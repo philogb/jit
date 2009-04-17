@@ -142,7 +142,7 @@ this.Hypertree = new Class({
                     overridable: false,
                     type: 'circle',
                     dim: 7,
-                    color: '#ccc',
+                    color: '#999',
                     width: 5,
                     height: 5,   
                     lineWidth: 1,
@@ -157,7 +157,7 @@ this.Hypertree = new Class({
                 Edge: {
                     overridable: false,
                     type: 'hyperline',
-                    color: '#ccc',
+                    color: '#999',
                     lineWidth: 1
                 },
 
