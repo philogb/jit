@@ -1,0 +1,63 @@
+html, body {
+    margin:0;
+    padding:0;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+#container {
+    width: 1000px;
+    height: 600px;
+    margin:0 auto;
+    position:relative;
+    border: 1px solid #777;    
+}
+
+#left-container, 
+#right-container, 
+#infovis {
+    height:600px;
+    position:absolute;
+    top:0;
+}
+
+#left-container, #right-container {
+    width:200px;
+    color:#fefefe;
+    background-color:#888;
+    text-align: left;
+    overflow: auto;
+}
+
+#left-container {
+    left:0;
+}
+
+#right-container {
+    right:0;
+}
+
+#infovis {
+    width:600px;
+    left:200px;
+}
+
+.text {
+    margin: 7px;
+}
+
+#inner-details {
+    font-size:0.8em;
+    list-style:none;
+    margin:7px;
+}
+
+#log {
+    background-color:#555;
+    color:#fefefe;
+    position:absolute;
+    right:200px;
+    top:0;
+    font-size:0.8em;
+}
