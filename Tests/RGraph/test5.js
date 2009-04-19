@@ -1,8 +1,15 @@
 function init(){
+    var Log = {
+        elem: false,
+        write: function(text){
+            if (!this.elem) 
+                this.elem = document.getElementById('log');
+            this.elem.innerHTML = text;
+        }
+    };
 
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    var fStyle, sStyle, lineWidth;
     var json = {
         "id": "190_0",
         "name": "Pearl Jam",
@@ -421,12 +428,13 @@ function init(){
         
         'backgroundCanvas': {
             'styles': {
-                'fillStyle': '#444',
-                'strokeStyle': '#444'
+                'fillStyle': '#ddd',
+                'strokeStyle': '#ddd'
             },
             
             'impl': {
-                'init': function() {}    ,
+                'init': function(){
+                },
                 'plot': function(canvas, ctx){
                     var times = 6, d = 100;
                     var pi2 = Math.PI * 2;
@@ -446,7 +454,6 @@ function init(){
         
         onBeforeCompute: function(node){
             Log.write("centering " + node.name + "...");
-            var _self = this;
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
             Graph.Util.eachAdjacency(node, function(adj){
@@ -460,30 +467,11 @@ function init(){
             document.getElementById('inner-details').innerHTML = html;
         },
         
-        //Add a controller to assign the node's name to the created label.    
         onCreateLabel: function(domElement, node){
-            var d = $(domElement);
-            effectHash[node.id] = new Fx.Tween(d, {
-                property: 'opacity',
-                duration: 300,
-                transition: Fx.Transitions.linear,
-                wait: false
-            });
-            d.setOpacity(0.6);
-            d.set('html', node.name).addEvents({
-                'mouseenter': function(){
-                    effectHash[node.id].start(0.6, 1);
-                },
-                
-                'mouseleave': function(){
-                    effectHash[node.id].start(1, 0.6);
-                },
-                
-                'click': function(){
-                    rgraph.onClick(d.id);
-                }
-            });
-            
+            domElement.innerHTML = node.name;
+            domElement.onclick = function () {
+                rgraph.onClick(node.id);
+            };
         },
         
         //Take off previous width and height styles and
@@ -521,8 +509,6 @@ function init(){
         'id': '4619_46'
     }, null);
     
-    g = GraphGenerator.makeGraph();
-    //             rgraph.loadJSON(g, 1);
     //compute positions
     rgraph.compute();
     
@@ -532,7 +518,22 @@ function init(){
     rgraph.controller.onBeforeCompute(rgraph.graph.getNode(rgraph.root));
     rgraph.controller.onAfterCompute();
     
-    (function(){
+    var button = document.getElementById('morph');
+    button.onclick = function(){
+        g = GraphGenerator.makeGraph();        
+        var stype = document.getElementById('select-type');
+        var sindex = stype.selectedIndex;
+        var type = stype.options[sindex].text;
+        
+        var fpstype = document.getElementById('select-fps');
+        var fpsindex = fpstype.selectedIndex;
+        var fps = parseInt(fpstype.options[fpsindex].text);
+        
+        var hideLabels = !!document.getElementById('hide-labels').checked;
+
+        var sduration = document.getElementById('select-duration');
+        var sdindex = sduration.selectedIndex;
+        var duration = parseInt(sduration.options[sdindex].text);
         var pearlJamNode = {
             'id': '190_0',
             'adjacencies': [g[0].id]
@@ -559,15 +560,14 @@ function init(){
         g.push(pearlJamNode4);
         g.push(pearlJamNode5);
         rgraph.op.morph(g, {
-            type: 'fade',
-            duration: 3000,
-            fps: 30,
             'id': '41529_12',
+            type: type,
+            fps: fps,
+            duration: duration,
+            hideLabels: hideLabels,
             onComplete: function(){
                 Log.write("morph complete!");
             }
         });
-    }).delay(3000);
-    
-    
+    };
 }

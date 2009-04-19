@@ -106,7 +106,7 @@ this.RGraph = new Class({
 					overridable: false,
 				    type: 'circle',
 					dim: 3,
-					color: '#ccc',
+					color: '#999',
                     width: 5,
                     height: 5,   
 					lineWidth: 1
@@ -120,7 +120,7 @@ this.RGraph = new Class({
 				Edge: {
 					overridable: false,
 				    type: 'line',
-					color: '#ccc',
+					color: '#999',
 					lineWidth: 1
 				},
 

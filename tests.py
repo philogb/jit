@@ -47,7 +47,7 @@ tests_model = {
             a fade-in animation.
             The centered node's children should be displayed in a relations list.
             """,
-            'Extras': ['excanvas.js']
+            'Extras': ['generators.js', 'excanvas.js']
         },
         {
             'Title': 'Test Morph.',
@@ -58,7 +58,7 @@ tests_model = {
             fade-in-out animations.
             The centered node's children should be displayed in a relations list.
             """,
-            'Extras': ['excanvas.js']
+            'Extras': ['generators.js', 'excanvas.js']
         },
         {
             'Title': 'Test with K6 weighted graph.',
@@ -69,7 +69,7 @@ tests_model = {
             Not other animations should happen.
             The centered node's children should be displayed in a relations list.
             """,
-            'Extras': ['excanvas.js']
+            'Extras': ['generators.js', 'excanvas.js']
         },
         {
             'Title': 'Test with node styles and edge styles.',
