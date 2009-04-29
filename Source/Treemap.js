@@ -9,30 +9,8 @@
  * 
  * Homepage: <http://thejit.org>
  * 
- * Version: 1.0.8a
+ * Version: 1.1.0a
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the organization nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY Nicolas Garcia Belmonte ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Nicolas Garcia Belmonte BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
  */
 
 /*
@@ -240,6 +218,7 @@ this.TM = {
 			onBeforePlotLine: $empty,
 			onAfterPlotLine:  $empty,
             onCreateElement:  $empty,
+            onDestroyElement: $empty,
 			request:          false
 		},
 
@@ -255,9 +234,6 @@ this.TM = {
 			//initial layout orientation "v" or "h"
 			//for vertical/horizontal.
 			orientation: "h",
-			//Property: tips
-			//Enables tips for the Treemap
-			tips: false,
 			//Property: titleHeight
 			//The height of the title. Set this to zero and remove 
 			//all styles for node classes if you just want to show leaf nodes.
@@ -325,9 +301,6 @@ this.TM = {
 		//Property: showSubtree
 		//The displayed JSON subtree. <http://blog.thejit.org>
 		this.shownTree = null;
-		//Property: tips
-		//This property will hold the a Mootools Tips instance if specified.
-		this.tips = null;
 		//Property: controller
 		//A treemap controller <http://blog.thejit.org/?p=8>
 		this.controller = this.config = $merge(this.config, 
@@ -337,8 +310,36 @@ this.TM = {
 		//Id of the Treemap container
 		this.rootId = this.config.rootId;
 		this.layout.orientation = this.config.orientation;
+        
+        //purge
+        var that = this;
+        var fn = function() {
+            that.empty();
+            if(window.CollectGarbage) window.CollectGarbage();
+            delete this;
+        };
+        if(window.addEventListener) {
+            window.addEventListener('unload', fn, false);
+        } else {
+            window.attachEvent('onunload', fn);
+        }
 	},
 
+    /*
+       Method: each
+    
+        Traverses head and leaf nodes applying a given function
+    */
+    each: function(f) {
+        var sl = Array.prototype.slice;
+        (function rec(elem) {
+          var ch = elem.childNodes, len = ch.length;
+          if(len > 0) {
+              f.apply(this, [elem, len === 1].concat(sl.call(ch)));
+          }
+          if(len > 1) rec(ch[1].childNodes[0]);  
+        })($get(this.rootId));
+    },
 
 	/*
 	   Method: toStyle
@@ -543,13 +544,13 @@ this.TM = {
 		maxv = c.maxValue,
 		minv = c.minValue,
 		diff = maxv - minv,
-		x = json.data.$color.toFloat();
+		x = (json.data.$color - 0);
 		//linear interpolation		
 		var comp = function(i, x) { 
-			return (((maxcv[i] - mincv[i]) / diff) * (x - minv) + mincv[i]).toInt(); 
+			return (((maxcv[i] - mincv[i]) / diff) * (x - minv) + mincv[i]) - 0; 
 		};
 		
-		return [ comp(0, x), comp(1, x), comp(2, x) ].rgbToHex();
+		return $rgbToHex([ comp(0, x), comp(1, x), comp(2, x) ]);
 	},
 
 	/*
@@ -562,7 +563,7 @@ this.TM = {
 	      elem - A JSON subtree. <http://blog.thejit.org>
 	*/
 	enter: function(elem) {
-		this.view(elem.getParent().id);
+		this.view(elem.parentNode.id);
 	},
 	
 	/*
@@ -591,11 +592,10 @@ this.TM = {
 	*/
 	view: function(id) {
 		var config = this.config, that = this;
-		if(config.tips) this.tips.hide();
 		var post = {
 			onComplete: function() {
 				that.loadTree(id);
-				$(config.rootId).focus();
+				$get(config.rootId).focus();
 			}
 		};
 
@@ -618,77 +618,78 @@ this.TM = {
 	      tree - A tree node (which is also a JSON tree object of course). <http://blog.thejit.org>
 	*/
 	resetPath: function(tree) {
-		var root = this.rootId;
-		var selector = "#" + root + " .in-path";
-		$$(selector).each(function (elem) {
-			elem.removeClass("in-path");
-		});
-		var container = $(tree.id);
-		var getParent = function(c) { 
-			var p = c.getParent();
-			return p && (p.id != root) && p;
-		 };
-		var parent = (tree)? getParent(container) : false;
-		while(parent) {
-			parent.getFirst().addClass("in-path")
-			parent = getParent(parent);
-		}
+		var root = this.rootId, previous = this.resetPath.previous;
+        this.resetPath.previous = tree || false;
+        function getParent(c) { 
+            var p = c.parentNode;
+            return p && (p.id != root) && p;
+         };
+         function toggleInPath(elem, remove) {
+            if(elem) {
+                var container = $get(elem.id);
+                if(container) {
+                    var parent = getParent(container);
+                    while(parent) {
+                        var elem = parent.childNodes[0], klasses = elem.className.split(" ");
+                        if(klasses.pop() == "in-path") {
+                            if(remove == undefined || !!remove) elem.className = klasses.join(" ");
+                        } else {
+                            if(!remove) elem.className += " in-path";
+                        }
+                        parent = getParent(parent);
+                    }
+                }
+            }
+         };
+         toggleInPath(previous, true);
+         toggleInPath(tree, false);                
 	},
 
-	/*
-	   Method: initializeBehavior
-	
-		Binds different methods to dom elements like tips, color changing, adding or removing class names on mouseenter and mouseleave, etc.
-	*/
-	initializeBehavior: function () {
-		var root = '#' + this.rootId, that = this;
-        var elems = $$(root + ' .leaf', root + ' .head');
-		if(this.config.tips) 
-			this.tips = new Tips(elems, {
-							className: 'tool-tip',
-							showDelay: 0,
-							hideDelay: 0
-						});
-		
-		elems.each(function(elem) {
-			elem.oncontextmenu = $lambda(false);
-			var id = elem.getParent().id;
-            if(id) {
-                var tree = TreeUtil.getSubtree(that.tree, id);
-            }
-            elem.addEvents({
-				'mouseenter': function(e) {
-					if(elem.hasClass("leaf")) {
-						elem.addClass("over-leaf");
-					} else if (elem.hasClass("head")) {
-						elem.addClass("over-head");
-						elem.getParent().addClass("over-content");
-					}
-					if(id) that.resetPath(tree);
-					e.stopPropagation();
-				},
-				
-				'mouseleave': function(e) {
-					if (elem.hasClass("over-leaf")) {
-						elem.removeClass("over-leaf");
-					} else if (elem.getParent().hasClass("over-content")) {
-						elem.removeClass("over-head");
-						elem.getParent().removeClass("over-content");
-					}
-					that.resetPath(false);
-					e.stopPropagation();
-				},
-				
-				'mouseup': function(e) {
-					if(e.rightClick) that.out(); else that.enter(elem);
-					e.preventDefault();
-					return false;
-				}
-			});
-            that.controller.onCreateElement(elem, tree);                      
-		});
-	},
-	
+    
+    /*
+       Method: initializeElements
+    
+       Traverses the tree applying the onCreateElement method.
+
+       The onCreateElement controller method should attach events and add some behavior to the DOM element
+       node created. By default, the Treemap wont add any event to its elements.
+    */
+    initializeElements: function() {
+      if(this.controller.onCreateElement != $empty) {
+          var cont = this.controller;
+          this.each(function(content, isLeaf, elem1, elem2) {
+              cont.onCreateElement(content, TreeUtil.getSubtree(that.tree, content.id), isLeaf, elem1, elem2);
+          });
+      }  
+    },
+
+    /*
+       Method: destroyElements
+    
+       Traverses the tree applying the onDestroyElement method.
+
+       The onDestroyElement controller method should detach events and garbage collect the element.
+       By default, the Treemap adds some garbage collect facilities for IE, but these are far from complete.
+    */
+    destroyElements: function() {
+      if(this.controller.onDestroyElement != $empty) {
+          var cont = this.controller;
+          this.each(function(content, isLeaf, elem1, elem2) {
+              cont.onDestroyElement(content, TreeUtil.getSubtree(that.tree, content.id), isLeaf, elem1, elem2);
+          });
+      }  
+    },
+    
+    /*
+       Method: empty
+    
+        Empties the Treemap container (trying also to garbage collect things).
+    */
+    empty: function() {
+        this.destroyElements();
+        $clean($get(this.rootId));
+    },
+
 	/*
 	   Method: loadTree
 	
@@ -699,7 +700,7 @@ this.TM = {
 	      id - A subtree id.
 	*/
 	loadTree: function(id) {
-		$(this.rootId).empty();
+		this.empty();
 		this.loadJSON(TreeUtil.getSubtree(this.tree, id));
 	}
 	
@@ -739,7 +740,7 @@ TM.SliceAndDice = new Class({
 	*/
 	loadJSON: function (json) {
 		this.controller.onBeforeCompute(json);
-		var container = $(this.rootId),
+		var container = $get(this.rootId),
 		config = this.config,
 		width = container.offsetWidth,
 		height = container.offsetHeight;
@@ -756,8 +757,8 @@ TM.SliceAndDice = new Class({
 		if(this.tree == null) this.tree = json;
 		this.shownTree = json;
 		this.compute(p, json, this.layout.orientation);
-		container.set('html', this.plot(json))
-		this.initializeBehavior();
+		container.innerHTML = this.plot(json);
+        this.initializeElements();
 		this.controller.onAfterCompute(json);
 	},
 	
@@ -784,14 +785,14 @@ TM.SliceAndDice = new Class({
 		var horizontal = (orientation == "h");
 		if(horizontal) {
 			orientation = 'v';		
-			var size = (width * fact).round(),
+			var size = Math.round(width * fact),
 			otherSize = height,
 			dim = 'height',
 			pos = 'top',
 			pos2 = 'left';
 		} else {
 			orientation = 'h';		
-			var otherSize = (height * fact).round(),
+			var otherSize = Math.round(height * fact),
 			size = width,
 			dim = 'width',
 			pos = 'left',
@@ -808,7 +809,7 @@ TM.SliceAndDice = new Class({
 			tm.compute(json, elem, orientation);
 			elem.coord[pos] = offsetSize;
 			elem.coord[pos2] = 0;
-			offsetSize += elem.coord[dim].toInt();
+			offsetSize += (elem.coord[dim] - 0);
 		});
 	}
 });
@@ -833,7 +834,7 @@ TM.Area = new Class({
 	*/
 	loadJSON: function (json) {
 		this.controller.onBeforeCompute(json);
-		var container = $(this.rootId),
+		var container = $get(this.rootId),
 		width = container.offsetWidth,
 		height = container.offsetHeight,
 		offst = this.config.offset,
@@ -855,7 +856,7 @@ TM.Area = new Class({
 		container.set('html', this.plot(json));
 		if(this.tree == null) this.tree = json;
 		this.shownTree = json;
-		this.initializeBehavior();
+		this.initializeElements();
 		this.controller.onAfterCompute(json);
 	},
 	
@@ -1048,7 +1049,7 @@ TM.Squarified = new Class({
 		var parentArea = coord.width * coord.height;
 		var parentDataValue = par.data.$area.toFloat();
 		for(var i=0; i<ch.length; i++) {
-			ch[i]._area = parentArea * ch[i].data.$area.toFloat() / parentDataValue;
+			ch[i]._area = parentArea * (ch[i].data.$area - 0) / parentDataValue;
 		}
 		var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
 		ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
@@ -1095,8 +1096,7 @@ TM.Squarified = new Class({
 	layoutV: function(ch, w, coord) {
 		var totalArea = 0; 
 		ch.each(function(elem) { totalArea += elem._area; });
-		var width = totalArea / w,
-		top =  0; 
+		var width = totalArea / w, top =  0; 
 		for(var i=0; i<ch.length; i++) {
 			var h = ch[i]._area / width;
 			ch[i].coord = {
@@ -1220,7 +1220,7 @@ TM.Strip = new Class({
 		var area = coord.width * coord.height;
 		var dataValue = par.data.$area.toFloat();
 		ch.each(function(elem) {
-			elem._area = area * elem.data.$area.toFloat() / dataValue;
+			elem._area = area * (elem.data.$area - 0) / dataValue;
 		});
 		var side = (this.layout.horizontal())? coord.width : coord.height;
 		var initElem = [ch[0]];
@@ -1267,8 +1267,7 @@ TM.Strip = new Class({
 	layoutV: function(ch, w, coord) {
 		var totalArea = 0; 
 		ch.each(function(elem) { totalArea += elem._area; });
-		var width = (totalArea / w),
-		top =  0; 
+		var width = (totalArea / w), top =  0; 
 		for(var i=0; i<ch.length; i++) {
 			var h = (ch[i]._area / width);
 			ch[i].coord = {

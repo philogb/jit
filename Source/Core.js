@@ -21,6 +21,9 @@
  * All functions and objects defined here are not visible nor accessible by the user.
  */
 
+function $get(id) {
+  return document.getElementById(id);  
+};
 
 function $empty() {};
 
@@ -87,10 +90,33 @@ function $unlink(object){
     return unlinked;
 };
 
+function $rgbToHex(srcArray, array){
+    if (srcArray.length < 3) return null;
+    if (srcArray.length == 4 && srcArray[3] == 0 && !array) return 'transparent';
+    var hex = [];
+    for (var i = 0; i < 3; i++){
+        var bit = (srcArray[i] - 0).toString(16);
+        hex.push((bit.length == 1) ? '0' + bit : bit);
+    }
+    return (array) ? hex : '#' + hex.join('');
+};
+
+function $destroy(elem) {
+   $clean(elem);
+   if(elem.parentNode) elem.parentNode.removeChild(elem);
+   if(elem.clearAttributes) elem.clearAttributes(); 
+};
+
+function $clean(elem) {
+  for(var ch = elem.childNodes, i=0; i < ch.length; i++) {
+      $destroy(ch[i]);
+  }  
+};
+
 var Class = function(properties){
 	properties = properties || {};
 	var klass = function(){
-//      not defining any "non-methods" in Class properties.
+//      not defining any attributes in Class properties.
 //		for (var key in this){
 //	        if (typeof this[key] != 'function') this[key] = $unlink(this[key]);
 //	    }
@@ -188,3 +214,4 @@ Class.prototype.implement = function(){
     });
     return this;
 };
+
