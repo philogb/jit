@@ -196,13 +196,13 @@ tests_model = {
             'Title': 'Test the Spacetree with an infinite client-side generator.',
             'Description': 
             """
-             Testing the Spacetree with a client-side generator that returns a Tree of level <= 3
-             when the controller request method is called.
-             This should lead to an infinite Spacetree.
-             Also, the edges should have arrow as style.
+             Testing the Spacetree with a client-side generator that returns a Tree of level = 3
+             when the controller request method is called.<br>
+             This should lead to an infinite Spacetree.<br>
+             Also, the edges should have arrow as style.<br>
              The nodes belonging in the path between the clicked node and the root node are selected with a
-             different color.
-             Clicking on a node should set focus to that node.
+             different color.<br>
+             Clicking on a node should set focus to that node.<br>
              This test uses the generator.js file to create random generated trees.
             """,
             'Extras': ['generators.js', 'excanvas.js']
@@ -211,7 +211,7 @@ tests_model = {
             'Title': 'Test adding a subtree',
             'Description': 
             """
-            Loads a static Spacetree and should add a subtree when clicking on the add button.
+            Loads a static Spacetree and should add a subtree when clicking on the add button.<br>
             You can change the parameters for adding the subtree in the form.
             """,
             'Extras': ['generators.js', 'excanvas.js']
@@ -220,7 +220,7 @@ tests_model = {
             'Title': 'Test removing a subtree.',
             'Description': 
             """
-            Loads a static Spacetree and should remove a subtree when clicking on the remove button.
+            Loads a static Spacetree and should remove a subtree when clicking on the remove button.<br>
             You can change the parameters for removing the subtree in the form.
             """,
             'Extras': ['generators.js', 'excanvas.js']
@@ -229,7 +229,7 @@ tests_model = {
             'Title': 'Test unbalanced tree.',
             'Description': 
             """
-            Tests the Spacetree layout algorithm with an unbalanced tree. Currently this test does not pass.
+            Tests the Spacetree layout algorithm with an unbalanced tree. Currently this test does not pass.<br>
             This is a known bug and probably will remain like this for version 1.1.0.
             """,
             'Extras': ['generators.js', 'excanvas.js']
@@ -238,8 +238,8 @@ tests_model = {
             'Title': 'Test Different node sizes',
             'Description': 
             """
-            Testing a static Spacetree with rectangle nodes with different width and height.
-            You can also click in a node's name in the list to add focus to that node.
+            Testing a static Spacetree with rectangle nodes with different widths and heights.<br>
+            You can also click on a node's name in the list to add focus to that node.
             """,
             'Extras': ['generators.js', 'excanvas.js']
         },
@@ -264,6 +264,7 @@ tests_model = {
             Right clicking should set the current root's parent as root.<br> 
             Hovering the Treemap nodes should pop-up a tooltip. <br>
             Treemap nodes should have colors by default. <br>
+            Hovering a node should change the style of all parents nodes, forming a path. <br>
             You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).
             """,
             'Extras': []
