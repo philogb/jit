@@ -1,4 +1,12 @@
 function init(){
+    var Log = {
+        elem: false,
+        write: function(text){
+            if (!this.elem) 
+                this.elem = document.getElementById('log');
+            this.elem.innerHTML = text;
+        }
+    };
 
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
@@ -10,7 +18,6 @@ function init(){
         minChildrenPerNode: 0,
         counter: 0
     });
-    //json.children = [{ 'id':'lala', 'name': 'lala', 'data':{}, 'children': [] }].concat(json.children);
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
@@ -46,11 +53,12 @@ function init(){
         },
         
         onCreateLabel: function(label, node){
-            var d = $(label);
             label.id = node.id;
-            d.setStyle('cursor', 'pointer').set('html', node.name).addEvent('click', function(){
-                st.onClick(d.id);
-            });
+            label.style.cursor = 'pointer';
+            label.innerHTML = node.name;
+            label.onclick = function() {
+              st.onClick(node.id);  
+            };
         },
         
         onBeforePlotNode: function(node){
@@ -87,16 +95,9 @@ function init(){
     //  Tree.Plot.plot(st.tree, st.canvas);
     st.onClick(st.root);
     
-    var minitree = Feeder.makeTree({
-        idPrefix: "node" + new Date().getTime(),
-        levelStart: 0,
-        levelEnd: 3,
-        maxChildrenPerNode: 6,
-        counter: 0
-    });
-    
     //Add input handler to switch spacetree orientation.
-    var select = document.getElementById('switch').addEvent('change', function(){
+    var select = document.getElementById('switch');
+    select.onchange = function(){
         var index = select.selectedIndex;
         var or = select.options[index].text;
         select.disabled = true;
@@ -105,23 +106,25 @@ function init(){
                 select.disabled = false;
             }
         });
-    });
+    };
+    
+    var align = document.getElementById('align');
+    align.onchange = function() {
+        var index = align.selectedIndex;
+        var or = align.options[index].text;
+        st.config.Node.align = or;
+        st.refresh();
+    };
     
     //make node list
-    var elemUl = new Element('ul');
+    var elemUl = document.createElement('ul');
     Graph.Util.eachNode(st.graph, function(elem){
-        var elemLi = new Element('li', {
-            'html': "name: " + elem.name,
-            'events': {
-                'click': function(){
-                    st.select(elem.id);
-                }
-            }
-        });
-        elemLi.inject(elemUl);
+        var elemLi = document.createElement('li');
+        elemLi.onclick = function() {
+            st.select(elem.id);
+        };
+        elemLi.innerHTML = elem.name;
+        elemUl.appendChild(elemLi);
     });
-    elemUl.inject('id-list');
-    
-    
-    
+    document.getElementById('id-list').appendChild(elemUl);
 }
