@@ -16,7 +16,7 @@ html, body {
 
 #left-container, 
 #right-container, 
-#infovis {
+#center-container {
     height:600px;
     position:absolute;
     top:0;
@@ -38,7 +38,7 @@ html, body {
     right:0;
 }
 
-#infovis {
+#center-container {
     width:600px;
     left:200px;
 }
@@ -60,4 +60,13 @@ html, body {
     right:200px;
     top:0;
     font-size:0.8em;
+}
+
+
+#infovis {
+    position:relative;
+    width:600px;
+    height:600px;
+    margin:auto;
+   
 }

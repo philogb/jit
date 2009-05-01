@@ -1,0 +1,96 @@
+#infovis {
+   background-color:#1D1D20; 
+}
+
+#infovis div {
+    position:absolute;
+    overflow:hidden;
+    font-size:11px;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;    
+}
+
+#infovis .content {
+    background-color:#333;
+    border:0px solid #111;
+}
+
+#infovis .head {
+    height:12px;
+    color:white;
+    background-color:#444;
+    
+}
+
+#infovis .head.in-path {
+    background-color:#655;
+}
+
+#infovis .body {
+    background-color:black;
+}
+
+#infovis .leaf {
+    color:white;
+    background-color:#111;
+    display:table-cell;
+    vertical-align:middle;
+    border:1px solid #000;
+}
+
+
+#infovis .over-leaf {
+    border:1px solid #9FD4FF; 
+}
+
+#infovis .over-content {
+    background-color: #9FD4FF;
+}
+
+#infovis .over-head { /* boy i'm funny! */
+    background-color:#A4D9FF;
+    color:black;
+}
+
+/*TOOLTIPS*/
+.tool-tip {
+    color: #fff;
+    width: 139px;
+    z-index: 13000;
+    background-color: black;
+    opacity:0.9;
+    filter:alpha(opacity=90);
+    font-size:10px;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+    padding:7px;
+}
+ 
+.tip-title {
+    font-weight: bold;
+    font-size: 11px;
+    margin: 0;
+    color: #9FD4FF;
+    padding: 8px 8px 4px;
+    background-color: black;
+    
+}
+ 
+.tip-text {
+    font-size: 11px;
+    padding: 4px 8px 8px;
+    background-color: black;
+}
+
+.album {
+    width:100px;
+    margin:3px;
+}
+
+.text {
+    margin:5px 0;
+}
+
+input {
+    font-size:10px;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+
+}

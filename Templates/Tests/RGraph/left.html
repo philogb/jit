@@ -1,9 +1,9 @@
 $def with (model, type, number, max)
 
 $if number > 1:
-    <a href="/testcase/$type/${number -1}/notmoo/" title="previous">previous</a>
+    <a href="/testcase/$type/${number -1}/" title="previous">previous</a>
 $if number < max:
-    <a href="/testcase/$type/${number +1}/notmoo/" title="next">next</a>
+    <a href="/testcase/$type/${number +1}/" title="next">next</a>
 
 
 <div class="text">

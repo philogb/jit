@@ -7,6 +7,7 @@ $def with (name, title, extras, test, build, includes)
 
 <!-- Test CSS -->
 <link type="text/css" href="/Tests/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/Tests/css/${name}.css" rel="stylesheet" />
 
 <!-- Add extra libraries -->
 $if extras:
@@ -30,11 +31,14 @@ $:build
     <div id="left-container">
 $:includes['left']
     </div>
-    <div id="infovis"></div>
+    <div id="center-container">
+        <div id="infovis"></div>    
+    </div>
     <div id="right-container">
 $:includes['right']
     </div>
 <div id="log"></div>
 </div>
+<div id="tooltip" class="tool-tip" style="display:none; position:absolute"></div>
 </body>
 </html>

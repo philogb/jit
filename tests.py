@@ -1,7 +1,4 @@
 #tests models
-
-from build import mootools
-
 tests_model = {
 
     'RGraph': [
@@ -259,74 +256,38 @@ tests_model = {
     
     'Treemap': [
         {
-            'Title': 'Test Squarified Treemap with static 50 artist feed.',
+            'Title': 'Test Squarified, SliceAndDice, and Strip Treemap with static 50 artist feed.',
             'Description': 
             """
-            Test Squarified Treemap with static 50 artist dataset.
-            Clicking on a Node should set the Node as root.
-            Right clicking should set the current root's parent as root.
-            Hovering the Treemap nodes should pop-up a tooltip.
-            Treemap nodes should have colors.
+            Test Squarified, SliceAndDice, and Strip Treemap with static 50 artist dataset.<br>
+            Clicking on a Node should set the Node as root. <br>
+            Right clicking should set the current root's parent as root.<br> 
+            Hovering the Treemap nodes should pop-up a tooltip. <br>
+            Treemap nodes should have colors by default. <br>
+            You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).
             """,
-            'Extras': [mootools]
+            'Extras': []
         },
         {
-            'Title': 'Test SliceAndDice Treemap with static 50 artist feed.',
+            'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
             'Description': 
             """
-            Test SliceAndDice Treemap with static 50 artist dataset.
-            Clicking on a Node should set the Node as root.
-            Right clicking should set the current root's parent as root.
-            Hovering the Treemap nodes should pop-up a tooltip.
-            Treemap nodes should have colors.
+            Loads a random generated weighted tree and renders it as Squarified Tree by default.<br> 
+            Treemap nodes should have colors by default. <br>
+            You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).<br> 
+            Each time an option is changed, a new random tree is generated and rendered.
             """,
-            'Extras': [mootools]
+            'Extras': ['generators.js']
         },
         {
-            'Title': 'Test Strip Treemap with static 50 artist feed.',
+            'Title': 'Test Squarified Treemap with a request controller method.',
             'Description': 
             """
-            Test Strip Treemap with static 50 artist dataset.
-            Clicking on a Node should set the Node as root.
-            Right clicking should set the current root's parent as root.
-            Hovering the Treemap nodes should pop-up a tooltip.
-            Treemap nodes should have colors.
+            The Treemap should not have colors. <br>
+            There should be only one level shown at a time. <br>
+            Clicking on a band should show a new treemap with the most listened albums. 
             """,
-            'Extras': [mootools]
-        },
-        {
-            'Title': 'Test Squarified Treemap with random Tree.',
-            'Description': 
-            """
-            Loads a random generated weighted tree and renders it as Squarified Tree.
-            """,
-            'Extras': ['generators.js', mootools]
-        },
-        {
-            'Title': 'Test SliceAndDice Treemap with random Tree.',
-            'Description': 
-            """
-            Loads a random generated weighted tree and renders it as SliceAndDice Tree.
-            """,
-            'Extras': ['generators.js', mootools]        
-        },
-        {
-            'Title': 'Test Strip Treemap with random Tree.',
-            'Description': 
-            """
-            Loads a random generated weighted tree and renders it as Strip Tree.
-            """,
-            'Extras': ['generators.js', mootools]        
-        },
-        {
-            'Title': 'Test Squarified 50 artists Treemap with a request controller method.',
-            'Description': 
-            """
-            The Treemap should not have colors.
-            There should be only one level shown at a time.
-            clicking on a band should show a new treemap with the most listened albums.
-            """,
-            'Extras': [mootools]        
+            'Extras': []        
         }
    ]   
 }

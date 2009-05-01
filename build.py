@@ -1,6 +1,5 @@
 import sys
 
-mootools = 'mootools-1.2.1.js'
 #build model
 class Build():
     def __init__(self):
@@ -54,13 +53,10 @@ class Build():
                             'Loader', 
                             'Animation'],
                             
-            'Treemap':      []
+            'Treemap':      ['Core']
         }
         
     def build(self, args=['Spacetree', 'RGraph', 'Hypertree', 'Treemap']):
-        if ('Treemap' in args) or ('Mootools' in args):
-            self.included.append('Core')
-        
         self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model])
         self.script = '(function () { \n\n' + self.script + '\n\n })();'
         return self.script

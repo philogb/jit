@@ -333,12 +333,17 @@ this.TM = {
     each: function(f) {
         var sl = Array.prototype.slice;
         (function rec(elem) {
+          if(!elem) return;
           var ch = elem.childNodes, len = ch.length;
           if(len > 0) {
               f.apply(this, [elem, len === 1].concat(sl.call(ch)));
           }
-          if(len > 1) rec(ch[1].childNodes[0]);  
-        })($get(this.rootId));
+          if (len > 1) {
+            for(var chi = ch[1].childNodes, i=0; i<chi.length; i++) {
+                rec(chi[i]);
+            }
+          }  
+        })($get(this.rootId).firstChild);
     },
 
 	/*
@@ -547,7 +552,7 @@ this.TM = {
 		x = (json.data.$color - 0);
 		//linear interpolation		
 		var comp = function(i, x) { 
-			return (((maxcv[i] - mincv[i]) / diff) * (x - minv) + mincv[i]) - 0; 
+			return Math.round((((maxcv[i] - mincv[i]) / diff) * (x - minv) + mincv[i])); 
 		};
 		
 		return $rgbToHex([ comp(0, x), comp(1, x), comp(2, x) ]);
@@ -656,7 +661,7 @@ this.TM = {
     */
     initializeElements: function() {
       if(this.controller.onCreateElement != $empty) {
-          var cont = this.controller;
+          var cont = this.controller, that = this;
           this.each(function(content, isLeaf, elem1, elem2) {
               cont.onCreateElement(content, TreeUtil.getSubtree(that.tree, content.id), isLeaf, elem1, elem2);
           });
@@ -673,7 +678,7 @@ this.TM = {
     */
     destroyElements: function() {
       if(this.controller.onDestroyElement != $empty) {
-          var cont = this.controller;
+          var cont = this.controller, that = this;
           this.each(function(content, isLeaf, elem1, elem2) {
               cont.onDestroyElement(content, TreeUtil.getSubtree(that.tree, content.id), isLeaf, elem1, elem2);
           });
@@ -805,11 +810,11 @@ TM.SliceAndDice = new Class({
 			'left':0
 		};
 		var offsetSize = 0, tm = this;
-		json.children.each(function(elem){
+		$each(json.children, function(elem){
 			tm.compute(json, elem, orientation);
 			elem.coord[pos] = offsetSize;
 			elem.coord[pos2] = 0;
-			offsetSize += (elem.coord[dim] - 0);
+			offsetSize += Math.floor(elem.coord[dim]);
 		});
 	}
 });
@@ -853,7 +858,7 @@ TM.Area = new Class({
 		});
 
 		this.compute(json, coord);
-		container.set('html', this.plot(json));
+		container.innerHTML = this.plot(json);
 		if(this.tree == null) this.tree = json;
 		this.shownTree = json;
 		this.initializeElements();
@@ -1047,9 +1052,9 @@ TM.Squarified = new Class({
 	processChildrenLayout: function(par, ch, coord) {
 		//compute children real areas
 		var parentArea = coord.width * coord.height;
-		var parentDataValue = par.data.$area.toFloat();
+		var parentDataValue = parseFloat(par.data.$area);
 		for(var i=0; i<ch.length; i++) {
-			ch[i]._area = parentArea * (ch[i].data.$area - 0) / parentDataValue;
+			ch[i]._area = parentArea * parseFloat(ch[i].data.$area) / parentDataValue;
 		}
 		var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
 		ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
@@ -1095,7 +1100,7 @@ TM.Squarified = new Class({
 	
 	layoutV: function(ch, w, coord) {
 		var totalArea = 0; 
-		ch.each(function(elem) { totalArea += elem._area; });
+		$each(ch, function(elem) { totalArea += elem._area; });
 		var width = totalArea / w, top =  0; 
 		for(var i=0; i<ch.length; i++) {
 			var h = ch[i]._area / width;
@@ -1121,7 +1126,7 @@ TM.Squarified = new Class({
 	
 	layoutH: function(ch, w, coord) {
 		var totalArea = 0; 
-		ch.each(function(elem) { totalArea += elem._area; });
+		$each(ch, function(elem) { totalArea += elem._area; });
 		var height = totalArea / w,
 		top = coord.height - height, 
 		left = 0;
@@ -1218,9 +1223,9 @@ TM.Strip = new Class({
 	processChildrenLayout: function(par, ch, coord) {
 		//compute children real areas
 		var area = coord.width * coord.height;
-		var dataValue = par.data.$area.toFloat();
-		ch.each(function(elem) {
-			elem._area = area * (elem.data.$area - 0) / dataValue;
+		var dataValue = parseFloat(par.data.$area);
+		$each(ch, function(elem) {
+			elem._area = area * parseFloat(elem.data.$area) / dataValue;
 		});
 		var side = (this.layout.horizontal())? coord.width : coord.height;
 		var initElem = [ch[0]];
@@ -1266,7 +1271,7 @@ TM.Strip = new Class({
 	
 	layoutV: function(ch, w, coord) {
 		var totalArea = 0; 
-		ch.each(function(elem) { totalArea += elem._area; });
+		$each(ch, function(elem) { totalArea += elem._area; });
 		var width = (totalArea / w), top =  0; 
 		for(var i=0; i<ch.length; i++) {
 			var h = (ch[i]._area / width);
@@ -1291,7 +1296,7 @@ TM.Strip = new Class({
 	
 	layoutH: function(ch, w, coord) {
 		var totalArea = 0; 
-		ch.each(function(elem) { totalArea += elem._area; });
+		$each(ch, function(elem) { totalArea += elem._area; });
 		var height = totalArea / w,
 		top = coord.height - height, 
 		left = 0;
