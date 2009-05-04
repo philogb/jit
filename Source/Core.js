@@ -1,20 +1,27 @@
 /*
  * File: Core.js
  * 
- * Author: Nicolas Garcia Belmonte
+ * Author: 
  * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
+ * Nicolas Garcia Belmonte
  * 
- * License: BSD License
+ * Copyright: 
  * 
- * Homepage: <http://thejit.org>
+ * Copyright 2008-2009 by Nicolas Garcia Belmonte.
  * 
- * Version: 1.0.8a
+ * License: 
+ * 
+ * BSD License
+ * 
+ * Homepage: 
+ * 
+ * <http://thejit.org>
+ * 
+ * Version: 
+ * 
+ * 1.1.0a
  *
- * Provides common utility functions and the Class object.
- * This code is used as middleware for standalone builds of the library.
- * If you are using Mootools then you don't need this module.
- * 
+ * Provides common utility functions and the Class object used internally by the library.
  * 
  * This Script is based on Mootools core: <http://mootools.net>
  * 

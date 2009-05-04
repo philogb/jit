@@ -1,21 +1,119 @@
 /*
  * File: Canvas.js
- * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
  *
+ * A cross browser Canvas widget.
+ *
+ * Used By:
+ *
+ * <ST>, <Hypertree>, <RGraph>
  */
+
 /*
    Class: Canvas
 
-   A multi-purpose Canvas object decorator.
+   A multi-purpose Canvas Class. This Class can be used with the ExCanvas library to provide
+    cross browser Canvas based visualizations.
+
+  Parameters:
+     id - The canvas id. This id will be used as prefix for the canvas widget DOM elements ids.
+     options - An object containing multiple options such as
+         
+         - _injectInto_ This property is _required_ and it specifies the id of the DOM element 
+         to which the Canvas widget will be appended
+         - _width_ The width of the Canvas widget. Default's to 200px
+         - _height_ The height of the Canvas widget. Default's to 200px
+         - _backgroundColor_ Used for compatibility with IE. The canvas' background color. 
+         Default's to '#333'
+         - _styles_ A hash containing canvas specific style properties such as _fillStyle_ and _strokeStyle_ among others. 
+
+  Example:
+    Suppose we have this HTML
+    (start code xml)
+      <div id="infovis"></div>
+    (end code)
+
+    Now we create a new Canvas instance
+    (start code js)
+  //Create a new canvas instance
+  var canvas = new Canvas('mycanvas', {
+    //Where to inject the canvas. Any div container will do.
+    'injectInto':'infovis',
+    //width and height for canvas. Default's to 200.
+    'width': 900,
+    'height':500,
+    //Canvas styles
+    'styles': {
+        'fillStyle': '#ccddee',
+        'strokeStyle': '#772277'
+    }
+ });
+    (end code)
+
+    The generated HTML will look like this
+    (start code xml)
+      <div id="infovis">
+        <div id="mycanvas" style="position:relative;">
+          <canvas id="mycanvas-canvas" width=900 height=500
+          style="position:absolute; top:0; left:0; width:900px; height:500px;" />
+          <div id="mycanvas-label" 
+          style="overflow:visible; position:absolute; top:0; left:0; width:900px; height:0px">
+          </div>
+        </div>
+      </div>
+    (end code)
+
+    As you can see, the generated HTML consists of a canvas DOM element of id _mycanvas-canvas_ and a div label container
+     of id _mycanvas-label_, wrapped in a main div container of id _mycanvas_.
+
+    You can also add a background canvas, for making background drawings. 
+    This is how the <RGraph> background concentric circles are drawn
+
+    Example:
+    (start code js)
+  //Create a new canvas instance.
+  var canvas = new Canvas('mycanvas', {
+    //Where to inject the canvas. Any div container will do.
+    'injectInto':'infovis',
+    //width and height for canvas. Default's to 200.
+    'width': 900,
+    'height':500,
+    //Canvas styles
+    'styles': {
+        'fillStyle': '#ccddee',
+        'strokeStyle': '#772277'
+    },
+    //Add a background canvas for plotting
+    //concentric circles.
+    'backgroundCanvas': {
+        //Add Canvas styles for the bck canvas.
+      'styles': {
+            'fillStyle': '#444',
+            'strokeStyle': '#444'
+        },
+        //Add the initialization and plotting functions.
+        'impl': {
+            'init': function() {},
+            'plot': function(canvas, ctx) {
+                var times = 6, d = 100;
+                var pi2 = Math.PI*2;
+                for(var i=1; i<=times; i++) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, i * d, 0, pi2, true);
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            }
+        }
+    }
+ });
+    (end code)
+
+    The _backgroundCanvas_ object contains a canvas _styles_ property and
+     an _impl_ key to be used for implementing background canvas specific code. 
+
+    The _init_ method is only called once, at the instanciation of the background canvas.
+
+    The _plot_ method is called for plotting a Canvas image. 
 */
 this.Canvas = (function () {
 	var ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
@@ -65,48 +163,6 @@ this.Canvas = (function () {
 		ctx.translate(width / 2, height / 2);
 	};
 	
-	/*
-	   Constructor: Canvas
-	
-	   Canvas constructor.
-	
-	   Parameters:
-	
-	      id - The canvas tag id.
-	      opt - configuration object, possible parameters are:
-	      - *injectInto* id for the container of the canvas.
-	      Canvas object will be appended to the object specified by this id.
-	      - *width* canvas width, default's 200
-	      - *height* canvas height, default's 200
-	      - *backgroundColor* used for background color when clipping in IE
-	      - *styles* an object containing canvas style properties. See <https://developer.mozilla.org/en/Canvas_tutorial/Applying_styles_and_colors>
-		  - *backgroundCanvas* an object containing configuration properties for a background canvas.
-		  
-		  A possible configuration object could be defined as:
-		  (start code)
-			var config = {
-				'injectInto': 'id',
-				
-				'width':200,
-				'height':200,
-				
-				'backgroundColor':'#333333',
-				
-				'styles': {
-					'fillStyle':'#000000',
-					'strokeStyle':'#000000'
-				},
-				
-				'backgroundCanvas': false
-			};
-		  (end code)
-		  
-		  More information in <http://blog.thejit.org>.
-
-	   Returns:
-	
-	      A new Canvas instance.
-	*/
 	return function(id, opt) {
 		if(arguments.length < 1) throw "Arguments missing";
 		var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
@@ -159,9 +215,20 @@ this.Canvas = (function () {
 			/*
 			   Method: getCtx
 			
+               Returns the main canvas context object
+
 			   Returns:
 			
-			      Main canvas context.
+			      Main canvas context
+
+               Example:
+
+               (start code js)
+                 var ctx = canvas.getCtx();
+                 //Now I can use the native canvas context
+                 //and for example change some canvas styles
+                 ctx.globalAlpha = 1;
+               (end code)
 			*/
 			getCtx: function() {
 				return ctx;
@@ -169,11 +236,18 @@ this.Canvas = (function () {
 
 			/*
 			   Method: getElement
+
+               Returns the main Canvas DOM wrapper
 			
 			   Returns:
 			
-			      DOM canvas wrapper generated. More information
-			      about this can be found in the post <http://blog.thejit.org>
+			      DOM canvas wrapper generated, (i.e the div wrapper element with id _mycanvas_)
+
+               Example:
+               (start code js)
+                 var wrapper = canvas.getElement();
+                 //Returns <div id="mycanvas" ... >...</div> as element
+               (end code)
 			*/
 			getElement: function() {
 				return mainContainer;
@@ -188,6 +262,18 @@ this.Canvas = (function () {
 			
 			      width - New canvas width.
 			      height - New canvas height.
+
+              This method can be used with the <ST>, <Hypertree> or <RGraph> visualizations to resize 
+              the visualizations
+
+              Example:
+              (start code js)
+                function resizeViz(width, height) {
+                  canvas.resize(width, height);
+                  rgraph.refresh(); //ht.refresh or st.refresh() also work.
+                  rgraph.onAfterCompute();
+                }
+              (end code)
 			
 			*/
 			resize: function(width, height) {
@@ -207,16 +293,16 @@ this.Canvas = (function () {
 			   Returns:
 			
 			      An object with _width_ and _height_ properties.
+
+               Example:
+               (start code js)
+                  canvas.getSize(); //returns { width: 900, height: 500 }
+               (end code)
 			*/
 			getSize: function() {
 				return { 'width': canvas.width, 'height': canvas.height };
 			},
 			
-			/*
-			   Method: path
-			   
-			  Performs a _beginPath_ executes _action_ doing then a _type_ ('fill' or 'stroke') and closing the path with closePath.
-			*/
 			path: function(type, action) {
 				ctx.beginPath();
 				action(ctx);
@@ -228,6 +314,7 @@ this.Canvas = (function () {
 			   Method: clear
 			
 			   Clears the canvas object.
+
 			*/		
 			clear: function () {
 				var size = this.getSize();
@@ -237,7 +324,7 @@ this.Canvas = (function () {
 			/*
 			   Method: clearReactangle
 			
-			   Same as <clear> but only clears a section of the canvas.
+			   Same as <Canvas.clear> but only clears a section of the canvas.
 			   
 			   Parameters:
 			   

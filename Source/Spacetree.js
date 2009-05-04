@@ -1,22 +1,180 @@
 /*
  * File: Spacetree.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.1.0a
+ * Implements the <ST> class and other derived classes.
+ *
+ * Description:
+ *
+ * The main idea of the spacetree algorithm is to take the most common tree layout, and to expand nodes that are "context-related" .i.e lying on the path between the root node and a selected node. Useful animations to contract and expand nodes are also included.
+ *
+ * Inspired by:
+ *
+ * SpaceTree: Supporting Exploration in Large Node Link Tree, Design Evolution and Empirical Evaluation (Catherine Plaisant, Jesse Grosjean, Benjamin B. Bederson)
+ *
+ * <http://hcil.cs.umd.edu/trs/2002-05/2002-05.pdf>
+ *
+ * Disclaimer:
+ *
+ * This visualization has been built from scratch, taking only the paper as inspiration, and only shares some features with the Spacetree.
  *
  */
 
 /*
      Class: ST
      
-     The main Spacetree class.
+     The main ST class
+
+     Extends:
+
+     <Loader>
+
+     Parameters:
+
+     canvas - A <Canvas> Class
+     config - A configuration/controller object.
+
+     Configuration:
+    
+     The configuration object can have the following properties (all properties are optional and have a default value)
+      
+     *General*
+
+     - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
+     - _levelsToShow_ Depth of the plotted tree. The plotted tree will be pruned in order to fit the specified depth. Default's 2.
+     - _subtreeOffset_ Separation offset between subtrees. Default's 8.
+     - _siblingOffset_ Separation offset between siblings. Default's 5.
+     - _levelDistance_ Distance between levels. Default's 30.
+
+     *Node*
+     
+     Customize the visualization nodes' shape, color, and other style properties.
+
+     - _Node_
+
+     This object has as properties
+
+     - _overridable_ Determine whether or not nodes properties can be overriden by a particular node. Default's false.
+
+     If given a JSON tree or graph, the node's data property contains properties which are the same as defined here but prefixed with 
+     a dollar sign (i.e $), the node properties will override the global node properties.
+
+     - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "ellipse" and "circle". Default's "rectangle".
+     - _color_ Node color. Default's '#ccb'.
+     - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
+     - _height_ Node height. Used for plotting rectangular nodes. _Width_ and _height_ properties are also used as bounding box for nodes of different shapes. 
+     This means that for all shapes you'd have to make sure that the node's shape is contained in the bounding box defined by _width_ and _height_ parameters. Default's 20.
+     - _width_ Node width. Used for plotting rectangular nodes and for calculating a node's bounding box. Default's 90.
+     - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. 
+     Please notice that even if these complex shapes (square, circle) only use _dim_ for calculating it's diameter property, the complex shape must be 
+     contained in the bounding box calculated with the _width_ and _height_ parameters. Default's 15.
+     - _align_ Defines a node's alignment. Possible values are "center", "left", "right". Default's "center".
+
+     *Edge*
+
+     Customize the visualization edges' shape, color, and other style properties.
+
+     - _Edge_
+
+     This object has as properties
+
+     - _overridable_ Determine whether or not edges properties can be overriden by a particular edge object. Default's false.
+
+     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), the adjacency's data property contains properties which are the same as defined here but prefixed with 
+     a dollar sign (i.e $), the adjacency properties will override the global edge properties.
+
+     - _type_ Edge type (shape). Possible options are "none", "line", "quadratic:begin", "quadratic:end", "bezier" and "arrow". Default's "line".
+     - _color_ Edge color. Default's '#ccb'.
+     - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
+     - _dim_ An extra parameter used by other complex shapes such as quadratic, arrow and bezier to determine the shape's diameter. 
+
+     *Animations*
+
+     - _duration_ Duration of the animation in milliseconds. Default's 700.
+     - _fps_ Frames per second. Default's 25.
+     - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
+
+    *Controller options*
+
+    You can also implement controller functions inside the configuration object. This functions are
+    
+    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
+    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
+    - _onCreateLabel(domElement, node)_ This method receives the label dom element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called on label creation. Note that a <Graph.Node> is a node from the input tree/graph you provided to the visualization. If you want to know more about what kind of JSON tree/graph format is used to feed the visualizations, you can take a look at <Loader.loadJSON>. This method proves useful when adding events to the labels used by the JIT.
+    - _onPlaceLabel(domElement, node)_ This method receives the label dom element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed on the visualization, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions.
+    - _onBeforePlotNode(node)_ This method is triggered right before plotting a given node. The _node_ parameter is the <Graph.Node> to be plotted. 
+This method is useful for changing a node style right before plotting it.
+    - _onAfterPlotNode(node)_ This method is triggered right after plotting a given node. The _node_ parameter is the <Graph.Node> plotted.
+    - _onBeforePlotLine(adj)_ This method is triggered right before plotting an edge. The _adj_ parameter is a <Graph.Adjacence> object. 
+This method is useful for adding some styles to a particular edge before being plotted.
+    - _onAfterPlotLine(adj)_ This method is triggered right after plotting an edge. The _adj_ parameter is the <Graph.Adjacence> plotted.
+    - _request(nodeId, level, onComplete)_ This method is used for buffering information into the visualization. When clicking on an empty node,
+ the visualization will make a request for this node's subtree, specifying a given level for this subtree. Once this request is completed the _onComplete_ 
+object must be called with the given result.
+
+    Example:
+
+    Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
+    all configuration properties  have the default value assigned.
+
+    I won't be instanciating a <Canvas> class here. If you want to know more about instanciating a <Canvas> class 
+    please take a look at the <Canvas> class documentation.
+
+    (start code js)
+      var st = new ST(canvas, {
+        orientation: "left",
+        levelsToShow: 2,
+        subtreeOffset: 8,
+        siblingOffset: 5,
+        levelDistance: 30,
+        Node: {
+          overridable: false,
+          type: 'rectangle',
+          color: '#ccb',
+          lineWidth: 1,
+          height: 20,
+          width: 90,
+          dim: 15,
+          align: "center"
+        },
+        Edge: {
+          overridable: false,
+          type: 'line',
+          color: '#ccc',
+          dim: 15,
+          lineWidth: 1
+        },
+        duration: 700,
+        fps: 25,
+        transition: Trans.Quart.easeInOut,
+
+        onBeforeCompute: function(node) {
+          //do something onBeforeCompute
+        },
+        onAfterCompute:  function () {
+          //do something onAfterCompute
+        },
+        onCreateLabel:   function(domElement, node) {
+          //do something onCreateLabel
+        },
+        onPlaceLabel:    function(domElement, node) {
+          //do something onPlaceLabel
+        },
+        onBeforePlotNode:function(node) {
+          //do something onBeforePlotNode
+        },
+        onAfterPlotNode: function(node) {
+          //do something onAfterPlotNode
+        },
+        onBeforePlotLine:function(adj) {
+          //do something onBeforePlotLine
+        },
+        onAfterPlotLine: function(adj) {
+          //do something onAfterPlotLine
+        },
+        request:         false
+
+      });
+    (end code)
  */
 
 this.ST= (function() {
@@ -113,16 +271,6 @@ this.ST= (function() {
     
         Implements: Loader,
         
-        /*
-         Constructor: ST
-        
-         Creates a new ST instance.
-         
-         Parameters:
-        
-            canvas - A <Canvas> instance.
-            controller - a ST controller <http://blog.thejit.org/?p=8>
-        */  
         initialize: function(canvas, controller) {
             var innerController = {
                 onBeforeCompute: $empty,
@@ -136,66 +284,24 @@ this.ST= (function() {
                 onAfterPlotLine: $empty,
                 request:         false
             };
-            /*
-               Object: config
-            
-               <ST> global configuration object. Contains important properties to enable customization and proper behavior for the <ST>.
-            */
             
             var config= {
-                //Property: orientation
-                //Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_.
                 orientation: "left",
-                //Property: labelContainer
-                //The id for the label container. The label container should be a div dom element where label div dom elements will be injected. You have to put the label container div dom element explicitly on your page to run the <ST>.
                 labelContainer: canvas.id + '-label',
-                //Property: levelsToShow
-                //Depth of the plotted tree. The plotted tree will be pruned in order to fit with the specified depth. Useful when using the "request" method on the controller.
                 levelsToShow: 2,
-                //Property: subtreeOffset
-                //Separation offset between subtrees.
                 subtreeOffset: 8,
-                //Property: siblingOffset
-                //Separation offset between siblings.
                 siblingOffset: 5,
-                //Property: levelDistance
-                //Distance between tree levels
                 levelDistance: 30,
-                //Property: Node
-                //What kind of node to plot, built-in types are none|circle|square|triangle|star
-                //If _overridable_ is set to true, then these global values can be overriden by
-                //adding a similar _$nodeType_ object to the data property of your JSON tree|graph node.
                 Node: {
-                    //Property: overridable
-                    //Set to true if you want to override this global Node properties
-                    //by assigning values to special properties to a graph node.
                     overridable: false,
-                    //Property: type
-                    //type of node to plot (square|rectangle|ellipse|circle|none|etc)
                     type: 'rectangle',
-                    //Property: color
-                    //Node's default color
                     color: '#ccb',
-                    //Property: lineWidth
-                    //Stroke's default width
                     lineWidth: 1,
-                    //Property: height
-                    //Node height
                     height: 20,
-                    //Property: width
-                    //Node's width
                     width: 90,
-                    //Property: dim
-                    //An extra node's dimension that might be used by some rendering functions (squared, bezier, quadratic).
                     dim: 15,
-                    //Property: align
-                    //For variable width/height nodes. Possible values are left|right|center.
-                    align: "left"
+                    align: "center"
                 },
-                //Property: Edge
-                //What kind of edge to plot, built-ins are none|line|arrow|multi
-                //If _overridable_ is set to true, then these global values can be overriden by
-                //adding a similar _edgeType_ object to the data property of your JSON tree|graph adj.
                 Edge: {
                     overridable: false,
                     type: 'line',
@@ -203,14 +309,8 @@ this.ST= (function() {
                     dim: 15,
                     lineWidth: 1
                 },
-                //Property: duration
-                //Time for the animation.
                 duration: 700,
-                //Property: fps
-                //Animation frames per second.
                 fps: 25,
-                //Property: transition
-                //Transition for the animation.
                 transition: Trans.Quart.easeInOut
             };
             
@@ -231,7 +331,8 @@ this.ST= (function() {
         /*
          Method: plot
         
-         This method plots the tree. Note that, before plotting the tree, you have to call <compute> to properly computePositions.
+         Plots the tree. Usually this method is called right after computing nodes' positions.
+
         */  
         plot: function() { this.fx.plot(this.controller); },
     
@@ -239,7 +340,22 @@ this.ST= (function() {
         /*
          Method: switchPosition
         
-         Switches the tree orientation from vertical to horizontal or viceversa.
+         Switches the tree orientation.
+
+         Parameters:
+
+        pos - The new tree orientation. Possible values are "top", "left", "right" and "bottom".
+        onComplete - _optional_ This callback is called once the "switching" animation is complete.
+
+         Example:
+
+         (start code js)
+           st.switchPosition("right", {
+            onComplete: function() {
+              alert('completed!');
+            } 
+           });
+         (end code)
         */  
         switchPosition: function(pos, onComplete) {
           var Geom = this.geom, Plot = this.fx, that = this;
@@ -256,38 +372,28 @@ this.ST= (function() {
           }
         },
 
-        /*
-         Method: addNodeInPath
-        
-         Adds a node in path. The ST will be forced to show this node at all times.
-         
-        */
        addNodeInPath: function(id) {
            nodesInPath.push(id);
        },       
 
-        /*
-         Method: clearNodesInPath
-        
-         Clears all nodes in path. The clicked node will be the only focused node.
-         
-        */
        clearNodesInPath: function(id) {
            nodesInPath.length = 0;
        },
        
+         
+        
+       /*
+         Method: refresh
+        
+         Computes new nodes' positions and replots the tree.
+         
+       */
        refresh: function() {
            this.reposition();
            this.select((this.clickedNode && this.clickedNode.id) || this.root);
        },    
 
-        /*
-         Method: reposition
-        
-         An alias for computing new positions to _endPos_
-         
-        */
-        reposition: function() {
+       reposition: function() {
             Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
              this.geom.setRightLevelToShow(this.clickedNode, this.canvas);
             Graph.Util.eachNode(this.graph, function(n) {
@@ -315,11 +421,6 @@ this.ST= (function() {
             this.computePositions(node, $C(0, 0), prop);
         },
         
-        /*
-         Method: computePositions
-        
-         This method implements the core algorithm to calculate node positioning.
-        */  
         computePositions: function (node, initialPos, property, contracted) {
             var GUtil = Graph.Util, geom = this.geom,
             contracted = (arguments.length == 3) || contracted;
@@ -351,11 +452,6 @@ this.ST= (function() {
             }
         },
     
-        /*
-            Method: requestNodes
-            
-            If the controller has a request method, it asynchonously requests subtrees for the leaves of the tree.
-        */
           requestNodes: function(node, onComplete) {
             var handler = $merge(this.controller, onComplete), 
             lev = this.config.levelsToShow, GUtil = Graph.Util;
@@ -374,11 +470,6 @@ this.ST= (function() {
                 handler.onComplete();
           },
      
-         /*
-            Method: contract
-            
-            Contracts selected nodes.
-         */
           contract: function(onComplete, switched) {
             var orn  = this.config.orientation;
             var Geom = this.geom, Group = this.group;
@@ -388,11 +479,6 @@ this.ST= (function() {
             Group.contract(nodes, $merge(this.controller, onComplete));
           },
       
-         /*
-            Method: move
-            
-            Performs the animation of the translation of the tree.
-         */
          move: function(node, offset, onComplete) {
             this.compute('endPos', false);
             this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
@@ -400,22 +486,12 @@ this.ST= (function() {
          },
       
       
-        /*
-         Method: expand
-        
-         Determines which nodes to expand (and expands their subtrees).
-        */  
         expand: function (node, onComplete) {
             var nodeArray = getNodesToShow.call(this, node);
             this.group.expand(nodeArray, $merge(this.controller, onComplete));
         },
     
     
-        /*
-            Method: selectPath
-            
-            Sets a "selected" flag to nodes that are in the path.
-        */    
         selectPath: function(node) {
           var GUtil = Graph.Util, that = this;
           GUtil.eachNode(this.graph, function(n) { n.selected = false; }); 
@@ -443,12 +519,22 @@ this.ST= (function() {
         
            Parameters:
               subtree - A JSON Tree object.
-              method - _optional_ set this to _animate_ to animate the tree after adding the subtree. You can also set this parameter to _replot_ to just replot the subtree.
-              onComplete - An action to perform after the animation (if any).
+              method - Set this to "animate" to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+              onComplete - _optional_ An action to perform after the animation (if any).
     
            Returns:
         
            The transformed and appended subtree.
+
+           Example:
+
+           (start code js)
+             st.addSubtree(json, 'animate', {
+                onComplete: function() {
+                  alert('complete!');
+                }
+             });
+           (end code)
         */
         addSubtree: function(subtree, method, onComplete) {
             if(method == 'replot') {
@@ -465,9 +551,19 @@ this.ST= (function() {
         
            Parameters:
               id - The _id_ of the subtree to be removed.
-              removeRoot - Remove the root subtree or only its subnodes.
-              method - Set this to _animate_ to animate the tree after adding the subtree. You can also set this parameter to _replot_ to just replot the subtree.
-              onComplete - An action to perform after the animation (if any).
+              removeRoot - Remove the root of the subtree or only its subnodes.
+              method - Set this to "animate" to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+              onComplete - _optional_ An action to perform after the animation (if any).
+
+          Example:
+
+          (start code js)
+            st.removeSubtree('idOfSubtreeToBeRemoved', false, 'animate', {
+              onComplete: function() {
+                alert('complete!');
+              }
+            });
+          (end code)
     
         */
         removeSubtree: function(id, removeRoot, method, onComplete) {
@@ -485,7 +581,21 @@ this.ST= (function() {
         /*
            Method: select
         
-            Selects a sepecific node in the Spacetree.
+            Selects a sepecific node in the Spacetree without performing an animation. Useful when selecting 
+            nodes which are currently hidden or deep inside the tree.
+
+          Parameters:
+            id - The id of the node to select.
+            onComplete - _optional_ onComplete callback.
+
+          Example:
+          (start code js)
+            st.select('mynodeid', {
+              onComplete: function() {
+                alert('complete!');
+              }
+            });
+          (end code)
         */
         select: function(id, onComplete) {
             var group = this.group, geom = this.geom;
@@ -525,11 +635,23 @@ this.ST= (function() {
             
          Parameters:
         
-            ide - The label id. The label id is usually the same as the tree node id.
-            onComplete - A controller method to perform things when the animation completes.
+            id - A node id.
+            options - A group of options and callbacks such as
+
+            - _onComplete_ an object callback called when the animation finishes.
+
+        Example:
+
+        (start code js)
+          st.onClick('mynodeid', {
+            onComplete: function() {
+              alert('yay!');
+            }
+          });
+        (end code)
     
         */    
-      onClick: function (id, onComplete) {
+      onClick: function (id, options) {
         var canvas = this.canvas, that = this, Fx = this.fx, Util = Graph.Util, Geom = this.geom;
         var innerController = {
             onBeforeRequest: $empty,
@@ -537,7 +659,7 @@ this.ST= (function() {
             onBeforeMove: $empty,
             onBeforeExpand: $empty
         };
-        var complete = $merge(this.controller, innerController, onComplete);
+        var complete = $merge(this.controller, innerController, options);
         
         if(!this.busy) {
             this.busy= true;
@@ -575,10 +697,26 @@ this.ST= (function() {
     });
 
 })();
+
 /*
    Class: ST.Op
     
-     Performs operations on graphs. Inherits from <Graph.Op>
+   Performs advanced operations on trees and graphs.
+
+   Extends:
+
+   All <Graph.Op> methods
+
+   Access:
+
+   This instance can be accessed with the _op_ parameter of the st instance created.
+
+   Example:
+
+   (start code js)
+    var st = new ST(canvas, config);
+    st.op.morph //or can also call any other <Graph.Op> method
+   (end code)
 
 */
 ST.Op = new Class({
