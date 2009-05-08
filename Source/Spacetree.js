@@ -15,7 +15,7 @@
  *
  * Disclaimer:
  *
- * This visualization has been built from scratch, taking only the paper as inspiration, and only shares some features with the Spacetree.
+ * This visualization was built from scratch, taking only the paper as inspiration, and only shares some features with the Spacetree.
  *
  */
 
@@ -385,7 +385,7 @@ this.ST= (function() {
        /*
          Method: refresh
         
-         Computes new nodes' positions and replots the tree.
+         Computes nodes' positions and replots the tree.
          
        */
        refresh: function() {
@@ -405,7 +405,8 @@ this.ST= (function() {
         /*
          Method: compute
         
-         Calculates positions from root node.
+         Computes nodes' positions.
+
         */  
         compute: function (property, computeLevels) {
             var prop = property || 'startPos';
@@ -518,14 +519,10 @@ this.ST= (function() {
             Adds a subtree, performing optionally an animation.
         
            Parameters:
-              subtree - A JSON Tree object.
-              method - Set this to "animate" to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+              subtree - A JSON Tree object. See also <Loader.loadJSON>.
+              method - Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
               onComplete - _optional_ An action to perform after the animation (if any).
     
-           Returns:
-        
-           The transformed and appended subtree.
-
            Example:
 
            (start code js)
@@ -552,7 +549,7 @@ this.ST= (function() {
            Parameters:
               id - The _id_ of the subtree to be removed.
               removeRoot - Remove the root of the subtree or only its subnodes.
-              method - Set this to "animate" to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+              method - Set this to "animate" if you want to animate the tree after removing the subtree. You can also set this parameter to "replot" to just replot the subtree.
               onComplete - _optional_ An action to perform after the animation (if any).
 
           Example:
@@ -728,7 +725,6 @@ ST.Op = new Class({
 });
 
 /*
-   Class: ST.Group
     
      Performs operations on group of nodes.
 
@@ -746,7 +742,6 @@ ST.Group = new Class({
     },
     
     /*
-       Method: requestNodes
     
        Calls the request method on the controller to request a subtree for each node. 
     */
@@ -773,7 +768,6 @@ ST.Group = new Class({
     },
     
     /*
-       Method: hide
     
        Collapses group of nodes. 
     */
@@ -821,7 +815,6 @@ ST.Group = new Class({
     
 
     /*
-       Method: expand
     
        Expands group of nodes. 
     */
@@ -859,7 +852,6 @@ ST.Group = new Class({
     },
     
     /*
-       Method: getNodesWithChildren
     
        Filters an array of nodes leaving only nodes with children.
     */
@@ -923,7 +915,19 @@ ST.Group = new Class({
 /*
    Class: ST.Geom
 
-    Performs geometrical computations like calculating bounding boxes, a subtree base size, etc.
+    Performs low level geometrical computations.
+
+   Access:
+
+   This instance can be accessed with the _geom_ parameter of the st instance created.
+
+   Example:
+
+   (start code js)
+    var st = new ST(canvas, config);
+    st.geom.translate //or can also call any other <ST.Geom> method
+   (end code)
+
 */
 
 ST.Geom = new Class({
@@ -938,7 +942,18 @@ ST.Geom = new Class({
     /*
        Method: translate
        
-       Applys a translation to the tree.
+       Applies a translation to the tree.
+
+       Parameters:
+
+       pos - A <Complex> number specifying translation vector.
+       prop - A <Graph.Node> position property ('pos', 'startPos' or 'endPos').
+
+       Example:
+
+       (start code js)
+         st.geom.translate(new Complex(300, 100), 'endPos');
+       (end code)
     */  
     translate: function(pos, prop) {
         prop = $splat(prop);
@@ -948,9 +963,9 @@ ST.Geom = new Class({
     },
 
     /*
-       Method: switchOrientation
-       
        Changes the tree current orientation to the one specified.
+
+       You should usually use <ST.switchPosition> instead.
     */  
     switchOrientation: function() {
         var args = arguments;
@@ -963,8 +978,6 @@ ST.Geom = new Class({
     },
 
     /*
-       Method: dispatch
-       
        Makes a value dispatch according to the current layout
        Works like a CSS property, either _top-right-bottom-left_ or _top|bottom - left|right_.
      */
@@ -984,8 +997,6 @@ ST.Geom = new Class({
     },
 
     /*
-       Method: getSize
-       
        Returns label height or with, depending on the tree current orientation.
     */  
     getSize: function(n, invert) {
@@ -1000,20 +1011,6 @@ ST.Geom = new Class({
     },
     
     /*
-       Method: translate
-       
-       Applys a translation to the tree.
-    */  
-    translate: function(pos, prop) {
-        prop = $splat(prop);
-        Graph.Util.eachNode(this.viz.graph, function(elem) {
-            $each(prop, function(p) { elem[p].$add(pos); });
-        });
-    },
-    
-    /*
-       Method: getMaxSiblingWidthAndHeight
-       
        Calculates the max width and height for a tree's level.
     */  
     getMaxSiblingWidthAndHeight: function(node) {
@@ -1041,7 +1038,11 @@ ST.Geom = new Class({
     /*
        Method: getBoundingBox
        
-       Calculates a tree bounding box. TODO: refactor
+       Calculates a tree bounding box for a given node. TODO: refactor
+
+       Parameters:
+
+       node - A <Graph.Node>, the root of the subtree to calculate its bounding box.
     */  
     getBoundingBox: function (node) {
         var dim = this.node, pos = node.pos, siblingOffset = this.config.siblingOffset;
@@ -1136,8 +1137,6 @@ ST.Geom = new Class({
      },
 
     /*
-       Method: getBaseSize
-       
        Calculates a subtree base size.
     */  
     getBaseSize: function(node, contracted, type) {
@@ -1155,8 +1154,6 @@ ST.Geom = new Class({
     },
 
     /*
-       Method: getTreeBaseSize
-       
        Calculates a subtree base size. This is an utility function used by _getBaseSize_
     */  
     getTreeBaseSize: function(node, level, leaf) {
@@ -1174,6 +1171,15 @@ ST.Geom = new Class({
        Method: getEdge
        
        Returns a Complex instance with the begin or end position of the edge to be plotted.
+
+       Parameters:
+
+       node - A <Graph.Node> that is connected to this edge.
+       type - Returns the begin or end edge position. Possible values are 'begin' or 'end'.
+
+       Returns:
+
+       A <Complex> number specifying the begin or end position.
     */  
     getEdge: function(node, type) {
         var $C = function(a, b) { 
@@ -1213,8 +1219,6 @@ ST.Geom = new Class({
     },
 
     /*
-       Method: getScaledTreePosition
-       
        Adjusts the tree position due to canvas scaling or translation.
     */  
     getScaledTreePosition: function(node, scale) {
@@ -1242,7 +1246,13 @@ ST.Geom = new Class({
     /*
        Method: treeFitsInCanvas
        
-       Returns a Boolean if the current tree fits in canvas.
+       Returns a Boolean if the current subtree fits in canvas.
+
+       Parameters:
+
+       node - A <Graph.Node> which is the current root of the subtree.
+       canvas - The <Canvas> object.
+       level - The depth of the subtree to be considered.
     */  
     treeFitsInCanvas: function(node, canvas, level) {
         var csize = canvas.getSize(node);
@@ -1254,8 +1264,6 @@ ST.Geom = new Class({
     },
     
     /*
-       Method: getFirstPos
-       
        Calculates the _first_ children position given a node position.
     */  
     getFirstPos: function(node, initialPos, baseHeight) {
@@ -1280,8 +1288,6 @@ ST.Geom = new Class({
     },
     
     /*
-       Method: nextPosition
-       
        Calculates a siblings node position given a node position.
     */  
     nextPosition: function(firstPos, siblingOffset) {
@@ -1297,8 +1303,6 @@ ST.Geom = new Class({
     },
     
     /*
-       Method: setRightLevelToShow
-       
        Hides levels of the tree until it properly fits in canvas.
     */  
     setRightLevelToShow: function(node, canvas) {
@@ -1317,8 +1321,6 @@ ST.Geom = new Class({
     },
     
     /*
-       Method: getRightLevelToShow
-       
        Returns the right level to show for the current tree in order to fit in canvas.
     */  
     getRightLevelToShow: function(node, canvas) {
@@ -1332,7 +1334,23 @@ ST.Geom = new Class({
 /*
    Object: ST.Plot
     
-     Performs plotting operations. Inherits from <Graph.Plot>
+   Performs plotting operations.
+
+   Extends:
+
+   All <Graph.Plot> methods
+
+   Access:
+
+   This instance can be accessed with the _fx_ parameter of the st instance created.
+
+   Example:
+
+   (start code js)
+    var st = new ST(canvas, config);
+    st.fx.placeLabel //or can also call any other <ST.Plot> method
+   (end code)
+
 
 */
 ST.Plot = new Class({
@@ -1350,8 +1368,6 @@ ST.Plot = new Class({
     },
     
     /*
-       Method: plotSubtree
-    
        Plots a subtree from the spacetree.
     */
     plotSubtree: function(node, opt, scale) {
@@ -1368,8 +1384,6 @@ ST.Plot = new Class({
         if(scale >= 0) node.drawn = true;
     },
     /*
-       Method: plotTree
-    
        Plots a Subtree.
     */
     plotTree: function(node, plotLabel, opt) {
@@ -1489,6 +1503,25 @@ ST.Plot = new Class({
     }
 });
 
+/*
+  Class: ST.Plot.NodeTypes
+
+  Here are implemented all kinds of node rendering functions. 
+  Rendering functions implemented are 'none', 'circle', 'ellipse', 'rectangle' and 'square'.
+
+  You can add new Node types by implementing a new method in this class
+
+  Example:
+
+  (start code js)
+    ST.Plot.NodeTypes.implement({
+      'newnodetypename': function(node, canvas) {
+        //Render my node here.
+      }
+    });
+  (end code)
+
+*/
 ST.Plot.NodeTypes = new Class({
     'none': function() {},
     
@@ -1535,6 +1568,25 @@ ST.Plot.NodeTypes = new Class({
     }
 });
 
+/*
+  Class: ST.Plot.EdgeTypes
+
+  Here are implemented all kinds of edge rendering functions. 
+  Rendering functions implemented are 'none', 'line', 'quadratic:begin', 'quadratic:end', 'bezier' and 'arrow'.
+
+  You can add new Edge types by implementing a new method in this class
+
+  Example:
+
+  (start code js)
+    ST.Plot.EdgeTypes.implement({
+      'newedgetypename': function(adj, canvas) {
+        //Render my edge here.
+      }
+    });
+  (end code)
+
+*/
 ST.Plot.EdgeTypes = new Class({
     'none': function() {},
     

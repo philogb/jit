@@ -1,22 +1,32 @@
 /*
  * File: Treemap.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.1.0a
+ * Implements the <TM> class and other derived classes.
+ *
+ * Description:
+ *
+ * A Treemap is an information visualization technique, proven very useful when displaying large hierarchical structures on a constrained space. The idea behind a Treemap is to describe hierarchical relations as 'containment'. That means that if node B is child of node A, then B 'is contained' in A.
+ *
+ * Inspired by:
+ *
+ * Squarified Treemaps (Mark Bruls, Kees Huizing, and Jarke J. van Wijk) 
+ *
+ * <http://www.win.tue.nl/~vanwijk/stm.pdf>
+ *
+ * Tree visualization with tree-maps: 2-d space-filling approach (Ben Shneiderman)
+ *
+ * <http://hcil.cs.umd.edu/trs/91-03/91-03.html>
+ *
+ * Disclaimer:
+ *
+ * This visualization was built from scratch, taking only these papers as inspiration, and only shares some features with the Treemap papers mentioned above.
  *
  */
 
 /*
    Object: TreeUtil
 
-   An object containing some common tree manipulation methods.
+   Some common tree manipulation methods.
 */
 this.TreeUtil = {
 
@@ -27,9 +37,9 @@ this.TreeUtil = {
 	
 	   Parameters:
 	
-	      tree - A JSON tree object. <http://blog.thejit.org>
+          tree - A JSON tree object. For more information please see <Loader.loadJSON>.
 	      maxLevel - An integer specifying the maximum level allowed for this tree. All nodes having depth greater than max level will be deleted.
-	
+
 	*/
 	prune: function(tree, maxLevel) {
 		this.each(tree, function(elem, i) {
@@ -43,12 +53,16 @@ this.TreeUtil = {
 	/*
 	   Method: getParent
 	
-	   Returns the parent node of the node having _id_.
+	   Returns the parent node of the node having _id_ as id.
 	
 	   Parameters:
 	
-	      tree - A JSON tree object. <http://blog.thejit.org>
+	      tree - A JSON tree object. See also <Loader.loadJSON>.
 	      id - The _id_ of the child node whose parent will be returned.
+
+      Returns:
+
+          A tree JSON node if any, or false otherwise.
 	
 	*/
 	getParent: function(tree, id) {
@@ -74,12 +88,13 @@ this.TreeUtil = {
 	
 	   Parameters:
 	
-		  tree - A JSON tree object. <http://blog.thejit.org>
+		  tree - A JSON tree object. See also <Loader.loadJSON>.
 	      id - A node *unique* identifier.
 	
 	   Returns:
 	
 	      A subtree having a root node matching the given id. Returns null if no subtree matching the id is found.
+
 	*/
 	getSubtree: function(tree, id) {
 		if(tree.id == id) return tree;
@@ -97,11 +112,16 @@ this.TreeUtil = {
     
        Parameters:
     
-          node - A tree node (which is also a JSON tree object of course). <http://blog.thejit.org>
+          node - A JSON tree node. See also <Loader.loadJSON>.
+          maxLevel - _optional_ A subtree's max level.
     
        Returns:
     
-       An array having objects with two properties. The _node_ property contains the leaf node. The _level_ property specifies the depth of the node.
+       An array having objects with two properties. 
+       
+        - The _node_ property contains the leaf node. 
+        - The _level_ property specifies the depth of the node.
+
     */
     getLeaves: function (node, maxLevel) {
         var leaves = [], levelsToShow = maxLevel || Number.MAX_VALUE;
@@ -121,15 +141,21 @@ this.TreeUtil = {
 	/*
 	   Method: eachLevel
 	
-		Iterates on tree nodes which relative depth is less or equal than a specified level.
+		Iterates on tree nodes with relative depth less or equal than a specified level.
 	
 	   Parameters:
 	
-	      tree - A JSON tree or subtree. <http://blog.thejit.org>
+	      tree - A JSON tree or subtree. See also <Loader.loadJSON>.
 	      initLevel - An integer specifying the initial relative level. Usually zero.
 	      toLevel - An integer specifying a top level. This method will iterate only through nodes with depth less than or equal this number.
 	      action - A function that receives a node and an integer specifying the actual level of the node.
 	      	
+      Example:
+     (start code js)
+       TreeUtil.eachLevel(tree, 0, 3, function(node, depth) {
+          alert(node.name + ' ' + depth);
+       });
+     (end code)
 	*/
 	eachLevel: function(tree, initLevel, toLevel, action) {
 		if(initLevel <= toLevel) {
@@ -147,8 +173,15 @@ this.TreeUtil = {
 	
 	   Parameters:
 	
-	      tree - A JSON tree or subtree. <http://blog.thejit.org>
+	      tree - A JSON tree or subtree. See also <Loader.loadJSON>.
 	      action - A function that receives a node.
+
+      Example:
+      (start code js)
+        TreeUtil.each(tree, function(node) {
+          alert(node.name);
+        });
+      (end code)
 	      	
 	*/
 	each: function(tree, action) {
@@ -158,14 +191,30 @@ this.TreeUtil = {
     /*
        Method: loadSubtrees
     
-        Appends subtrees to leaves by requesting new subtrees.
-        with the controller.request method.
+        Appends subtrees to leaves by requesting new subtrees
+        with the _request_ method.
     
        Parameters:
     
-          tree - A JSON tree or subtree. <http://blog.thejit.org>
-          controller - A controller.
-            
+          tree - A JSON tree node. <Loader.loadJSON>.
+          controller - An object that implements a request method.
+      
+       Example:
+        (start code js)
+          TreeUtil.loadSubtrees(leafNode, {
+            request: function(nodeId, level, onComplete) {
+              //Pseudo-code to make an ajax request for a new subtree
+              // that has as root id _nodeId_ and depth _level_ ...
+              Ajax.request({
+                'url': 'http://subtreerequesturl/',
+                
+                onSuccess: function(json) {
+                  onComplete.onComplete(nodeId, json);
+                }
+              });
+            }
+          });
+        (end code)
     */
     loadSubtrees: function(tree, controller) {
         var maxLevel = controller.request && controller.levelsToShow;
@@ -192,7 +241,114 @@ this.TreeUtil = {
 /*
    Object: TM
 
-	Abstract Treemap class. Squarified and Slice and Dice Treemaps will extend this class.
+	Abstract Treemap object.
+
+   Implemented By:
+    
+    <TM.Squarified>, <TM.Strip> and <TM.SliceAndDice>.
+
+    Description:
+    
+    Implements layout and configuration options inherited by <TM.Squarified>, <TM.Strip> and <TM.SliceAndDice>.
+
+    All Treemap constructors take the same configuration object as parameter.
+
+    Two special _data_ keys are read from the JSON tree structure loaded by <Loader.loadJSON> to calculate 
+    node's color and dimensions. These properties are $area (for nodes dimensions) and $color. Both of these properties are floats.
+
+    This means that the tree structure defined in <Loader.loadJSON> should now look more like this
+
+    (start code js)
+        var json = {  
+            "id": "aUniqueIdentifier",  
+            "name": "usually a nodes name",  
+            "data": {
+                "$area": 33, //some float value
+                "$color": 36, //-optional- some float value
+                "some key": "some value",
+                "some other key": "some other value"
+             },  
+            "children": [ 'other nodes or empty' ]  
+        };  
+    (end code)
+
+    If you want to know more about JSON tree structures and the _data_ property please read <Loader.loadJSON>.
+
+    Configuration:
+
+    *General*
+
+    - _rootId_ The id of the div container where the Treemap will be injected. Default's 'infovis'.
+    - _orientation_ For <TM.Strip> and <TM.SliceAndDice> only. The layout algorithm orientation. Possible values are 'h' or 'v'.
+    - _levelsToShow_ Max depth of the plotted tree. Useful when using the request method.
+
+    *Nodes*
+    
+    There are two kinds of Treemap nodes.
+
+    (see treemapnode.png)
+
+    Inner nodes are nodes having children, like _Pearl Jam_.
+    
+    These nodes are represented by three div elements. A _content_ element, a _head_ element (where the title goes) and a _body_ element, where the children are laid out.
+    
+    (start code xml)
+    <div class="content">
+      <div class="head">Pearl Jam</div>
+      <div class="body">...other nodes here...</div>
+    </div>
+    (end code)
+
+      Leaves are optionally colored nodes laying at the "bottom" of the tree. For example, _Yield_, _Vs._ and _Riot Act_ are leaves.
+
+    These nodes are represented by two div elements. A _content_ element and a wrapped _leaf_ element
+
+    (start code xml)
+    <div class="content">
+      <div class="leaf">Yield</div>
+    </div>
+    (end code)
+
+    There are some configuration properties regarding Treemap nodes
+
+    - _titleHeight_ The height of the title (_head_) div container. Default's 13.
+    - _offset_ The separation offset between the _content_ div element and its contained div(s). Default's 4.
+
+    *Color*
+
+    _Color_ is an object containing as properties
+
+    - _allow_ If *true*, the algorithm will check for the JSON node data _$color_ property to add some color to the Treemap leaves. 
+    This color is calculated by interpolating a node's $color value range with a real RGB color range. 
+    By specifying min|maxValues for the $color property and min|maxColorValues for the RGB counterparts, the visualization is able to 
+    interpolate color values and assign a proper color to the leaf node. Default's *false*.
+    - _minValue_ The minimum value expected for the $color value property. Used for interpolating. Default's -100.
+    - _maxValue_ The maximum value expected for the $color value property. Used for interpolating. Default's 100.
+    - _minColorValue_ A three-element RGB array defining the color to be assigned to the _$color_ having _minValue_ as value. Default's [255, 0, 50].
+    - _maxColorValue_ A three-element RGB array defining the color to be assigned to the _$color_ having _maxValue_ as value. Default's [0, 255, 50].
+
+    *Controller options*
+
+    You can also implement controller functions inside the configuration object. These functions are
+    
+    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
+    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
+    - _onCreateElement(content, node, isLeaf, elem1, elem2)_ This method is called on each newly created node. 
+    
+    Parameters:
+      content - The div wrapper element with _content_ className.
+      node - The corresponding JSON tree node (See also <Loader.loadJSON>).
+      isLeaf - Whether is a leaf or inner node. If the node's an inner tree node, elem1 and elem2 will become the _head_ and _body_ div elements respectively. 
+      If the node's a _leaf_, then elem1 will become the div leaf element.
+    
+    - _onDestroyElement(content, node, isLeaf, elem1, elem2)_ This method is called before collecting each node. Takes the same parameters as onCreateElement.
+    - _request(nodeId, level, onComplete)_ This method is used for buffering information into the visualization. When clicking on an empty node,
+    the visualization will make a request for this node's subtrees, specifying a given level for this subtree (defined by _levelsToShow_). Once the request is completed, the _onComplete_ 
+object should be called with the given result.
+
+    See also <TM.Squarified>, <TM.SliceAndDice> and <TM.Strip>.
+
+
 */
 this.TM = {
 
@@ -212,102 +368,34 @@ this.TM = {
 	innerController: {
 			onBeforeCompute:  $empty,
 			onAfterCompute:   $empty,
-			onCreateLabel:    $empty,
-			onPlaceLabel:     $empty,
 			onComplete:       $empty,
-			onBeforePlotLine: $empty,
-			onAfterPlotLine:  $empty,
             onCreateElement:  $empty,
             onDestroyElement: $empty,
 			request:          false
 		},
 
-		/*
-		   Object: Config
-		
-		   Treemap configuration. 
-		   Contains properties to enable customization and proper 
-		   behavior of treemaps.
-		*/
 		config: {
-			//Property: tips
-			//initial layout orientation "v" or "h"
-			//for vertical/horizontal.
 			orientation: "h",
-			//Property: titleHeight
-			//The height of the title. Set this to zero and remove 
-			//all styles for node classes if you just want to show leaf nodes.
 			titleHeight: 13,
-			//Property: rootId
-			//The id of the main container box. That is, the div that 
-			//will contain this visualization. This div has to be 
-			//explicitly added on your page.
 			rootId: 'infovis',
-			//Property: offset
-			//Offset distance between nodes. Works better with 
-			//even numbers. Set this to zero if you only want to show leaf nodes.
 			offset:4,
-			//Property: levelsToShow
-			//Depth of the plotted tree. The plotted tree will be pruned 
-			//in order to fit with the specified depth. Useful when 
-			//using the "request" method on the controller.
 			levelsToShow: 3,
-			//Property: Color
-			//Configuration object to add some color to the leaves.
 			Color: {
-				//Property: allow
-				//Set this to true if you want to add color to 
-				//the nodes. Color will be based upon the second 
-				//"data" JSON object passed to the node. If your node 
-				//has a "data" property which has at least two key-value 
-				//objects, color will be based on your second key-value object value.
 				allow: false,
-				//Property: minValue
-				//We need to know the minimum value of the property which 
-				//will be taken in account to color the leaves.
 				minValue: -100,
-				//Property: maxValue
-				//We need to know the maximum value of the property which 
-				//will be taken in account to color the leaves.
 				maxValue: 100,
-				//Property: minColorValue
-				//The color to be applied when displaying a min value (RGB format).
 				minColorValue: [255, 0, 50],
-				//Property: maxColorValue
-				//The color to be applied when displaying a max value (RGB format).
 				maxColorValue: [0, 255, 50]
 			}
 		},
 	
 
-	/*
-	   Method: initialize
-	
-		<TM.Squarified> and <TM.SliceAndDice> constructor.
-	
-	   Parameters:
-	
-	      controller - A treemap controller. <http://blog.thejit.org/?p=8>
-	   
-	   Returns:
-	
-	   	  A new <TM.Squarified> or <TM.SliceAndDice> instance.
- 
-	*/
 	initialize: function(controller) {
-		//Property: tree
-		//The JSON tree. <http://blog.thejit.org>
 		this.tree = null;
-		//Property: showSubtree
-		//The displayed JSON subtree. <http://blog.thejit.org>
 		this.shownTree = null;
-		//Property: controller
-		//A treemap controller <http://blog.thejit.org/?p=8>
 		this.controller = this.config = $merge(this.config, 
 										this.innerController, 
 										controller);
-		//Property: rootId
-		//Id of the Treemap container
 		this.rootId = this.config.rootId;
 		this.layout.orientation = this.config.orientation;
         
@@ -329,6 +417,10 @@ this.TM = {
        Method: each
     
         Traverses head and leaf nodes applying a given function
+
+      Parameters:
+      
+        f - A function that takes as parameters the same as the onCreateElement and onDestroyElement methods described in <TM>.
     */
     each: function(f) {
         var sl = Array.prototype.slice;
@@ -347,7 +439,7 @@ this.TM = {
     },
 
 	/*
-	   Method: toStyle
+	   toStyle
 	
 		Transforms a JSON into a CSS style string.
 	*/
@@ -358,7 +450,7 @@ this.TM = {
 	},
 
 	/*
-	   Method: leaf
+	   leaf
 	
 		Returns a boolean value specifying if the node is a tree leaf or not.
 	
@@ -380,13 +472,40 @@ this.TM = {
 	
 		Constructs the proper DOM layout from a json node.
 		
-		If this node is a leaf, then it creates a _leaf_ div dom element by calling <TM.newLeaf>. Otherwise it creates a content div dom element that contains <TM.newHead> and <TM.newBody> elements.
-	
+        If the node's an _inner node_, 
+        this method calls <TM.contentBox>, <TM.bodyBox> and <TM.leafBox> 
+        to create the following HTML structure
+        
+        (start code xml)
+        <div class="content">
+          <div class="head">[Node name]</div>
+          <div class="body">[Node's children]</div>
+        </div>
+        (end code)
+
+        If the node's a leaf node, it creates the following structure 
+        by calling <TM.contentBox>, <TM.leafBox>
+
+        (start code xml)
+        <div class="content">
+          <div class="leaf">[Node name]</div>
+        </div>
+        (end code)
+
+
 	   Parameters:
 
-		  injectTo - A DOM element where this new DOM element will be injected.	
-	      json - A JSON subtree. <http://blog.thejit.org>
+	      json - A JSON subtree. See also <Loader.loadJSON>. 
 		  coord - A coordinates object specifying width, height, left and top style properties.
+          html - html to inject into the _body_ element if the node is an inner Tree node.
+
+      Returns:
+
+          The HTML structure described above.
+
+      See also:
+
+        <TM>, <TM.contentBox>, <TM.bodyBox>, <TM.headBox>, <TM.leafBox>.
 
 	*/
 	createBox: function(json, coord, html) {
@@ -400,7 +519,21 @@ this.TM = {
 	/*
 	   Method: plot
 	
-		Plots a Treemap
+		Renders the Treemap.
+
+      Parameters:
+
+        json - A JSON tree structure preprocessed by some Treemap layout algorithm.
+
+      Returns:
+
+        The HTML to inject to the main visualization container.
+
+      See also:
+
+        <TM.createBox>.
+
+
 	*/
 	plot: function(json) {
 		var coord = json.coord, html = "";
@@ -422,12 +555,16 @@ this.TM = {
 	
 	   Parameters:
 	
-	      json - A JSON subtree. <http://blog.thejit.org>
-	      coord - width and height base coordinates
+	      json - A JSON subtree. See also <Loader.loadJSON>.
+	      coord - width and height base coordinate object.
 
 	   Returns:
 	
 	   	  A new _head_ div dom element that has _head_ as class name.
+
+        See also:
+
+          <TM.createBox>.
  
 	*/
 	headBox: function(json, coord) {
@@ -449,10 +586,15 @@ this.TM = {
 	   Parameters:
 	
 	      html - html that should be contained in the body html.
+	      coord - width and height base coordinate object.
 
 	   Returns:
 	
 	   	  A new _body_ div dom element that has _body_ as class name.
+ 
+        See also:
+
+          <TM.createBox>.
  
 	*/
 	bodyBox: function(html, coord) {
@@ -478,13 +620,17 @@ this.TM = {
 	
 	   Parameters:
 	
-	      json - A JSON node. <http://blog.thejit.org>
+	      json - A JSON node. See also <Loader.loadJSON>. 
 	      coord - An object containing width, height, left and top coordinates.
 	      html - input html wrapped by this tag.
 	      
 	   Returns:
 	
 	   	  A new _content_ div dom element that has _content_ as class name.
+
+       See also:
+
+          <TM.createBox>.
  
 	*/
 	contentBox: function(json, coord, html) {
@@ -502,13 +648,18 @@ this.TM = {
 	
 	   Parameters:
 	
-	      json - A JSON subtree. <http://blog.thejit.org>
-	      coord - base with and height coordinates
+	      json - A JSON subtree. See also <Loader.loadJSON>. 
+	      coord - base with and height coordinate object.
 	      
 	   Returns:
 	
 	   	  A new _leaf_ div dom element having _leaf_ as class name.
  
+       See also:
+
+          <TM.createBox>.
+ 
+
 	*/
 	leafBox: function(json, coord) {
 		var config = this.config;
@@ -531,11 +682,46 @@ this.TM = {
 	/*
 	   Method: setColor
 	
-		A JSON tree node has usually a data property containing an Array of key-value objects. This method takes the second key-value object from that array, returning a string specifying a color relative to the value property of that object.
+	      Calculates an hexa color string based on the _$color_ data node property.	
 	
+          This method is called by <TM.leafBox> to assign an hexadecimal color to each leaf node.
+          
+          This color is calculated by making a linear interpolation between _$color_ max and min values and 
+          RGB max and min values so that
+
+          > hex = (maxColorValue - minColorValue) / (maxValue - minValue) * (x - minValue) + minColorValue
+
+          where _x_ range is [minValue, maxValue] and 
+
+          - _minValue_
+          - _maxValue_
+          - _minColorValue_
+          - _maxColorValue_
+
+        are defined in the <TM> configuration object.
+
+        This method is called by <TM.leafBox> iif _Color.allow_ is setted to _true_.
+
+        Sometimes linear interpolation for coloring is just not enough. In that case you can re-implement this 
+        method so that it fits your coloring needs.
+
+        Some people might find useful to implement their own coloring interpolation method and to assign the resulting hex string 
+        to the _$color_ property. In that case we could re-implement the <TM.setColor> method like this
+
+        (start code js)
+          //TM.Strip, TM.SliceAndDice also work
+          TM.Squarified.implement({
+            'setColor': function(json) {
+              return json.data.$color;
+            }
+          });
+        (end code)
+
+      So that it returns the previously assigned hex string.
+
 	   Parameters:
 	
-	      json - A JSON subtree. <http://blog.thejit.org>
+	      json - A JSON tree node.
 
 	   Returns:
 	
@@ -565,7 +751,7 @@ this.TM = {
 	
 	   Parameters:
 	
-	      elem - A JSON subtree. <http://blog.thejit.org>
+	      elem - A JSON Tree node. See also <Loader.loadJSON>. 
 	*/
 	enter: function(elem) {
 		this.view(elem.parentNode.id);
@@ -574,7 +760,7 @@ this.TM = {
 	/*
 	   Method: out
 	
-		Takes the _parent_ node of the currently shown subtree and performs the layout.
+		Sets the _parent_ node of the currently shown subtree as root and performs the layout.
 	
 	*/
 	out: function() {
@@ -589,7 +775,7 @@ this.TM = {
 	/*
 	   Method: view
 	
-		Sets the root of the treemap to the specified Id
+		Sets the root of the treemap to the specified node id and performs the layout.
 	
 	   Parameters:
 	
@@ -616,11 +802,12 @@ this.TM = {
 	/*
 	   Method: resetPath
 	
-		Removes the _.in-path_ className for all tree dom elements and then adds this className to all ancestors of the given subtree.
+       Sets an 'in-path' className for _leaf_ and _head_ elements which belong to the path between the given tree node 
+       and the visualization's root node.
 	
 	   Parameters:
 	
-	      tree - A tree node (which is also a JSON tree object of course). <http://blog.thejit.org>
+	      tree - A JSON  tree node. See also <Loader.loadJSON>.
 	*/
 	resetPath: function(tree) {
 		var root = this.rootId, previous = this.resetPath.previous;
@@ -654,10 +841,10 @@ this.TM = {
     /*
        Method: initializeElements
     
-       Traverses the tree applying the onCreateElement method.
+       Traverses the DOM tree applying the onCreateElement method.
 
        The onCreateElement controller method should attach events and add some behavior to the DOM element
-       node created. By default, the Treemap wont add any event to its elements.
+       node created. *By default, the Treemap wont add any event to its elements.*
     */
     initializeElements: function() {
       if(this.controller.onCreateElement != $empty) {
@@ -674,7 +861,7 @@ this.TM = {
        Traverses the tree applying the onDestroyElement method.
 
        The onDestroyElement controller method should detach events and garbage collect the element.
-       By default, the Treemap adds some garbage collect facilities for IE, but these are far from complete.
+       *By default, the Treemap adds some garbage collect facilities for IE.*
     */
     destroyElements: function() {
       if(this.controller.onDestroyElement != $empty) {
@@ -716,17 +903,53 @@ this.TM = {
 
 	A JavaScript implementation of the Slice and Dice Treemap algorithm.
 
-	Go to <http://blog.thejit.org> to know what kind of JSON structure feeds this object.
-	
-	Go to <http://blog.thejit.org/?p=8> to know what kind of controller this class accepts.
-	
-	Refer to the <Config> object to know what properties can be modified in order to customize this object. 
+	The <TM.SliceAndDice> constructor takes an _optional_ configuration object described in <TM>.
 
-	The simplest way to create and layout a slice and dice treemap from a JSON object is:
-	
-	(start code)
+    This visualization (as all other Treemap visualizations) is fed with JSON Tree structures.
 
-	var tm = new TM.SliceAndDice();
+    The _$area_ node data key is required for calculating rectangles dimensions.
+
+    The _$color_ node data key is required if _Color_ _allow_ is *true* and is used for calculating 
+    leaves colors.
+
+    Extends:
+    <TM>
+
+    Example:
+
+
+	Here's a way of instanciating the <TM.SliceAndDice> will all its _optional_ configuration features
+	
+	(start code js)
+
+	var tm = new TM.SliceAndDice({
+  		orientation: "h",
+		titleHeight: 13,
+		rootId: 'infovis',
+		offset:4,
+		levelsToShow: 3,
+		Color: {
+			allow: false,
+			minValue: -100,
+			maxValue: 100,
+			minColorValue: [255, 0, 50],
+			maxColorValue: [0, 255, 50]
+          }
+  
+          onBeforeCompute:  function(node) {
+            //Some stuff on before compute...
+          },
+          onAfterCompute:   function() {
+            //Some stuff on after compute...
+          },
+          onCreateElement:  function(content, node, isLeaf, head, body) {
+            //Some stuff onCreateElement
+          },
+          onDestroyElement: function(content, node, isLeaf, head, body) {
+            //Some stuff onDestroyElement
+          },
+    	  request:          false
+    });
 	tm.loadJSON(json);
 
 	(end code)
@@ -741,7 +964,7 @@ TM.SliceAndDice = new Class({
 	
 	   Parameters:
 	
-	      json - A JSON subtree. <http://blog.thejit.org>
+	      json - A JSON Tree. See also <Loader.loadJSON>. 
 	*/
 	loadJSON: function (json) {
 		this.controller.onBeforeCompute(json);
@@ -775,8 +998,8 @@ TM.SliceAndDice = new Class({
 	   Parameters:
 
 	      par - The parent node of the json subtree.	
-	      json - A JSON subtree. <http://blog.thejit.org>
-	      orientation - The current <Layout> orientation. This value is switched recursively.
+	      json - A JSON subtree. See also <Loader.loadJSON>.
+	      orientation - The current orientation. This value is switched recursively.
 	*/
 	compute: function(par, json, orientation) {
 		var config = this.config, 
@@ -824,7 +1047,11 @@ TM.SliceAndDice = new Class({
    Class: TM.Area
 
 	Abstract Treemap class containing methods that are common to
-	 aspect ratio related algorithms.
+	 aspect ratio related algorithms such as <TM.Squarified> and <TM.Strip>.
+
+    Implemented by:
+
+    <TM.Squarified>, <TM.Strip>
 */
 TM.Area = new Class({
 
@@ -835,7 +1062,7 @@ TM.Area = new Class({
 	
 	   Parameters:
 	
-	      json - A JSON subtree. <http://blog.thejit.org>
+	      json - A JSON tree. See also <Loader.loadJSON>.
 	*/
 	loadJSON: function (json) {
 		this.controller.onBeforeCompute(json);
@@ -868,13 +1095,13 @@ TM.Area = new Class({
 	/*
 	   Method: computeDim
 	
-		Computes the dimensions and positions of a group of nodes
+		Computes dimensions and positions of a group of nodes
 		according to a custom layout row condition. 
 	
 	   Parameters:
 
 	      tail - An array of nodes.	
-	      initElem - An array of nodes
+          initElem - An array of nodes (containing the initial node to be laid).
 	      w - A fixed dimension where nodes will be layed out.
 		  coord - A coordinates object specifying width, height, left and top style properties.
 		  comp - A custom comparison function
@@ -906,11 +1133,15 @@ TM.Area = new Class({
 	/*
 	   Method: worstAspectRatio
 	
-		Calculates the worst aspect ratio of a group of rectangles. <http://en.wikipedia.org/wiki/Aspect_ratio>
+		Calculates the worst aspect ratio of a group of rectangles. 
+        
+        See also:
+        
+        <http://en.wikipedia.org/wiki/Aspect_ratio>
 		
 	   Parameters:
 
-		  children - An array of nodes.	
+		  ch - An array of nodes.	
 	      w - The fixed dimension where rectangles are being laid out.
 
 	   Returns:
@@ -936,16 +1167,20 @@ TM.Area = new Class({
 	/*
 	   Method: avgAspectRatio
 	
-		Calculates the worst aspect ratio of a group of rectangles. <http://en.wikipedia.org/wiki/Aspect_ratio>
+		Calculates the average aspect ratio of a group of rectangles. 
+        
+        See also:
+        
+        <http://en.wikipedia.org/wiki/Aspect_ratio>
 		
 	   Parameters:
 
-		  children - An array of nodes.	
+		  ch - An array of nodes.	
 	      w - The fixed dimension where rectangles are being laid out.
 
 	   Returns:
 	
-	   	  The worst aspect ratio.
+	   	  The average aspect ratio.
  
 
 	*/
@@ -961,7 +1196,7 @@ TM.Area = new Class({
 	},
 
 	/*
-	   Method: layoutLast
+	   layoutLast
 	
 		Performs the layout of the last computed sibling.
 	
@@ -984,22 +1219,57 @@ TM.Area = new Class({
    Class: TM.Squarified
 
 	A JavaScript implementation of the Squarified Treemap algorithm.
-	
-	Go to <http://blog.thejit.org> to know what kind of JSON structure feeds this object.
-	
-	Go to <http://blog.thejit.org/?p=8> to know what kind of controller this class accepts.
-	
-	Refer to the <Config> object to know what properties can be modified in order to customize this object. 
 
-	The simplest way to create and layout a Squarified treemap from a JSON object is:
-	
-	(start code)
+	The <TM.Squarified> constructor takes an _optional_ configuration object described in <TM>.
 
-	var tm = new TM.Squarified();
+    This visualization (as all other Treemap visualizations) is fed with JSON Tree structures.
+
+    The _$area_ node data key is required for calculating rectangles dimensions.
+
+    The _$color_ node data key is required if _Color_ _allow_ is *true* and is used for calculating 
+    leaves colors.
+
+    Extends:
+    <TM> and <TM.Area>
+
+    Example:
+
+
+	Here's a way of instanciating the <TM.Squarified> will all its _optional_ configuration features
+	
+	(start code js)
+
+	var tm = new TM.Squarified({
+		titleHeight: 13,
+		rootId: 'infovis',
+		offset:4,
+		levelsToShow: 3,
+		Color: {
+			allow: false,
+			minValue: -100,
+			maxValue: 100,
+			minColorValue: [255, 0, 50],
+			maxColorValue: [0, 255, 50]
+          }
+  
+          onBeforeCompute:  function(node) {
+            //Some stuff on before compute...
+          },
+          onAfterCompute:   function() {
+            //Some stuff on after compute...
+          },
+          onCreateElement:  function(content, node, isLeaf, head, body) {
+            //Some stuff onCreateElement
+          },
+          onDestroyElement: function(content, node, isLeaf, head, body) {
+            //Some stuff onDestroyElement
+          },
+    	  request:          false
+    });
 	tm.loadJSON(json);
 
 	(end code)
-	
+
 */
 	
 TM.Squarified = new Class({
@@ -1012,8 +1282,7 @@ TM.Squarified = new Class({
 	
 	   Parameters:
 
-	      parent - The parent node of the json subtree.	
-	      json - A JSON subtree. <http://blog.thejit.org>
+	      json - A JSON tree. See also <Loader.loadJSON>.
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
 	compute: function(json, coord) {
@@ -1045,7 +1314,7 @@ TM.Squarified = new Class({
 	
 	   Parameters:
 
-	      parent - The parent node of the json subtree.	
+	      par - The parent node of the json subtree.	
 	      ch - An Array of nodes
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
@@ -1066,13 +1335,13 @@ TM.Squarified = new Class({
 	/*
 	   Method: squarify
 	
-		Performs a heuristic method to calculate div elements sizes in order to have a good aspect ratio.
+		Performs an heuristic method to calculate div elements sizes in order to have a good aspect ratio.
 	
 	   Parameters:
 
 	      tail - An array of nodes.	
-	      initElem - An array of nodes
-	      w - A fixed dimension where nodes will be layed out.
+	      initElem - An array of nodes, containing the initial node to be laid out.
+	      w - A fixed dimension where nodes will be laid out.
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
 	squarify: function(tail, initElem, w, coord) {
@@ -1087,7 +1356,7 @@ TM.Squarified = new Class({
 	   Parameters:
 
 	      ch - An array of nodes.	
-	      w - A fixed dimension where nodes will be layed out.
+	      w - A fixed dimension where nodes will be laid out.
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
 	layoutRow: function(ch, w, coord) {
@@ -1157,22 +1426,58 @@ TM.Squarified = new Class({
    Class: TM.Strip
 
 	A JavaScript implementation of the Strip Treemap algorithm.
-	
-	Go to <http://blog.thejit.org> to know what kind of JSON structure feeds this object.
-	
-	Go to <http://blog.thejit.org/?p=8> to know what kind of controller this class accepts.
-	
-	Refer to the <Config> object to know what properties can be modified in order to customize this object. 
 
-	The simplest way to create and layout a Strip treemap from a JSON object is:
-	
-	(start code)
+	The <TM.Strip> constructor takes an _optional_ configuration object described in <TM>.
 
-	var tm = new TM.Strip();
+    This visualization (as all other Treemap visualizations) is fed with JSON Tree structures.
+
+    The _$area_ node data key is required for calculating rectangles dimensions.
+
+    The _$color_ node data key is required if _Color_ _allow_ is *true* and is used for calculating 
+    leaves colors.
+
+    Extends:
+    <TM> and <TM.Area>
+
+    Example:
+
+
+	Here's a way of instanciating the <TM.Strip> will all its _optional_ configuration features
+	
+	(start code js)
+
+	var tm = new TM.Strip({
+		titleHeight: 13,
+  		orientation: "h",
+		rootId: 'infovis',
+		offset:4,
+		levelsToShow: 3,
+		Color: {
+			allow: false,
+			minValue: -100,
+			maxValue: 100,
+			minColorValue: [255, 0, 50],
+			maxColorValue: [0, 255, 50]
+          }
+  
+          onBeforeCompute:  function(node) {
+            //Some stuff on before compute...
+          },
+          onAfterCompute:   function() {
+            //Some stuff on after compute...
+          },
+          onCreateElement:  function(content, node, isLeaf, head, body) {
+            //Some stuff onCreateElement
+          },
+          onDestroyElement: function(content, node, isLeaf, head, body) {
+            //Some stuff onDestroyElement
+          },
+    	  request:          false
+    });
 	tm.loadJSON(json);
 
 	(end code)
-	
+
 */
 	
 TM.Strip = new Class({
@@ -1185,8 +1490,7 @@ TM.Strip = new Class({
 	
 	   Parameters:
 
-	      parent - The parent node of the json subtree.	
-	      json - A JSON subtree. <http://blog.thejit.org>
+	      json - A JSON subtree. See also <Loader.loadJSON>. 
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
 	compute: function(json, coord) {
@@ -1212,11 +1516,11 @@ TM.Strip = new Class({
 	/*
 	   Method: processChildrenLayout
 	
-		Computes children real areas and other useful parameters for performing the Squarified algorithm.
+		Computes children real areas and other useful parameters for performing the Strip algorithm.
 	
 	   Parameters:
 
-	      parent - The parent node of the json subtree.	
+	      par - The parent node of the json subtree.	
 	      ch - An Array of nodes
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
@@ -1236,13 +1540,13 @@ TM.Strip = new Class({
 	/*
 	   Method: stripify
 	
-		Performs a heuristic method to calculate div elements sizes in order to have 
+		Performs an heuristic method to calculate div elements sizes in order to have 
 		a good compromise between aspect ratio and order.
 	
 	   Parameters:
 
 	      tail - An array of nodes.	
-	      initElem - An array of nodes
+	      initElem - An array of nodes.
 	      w - A fixed dimension where nodes will be layed out.
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
@@ -1258,7 +1562,7 @@ TM.Strip = new Class({
 	   Parameters:
 
 	      ch - An array of nodes.	
-	      w - A fixed dimension where nodes will be layed out.
+	      w - A fixed dimension where nodes will be laid out.
 		  coord - A coordinates object specifying width, height, left and top style properties.
 	*/
 	layoutRow: function(ch, w, coord) {
