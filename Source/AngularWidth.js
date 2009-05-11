@@ -1,15 +1,11 @@
 /*
  * File: AngularWidth.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.1.0a
+ * Provides utility methods for calculating angular widths.
+ *
+ * Implemented by:
+ *
+ * <RGraph>, <Hypertree>
  *
  */
 
@@ -38,7 +34,7 @@ var AngularWidth = {
     },
     
     /*
-     Method: setSubtreesAngularWidths
+     Method: setSubtreesAngularWidth
     
      Sets subtrees angular widths.
     */

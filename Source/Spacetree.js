@@ -55,7 +55,7 @@
 
      - _overridable_ Determine whether or not nodes properties can be overriden by a particular node. Default's false.
 
-     If given a JSON tree or graph, the node's data property contains properties which are the same as defined here but prefixed with 
+     If given a JSON tree or graph, a node _data_ property contains properties which are the same as defined here but prefixed with 
      a dollar sign (i.e $), the node properties will override the global node properties.
 
      - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "ellipse" and "circle". Default's "rectangle".
@@ -79,7 +79,7 @@
 
      - _overridable_ Determine whether or not edges properties can be overriden by a particular edge object. Default's false.
 
-     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), the adjacency's data property contains properties which are the same as defined here but prefixed with 
+     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), an adjacency _data_ property contains properties which are the same as defined here but prefixed with 
      a dollar sign (i.e $), the adjacency properties will override the global edge properties.
 
      - _type_ Edge type (shape). Possible options are "none", "line", "quadratic:begin", "quadratic:end", "bezier" and "arrow". Default's "line".
@@ -175,6 +175,12 @@ object must be called with the given result.
 
       });
     (end code)
+
+    Instance Properties:
+
+    - _graph_ Access a <Graph> instance.
+    - _op_ Access a <ST.Op> instance.
+    - _fx_ Access a  <ST.Plot> instance.
  */
 
 this.ST= (function() {
@@ -1418,6 +1424,18 @@ ST.Plot = new Class({
         }
     },
     
+    /* 
+      Method: placeLabel
+
+      Overrides abstract method placeLabel in <Graph.Plot>.
+
+      Parameters:
+
+      tag - A DOM label element.
+      node - A <Graph.Node>.
+      controller - A configuration/controller object passed to the visualization.
+     
+    */
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), dim = this.node, canvas = this.viz.canvas;
         var w = dim.overridable && node.data.$width || dim.width;

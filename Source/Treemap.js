@@ -915,6 +915,10 @@ this.TM = {
     Extends:
     <TM>
 
+    Parameters:
+
+    config - Configuration defined in <TM>.
+
     Example:
 
 
@@ -1232,6 +1236,10 @@ TM.Area = new Class({
     Extends:
     <TM> and <TM.Area>
 
+    Parameters:
+
+    config - Configuration defined in <TM>.
+
     Example:
 
 
@@ -1438,6 +1446,10 @@ TM.Squarified = new Class({
 
     Extends:
     <TM> and <TM.Area>
+
+    Parameters:
+    
+    config - Configuration defined in <TM>.
 
     Example:
 

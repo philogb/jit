@@ -1,15 +1,11 @@
 /*
  * File: Graph.js
- * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
+ *
+ * Generic <Graph>, <Graph.Node> and <Graph.Adjacence> classes.
+ *
+ * Used by:
+ *
+ * <Hypertree>, <RGraph> and <ST>.
  *
 */
 
@@ -17,34 +13,68 @@
  Class: Graph
 
  A generic Graph class.
+
+ Description:
+
+ When a json graph/tree structure is loaded by <Loader.loadJSON>, an internal <Graph> representation is created. 
+
+ In most cases you'll be dealing with an already created <Graph> structure, so methods like <Graph.addNode> or <Graph.addAdjacence> won't 
+ be of many use. However methods like <Graph.getNode> and <Graph.hasNode> are pretty useful.
+
+ <Graph.Util> provides also iterators for <Graphs> and advanced and useful graph operations and methods.
+
+ Used by:
+
+ <Loader.loadJSON>, <Hypertree>, <RGraph> and <ST>.
+
+ Access:
+
+ An instance of this class can be accessed by using the _graph_ parameter of a <Hypertree>, <RGraph> or <ST> instance
+
+ Example:
+
+ (start code js)
+   var st = new ST(canvas, config);
+   st.graph.getNode //or any other <Graph> method.
+   
+   var ht = new Hypertree(canvas, config);
+   ht.graph.getNode //or any other <Graph> method.
+   
+   var rg = new RGraph(canvas, config);
+   rg.graph.getNode //or any other <Graph> method.
+ (end code)
  
 */  
 
 this.Graph = new Class({
 
-/*
- Constructor: Graph
-
- Creates a new Graph instance.
- 
-*/  
  initialize: function(opt) {
     var innerOptions = {
 		'complex': false,
 		'Node': {}
 	};
-    //Property: opt
-	//Graph class options
-	this.opt = $merge(innerOptions, opt || {});
-	//Property: nodes
-    //Graph nodes
+    this.opt = $merge(innerOptions, opt || {});
     this.nodes= {};
  },
 
 /*
      Method: getNode
     
-     Returns a <Graph.Node> from a specified _id_.
+     Returns a <Graph.Node> by _id_.
+
+     Parameters:
+
+     id - A <Graph.Node> id.
+
+     Returns:
+
+     A <Graph.Node> having _id_ as id. Returns *false* otherwise.
+
+     Example:
+
+     (start code js)
+       var node = graph.getNode('someid');
+     (end code)
 */  
  getNode: function(id) {
     if(this.hasNode(id)) return this.nodes[id];
@@ -54,7 +84,16 @@ this.Graph = new Class({
 /*
      Method: getAdjacence
     
-     Returns an array of <Graph.Adjacence> that connects nodes with id _id_ and _id2_.
+     Returns an array of <Graph.Adjacence> objects connecting nodes with ids _id_ and _id2_.
+
+     Parameters:
+
+     id - A <Graph.Node> id.
+     id2 - A <Graph.Node> id.
+
+     Returns:
+
+     An Array of <Graph.Adjacence> objects. Returns *false* if there's not a <Graph.Adjacence> connecting those two nodes.
 */  
   getAdjacence: function (id, id2) {
     var adjs = [];
@@ -74,8 +113,16 @@ this.Graph = new Class({
      
      Parameters:
     
-        obj - A <> object.
-    */  
+        obj - An object containing as properties
+
+        - _id_ node's id
+        - _name_ node's name
+        - _data_ node's data hash
+
+    See also:
+    <Graph.Node>
+
+  */  
   addNode: function(obj) {
     if(!this.nodes[obj.id]) {
         this.nodes[obj.id] = new Graph.Node($extend({
@@ -90,13 +137,17 @@ this.Graph = new Class({
     /*
      Method: addAdjacence
     
-     Connects nodes specified by *obj* and *obj2*. If not found, nodes are created.
+     Connects nodes specified by _obj_ and _obj2_. If not found, nodes are created.
      
      Parameters:
     
         obj - a <Graph.Node> object.
         obj2 - Another <Graph.Node> object.
-        data - A DataSet object.
+        data - A DataSet object. Used to store some extra information in the <Graph.Adjacence> object created.
+
+    See also:
+
+    <Graph.Node>, <Graph.Adjacence>
     */  
   addAdjacence: function (obj, obj2, data) {
     var adjs = []
@@ -123,7 +174,12 @@ this.Graph = new Class({
     /*
      Method: removeNode
     
-     Removes a <Graph.Node> from <Graph> that matches the specified _id_.
+     Removes a <Graph.Node> matching the specified _id_.
+
+     Parameters:
+
+     id - A node's id.
+
     */  
   removeNode: function(id) {
     if(this.hasNode(id)) {
@@ -139,7 +195,12 @@ this.Graph = new Class({
 /*
      Method: removeAdjacence
     
-     Removes a <Graph.Adjacence> from <Graph> that matches the specified _id1_ and _id2_.
+     Removes a <Graph.Adjacence> matching _id1_ and _id2_.
+
+     Parameters:
+
+     id1 - A <Graph.Node> id.
+     id2 - A <Graph.Node> id.
 */  
   removeAdjacence: function(id1, id2) {
     if(this.hasNode(id1)) this.nodes[id1].removeAdjacency(id2);
@@ -149,7 +210,7 @@ this.Graph = new Class({
     /*
      Method: hasNode
     
-     Returns a Boolean instance indicating if node belongs to graph or not.
+     Returns a Boolean instance indicating if the node belongs to the <Graph> or not.
      
      Parameters:
     
@@ -157,7 +218,7 @@ this.Graph = new Class({
 
      Returns:
       
-            A Boolean instance indicating if node belongs to graph or not.
+     A Boolean instance indicating if the node belongs to the graph or not.
     */  
   hasNode: function(id) {
     return id in this.nodes;
@@ -166,31 +227,40 @@ this.Graph = new Class({
 
 /*
      Class: Graph.Node
-    
-     Behaviour of the <Graph> node.
 
+     A <Graph> node.
+
+     Parameters:
+
+     obj - An object containing an 'id', 'name' and 'data' properties as described in <Graph.addNode>.
+     complex - Whether node position properties should contain <Complex> or <Polar> instances.
+
+     See also:
+
+     <Graph>
+
+     Description:
+
+     An instance of <Graph.Node> is usually passed as parameter for most configuration/controller methods in the 
+     <Hypertree>, <RGraph> and <ST> classes.
+
+     A <Graph.Node> object has as properties
+
+      id - Node id.
+      name - Node name.
+      data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
+      selected - Whether the node is selected or not. Used by <ST> for selecting nodes that are between the root node and the selected node.
+      angleSpan - For radial layouts such as the ones performed by the <Hypertree> and the <RGraph>. Contains _begin_ and _end_ properties containing angle values describing the angle span for this subtree.
+      alpha - Current opacity value.
+      startAlpha - Opacity begin value. Used for interpolation.
+      endAlpha - Opacity end value. Used for interpolation.
+      pos - Current position. Can be a <Complex> or <Polar> instance.
+      startPos - Starting position. Used for interpolation.
+      endPos - Ending position. Used for interpolation.
 */
 Graph.Node = new Class({
     
-/*
-   Constructor: Graph.Node
-
-   Node constructor.
-
-   Parameters:
-
-      id - The node *unique identifier* id.
-      name - A node's name.
-      data - Place to store some extra information (can be left to null).
-      opt - initialization options
-
-   Returns:
-
-      A new <Graph.Node> instance.
-*/
     initialize: function(opt, complex) {
-	    //Property: innerOptions
-		//Default configuration options
 		var innerOptions = {
 			'id': '',
 			'name': '',
@@ -221,7 +291,7 @@ Graph.Node = new Class({
     /*
        Method: adjacentTo
     
-       Indicates if the node is adjacent to the node indicated by the specified id
+       Indicates if the node is adjacent to the node specified by id
 
        Parameters:
     
@@ -230,6 +300,11 @@ Graph.Node = new Class({
        Returns:
     
          A Boolean instance indicating whether this node is adjacent to the specified by id or not.
+
+       Example:
+       (start code js)
+        node.adjacentTo('mynodeid');
+       (end code)
     */
     adjacentTo: function(node) {
         return node.id in this.adjacencies;
@@ -238,11 +313,15 @@ Graph.Node = new Class({
     /*
        Method: getAdjacency
     
-       Returns a <Graph.Adjacence> that connects the current <Graph.Node> with the node having _id_ as id.
+       Returns a <Graph.Adjacence> object connecting the current <Graph.Node> and the node having _id_ as id.
 
        Parameters:
     
           id - A node id.
+
+       Returns:
+
+          A <Graph.Adjacence> object or undefined.
     */  
     getAdjacency: function(id) {
         return this.adjacencies[id];
@@ -250,11 +329,12 @@ Graph.Node = new Class({
     /*
        Method: addAdjacency
     
-       Connects the node to the specified by id.
+       Connects the current node and the given node.
 
        Parameters:
     
-          id - A node id.
+          node - A <Graph.Node>.
+          data - Some custom hash information.
     */  
     addAdjacency: function(node, data) {
         var adj = new Graph.Adjacence(this, node, data);
@@ -264,7 +344,7 @@ Graph.Node = new Class({
     /*
        Method: removeAdjacency
     
-       Deletes the <Graph.Adjacence> by _id_.
+       Removes a <Graph.Adjacence> by _id_.
 
        Parameters:
     
@@ -276,40 +356,51 @@ Graph.Node = new Class({
 });
 
 /*
-   Class: Graph.Adjacence
-    
-     Creates a new <Graph> adjacence.
+     Class: Graph.Adjacence
 
+     A <Graph> adjacence (or edge). Connects two <Graph.Nodes>.
+
+     Parameters:
+
+     nodeFrom - A <Graph.Node>.
+     nodeTo - A <Graph.Node>.
+     data - Some custom hash data.
+
+     See also:
+
+     <Graph>
+
+     Description:
+
+     An instance of <Graph.Adjacence> is usually passed as parameter for some configuration/controller methods in the 
+     <Hypertree>, <RGraph> and <ST> classes.
+
+     A <Graph.Adjacence> object has as properties
+
+      nodeFrom - A <Graph.Node> connected by this edge.
+      nodeTo - Another  <Graph.Node> connected by this edge.
+      data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
+      alpha - Current opacity value.
+      startAlpha - Opacity begin value. Used for interpolation.
+      endAlpha - Opacity end value. Used for interpolation.
 */
 Graph.Adjacence = function(nodeFrom, nodeTo, data) {
-    //Property: nodeFrom
-    //One of the two <Graph.Node>s connected by this edge.
     this.nodeFrom = nodeFrom;
-    //Property: nodeTo
-    //One of the two <Graph.Node>s connected by this edge.
     this.nodeTo = nodeTo;
-    //Property: data
-    //A dataset object
     this.data = data || {};
-    //Property: alpha
-    //node alpha
     this.alpha = 1;
-    //Property: startAlpha
-    //node start alpha
     this.startAlpha = 1;
-    //Property: endAlpha
-    //node end alpha
     this.endAlpha = 1;
 };
 
 /*
    Object: Graph.Util
 
-   A multi purpose object to do graph traversal and processing.
+   <Graph> traversal and processing utility object.
 */
 Graph.Util = {
     /*
-       Method: filter
+       filter
     
        For internal use only. Provides a filtering function based on flags.
     */
@@ -324,7 +415,22 @@ Graph.Util = {
     /*
        Method: getNode
     
-       Returns a graph's node with a specified _id_.
+       Returns a <Graph.Node> by _id_.
+
+       Parameters:
+
+       graph - A <Graph> instance.
+       id - A <Graph.Node> id.
+
+       Returns:
+
+       A <Graph> node.
+
+       Example:
+
+       (start code js)
+         Graph.Util.getNode(graph, 'nodeid');
+       (end code)
     */
     getNode: function(graph, id) {
         return graph.getNode(id);
@@ -333,7 +439,19 @@ Graph.Util = {
     /*
        Method: eachNode
     
-       Iterates over graph nodes performing an action.
+       Iterates over <Graph> nodes performing an _action_.
+
+       Parameters:
+
+       graph - A <Graph> instance.
+       action - A callback function having a <Graph.Node> as first formal parameter.
+
+       Example:
+       (start code js)
+         Graph.Util.each(graph, function(node) {
+          alert(node.name);
+         });
+       (end code)
     */
     eachNode: function(graph, action, flags) {
         var filter = this.filter(flags);
@@ -343,7 +461,19 @@ Graph.Util = {
     /*
        Method: eachAdjacency
     
-       Iterates over a _node_ adjacencies applying the _action_ function.
+       Iterates over <Graph.Node> adjacencies applying the _action_ function.
+
+       Parameters:
+
+       node - A <Graph.Node>.
+       action - A callback function having <Graph.Adjacence> as first formal parameter.
+
+       Example:
+       (start code js)
+         Graph.Util.eachAdjacency(node, function(adj) {
+          alert(adj.nodeTo.name);
+         });
+       (end code)
     */
     eachAdjacency: function(node, action, flags) {
         var adj = node.adjacencies, filter = this.filter(flags);
@@ -353,7 +483,17 @@ Graph.Util = {
      /*
        Method: computeLevels
     
-       Performs a BFS traversal setting correct level for nodes.
+       Performs a BFS traversal setting the correct depth for each node.
+
+       The depth of each node can then be accessed by 
+       >node._depth
+
+       Parameters:
+
+       graph - A <Graph>.
+       id - A starting node id for the BFS traversal.
+       startDepth - _optional_ A minimum depth value. Default's 0.
+
     */
     computeLevels: function(graph, id, startDepth, flags) {
         startDepth = startDepth || 0;
@@ -381,8 +521,20 @@ Graph.Util = {
     /*
        Method: eachBFS
     
-       Performs a BFS traversal of a graph beginning by the node of id _id_ and performing _action_ on each node.
-       This traversal ignores nodes or edges having the property _ignore_ setted to _true_.
+       Performs a BFS traversal applying _action_ to each <Graph.Node>.
+
+       Parameters:
+
+       graph - A <Graph>.
+       id - A starting node id for the BFS traversal.
+       action - A callback function having a <Graph.Node> as first formal parameter.
+
+       Example:
+       (start code js)
+         Graph.Util.eachBFS(graph, 'mynodeid', function(node) {
+          alert(node.name);
+         });
+       (end code)
     */
     eachBFS: function(graph, id, action, flags) {
         var filter = this.filter(flags);
@@ -405,7 +557,15 @@ Graph.Util = {
     /*
        Method: eachLevel
     
-       Iterates over a node's subgraph applying _action_ to the nodes of relative _depth_ between _levelBegin_ and _levelEnd_.
+       Iterates over a node's subgraph applying _action_ to the nodes of relative depth between _levelBegin_ and _levelEnd_.
+
+       Parameters:
+       
+       node - A <Graph.Node>.
+       levelBegin - A relative level value.
+       levelEnd - A relative level value.
+       action - A callback function having a <Graph.Node> as first formal parameter.
+
     */
     eachLevel: function(node, levelBegin, levelEnd, action, flags) {
         var d = node._depth, filter = this.filter(flags), that = this;
@@ -426,6 +586,17 @@ Graph.Util = {
        Method: eachSubgraph
     
        Iterates over a node's children recursively.
+
+       Parameters:
+       node - A <Graph.Node>.
+       action - A callback function having a <Graph.Node> as first formal parameter.
+
+       Example:
+       (start code js)
+         Graph.Util.eachSubgraph(node, function(node) {
+          alert(node.name);
+         });
+       (end code)
     */
     eachSubgraph: function(node, action, flags) {
 		this.eachLevel(node, 0, false, action, flags);
@@ -435,6 +606,17 @@ Graph.Util = {
        Method: eachSubnode
     
        Iterates over a node's children (without deeper recursion).
+       
+       Parameters:
+       node - A <Graph.Node>.
+       action - A callback function having a <Graph.Node> as first formal parameter.
+
+       Example:
+       (start code js)
+         Graph.Util.eachSubnode(node, function(node) {
+          alert(node.name);
+         });
+       (end code)
     */
     eachSubnode: function(node, action, flags) {
         this.eachLevel(node, 1, 1, action, flags);
@@ -443,7 +625,19 @@ Graph.Util = {
     /*
        Method: anySubnode
     
-       Returns true if any subnode matches the given condition.
+       Returns *true* if any subnode matches the given condition.
+
+       Parameters:
+       node - A <Graph.Node>.
+       cond - A callback function returning a Boolean instance. This function has as first formal parameter a <Graph.Node>.
+
+       Returns:
+       A boolean value.
+
+       Example:
+       (start code js)
+         Graph.Util.anySubnode(node, function(node) { return node.name == "mynodename"; });
+       (end code)
     */
     anySubnode: function(node, cond, flags) {
         var flag = false;
@@ -459,6 +653,14 @@ Graph.Util = {
        Method: getSubnodes
     
        Collects all subnodes for a specified node. The _level_ parameter filters nodes having relative depth of _level_ from the root node.
+
+       Parameters:
+       node - A <Graph.Node>.
+       level - _optional_ A starting relative depth for collecting nodes. Default's 0.
+
+       Returns:
+       An array of nodes.
+
     */
     getSubnodes: function(node, level, flags) {
         var ans = [], that = this;
@@ -480,7 +682,21 @@ Graph.Util = {
     /*
        Method: getParents
     
-       Returns all nodes having a depth that is less than the node's depth property.
+       Returns an Array of <Graph.Nodes> wich are parents of the given node. 
+
+       Parameters:
+       node - A <Graph.Node>.
+
+       Returns:
+       An Array of <Graph.Nodes>.
+
+       Example:
+       (start code js)
+         var pars = Graph.Util.getParents(node);
+         if(pars.length > 0) {
+           //do stuff with parents
+         }
+       (end code)
     */
     getParents: function(node) {
         var ans = [];
@@ -495,6 +711,9 @@ Graph.Util = {
        Method: clean
     
        Cleans flags from nodes (by setting the _flag_ property to false).
+
+       Parameters:
+       graph - A <Graph> instance.
     */
     clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); }
 };

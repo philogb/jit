@@ -1,15 +1,7 @@
 /*
  * File: Graph.Plot.js
- * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
+ *
+ * Defines an abstract class for performing <Graph> rendering and animation.
  *
  */
 
@@ -17,7 +9,24 @@
 /*
    Object: Graph.Plot
 
-   An abstract object for plotting a generic graph structure.
+   Generic <Graph> rendering and animation methods.
+   
+   Description:
+
+   An abstract class for plotting a generic graph structure.
+
+   Implemented by:
+
+   <Hypertree.Plot>, <RGraph.Plot>, <ST.Plot>.
+
+   Access:
+
+   The subclasses for this abstract class can be accessed by using the _fx_ property of the <Hypertree>, <RGraph>, or <ST> instances created.
+
+   See also:
+
+   <Hypertree.Plot>, <RGraph.Plot>, <ST.Plot>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
 */
 Graph.Plot = {
     
@@ -58,13 +67,10 @@ Graph.Plot = {
         }
     },
     
-    //Property: labelsHidden
     //A flag value indicating if node labels are being displayed or not.
     labelsHidden: false,
-    //Property: labelContainer
     //Label DOM element
     labelContainer: false,
-    //Property: labels
     //Label DOM elements hash.
     labels: {},
 
@@ -72,6 +78,18 @@ Graph.Plot = {
        Method: getLabelContainer
     
        Lazy fetcher for the label container.
+
+       Returns:
+
+       The label container DOM element.
+
+       Example:
+
+      (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        var labelContainer = rg.fx.getLabelContainer();
+        alert(labelContainer.innerHTML);
+      (end code)
     */
     getLabelContainer: function() {
         return this.labelContainer? this.labelContainer : this.labelContainer = document.getElementById(this.viz.config.labelContainer);
@@ -81,6 +99,23 @@ Graph.Plot = {
        Method: getLabel
     
        Lazy fetcher for the label DOM element.
+
+       Parameters:
+
+       id - The label id (which is also a <Graph.Node> id).
+
+       Returns:
+
+       The label DOM element.
+
+       Example:
+
+      (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        var label = rg.fx.getLabel('someid');
+        alert(label.innerHTML);
+      (end code)
+      
     */
     getLabel: function(id) {
         return (id in this.labels && this.labels[id] != null)? this.labels[id] : this.labels[id] = document.getElementById(id);
@@ -89,7 +124,18 @@ Graph.Plot = {
     /*
        Method: hideLabels
     
-       Hides all labels.
+       Hides all labels (by hiding the label container).
+
+       Parameters:
+
+       hide - A boolean value indicating if the label container must be hidden or not.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.hideLabels(true);
+       (end code)
+       
     */
     hideLabels: function (hide) {
         var container = this.getLabelContainer();
@@ -102,6 +148,14 @@ Graph.Plot = {
        Method: clearLabels
     
        Clears the label container.
+
+       Useful when using a new visualization with the same canvas element/widget.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.clearLabels();
+        (end code)
     */
     clearLabels: function() {
         for(var id in this.labels) 
@@ -115,6 +169,16 @@ Graph.Plot = {
        Method: disposeLabel
     
        Removes a label.
+
+       Parameters:
+
+       id - A label id (which generally is also a <Graph.Node> id).
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.disposeLabel('labelid');
+       (end code)
     */
     disposeLabel: function(id) {
         var elem = this.getLabel(id);
@@ -126,7 +190,18 @@ Graph.Plot = {
     /*
        Method: hideLabel
     
-       Hides a label having _node.id_ as id.
+       Hides the corresponding <Graph.Node> label.
+        
+       Parameters:
+
+       node - A <Graph.Node>. Can also be an array of <Graph.Nodes>.
+       flag - If *true*, nodes will be shown. Otherwise nodes will be hidden.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.hideLabel(rg.graph.getNode('someid'), false);
+       (end code)
     */
     hideLabel: function(node, flag) {
 		node = $splat(node);
@@ -142,6 +217,33 @@ Graph.Plot = {
        Method: sequence
     
        Iteratively performs an action while refreshing the state of the visualization.
+
+       Parameters:
+
+       options - Some sequence options like
+      
+       - _condition_ A function returning a boolean instance in order to stop iterations.
+       - _step_ A function to execute on each step of the iteration.
+       - _onComplete_ A function to execute when the sequence finishes.
+       - _duration_ Duration (in milliseconds) of each step.
+
+      Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        var i = 0;
+        rg.fx.sequence({
+          condition: function() {
+           return i == 10;
+          },
+          step: function() {
+            alert(i++);
+          },
+          onComplete: function() {
+           alert('done!');
+          }
+        });
+       (end code)
+
     */
     sequence: function(options) {
         var that = this;
@@ -150,7 +252,7 @@ Graph.Plot = {
             step: $empty,
             onComplete: $empty,
             duration: 200
-        }, options);
+        }, options || {});
 
         var interval = setInterval(function() {
             if(options.condition()) {
@@ -166,8 +268,34 @@ Graph.Plot = {
     /*
        Method: animate
     
-       Animates the graph. Depends on the _modes_ assigned to the opt property.
-       Modes are Interpolators.
+       Animates a <Graph> by interpolating some <Graph.Nodes> properties.
+
+       Parameters:
+
+       opt - Animation options. This object contains as properties
+
+       - _modes_ (required) An Array of animation types. Possible values are "linear", "polar", "moebius", "fade:nodes" and "fade:vertex".
+
+       "linear", "polar" and "moebius" animation options will interpolate <Graph.Nodes> "startPos" and "endPos" properties, storing the result in "pos".
+       
+       "fade:nodes" and "fade:vertex" animation options will interpolate <Graph.Nodes> and/or <Graph.Adjacence> "startAlpha" and "endAlpha" properties, storing the result in "alpha".
+
+       - _duration_ Duration (in milliseconds) of the Animation.
+       - _fps_ Frames per second.
+       - _hideLabels_ hide labels or not during the animation.
+
+       ...and other <Hypertree>, <RGraph> or <ST> controller methods.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.animate({
+          modes: ['linear'],
+          hideLabels: false
+        }); 
+       (end code)
+       
+       
     */
     animate: function(opt, versor) {
         var that = this,
@@ -203,7 +331,19 @@ Graph.Plot = {
     /*
        Method: plot
     
-       Plots a Graph.
+       Plots a <Graph>.
+
+       Parameters:
+
+       opt - _optional_ Plotting options.
+
+       Example:
+
+       (start code js)
+       var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+       rg.fx.plot(); 
+       (end code)
+
     */
     plot: function(opt) {
         var viz = this.viz, 
@@ -251,6 +391,13 @@ Graph.Plot = {
        Method: plotLabel
     
        Plots a label for a given node.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+
     */
     plotLabel: function(canvas, node, controller) {
 		var id = node.id, tag = this.getLabel(id);
@@ -270,7 +417,13 @@ Graph.Plot = {
 	/*
        Method: plotNode
     
-       Plots a graph node.
+       Plots a <Graph.Node>.
+
+       Parameters:
+       
+       node - A <Graph.Node>.
+       canvas - A <Canvas> element.
+
     */
     plotNode: function(node, canvas) {
         var nconfig = this.node, data = node.data;
@@ -296,6 +449,12 @@ Graph.Plot = {
        Method: plotLine
     
        Plots a line.
+
+       Parameters:
+
+       adj - A <Graph.Adjacence>.
+       canvas - A <Canvas> instance.
+
     */
     plotLine: function(adj, canvas) {
         var econfig = this.edge, data = adj.data;
@@ -320,7 +479,17 @@ Graph.Plot = {
 	/*
        Method: fitsInCanvas
     
-       Returns _true_ or _false_ if the label for the node is contained on the canvas dom element or not.
+       Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.
+
+       Parameters:
+
+       pos - A <Complex> instance (I'm doing duck typing here so any object with _x_ and _y_ parameters will do).
+       canvas - A <Canvas> instance.
+       
+       Returns:
+
+       A boolean value specifying if the label is contained in the <Canvas> DOM element or not.
+
     */
     fitsInCanvas: function(pos, canvas) {
         var size = canvas.getSize();

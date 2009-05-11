@@ -1,139 +1,204 @@
 /*
  * File: RGraph.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
+ * Implements the <RGraph> class and other derived classes.
  *
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
- * 
- * License: BSD License
- * 
+ * Description:
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the organization nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ * A radial layout of a tree puts the root node on the center of the canvas, places its children on the first concentric ring away from the root node, its grandchildren on a second concentric ring, and so on...
  *
- * THIS SOFTWARE IS PROVIDED BY Nicolas Garcia Belmonte ``AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Nicolas Garcia Belmonte BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Ka-Ping Yee, Danyel Fisher, Rachna Dhamija and Marti Hearst introduced a very interesting paper called "Animated Exploration of Dynamic Graphs with Radial Layout". In this paper they describe a way to animate a radial layout of a tree with ease-in and ease-out transitions, which make transitions from a graph's state to another easier to understand for the viewer.
+ *
+ * Inspired by:
+ *
+ * Animated Exploration of Dynamic Graphs with Radial Layout (Ka-Ping Yee, Danyel Fisher, Rachna Dhamija, Marti Hearst)
+ *
+ * <http://bailando.sims.berkeley.edu/papers/infovis01.htm>
+ *
+ * Disclaimer:
+ *
+ * This visualization was built from scratch, taking only the paper as inspiration, and only shares some features with this paper.
+ *
  * 
  */
 
 /*
    Class: RGraph
+      
+     The main RGraph class
 
-	An animated Graph with radial layout.
+     Extends:
 
-	Go to <http://blog.thejit.org> to know what kind of JSON structure feeds this object.
-	
-	Go to <http://blog.thejit.org/?p=8> to know what kind of controller this class accepts.
-	
-	Refer to the <config> object to know what properties can be modified in order to customize this object. 
+     <Loader>, <AngularWidth>
 
-	The simplest way to create and layout a RGraph is:
-	
-	(start code)
+     Parameters:
 
-		  var canvas= new Canvas('mycanvas', {
-		      'injectInto': 'infovis'
-		  });
-		  var rgraph= new RGraph(canvas);
-		  rgraph.loadJSON(json);
-		  rgraph.refresh();
+     canvas - A <Canvas> Class
+     config - A configuration/controller object.
 
-	(end code)
+     Configuration:
+    
+     The configuration object can have the following properties (all properties are optional and have a default value)
+     
+     *General*
 
-	A user should only interact with the <Canvas>, and <RGraph> objects/classes.
-	By implementing RGraph controllers you can also customize the RGraph behavior.
+     - _interpolation_ Interpolation type used for animations. Possible options are 'polar' and 'linear'. Default's 'linear'.
+     - _levelDistance_ Distance between a parent node and its children. Default's 100.
+
+     *Node*
+     
+     Customize the visualization nodes' shape, color, and other style properties.
+
+     - _Node_
+
+     This object has as properties
+
+     - _overridable_ Determine whether or not nodes properties can be overriden by a particular node. Default's false.
+
+     If given a JSON tree or graph, a node _data_ property contains properties which are the same as defined here but prefixed with 
+     a dollar sign (i.e $), the node properties will override the global node properties.
+
+     - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "circle", "triangle", "star". Default's "circle".
+     - _color_ Node color. Default's '#ccb'.
+     - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
+     - _height_ Node height. Used for plotting rectangular nodes. Default's 5.
+     - _width_ Node width. Used for plotting rectangular nodes. Default's 5.
+     - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. Default's 3.
+
+     *Edge*
+
+     Customize the visualization edges' shape, color, and other style properties.
+
+     - _Edge_
+
+     This object has as properties
+
+     - _overridable_ Determine whether or not edges properties can be overriden by a particular edge object. Default's false.
+
+     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), an adjacency _data_ property contains properties which are the same as defined here but prefixed with 
+     a dollar sign (i.e $), the adjacency properties will override the global edge properties.
+
+     - _type_ Edge type (shape). Possible options are "none", "line" and "arrow". Default's "line".
+     - _color_ Edge color. Default's '#ccb'.
+     - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
+
+     *Animations*
+
+     - _duration_ Duration of the animation in milliseconds. Default's 2500.
+     - _fps_ Frames per second. Default's 40.
+     - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
+
+    *Controller options*
+
+    You can also implement controller functions inside the configuration object. This functions are
+    
+    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
+    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
+    - _onCreateLabel(domElement, node)_ This method receives the label dom element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called on label creation. Note that a <Graph.Node> is a node from the input tree/graph you provided to the visualization. If you want to know more about what kind of JSON tree/graph format is used to feed the visualizations, you can take a look at <Loader.loadJSON>. This method proves useful when adding events to the labels used by the JIT.
+    - _onPlaceLabel(domElement, node)_ This method receives the label dom element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed on the visualization, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions.
+    - _onBeforePlotNode(node)_ This method is triggered right before plotting a given node. The _node_ parameter is the <Graph.Node> to be plotted. 
+This method is useful for changing a node style right before plotting it.
+    - _onAfterPlotNode(node)_ This method is triggered right after plotting a given node. The _node_ parameter is the <Graph.Node> plotted.
+    - _onBeforePlotLine(adj)_ This method is triggered right before plotting an edge. The _adj_ parameter is a <Graph.Adjacence> object. 
+This method is useful for adding some styles to a particular edge before being plotted.
+    - _onAfterPlotLine(adj)_ This method is triggered right after plotting an edge. The _adj_ parameter is the <Graph.Adjacence> plotted.
+
+    Example:
+
+    Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
+    all configuration properties  have the default value assigned.
+
+    I won't be instanciating a <Canvas> class here. If you want to know more about instanciating a <Canvas> class 
+    please take a look at the <Canvas> class documentation.
+
+    (start code js)
+      var rgraph = new RGraph(canvas, {
+        interpolation: 'linear',
+        levelDistance: 100,
+        Node: {
+          overridable: false,
+          type: 'circle',
+          color: '#ccb',
+          lineWidth: 1,
+          height: 5,
+          width: 5,
+          dim: 3
+        },
+        Edge: {
+          overridable: false,
+          type: 'line',
+          color: '#ccb',
+          lineWidth: 1
+        },
+        duration: 2500,
+        fps: 40,
+        transition: Trans.Quart.easeInOut,
+
+        onBeforeCompute: function(node) {
+          //do something onBeforeCompute
+        },
+        onAfterCompute:  function () {
+          //do something onAfterCompute
+        },
+        onCreateLabel:   function(domElement, node) {
+          //do something onCreateLabel
+        },
+        onPlaceLabel:    function(domElement, node) {
+          //do something onPlaceLabel
+        },
+        onBeforePlotNode:function(node) {
+          //do something onBeforePlotNode
+        },
+        onAfterPlotNode: function(node) {
+          //do something onAfterPlotNode
+        },
+        onBeforePlotLine:function(adj) {
+          //do something onBeforePlotLine
+        },
+        onAfterPlotLine: function(adj) {
+          //do something onAfterPlotLine
+        }
+      });
+    (end code)
+
+  Instance Properties:
+
+   - _graph_ Access a <Graph> instance.
+   - _op_ Access a <RGraph.Op> instance.
+   - _fx_ Access a <RGraph.Plot> instance.
 */
 
-/*
- Constructor: RGraph
-
- Creates a new RGraph instance.
- 
- Parameters:
-
-    canvas - A <Canvas> instance.
-    controller - _optional_ a RGraph controller <http://blog.thejit.org/?p=8>
-*/
 this.RGraph = new Class({
 	
     Implements: [Loader, AngularWidth],
     
 	initialize: function(canvas, controller) {
-		/*
-		   Object: config
-		
-		   <RGraph> configuration object. Contains important properties to enable customization and proper behavior for the <RGraph>.
-		*/
 		var config= {
-		        //Property: labelContainer
-		        //Id for label container. Don't change this.
 		        labelContainer: canvas.id + '-label',
 
-                //Property: interpolation
-				//What kind of interpolation we shoud use. Possible options are linear|polar
                 interpolation: 'linear',
 
-		        //Property: levelDistance
-		        //The actual distance between a node and its child node
 		        levelDistance: 100,
 		        
-                //Property: Node
-                //What kind of node to plot, built-in types are none|circle|squared|triangle|star
-				//You can also add any other property that suits the node rendering function.
-				//If _overridable_ is set to true, then these global values can be overriden by
-				//adding a similar _$nodeType_ object to the data property of your JSON tree|graph node.
 				Node: {
 					overridable: false,
 				    type: 'circle',
 					dim: 3,
-					color: '#999',
+					color: '#ccb',
                     width: 5,
                     height: 5,   
 					lineWidth: 1
 				},
 				
-				//Property: Edge
-                //What kind of edge to plot, built-ins are none|line|arrow|multi
-                //You can also add any other property that suits the edge rendering function.
-                //If _overridable_ is set to true, then these global values can be overriden by
-                //adding a similar _edgeType_ object to the data property of your JSON tree|graph adj.
 				Edge: {
 					overridable: false,
 				    type: 'line',
-					color: '#999',
+					color: '#ccb',
 					lineWidth: 1
 				},
 
-		        //Property: fps
-		        //Animation frames per second.
 		        fps:40,
-		        
-		        //Property: duration
-				//Animation duration.
 		        duration: 2500,
-		        
-                //Property: transition
-                //Animation transition type.
                 transition: Trans.Quart.easeInOut
 		};
 
@@ -146,8 +211,7 @@ this.RGraph = new Class({
 	        onBeforePlotLine:$empty,
 	        onAfterPlotLine: $empty,
 	        onBeforePlotNode:$empty,
-	        onAfterPlotNode: $empty,
-	        request:         false
+	        onAfterPlotNode: $empty
 	    };
 		
 	    this.controller = this.config = $merge(config, innerController, controller);
@@ -168,13 +232,12 @@ this.RGraph = new Class({
 	    this.busy = false;
 	    this.parent = false;
 	},
-
-    /*
-     Method: refresh
-    
-     Computes positions and then plots.
+    /* 
+     Method: refresh 
      
-    */
+     Computes nodes' positions and replots the tree.
+
+    */ 
     refresh: function() {
         this.compute();
         this.plot();
@@ -184,6 +247,10 @@ this.RGraph = new Class({
      Method: reposition
     
      An alias for computing new positions to _endPos_
+
+     See also:
+
+     <RGraph.compute>
      
     */
     reposition: function() {
@@ -199,12 +266,16 @@ this.RGraph = new Class({
     plot: function() {
         this.fx.plot();
     },
-    
-    /*
-     Method: compute
-    
-     Computes the graph nodes positions and stores this positions on _property_.
-    */
+    /* 
+     Method: compute 
+     
+     Computes nodes' positions. 
+
+     Parameters:
+
+     property - _optional_ A <Graph.Node> position property to store the new positions. Possible values are 'pos', 'endPos' or 'startPos'.
+
+    */ 
     compute: function(property) {
         var prop = property || ['pos', 'startPos', 'endPos'];
         var node = this.graph.getNode(this.root);
@@ -215,7 +286,7 @@ this.RGraph = new Class({
     },
     
     /*
-     Method: computePositions
+     computePositions
     
      Performs the main algorithm for computing node positions.
     */
@@ -273,7 +344,7 @@ this.RGraph = new Class({
     },
 
     /*
-     Method: getNodeAndParentAngle
+     getNodeAndParentAngle
     
      Returns the _parent_ of the given node, also calculating its angle span.
     */
@@ -292,7 +363,7 @@ this.RGraph = new Class({
     },
     
     /*
-     Method: tagChildren
+     tagChildren
     
      Enumerates the children in order to mantain child ordering (second constraint of the paper).
     */
@@ -310,13 +381,29 @@ this.RGraph = new Class({
         }
     },
     
-    /*
-     Method: onClick
-    
-     Performs all calculations and animation when clicking on a label specified by _id_. 
-     The label id is the same id as its homologue node.
-    
-	*/
+     /* 
+     Method: onClick 
+     
+     Performs all calculations and animations to center the node specified by _id_.
+
+     Parameters:
+
+     id - A <Graph.Node> id.
+     opt - _optional_ An object containing some extra properties like
+
+     - _hideLabels_ Hide labels when performing the animation. Default's *true*.
+
+     Example:
+
+     (start code js)
+       rgraph.onClick('someid');
+       //or also...
+       rgraph.onClick('someid', {
+        hideLabels: false
+       });
+      (end code)
+      
+    */ 
     onClick: function(id, opt) {
         if(this.root != id && !this.busy) {
             this.busy = true;
@@ -354,9 +441,22 @@ this.RGraph = new Class({
 /*
    Class: RGraph.Op
 
-   <RGraph.Op> performs rgraph operations like sum, morphing, removing nodes|edges.
-   
-   Implements methods from the generic <Graph.Op> object.
+   Performs advanced operations on trees and graphs.
+
+   Extends:
+
+   All <Graph.Op> methods
+
+   Access:
+
+   This instance can be accessed with the _op_ parameter of the <RGraph> instance created.
+
+   Example:
+
+   (start code js)
+    var rgraph = new RGraph(canvas, config);
+    rgraph.op.morph //or can also call any other <Graph.Op> method
+   (end code)
    
 */
 RGraph.Op = new Class({
@@ -371,7 +471,23 @@ RGraph.Op = new Class({
 /*
    Class: RGraph.Plot
 
-   <RGraph> plotting capabilities.
+   Performs plotting operations.
+
+   Extends:
+
+   All <Graph.Plot> methods
+
+   Access:
+
+   This instance can be accessed with the _fx_ parameter of the <RGraph> instance created.
+
+   Example:
+
+   (start code js)
+    var rgraph = new RGraph(canvas, config);
+    rgraph.fx.placeLabel //or can also call any other <RGraph.Plot> method
+   (end code)
+
 */
 RGraph.Plot = new Class({
 	
@@ -386,7 +502,19 @@ RGraph.Plot = new Class({
 	    this.nodeTypes = new RGraph.Plot.NodeTypes;
 		this.edgeTypes = new RGraph.Plot.EdgeTypes;
     },
-	
+
+    /* 
+      Method: placeLabel
+
+      Overrides abstract method placeLabel in <Graph.Plot>.
+
+      Parameters:
+
+      tag - A DOM label element.
+      node - A <Graph.Node>.
+      controller - A configuration/controller object passed to the visualization.
+     
+     */
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), canvas = this.viz.canvas; 
         var radius= canvas.getSize();
@@ -402,6 +530,25 @@ RGraph.Plot = new Class({
 	}
 });
 
+/*
+  Class: RGraph.Plot.NodeTypes
+
+  Here are implemented all kinds of node rendering functions. 
+  Rendering functions implemented are 'none', 'circle', 'triangle', 'rectangle', 'star' and 'square'.
+
+  You can add new Node types by implementing a new method in this class
+
+  Example:
+
+  (start code js)
+    RGraph.Plot.NodeTypes.implement({
+      'newnodetypename': function(node, canvas) {
+        //Render my node here.
+      }
+    });
+  (end code)
+
+*/
 RGraph.Plot.NodeTypes = new Class({
     'none': function() {},
     
@@ -462,6 +609,25 @@ RGraph.Plot.NodeTypes = new Class({
     }
 });
 
+/*
+  Class: RGraph.Plot.EdgeTypes
+
+  Here are implemented all kinds of edge rendering functions. 
+  Rendering functions implemented are 'none', 'line' and 'arrow'.
+
+  You can add new Edge types by implementing a new method in this class
+
+  Example:
+
+  (start code js)
+    RGraph.Plot.EdgeTypes.implement({
+      'newedgetypename': function(adj, canvas) {
+        //Render my edge here.
+      }
+    });
+  (end code)
+
+*/
 RGraph.Plot.EdgeTypes = new Class({
     'none': function() {},
     

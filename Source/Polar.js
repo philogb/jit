@@ -1,15 +1,15 @@
 /*
  * File: Polar.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
+ * Defines the <Polar> class.
+ *
+ * Description:
+ *
+ * The <Polar> class, just like the <Complex> class, is used by the <Hypertree>, <ST> and <RGraph> as a 2D point representation.
+ *
+ * See also:
+ *
+ * <http://en.wikipedia.org/wiki/Polar_coordinates>
  *
 */
 
@@ -18,22 +18,18 @@
 
    A multi purpose polar representation.
 
-*/
-
-/*
-   Constructor: Polar
-
-   Polar constructor.
-
+   Description:
+ 
+   The <Polar> class, just like the <Complex> class, is used by the <Hypertree>, <ST> and <RGraph> as a 2D point representation.
+ 
+   See also:
+ 
+   <http://en.wikipedia.org/wiki/Polar_coordinates>
+ 
    Parameters:
 
       theta - An angle.
       rho - The norm.
-
-
-   Returns:
-
-      A new Polar instance.
 */
 
 this.Polar = function(theta, rho) {
@@ -47,7 +43,11 @@ Polar.prototype = {
     
        Returns a complex number.
     
-       Returns:
+       Parameters:
+
+       simple - _optional_ If *true*, this method will return only an object holding x and y properties and not a <Complex> instance. Default's *false*.
+
+      Returns:
     
           A complex number.
     */
@@ -58,7 +58,7 @@ Polar.prototype = {
     /*
        Method: getp
     
-       Returns the variable in polar coordinates.
+       Returns a <Polar> representation.
     
        Returns:
     
@@ -73,6 +73,10 @@ Polar.prototype = {
        Method: set
     
        Sets a number.
+
+       Parameters:
+
+       v - A <Complex> or <Polar> instance.
     
     */
     set: function(v) {
@@ -83,7 +87,12 @@ Polar.prototype = {
     /*
        Method: setc
     
-       Sets a complex number.
+       Sets a <Complex> number.
+
+       Parameters:
+
+       x - A <Complex> number real part.
+       y - A <Complex> number imaginary part.
     
     */
     setc: function(x, y) {
@@ -96,6 +105,11 @@ Polar.prototype = {
        Method: setp
     
        Sets a polar number.
+
+       Parameters:
+
+       theta - A <Polar> number angle property.
+       rho - A <Polar> number rho property.
     
     */
     setp: function(theta, rho) {
@@ -121,9 +135,13 @@ Polar.prototype = {
     
         Translates from polar to cartesian coordinates and returns a new <Complex> instance.
     
-       Returns:
+        Parameters:
+
+        simple - _optional_ If *true* this method will only return an object with x and y properties (and not the whole <Complex> instance). Default's *false*.
+ 
+        Returns:
     
-          A new Complex instance.
+          A new <Complex> instance.
     */
     toComplex: function(simple) {
         var x = Math.cos(this.theta) * this.rho;
@@ -137,6 +155,10 @@ Polar.prototype = {
     
         Adds two <Polar> instances.
     
+       Parameters:
+
+       polar - A <Polar> number.
+
        Returns:
     
           A new Polar instance.
@@ -150,7 +172,11 @@ Polar.prototype = {
     
         Scales a polar norm.
     
-       Returns:
+        Parameters:
+
+        number - A scale factor.
+        
+        Returns:
     
           A new Polar instance.
     */
@@ -162,6 +188,16 @@ Polar.prototype = {
        Method: equals
     
        Comparison method.
+
+       Returns *true* if the theta and rho properties are equal.
+
+       Parameters:
+
+       c - A <Polar> number.
+
+       Returns:
+
+       *true* if the theta and rho parameters for these objects are equal. *false* otherwise.
     */
     equals: function(c) {
         return this.theta == c.theta && this.rho == c.rho;
@@ -172,6 +208,10 @@ Polar.prototype = {
     
         Adds two <Polar> instances affecting the current object.
     
+       Paramters:
+
+       polar - A <Polar> instance.
+
        Returns:
     
           The changed object.
@@ -186,6 +226,10 @@ Polar.prototype = {
     
         Adds two <Polar> instances affecting the current object. The resulting theta angle is modulo 2pi.
     
+       Parameters:
+
+       polar - A <Polar> instance.
+
        Returns:
     
           The changed object.
@@ -201,7 +245,11 @@ Polar.prototype = {
     
         Scales a polar instance affecting the object.
     
-       Returns:
+      Parameters:
+
+      number - A scaling factor.
+
+      Returns:
     
           The changed object.
     */
@@ -214,10 +262,15 @@ Polar.prototype = {
        Method: interpolate
     
         Calculates a polar interpolation between two points at a given delta moment.
+
+        Parameters:
+      
+        elem - A <Polar> instance.
+        delta - A delta factor ranging [0, 1].
     
        Returns:
     
-          A new Polar instance representing an interpolation between _this_ and _elem_
+          A new <Polar> instance representing an interpolation between _this_ and _elem_
     */
     interpolate: function(elem, delta) {
         var pi = Math.PI, pi2 = pi * 2;

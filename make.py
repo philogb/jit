@@ -12,6 +12,6 @@ def make_docs():
         + "NaturalDocs-1.4/NaturalDocs -i " 
         + PROJECT_ROOT + "Source/ -o HTML "
         + PROJECT_ROOT +"Docs/ -p "
-        + PROJECT_ROOT + "NaturalDocs-1.4 -s docstyle -r")
+        + PROJECT_ROOT + "NaturalDocs-1.4 -img NaturalDocs-1.4/img -s docstyle -r")
     
 if __name__ == "__main__": main()

@@ -1,22 +1,136 @@
 /*
  * File: Animation.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
+ * Core <Animation> and <Trans> transition classes.
  *
 */
 
 /*
    Object: Trans
     
-     An object containing multiple type of transformations. Based on the mootools library <http://mootools.net>.
+     An object containing multiple type of transformations. 
+     
+     Based on:
+         
+     MooTools library <http://mootools.net>.
+
+     Used by:
+
+     <RGraph>, <Hypertree> and <ST> classes.
+
+     Description:
+
+     This object is used for specifying different animation transitions in the <RGraph>, <Hypertree> and <ST> classes.
+
+     There are many different type of animation transitions.
+
+     linear:
+
+     Displays a linear transition
+
+     >Trans.linear
+     
+     (see Linear.png)
+
+     Quad:
+
+     Displays a Quadratic transition.
+  
+     >Trans.Quad.easeIn
+     >Trans.Quad.easeOut
+     >Trans.Quad.easeInOut
+     
+    (see Quad.png)
+
+    Cubic:
+
+    Displays a Cubic transition.
+
+    >Trans.Cubic.easeIn
+    >Trans.Cubic.easeOut
+    >Trans.Cubic.easeInOut
+
+    (see Cubic.png)
+
+    Quart:
+
+    Displays a Quartetic transition.
+
+    >Trans.Quart.easeIn
+    >Trans.Quart.easeOut
+    >Trans.Quart.easeInOut
+
+    (see Quart.png)
+
+    Quint:
+
+    Displays a Quintic transition.
+
+    >Trans.Quint.easeIn
+    >Trans.Quint.easeOut
+    >Trans.Quint.easeInOut
+
+    (see Quint.png)
+
+    Expo:
+
+    Displays an Exponential transition.
+
+    >Trans.Expo.easeIn
+    >Trans.Expo.easeOut
+    >Trans.Expo.easeInOut
+
+    (see Expo.png)
+
+    Circ:
+
+    Displays a Circular transition.
+
+    >Trans.Circ.easeIn
+    >Trans.Circ.easeOut
+    >Trans.Circ.easeInOut
+
+    (see Circ.png)
+
+    Sine:
+
+    Displays a Sineousidal transition.
+
+    >Trans.Sine.easeIn
+    >Trans.Sine.easeOut
+    >Trans.Sine.easeInOut
+
+    (see Sine.png)
+
+    Back:
+
+    >Trans.Back.easeIn
+    >Trans.Back.easeOut
+    >Trans.Back.easeInOut
+
+    (see Back.png)
+
+    Bounce:
+
+    Bouncy transition.
+
+    >Trans.Bounce.easeIn
+    >Trans.Bounce.easeOut
+    >Trans.Bounce.easeInOut
+
+    (see Bounce.png)
+
+    Elastic:
+
+    Elastic curve.
+
+    >Trans.Elastic.easeIn
+    >Trans.Elastic.easeOut
+    >Trans.Elastic.easeInOut
+
+    (see Elastic.png)
+
+
 
 */
 this.Trans = {
@@ -95,7 +209,17 @@ this.Trans = {
 /*
    Class: Animation
     
-   A Class that can perform graph animations. Based on Fx.Base from Mootools: <http://mootools.net>.
+   A Class that can perform animations for generic objects.
+
+   If you are looking for animation transitions please take a look at the <Trans> object.
+
+   Used by:
+
+   <Graph.Plot>
+   
+   Based on:
+   
+   Fx.Base from MooTools: <http://mootools.net>.
 
 */
 

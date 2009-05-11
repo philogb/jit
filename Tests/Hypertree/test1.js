@@ -370,7 +370,7 @@ function init(){
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.onclick = function () {
-                ht.onClick(node.id);
+                ht.onClick(node.id, { hideLabels: false });
             };
         },
         

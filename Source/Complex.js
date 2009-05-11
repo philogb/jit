@@ -1,23 +1,36 @@
 /*
  * File: Complex.js
  * 
- * Author: Nicolas Garcia Belmonte
- * 
- * Copyright: Copyright 2008-2009 by Nicolas Garcia Belmonte.
- * 
- * License: BSD License
- * 
- * Homepage: <http://thejit.org>
- * 
- * Version: 1.0.8a
+ * Defines the <Complex> class.
+ *
+ * Description:
+ *
+ * The <Complex> class, just like the <Polar> class, is used by the <Hypertree>, <ST> and <RGraph> as a 2D point representation.
+ *
+ * See also:
+ *
+ * <http://en.wikipedia.org/wiki/Complex_number>
  *
 */
 
 /*
    Class: Complex
     
-     A multi-purpose Complex Class with common methods.
+   A multi-purpose Complex Class with common methods.
+ 
+   Description:
+ 
+   The <Complex> class, just like the <Polar> class, is used by the <Hypertree>, <ST> and <RGraph> as a 2D point representation.
+ 
+   See also:
+ 
+   <http://en.wikipedia.org/wiki/Complex_number>
 
+   Parameters:
+
+   x - _optional_ A Complex number real part.
+   y - _optional_ A Complex number imaginary part.
+ 
 */
 
 this.Complex = function(x, y) {
@@ -25,21 +38,6 @@ this.Complex = function(x, y) {
 	this.y = y;
 };
 
-/*
-   Constructor: Complex
-
-   Complex constructor.
-
-   Parameters:
-
-      re - A real number.
-      im - An real number representing the imaginary part.
-
-
-   Returns:
-
-      A new Complex instance.
-*/
 Complex.prototype = {
     /*
        Method: getc
@@ -57,11 +55,15 @@ Complex.prototype = {
     /*
        Method: getp
     
-       Returns the variable in polar coordinates.
+       Returns a <Polar> representation of this number.
     
+       Parameters:
+
+       simple - _optional_ If *true*, this method will return only an object holding theta and rho properties and not a <Polar> instance. Default's *false*.
+
        Returns:
     
-          A variable in polar coordinates.
+          A variable in <Polar> coordinates.
     */
     getp: function(simple) {
         return this.toPolar(simple);
@@ -72,6 +74,10 @@ Complex.prototype = {
        Method: set
     
        Sets a number.
+
+       Parameters:
+
+       c - A <Complex> or <Polar> instance.
     
     */
     set: function(c) {
@@ -84,6 +90,11 @@ Complex.prototype = {
        Method: setc
     
        Sets a complex number.
+
+       Parameters:
+
+       x - A <Complex> number Real part.
+       y - A <Complex> number Imaginary part.
     
     */
     setc: function(x, y) {
@@ -95,6 +106,11 @@ Complex.prototype = {
        Method: setp
     
        Sets a polar number.
+
+       Parameters:
+
+       theta - A <Polar> number theta property.
+       rho - A <Polar> number rho property.
     
     */
     setp: function(theta, rho) {
@@ -120,6 +136,10 @@ Complex.prototype = {
     
        Transforms cartesian to polar coordinates.
     
+       Parameters:
+
+       simple - _optional_ If *true* this method will only return an object with theta and rho properties (and not the whole <Polar> instance). Default's *false*.
+       
        Returns:
     
           A new <Polar> instance.
@@ -135,7 +155,7 @@ Complex.prototype = {
     /*
        Method: norm
     
-       Calculates the complex norm.
+       Calculates a <Complex> number norm.
     
        Returns:
     
@@ -148,7 +168,7 @@ Complex.prototype = {
     /*
        Method: squaredNorm
     
-       Calculates the complex squared norm.
+       Calculates a <Complex> number squared norm.
     
        Returns:
     
@@ -162,11 +182,12 @@ Complex.prototype = {
        Method: add
     
        Returns the result of adding two complex numbers.
+       
        Does not alter the original object.
 
        Parameters:
     
-          pos - A Complex initialized instance.
+          pos - A <Complex> instance.
     
        Returns:
     
@@ -179,12 +200,13 @@ Complex.prototype = {
     /*
        Method: prod
     
-       Returns the result of multiplying two complex numbers.
+       Returns the result of multiplying two <Complex> numbers.
+       
        Does not alter the original object.
 
        Parameters:
     
-          pos - A Complex initialized instance.
+          pos - A <Complex> instance.
     
        Returns:
     
@@ -197,11 +219,13 @@ Complex.prototype = {
     /*
        Method: conjugate
     
-       Returns the conjugate por this complex.
+       Returns the conjugate of this <Complex> number.
+
+       Does not alter the original object.
 
        Returns:
     
-         The conjugate por this complex.
+         The conjugate of this <Complex> number.
     */
     conjugate: function() {
         return new Complex(this.x, -this.y);
@@ -211,7 +235,8 @@ Complex.prototype = {
     /*
        Method: scale
     
-       Returns the result of scaling a Complex instance.
+       Returns the result of scaling a <Complex> instance.
+       
        Does not alter the original object.
 
        Parameters:
@@ -230,6 +255,16 @@ Complex.prototype = {
        Method: equals
     
        Comparison method.
+
+       Returns *true* if both real and imaginary parts are equal.
+
+       Parameters:
+
+       c - A <Complex> instance.
+
+       Returns:
+
+       A boolean instance indicating if both <Complex> numbers are equal.
     */
     equals: function(c) {
         return this.x == c.x && this.y == c.y;
@@ -238,12 +273,13 @@ Complex.prototype = {
     /*
        Method: $add
     
-       Returns the result of adding two complex numbers.
+       Returns the result of adding two <Complex> numbers.
+       
        Alters the original object.
 
        Parameters:
     
-          pos - A Complex initialized instance.
+          pos - A <Complex> instance.
     
        Returns:
     
@@ -257,12 +293,13 @@ Complex.prototype = {
     /*
        Method: $prod
     
-       Returns the result of multiplying two complex numbers.
+       Returns the result of multiplying two <Complex> numbers.
+       
        Alters the original object.
 
        Parameters:
     
-          pos - A Complex initialized instance.
+          pos - A <Complex> instance.
     
        Returns:
     
@@ -278,7 +315,8 @@ Complex.prototype = {
     /*
        Method: $conjugate
     
-       Returns the conjugate for this complex.
+       Returns the conjugate for this <Complex>.
+       
        Alters the original object.
 
        Returns:
@@ -293,7 +331,8 @@ Complex.prototype = {
     /*
        Method: $scale
     
-       Returns the result of scaling a Complex instance.
+       Returns the result of scaling a <Complex> instance.
+       
        Alters the original object.
 
        Parameters:
@@ -312,12 +351,13 @@ Complex.prototype = {
     /*
        Method: $div
     
-       Returns the division of two complex numbers.
+       Returns the division of two <Complex> numbers.
+       
        Alters the original object.
 
        Parameters:
     
-          pos - A Complex number.
+          pos - A <Complex> number.
     
        Returns:
     

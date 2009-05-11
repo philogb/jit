@@ -473,7 +473,7 @@ function init(){
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.onclick = function () {
-                rgraph.onClick(node.id);
+                rgraph.onClick(node.id, { hideLabels: true });
             };
         },
         
