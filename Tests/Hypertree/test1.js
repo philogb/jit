@@ -5,9 +5,10 @@ function init(){
             if (!this.elem) 
                 this.elem = document.getElementById('log');
             this.elem.innerHTML = text;
+            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
         }
     };
-    
+    //init data
     var json = {
         "id": "347_0",
         "name": "Nine Inch Nails",
@@ -326,79 +327,76 @@ function init(){
         }],
         "data": []
     };
+    //end
     var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
+    
+    //init canvas
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ddd',
-            'strokeStyle': '#ddd'
+        'height': h
+    });
+    //end
+    var style = document.getElementById('mycanvas').style;
+    style.marginLeft = style.marginTop = "25px";
+    //init Hypertree
+    var ht = new Hypertree(canvas, {
+        //Change node and edge styles such as
+        //color, width and dimensions.
+        Node: {
+            dim: 9,
+            color: "#f00"
         },
         
-        'backgroundCanvas': {
-            'styles': {
-                'fillStyle': '#ccc',
-                'strokeStyle': '#ccc'
-            },
-            
-            'impl': {
-                'init': function(){
-                },
-                'plot': function(canvas, ctx){
-                    ctx.beginPath();
-                    ctx.arc(0, 0, ((w < h) ? w : h) / 2, 0, Math.PI * 2, true);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            }
-        }
-    });
-    
-    var nodesCache = {};
-    ht = new Hypertree(canvas, {
-        Node: {
-            dim: 5
+        Edge: {
+            lineWidth: 2,
+            color: "#088"
         },
         
         onBeforeCompute: function(node){
             Log.write("centering");
         },
-        
+        //Attach event handlers and add text to the
+        //labels. This method is only triggered on label
+        //creation
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.onclick = function () {
-                ht.onClick(node.id, { hideLabels: false });
+                ht.onClick(node.id);
             };
         },
-        
-        //Take the left style property and substract half of the label actual width.
-        onPlaceLabel: function(tag, node){
-            var width = tag.offsetWidth;
-            var intX = parseInt(tag.style.left);
-            intX -= width / 2;
-            tag.style.left = intX + 'px';
+        //Change node styles when labels are placed
+        //or moved.
+        onPlaceLabel: function(domElement, node){
+            var style = domElement.style;
+            style.display = '';
+            style.cursor = 'pointer';
+            if (node._depth <= 1) {
+                style.fontSize = "0.8em";
+                style.color = "#ddd";
+
+            } else if(node._depth == 2){
+                style.fontSize = "0.7em";
+                style.color = "#555";
+
+            } else {
+                style.display = 'none';
+            }
+
+            var left = parseInt(style.left);
+            var w = domElement.offsetWidth;
+            style.left = (left - w / 2) + 'px';
         },
         
         onAfterCompute: function(){
             Log.write("done");
-            var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
-            var _self = this;
-            Graph.Util.eachNode(ht.graph, function(n){
-                var domNode = (n.id in nodesCache) ? nodesCache[n.id] : nodesCache[n.id] = document.getElementById(n.id);
-                if (node.adjacentTo(n) || node.id == n.id) {
-                    var wasEmpty = domNode.innerHTML == "";
-                    domNode.innerHTML = n.name;
-                    if (wasEmpty) 
-                        _self.onPlaceLabel(domNode, n);
-                }
-                else {
-                    domNode.innerHTML = "";
-                }
-            });
             
+            //Build the right column relations list.
+            //This is done by collecting the information (stored in the data property) 
+            //for all the nodes adjacent to the centered node.
+            var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
             Graph.Util.eachAdjacency(node, function(adj){
@@ -413,10 +411,10 @@ function init(){
         }
     });
     
-    //load tree from tree data.
+    //load JSON data.
     ht.loadJSON(json);
-    ht.compute();
-    ht.plot();
-    //    ht.prepareCanvasEvents();
+    //compute positions and plot.
+    ht.refresh();
+    //end
     ht.controller.onAfterCompute();
 }

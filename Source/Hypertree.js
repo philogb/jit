@@ -62,13 +62,37 @@ Complex.prototype.moebiusTransformation = function(c) {
   
 */ 
 Graph.Util.getClosestNodeToOrigin = function(graph, prop, flags) { 
-  var node = null; prop = prop || 'pos';
+    return this.getClosestNodeToPos(graph, Polar.KER, prop, flags);
+}; 
+
+/* 
+   Method: getClosestNodeToPos
+ 
+   Extends <Graph.Util>. Returns the closest node to the given position.
+
+   Parameters:
+  
+    graph - A <Graph> instance.
+    p[os - A <Complex> or <Polar> instance.
+    prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
+
+   Returns:
+
+    Closest node to the given position. Returns *null* otherwise.
+  
+*/ 
+Graph.Util.getClosestNodeToPos = function(graph, pos, prop, flags) { 
+  var node = null; prop = prop || 'pos'; pos = pos && pos.getc(true) || Complex.KER;
+  var distance = function(a, b) { 
+    var d1 = a.x - b.x, d2 = a.y - b.y;
+    return d1 * d1 + d2 * d2;
+  };
   this.eachNode(graph, function(elem) { 
-    node = (node == null || elem[prop].rho < node[prop].rho)? elem : node; 
+    node = (node == null || distance(elem[prop].getc(true), pos) < distance(node[prop].getc(true), pos))? elem : node; 
   }, flags); 
   return node; 
 }; 
- 
+
 /* 
     moebiusTransformation 
      
@@ -495,8 +519,10 @@ this.Hypertree = new Class({
     move: function(pos, opt) { 
         var versor = $C(pos.x, pos.y); 
         if(this.busy === false && versor.norm() < 1) { 
+            var GUtil = Graph.Util;
             this.busy = true; 
-            var root = this.graph.getNode(this.root), that = this; 
+            var root = GUtil.getClosestNodeToPos(this.graph, versor), that = this;
+            GUtil.computeLevels(this.graph, root.id, 0);
             this.controller.onBeforeCompute(root); 
             if (versor.norm() < 1) { 
                 opt = $merge({ onComplete: $empty }, opt || {}); 

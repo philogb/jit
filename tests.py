@@ -3,15 +3,15 @@ tests_model = {
 
     'RGraph': [
         {
-            'Title': 'Test animation with simple static tree.',
+            'Title': 'Tree Animation',
             'Description': 
             """
-            Testing the RGraph with a simple static JSON structure.
-            Clicking on a node should move the tree and center that node.
-            Not other animations should happen.
-            The centered node's children should be displayed in a relations list.
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            Clicking on a node should move the tree and center that node.<br /><br />
+            The centered node's children are displayed in a relations list in the right column.
             """,
-            'Extras': ['excanvas.js']
+            'Extras': ['excanvas.js'],
+            'Example': True
         },
         {
             'Title': 'Test removing nodes.',
@@ -58,15 +58,16 @@ tests_model = {
             'Extras': ['generators.js', 'excanvas.js']
         },
         {
-            'Title': 'Test with K6 weighted graph.',
+            'Title': 'Weighted Graph Animation',
             'Description': 
             """
-            Testing the RGraph with a simple static JSON K6 graph structure with wieghted nodes and edges.
-            Clicking on a node should move the graph and center that node.
-            Not other animations should happen.
-            The centered node's children should be displayed in a relations list.
+            A static JSON graph structure is used for this animation.<br /><br />
+            For each JSON node/edge the properties prefixed with the dollar sign ($) set the type of node/edge to be plotted, its style and its dimensions.<br /><br />
+            Line weights are added programmatically, <em>onBeforePlotLine</em>.<br /><br />
+            An <b>Elastic</b> transition is used instead of the linear transition for the animation.
             """,
-            'Extras': ['generators.js', 'excanvas.js']
+            'Extras': ['excanvas.js'],
+            'Example':True
         },
         {
             'Title': 'Test with node styles and edge styles.',
@@ -79,21 +80,34 @@ tests_model = {
             The centered node's children should be displayed in a relations list.
             """,
             'Extras': ['excanvas.js']
+        },
+        {
+            'Title': 'Graph Operations',
+            'Description': 
+            """
+            You can do the following operations with the RGraph<br /><br />
+            1.- Removing subtrees or nodes<br /><br />
+            2.- Removing edges<br /><br />
+            3.- Adding another graph, also called sum<br /><br />
+            4.- Morphing (or transforming) the graph into another one<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
         }]
     ,
 
     
     'Hypertree': [
         {
-            'Title': 'Test animation with simple static tree.',
+            'Title': 'Tree Animation',
             'Description': 
             """
-            Testing the Hypertree with a simple static JSON structure.
-            Clicking on a node should move the tree and center that node.
-            Not other animations should happen.
-            The centered node's children should be displayed in a relations list.
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            Clicking on a node should move the tree and center that node.<br /><br />
+            The centered node's children are displayed in a relations list in the right column.
             """,
-            'Extras': ['excanvas.js']
+            'Extras': ['excanvas.js'],
+            'Example':True
         },
         {
             'Title': 'Test with single node.',
@@ -148,16 +162,16 @@ tests_model = {
             'Extras': ['generators.js', 'excanvas.js']
         },
         {
-            'Title': 'Test with K6 weighted graph.',
+            'Title': 'Weighted Graph Animation',
             'Description': 
             """
-            Testing the Hypertree with a simple static JSON K6 graph structure with wieghted nodes and edges.
-            Clicking on a node should move the graph and center that node.
-            Not other animations should happen.
-            Nodes diameter should not be transformed when moving the tree.
-            The centered node's children should be displayed in a relations list.
+            A static JSON graph structure is used for this animation.<br /><br />
+            For each JSON node the "$type" and "$dim" parameters set the type of node to be plotted and its dimensions.<br /><br />
+            Line weights are added programmatically, <em>onBeforePlotLine</em>.<br /><br />
+            A <b>Back</b> transition is used instead of the linear transition for the animation.
             """,
-            'Extras': ['excanvas.js']
+            'Extras': ['excanvas.js'],
+            'Example':True
         },
         {
             'Title': 'Test with not weighted random generated tree.',
@@ -188,6 +202,19 @@ tests_model = {
             overriding each node's style differently.
             """,
             'Extras': ['excanvas.js']
+        },
+        {
+            'Title': 'Graph Operations',
+            'Description': 
+            """
+            You can do the following operations with the Hypertree<br /><br />
+            1.- Removing subtrees or nodes<br /><br />
+            2.- Removing edges<br /><br />
+            3.- Adding another graph, also called sum<br /><br />
+            4.- Morphing (or transforming) the graph into another one<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
         }
     ],
     

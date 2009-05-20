@@ -5,9 +5,15 @@ function init(){
             if (!this.elem) 
                 this.elem = document.getElementById('log');
             this.elem.innerHTML = text;
+            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
         }
     };
-
+    //init data
+    //By defining properties with the dollar sign ($)
+    //in nodes and edges we can override the global configuration
+    //properties for nodes and edges.
+    //In this case we use "$type" and "$dim" properties to override
+    //the type of the node to be plotted and its dimension.
     var json = [{
         "id": "node0",
         "name": "node0 name",
@@ -46,6 +52,7 @@ function init(){
         "name": "node1 name",
         "data": {
             "$dim": 13.077119090372014,
+            "$type": "square",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -79,6 +86,7 @@ function init(){
         "name": "node2 name",
         "data": {
             "$dim": 24.937383149648717,
+            "$type": "triangle",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -144,7 +152,8 @@ function init(){
         "id": "node4",
         "name": "node4 name",
         "data": {
-            "$dim": 1.3754347037767345,
+            "$dim": 5.3754347037767345,
+            "$type":"triangle",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -178,6 +187,7 @@ function init(){
         "name": "node5 name",
         "data": {
             "$dim": 32.26403873194912,
+            "$type": "star",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -207,29 +217,38 @@ function init(){
             }
         }]
     }];
+    //end
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    //init canvas
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ddd',
-            'strokeStyle': '#ddd'
-        }
+        'height': h
     });
-    ht = new Hypertree(canvas, {
+    //end
+    //init Hypertree
+    var ht = new Hypertree(canvas, {
+        //By setting overridable=true,
+        //Node and Edge global properties can be
+        //overriden for each node/edge.
         Node: {
             overridable: true,
-            'transform': false
+            'transform': false,
+            color: "#f00"
         },
         
         Edge: {
-            overridable: true
+            overridable: true,
+            color: "#088"
         },
         
+        transition: Trans.Back.easeOut,
+        duration:1000,
+        
         onBeforePlotLine: function(adj){
+            //Set random lineWidth for edges.
             if (!adj.data.$lineWidth) 
                 adj.data.$lineWidth = Math.random() * 5 + 1;
         },
@@ -237,24 +256,26 @@ function init(){
         onBeforeCompute: function(node){
             Log.write("centering");
         },
-        
+        //Attach event handlers.
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
+            domElement.style.cursor = "pointer";
             domElement.onclick = function () {
-                ht.onClick(node.id);
+                ht.onClick(node.id, { hideLabels: false });
             };
         },
         
-        //Take the left style property and substract half of the label actual width.
-        onPlaceLabel: function(tag, node){
-            var width = tag.offsetWidth;
-            var intX = parseInt(tag.style.left);
+        onPlaceLabel: function(domElement, node){
+            var width = domElement.offsetWidth;
+            var intX = parseInt(domElement.style.left);
             intX -= width / 2;
-            tag.style.left = intX + 'px';
+            domElement.style.left = intX + 'px';
         },
         
         onAfterCompute: function(){
             Log.write("done");
+
+            //Make the relations list shown in the right column.
             var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
@@ -266,13 +287,11 @@ function init(){
             document.getElementById('inner-details').innerHTML = html;
         }
     });
-    //load weighted graph.
+    //load JSON graph.
     ht.loadJSON(json, 2);
-    //compute positions
-    ht.compute();
-    //make first plot
-    ht.plot();
+    //compute positions and plot
+    ht.refresh();
+    //end
     ht.controller.onBeforeCompute(Graph.Util.getNode(ht.graph, ht.root));
     ht.controller.onAfterCompute();
-    
 }

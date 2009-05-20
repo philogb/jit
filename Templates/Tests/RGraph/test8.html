@@ -1,0 +1,143 @@
+$def with (model)
+
+<h4>Global Options</h4>
+
+<table>
+    <tr>
+        <td>
+            duration:
+        </td>
+        <td>
+            <select id="select-duration">
+                <option>1000</option>
+                <option>1500</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            fps:
+        </td>
+        <td>
+            <select id="select-fps">
+                <option>10</option>
+                <option selected="selected">30</option>
+                <option>60</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            hide labels:
+        </td>
+        <td>
+            <input type="checkbox" checked="checked" id="hide-labels" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>
+
+<h4>1.- Remove Nodes</h4>
+
+<table>
+    <tr>
+        <td>
+            type:
+        </td>
+        <td>
+            <select id="select-type-remove-nodes">
+                <option>fade:seq</option>
+                <option>fade:con</option>
+                <option>iter</option>
+                <option>replot</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Remove" id="remove-nodes" />    
+        </td>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>
+
+<h4>2.- Remove Edges</h4>
+
+<table>
+    <tr>
+        <td>
+            type:
+        </td>
+        <td>
+            <select id="select-type-remove-edges">
+                <option>fade:seq</option>
+                <option>fade:con</option>
+                <option>iter</option>
+                <option>replot</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Remove" id="remove-edges" />    
+        </td>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>
+
+<h4>3.- Add Graph (Sum)</h4>
+
+<table>
+    <tr>
+        <td>
+            type:
+        </td>
+        <td>
+            <select id="select-type-sum">
+                <option>fade:seq</option>
+                <option>fade:con</option>
+                <option>replot</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Sum" id="sum" />    
+        </td>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>
+
+<h4>4.- Morph</h4>
+
+<table>
+    <tr>
+        <td>
+            type:
+        </td>
+        <td>
+            <select id="select-type-morph">
+                <option>fade:con</option>
+                <option>replot</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Morph" id="morph" />    
+        </td>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>

@@ -7,6 +7,15 @@ html, body {
     background-color:#F2F2F2;
 }
 
+input, select {
+    font-size:0.9em;
+}
+
+table {
+    margin-top:-10px;
+    margin-left:7px;
+}
+
 h4 {
     font-size:1.1em;
     text-decoration:none;
@@ -52,6 +61,10 @@ h4 {
     background-image:url('col1.png');
     background-position:center left;
     border-right:1px solid #ddd;
+}
+
+#right-container h4{
+    text-indent:8px;
 }
 
 #center-container {

@@ -8,6 +8,7 @@ function init(){
             this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
         }
     };
+    //init data
     var json = {
         id: "190_0",
         name: "Pearl Jam",
@@ -366,10 +367,12 @@ function init(){
             relation: "<h4>Pearl Jam</h4><b>Connections:</b><ul><li>Pearl Jam &amp; Cypress Hill <div>(relation: collaboration)</div></li><li>Neil Young &amp; Pearl Jam <div>(relation: collaboration)</div></li><li>Jeff Ament <div>(relation: member of band)</div></li><li>Stone Gossard <div>(relation: member of band)</div></li><li>Eddie Vedder <div>(relation: member of band)</div></li><li>Mike McCready <div>(relation: member of band)</div></li><li>Matt Cameron <div>(relation: member of band)</div></li><li>Dave Krusen <div>(relation: member of band)</div></li><li>Matt Chamberlain <div>(relation: member of band)</div></li><li>Dave Abbruzzese <div>(relation: member of band)</div></li><li>Jack Irons <div>(relation: member of band)</div></li></ul>"
         }
     };
+    //end
     
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     
+    //init canvas
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         //Where to append the canvas widget
@@ -399,8 +402,10 @@ function init(){
             }
         }
     });
-    
-    rgraph = new RGraph(canvas, {
+    //end
+    //init RGraph
+    var rgraph = new RGraph(canvas, {
+        //Set Node and Edge colors.
         Node: {
             color: '#ccddee'
         },
@@ -411,20 +416,25 @@ function init(){
 
         onBeforeCompute: function(node){
             Log.write("centering " + node.name + "...");
+            //Add the relation list in the right column.
+            //This list is taken from the data property of each JSON node.
             document.getElementById('inner-details').innerHTML = node.data.relation;
         },
         
         onAfterCompute: function(){
             Log.write("done");
         },
-        
+        //Add the name of the node in the correponding label
+        //and a click handler to move the graph.
+        //This method is called once, on label creation.
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.onclick = function(){
                 rgraph.onClick(node.id);
             };
         },
-        
+        //Change some label dom properties.
+        //This method is called each time a label is plotted.
         onPlaceLabel: function(domElement, node){
             var style = domElement.style;
             style.display = '';
@@ -445,14 +455,14 @@ function init(){
             var left = parseInt(style.left);
             var w = domElement.offsetWidth;
             style.left = (left - w / 2) + 'px';
-
         }
     });
     
-    //load tree from tree data.
+    //load JSON data
     rgraph.loadJSON(json);
     //compute positions and make the first plot
     rgraph.refresh();
+    //end
     //append information about the root relations in the right column
     document.getElementById('inner-details').innerHTML = rgraph.graph.getNode(rgraph.root).data.relation;
 }

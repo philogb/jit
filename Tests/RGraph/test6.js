@@ -5,11 +5,17 @@ function init(){
             if (!this.elem) 
                 this.elem = document.getElementById('log');
             this.elem.innerHTML = text;
+            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
         }
     };
-
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    //init data
+    //If a node in this JSON structure
+    //has the "$type" or "$dim" parameters
+    //defined it will override the "type" and
+    //"dim" parameters globally defined in the
+    //RGraph constructor.
     var json = [{
         "id": "node0",
         "name": "node0 name",
@@ -35,6 +41,9 @@ function init(){
         }, {
             "nodeTo": "node4",
             "data": {
+                "$type":"arrow",
+                "$color":"#dd99dd",
+                "$dim":25,
                 "weight": 1
             }
         }, {
@@ -48,6 +57,7 @@ function init(){
         "name": "node1 name",
         "data": {
             "$dim": 13.077119090372014,
+            "$type": "square",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -81,6 +91,7 @@ function init(){
         "name": "node2 name",
         "data": {
             "$dim": 24.937383149648717,
+            "$type": "triangle",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -134,6 +145,10 @@ function init(){
         }, {
             "nodeTo": "node4",
             "data": {
+                "$type":"arrow",
+                "$direction": ["node4", "node3"],
+                "$dim":25,
+                "$color":"#dd99dd",
                 "weight": 1
             }
         }, {
@@ -146,7 +161,8 @@ function init(){
         "id": "node4",
         "name": "node4 name",
         "data": {
-            "$dim": 1.3754347037767345,
+            "$dim": 5.3754347037767345,
+            "$type":"triangle",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -180,6 +196,7 @@ function init(){
         "name": "node5 name",
         "data": {
             "$dim": 32.26403873194912,
+            "$type": "star",
             "some other key": "some other value"
         },
         "adjacencies": [{
@@ -209,25 +226,21 @@ function init(){
             }
         }]
     }];
+    //end
+    //init canvas
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
         'height': h,
-        'styles': {
-            'fillStyle': '#ccddee',
-            'strokeStyle': '#772277'
-        },
-        
+        //Optional: Add a background canvas
+        //that draws some concentric circles.
         'backgroundCanvas': {
             'styles': {
-                'fillStyle': '#ddd',
-                'strokeStyle': '#ddd'
+                'strokeStyle': '#444'
             },
-            
             'impl': {
-                'init': function(){
-                },
+                'init': function(){},
                 'plot': function(canvas, ctx){
                     var times = 6, d = 200;
                     var pi2 = Math.PI * 2;
@@ -241,55 +254,76 @@ function init(){
             }
         }
     });
-    rgraph = new RGraph(canvas, {
-        interpolation: 'polar',
+    //end
+    //init RGraph
+    var rgraph = new RGraph(canvas, {
+        //Nodes and Edges parameters
+        //can be overriden if defined in 
+        //the JSON input data.
+
+        //This way we can define different node
+        //types individually.
+
         Node: {
-            'overridable': true
+            'overridable': true,
+             'color': '#cc0000'
+
         },
         Edge: {
-            'overridable': true
+            'overridable': true,
+            'color': '#cccc00'
         },
+
+        //Set polar interpolation.
+        //Default's linear.
+        interpolation: 'polar',
         
+        //Change the transition effect from linear
+        //to elastic.
         transition: Trans.Elastic.easeOut,
-        fps: 40,
+        //Change other animation parameters.
+        duration:3500,
+        fps: 30,
+        //Change father-child distance.
         levelDistance: 200,
         
         onBeforePlotLine: function(adj){
+            //Add some random lineWidth to each edge.
             if (!adj.data.$lineWidth) 
                 adj.data.$lineWidth = Math.random() * 5 + 1;
         },
         
         onBeforeCompute: function(node){
             Log.write("centering " + node.name + "...");
+            
+            //Make right column relations list.
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
             Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
-                if (child.data) {
-                    html += "<li>" + child.name + "</li>";
-                }
+                html += "<li>" + child.name + "</li>";
             });
             html += "</ul>";
             document.getElementById('inner-details').innerHTML = html;
         },
         
+        //Add node click handler and some styles.
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.onclick = function () {
-                rgraph.onClick(node.id);
+                rgraph.onClick(node.id, { hideLabels: false });
             };
+            var style = domElement.style;
+            style.cursor = 'pointer';
+            style.fontSize = "0.8em";
+            style.color = "#fff";
         },
         
-        //Take off previous width and height styles and
-        //add half of the *actual* label width to the left position
-        // That will center your label (do the math man). 
         onPlaceLabel: function(domElement, node){
-            domElement.innerHTML = node.name;
-            var left = parseInt(domElement.style.left);
-            domElement.style.width = '';
-            domElement.style.height = '';
+            var style = domElement.style;
+            var left = parseInt(style.left);
             var w = domElement.offsetWidth;
-            domElement.style.left = (left - w / 2) + 'px';
+            style.left = (left - w / 2) + 'px';
         },
         
         onAfterCompute: function(){
@@ -297,18 +331,12 @@ function init(){
         }
         
     });
-    var effectHash = {};
-    
-    
-    //load weighted graph.
+    //load graph.
     rgraph.loadJSON(json, 1);
     
-    //compute positions
-    rgraph.compute();
-    
-    //make first plot
-    rgraph.plot();
-    
+    //compute positions and plot
+    rgraph.refresh();
+    //end
     rgraph.controller.onBeforeCompute(rgraph.graph.getNode(rgraph.root));
     rgraph.controller.onAfterCompute();
     

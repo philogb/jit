@@ -32,9 +32,9 @@ var Feeder = {
 			id:   idPrefix + levelStart + this.counter,
 			name: levelStart + "." + this.counter,
 			data: {
-                '$area': numb,
-                '$color': numb2,
-                '$dim': numb
+                "$area": numb,
+                "$color": numb2,
+                "$dim": numb
             }, 
 			children: []
 		};
@@ -107,13 +107,13 @@ var GraphGenerator = {
 						ans[j].adjacencies.push({
 							nodeTo: ans[k].id,
 							data: {
-								'$lineWidth': w
+								"$lineWidth": w
 							}
 						});
 						ans[k].adjacencies.push({
 							nodeTo: ans[j].id,
 							data: {
-								'$lineWidth': w
+								"$lineWidth": w
 							}
 						});
 					} else {
@@ -130,13 +130,13 @@ var GraphGenerator = {
 	newNode: function(i) {
 		var id = this.p.idPrefix + i;
 		return {
-			'id':id,
-			'name':id + " name",
-			'data': {
-                '$dim': Math.random() * 34 + 1,
-                'some other key': 'some other value'
+			"id":id,
+			"name":id + " name",
+			"data": {
+                "$dim": Math.random() * 34 + 1,
+                "some other key": "some other value"
             },
-			'adjacencies': []
+			"adjacencies": []
 		};
 	}
 };
