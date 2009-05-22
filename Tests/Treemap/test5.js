@@ -662,10 +662,15 @@ function init(){
     infovis.style.height = h + 'px';
     
     //init tm
-    var tm = new TM.Squarified({
+    //You can also do TM.SliceAndDice and TM.Squarified
+    var tm = new TM.Strip({ 
         //Where to inject the treemap.
         rootId: 'infovis',
         
+        titleHeight: 0,
+        orientation: "h",
+        offset: 0,
+                
         Color: {
             //Allow coloring
             allow: true,
@@ -759,15 +764,7 @@ function init(){
             //onmouseover
             var prevmover = leaf.onmouseover;
             leaf.onmouseover = function(e){
-                if (isLeaf) {
-                    leaf.className += ' over-leaf';
-                }
-                else {
-                    leaf.className += ' over-head';
-                    content.className += ' over-content';
-                }
-                if (content.id) 
-                    that.resetPath(tree);
+                if (isLeaf) leaf.className += ' over-leaf';
                 prevmover();
             };
             //Change an element CSS class
@@ -775,8 +772,6 @@ function init(){
             var prevmovout = leaf.onmouseout;
             leaf.onmouseout = function(e){
                 leaf.className = leaf.className.split(" ")[0];
-                content.className = content.className.split(" ")[0];
-                that.resetPath();
                 prevmovout();
             };
             //Add left and right click handlers
@@ -798,6 +793,21 @@ function init(){
                 else 
                     e.returnValue = false;
             };
+            
+            //Add background image
+            if(isLeaf) {
+                var style = leaf.style, 
+                width = parseInt(style.width) - 2, 
+                height = parseInt(style.height) - 2;
+                
+                leaf.innerHTML = tree.name + 
+                "<img src=\"/Tests/css/gradient.png\" " +
+                " style=\"position:absolute;top:0;left:0;width:" + 
+                width + "px;height:" + height + "px;\" />";
+                
+                style.width = width + "px";
+                style.height = height + "px";
+            }
         },
         //Remove all events for the element before destroying it.
         onDestroyElement: function(content, tree, isLeaf, leaf){

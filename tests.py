@@ -278,6 +278,18 @@ tests_model = {
             a form.
             """,
             'Extras': ['generators.js', 'excanvas.js']
+        },
+        {
+            'Title': 'Tree Animation',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            Clicking on a node should move the tree and center that node.<br /><br />
+            Leaves color depend on the number of children they actually have.<br /><br />
+            You can select the <b>tree orientation</b> by changing the select box in the right column.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
         }
    ],
     
@@ -308,14 +320,40 @@ tests_model = {
             'Extras': ['generators.js']
         },
         {
-            'Title': 'Test Squarified Treemap with a request controller method.',
+            'Title': 'Squarified Treemap with on-demand nodes',
             'Description': 
             """
-            The Treemap should not have colors. <br>
-            There should be only one level shown at a time. <br>
-            Clicking on a band should show a new treemap with the most listened albums. 
+            This example shows how you can use the <b>request</b> controller method to create a Treemap with <em>on demand</em> nodes<br /><br />
+            There should be only one level shown at a time. <br /><br />
+            Clicking on a band should show a new treemap with its most listened albums. 
             """,
-            'Extras': []        
+            'Extras': [],
+            'Example': True
+        },
+        {
+            'Title': 'Squarified Treemap',
+            'Description': 
+            """
+            In this example a static JSON tree is loaded into a Squarified Treemap.<br /><br />
+            Tooltips are manually added for each Treemap DOM node.<br /><br />
+            <b>Left click</b> to set a node as root for the visualization.<br /><br />
+            <b>Right click</b> to set the parent node as root for the visualization.
+            """,
+            'Extras': [],
+            'Example':True        
+        },
+        {
+            'Title': 'Strip Cushioned Treemap',
+            'Description': 
+            """
+            In this example a static JSON tree is loaded into a Strip Treemap.<br /><br />
+            Tooltips are manually added for each Treemap DOM node.<br /><br />
+            Also an image is added as background for each leaf node to simulate cushions.<br /><br />
+            <b>Left click</b> to set a node as root for the visualization.<br /><br />
+            <b>Right click</b> to set the parent node as root for the visualization.
+            """,
+            'Extras': [],
+            'Example':True        
         }
    ]   
 }

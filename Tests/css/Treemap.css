@@ -1,5 +1,9 @@
+#right-container {
+    display:none;
+}
+
 #infovis {
-   background-color:#1D1D20; 
+    width:800px;
 }
 
 #infovis div {
@@ -15,7 +19,6 @@
 }
 
 #infovis .head {
-    height:12px;
     color:white;
     background-color:#444;
     
@@ -83,10 +86,6 @@
 .album {
     width:100px;
     margin:3px;
-}
-
-.text {
-    margin:5px 0;
 }
 
 input {

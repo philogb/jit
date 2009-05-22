@@ -741,7 +741,7 @@ ST.Group = new Class({
         this.viz = viz;
         this.canvas = viz.canvas;
         this.config = viz.config;
-        this.animation = new Animation();
+        this.animation = new Animation;
         this.nodes = null;
         this.siblings = null;
         this.bbs = null;
@@ -784,9 +784,11 @@ ST.Group = new Class({
 
         nodes = this.prepare(nodes);
         this.animation.setOptions($merge(controller, {
+            $animating: false,
             compute: function(delta) {
               if(delta == 1) delta = .99;
-              that.plotStep(1 - delta, controller);
+              that.plotStep(1 - delta, controller, this.$animating);
+              this.$animating = true;
             },
             
             complete: function() {
@@ -828,12 +830,14 @@ ST.Group = new Class({
         var that = this, GUtil = Graph.Util;
         this.show(nodes);
         this.animation.setOptions($merge(controller, {
+            $animating: false,
             compute: function(delta) {
-                that.plotStep(delta, controller);
+                that.plotStep(delta, controller, this.$animating);
+                this.$animating = true;
             },
             
             complete: function() {
-                that.plotStep(undefined, controller);
+                that.plotStep(undefined, controller, false);
                 controller.onComplete();
             }       
         })).start();
@@ -871,7 +875,7 @@ ST.Group = new Class({
         return ans;
     },
     
-    plotStep: function(delta, controller) {
+    plotStep: function(delta, controller, animating) {
       var viz = this.viz, 
       canvas = viz.canvas, 
       ctx = canvas.getCtx(),
@@ -884,7 +888,7 @@ ST.Group = new Class({
         var node= nodes[i];
         var bb= bbs[i];
         canvas.clearRectangle(bb.top, bb.right, bb.bottom, bb.left);
-        viz.fx.plotSubtree(node, controller, delta);                
+        viz.fx.plotSubtree(node, controller, delta, animating);                
         ctx.restore();
         $each(siblings[node.id], function(elem) {
             viz.fx.plotNode(elem, canvas);
@@ -1376,7 +1380,7 @@ ST.Plot = new Class({
     /*
        Plots a subtree from the spacetree.
     */
-    plotSubtree: function(node, opt, scale) {
+    plotSubtree: function(node, opt, scale, animating) {
         var viz = this.viz, canvas = viz.canvas;
         scale = Math.min(Math.max(0.001, scale), 1);
         if(scale >= 0) {
@@ -1386,13 +1390,13 @@ ST.Plot = new Class({
             ctx.translate(diff.x, diff.y);
             ctx.scale(scale, scale);
         }
-        this.plotTree(node, !scale, opt);
+        this.plotTree(node, !scale, opt, animating);
         if(scale >= 0) node.drawn = true;
     },
     /*
        Plots a Subtree.
     */
-    plotTree: function(node, plotLabel, opt) {
+    plotTree: function(node, plotLabel, opt, animating) {
         var that = this, 
         viz = this.viz, 
         canvas = viz.canvas,
@@ -1401,20 +1405,20 @@ ST.Plot = new Class({
             if(elem.exist) {
                 if(elem.drawn) {
                     var adj = node.getAdjacency(elem.id);
-                    opt.onBeforePlotLine(adj);
+                    !animating && opt.onBeforePlotLine(adj);
                     ctx.globalAlpha = Math.min(node.alpha, elem.alpha);
                     that.plotLine(adj, canvas);
-                    opt.onAfterPlotLine(adj);
+                    !animating && opt.onAfterPlotLine(adj);
                 }
-                that.plotTree(elem, plotLabel, opt);
+                that.plotTree(elem, plotLabel, opt, animating);
             }
         });
 
-        if(node.drawn && node.exist) {
+        if(node.drawn) {
             ctx.globalAlpha = node.alpha;
-            opt.onBeforePlotNode(node);
+            !animating && opt.onBeforePlotNode(node);
             this.plotNode(node, canvas);
-            opt.onAfterPlotNode(node);
+            !animating && opt.onAfterPlotNode(node);
             if(plotLabel && ctx.globalAlpha >= .95) 
                 this.plotLabel(canvas, node, opt);
             else 

@@ -306,6 +306,7 @@ Graph.Plot = {
 		
         if(opt.hideLabels) this.hideLabels(true);
         this.animation.setOptions($merge(opt, {
+            $animating: false,
             compute: function(delta) {
 				var vector = versor? versor.scale(-delta) : null;
 				GUtil.eachNode(graph, function(node) { 
@@ -313,7 +314,8 @@ Graph.Plot = {
 						that.Interpolator[opt.modes[i]](node, delta, vector);
 					} 
                 });
-                that.plot(opt);
+                that.plot(opt, this.$animating);
+                this.$animating = true;
             },
             complete: function() {
                 GUtil.eachNode(graph, function(node) { 
@@ -345,7 +347,7 @@ Graph.Plot = {
        (end code)
 
     */
-    plot: function(opt) {
+    plot: function(opt, animating) {
         var viz = this.viz, 
 		aGraph = viz.graph, 
 		canvas = viz.canvas, 
@@ -360,20 +362,20 @@ Graph.Plot = {
             GUtil.eachAdjacency(node, function(adj) {
 				var nodeTo = adj.nodeTo;
                 if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
-                    opt.onBeforePlotLine(adj);
+                    !animating && opt.onBeforePlotLine(adj);
                     ctx.save();
                     ctx.globalAlpha = Math.min(Math.min(node.alpha, nodeTo.alpha), adj.alpha);
                     that.plotLine(adj, canvas);
                     ctx.restore();
-                    opt.onAfterPlotLine(adj);
+                    !animating && opt.onAfterPlotLine(adj);
                 }
             });
             ctx.save();
 			if(node.drawn) {
 	            ctx.globalAlpha = node.alpha;
-	            opt.onBeforePlotNode(node);
+	            !animating && opt.onBeforePlotNode(node);
 	            that.plotNode(node, canvas);
-	            opt.onAfterPlotNode(node);
+	            !animating && opt.onAfterPlotNode(node);
 			}
             if(!that.labelsHidden) {
 				if(node.drawn && ctx.globalAlpha >= .95) {
@@ -425,13 +427,12 @@ Graph.Plot = {
        canvas - A <Canvas> element.
 
     */
-    plotNode: function(node, canvas) {
+    plotNode: function(node, canvas, animating) {
         var nconfig = this.node, data = node.data;
         var cond = nconfig.overridable && data;
         var width = cond && data.$lineWidth || nconfig.lineWidth;
         var color = cond && data.$color || nconfig.color;
-        var ctx = canvas.getCtx(), lwidth = ctx.lineWidth;
-        var fStyle = ctx.fillStyle, sStyle = ctx.strokeStyle;
+        var ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
 		ctx.fillStyle = color;
@@ -439,10 +440,6 @@ Graph.Plot = {
 
         var f = node.data && node.data.$type || nconfig.type;
         this.nodeTypes[f].call(this, node, canvas);
-
-        ctx.lineWidth = lwidth;
-        ctx.fillStyle = fStyle;
-        ctx.strokeStyle = sStyle; 
     },
     
     /*
@@ -456,13 +453,12 @@ Graph.Plot = {
        canvas - A <Canvas> instance.
 
     */
-    plotLine: function(adj, canvas) {
+    plotLine: function(adj, canvas, animating) {
         var econfig = this.edge, data = adj.data;
         var cond = econfig.overridable && data;
         var width = cond && data.$lineWidth || econfig.lineWidth;
         var color = cond && data.$color || econfig.color;
-        var ctx = canvas.getCtx(), lwidth = ctx.lineWidth;
-        var fStyle = ctx.fillStyle, sStyle = ctx.strokeStyle;
+        var ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
         ctx.fillStyle = color;
@@ -470,10 +466,6 @@ Graph.Plot = {
 
         var f = adj.data && adj.data.$type || econfig.type;
         this.edgeTypes[f].call(this, adj, canvas);
-
-        ctx.lineWidth = lwidth;
-        ctx.fillStyle = fStyle;
-        ctx.strokeStyle = sStyle; 
     },    
 	
 	/*
