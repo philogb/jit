@@ -4,14 +4,13 @@ from tests import tests_model
 from build import Build
 
 urls = (
-    '/testcase/(RGraph|Treemap|Hypertree|Spacetree)/([0-9]+)/', 'testcase',
+    '/testcase/(RGraph|Treemap|Hypertree|Spacetree|Other)/([0-9]+)/', 'testcase',
 )
 
 app = web.application(urls, globals())
 
 render = {
-    'TestCases': template.render('Templates/Tests/'),
-    'Examples': template.render('Templates/Examples/')
+    'TestCases': template.render('Templates/'),
 }
 
 class testcase:
@@ -28,8 +27,9 @@ class testcase:
         title = model['Title']
         extras = model['Extras'][:]
         
-        build_config = getattr(model, 'Build', [type])
-        
+        if 'Build' in model: build_config = model['Build']
+        else: build_config = [type]
+
         build = Build().build(build_config)
         
         includes = {
@@ -37,6 +37,6 @@ class testcase:
             'right': getattr(render['TestCases'], type + '/' + 'test' + number)(model),
         }
         
-        return render['TestCases'].base(name, title, extras, test, build, includes)
+        return render['TestCases'].basetests(name, title, extras, test, build, includes)
 
 if __name__ == "__main__": app.run()

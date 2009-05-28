@@ -52,9 +52,6 @@
 >  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-function $get(id) {
-  return document.getElementById(id);  
-};
 
 function $empty() {};
 
@@ -142,6 +139,29 @@ function $clean(elem) {
   for(var ch = elem.childNodes, i=0; i < ch.length; i++) {
       $destroy(ch[i]);
   }  
+};
+
+function $addEvent(obj, type, fn) {
+    if (obj.addEventListener) 
+        obj.addEventListener(type, fn, false);
+    else 
+        obj.attachEvent('on' + type, fn);
+};
+
+function $hasClass(obj, klass) {
+    return (' ' + obj.className + ' ').indexOf(' ' + klass + ' ') > -1;
+};
+
+function $addClass(obj, klass) {
+    if(!$hasClass(obj, klass)) obj.className = (obj.className + " " + klass);
+};
+
+function $removeClass(obj, klass) {
+    obj.className = obj.className.replace(new RegExp('(^|\\s)' + klass + '(?:\\s|$)'), '$1');
+};
+
+function $get(id) {
+  return document.getElementById(id);  
 };
 
 var Class = function(properties){

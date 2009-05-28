@@ -44,6 +44,7 @@
 
      - _interpolation_ Interpolation type used for animations. Possible options are 'polar' and 'linear'. Default's 'linear'.
      - _levelDistance_ Distance between a parent node and its children. Default's 100.
+     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
 
      *Node*
      
@@ -87,7 +88,8 @@
      - _duration_ Duration of the animation in milliseconds. Default's 2500.
      - _fps_ Frames per second. Default's 40.
      - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
-
+     - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
+     
     *Controller options*
 
     You can also implement controller functions inside the configuration object. This functions are
@@ -115,6 +117,7 @@ This method is useful for adding some styles to a particular edge before being p
       var rgraph = new RGraph(canvas, {
         interpolation: 'linear',
         levelDistance: 100,
+        withLabels: true,
         Node: {
           overridable: false,
           type: 'circle',
@@ -133,7 +136,7 @@ This method is useful for adding some styles to a particular edge before being p
         duration: 2500,
         fps: 40,
         transition: Trans.Quart.easeInOut,
-
+        clearCanvas: true,
         onBeforeCompute: function(node) {
           //do something onBeforeCompute
         },
@@ -177,9 +180,9 @@ this.RGraph = new Class({
 		        labelContainer: canvas.id + '-label',
 
                 interpolation: 'linear',
-
 		        levelDistance: 100,
-		        
+		        withLabels: true,
+                
 				Node: {
 					overridable: false,
 				    type: 'circle',
@@ -199,7 +202,8 @@ this.RGraph = new Class({
 
 		        fps:40,
 		        duration: 2500,
-                transition: Trans.Quart.easeInOut
+                transition: Trans.Quart.easeInOut,
+                clearCanvas: true
 		};
 
 	    var innerController = {

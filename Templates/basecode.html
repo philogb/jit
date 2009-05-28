@@ -1,0 +1,51 @@
+$def with (name, title, code, example)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>$name - $title - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for $title</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>$title</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="${example}.js">here</a>. Or <a href="${example}.html">go back to the example</a>. 
+        </div>
+
+
+$for elem in code:
+    <h4>$elem['name']</h4>
+    $if elem['name'] == 'data':
+        <div class="code-wrapper" style="height:200px">
+    $else:
+        <div class="code-wrapper">
+    <pre name="code" class="js:nogutter:nocontrols">
+    $elem['code']
+    </pre>
+    </div>
+
+</div>
+</div>
+</body>
+</html>

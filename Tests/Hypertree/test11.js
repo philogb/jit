@@ -1,13 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
-        }
-    };
     //init data
     var json = {
         "id": "190_0",
@@ -449,10 +440,13 @@ function init(){
         onBeforeCompute: function(node){
             Log.write("centering");
         },
-        
+        //Add the node's name to its corresponding label.
+        //This method is only called on label creation.
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
         },
+
+        //Ths method is called when moving/placing a label.
         //Add label styles based on their position.
         onPlaceLabel: function(domElement, node){
             var style = domElement.style;

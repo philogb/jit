@@ -1,14 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
-        }
-    };
-
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
 
@@ -462,10 +452,14 @@ function init(){
             color: '#772277'
         },
         //Add the node's name into the label
+        //This method is called only once, on label creation.
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
         },
+
         //Change the node's style based on its position.
+        //This method is called each time a label is rendered/positioned
+        //during an animation.
         onPlaceLabel: function(domElement, node){
             var style = domElement.style;
             style.display = '';

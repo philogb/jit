@@ -44,6 +44,7 @@
      - _subtreeOffset_ Separation offset between subtrees. Default's 8.
      - _siblingOffset_ Separation offset between siblings. Default's 5.
      - _levelDistance_ Distance between levels. Default's 30.
+     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
 
      *Node*
      
@@ -92,7 +93,8 @@
      - _duration_ Duration of the animation in milliseconds. Default's 700.
      - _fps_ Frames per second. Default's 25.
      - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
-
+     - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
+     
     *Controller options*
 
     You can also implement controller functions inside the configuration object. This functions are
@@ -126,6 +128,7 @@ object must be called with the given result.
         subtreeOffset: 8,
         siblingOffset: 5,
         levelDistance: 30,
+        withLabels: true,
         Node: {
           overridable: false,
           type: 'rectangle',
@@ -146,7 +149,8 @@ object must be called with the given result.
         duration: 700,
         fps: 25,
         transition: Trans.Quart.easeInOut,
-
+        clearCanvas: true,
+        
         onBeforeCompute: function(node) {
           //do something onBeforeCompute
         },
@@ -298,6 +302,8 @@ this.ST= (function() {
                 subtreeOffset: 8,
                 siblingOffset: 5,
                 levelDistance: 30,
+                withLabels: true,
+                clearCanvas: true,
                 Node: {
                     overridable: false,
                     type: 'rectangle',
@@ -486,8 +492,12 @@ this.ST= (function() {
             Group.contract(nodes, $merge(this.controller, onComplete));
           },
       
-         move: function(node, offset, onComplete) {
+         move: function(node, onComplete) {
             this.compute('endPos', false);
+            var move = onComplete.Move, offset = {
+                'x': move.offsetX,
+                'y': move.offsetY 
+            };
             this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
             this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete));
          },
@@ -541,9 +551,9 @@ this.ST= (function() {
         */
         addSubtree: function(subtree, method, onComplete) {
             if(method == 'replot') {
-                this.op.sum(subtree, { type: 'replot' });
+                this.op.sum(subtree, $extend({ type: 'replot' }, onComplete || {}));
             } else if (method == 'animate') {
-                this.op.sum(subtree, { type: 'fade:seq' });
+                this.op.sum(subtree, $extend({ type: 'fade:seq' }, onComplete || {}));
             }
         },
     
@@ -575,9 +585,9 @@ this.ST= (function() {
                 subids.push(n.id);
             });
             if(method == 'replot') {
-                this.op.removeNode(subids, { type: 'replot' });
+                this.op.removeNode(subids, $extend({ type: 'replot' }, onComplete || {}));
             } else if (method == 'animate') {
-                this.op.removeNode(subids, { type: 'fade:seq'});
+                this.op.removeNode(subids, $extend({ type: 'fade:seq'}, onComplete || {}));
             }
         },
     
@@ -657,6 +667,10 @@ this.ST= (function() {
       onClick: function (id, options) {
         var canvas = this.canvas, that = this, Fx = this.fx, Util = Graph.Util, Geom = this.geom;
         var innerController = {
+            Move: {
+              offsetX: 0,
+              offsetY: 0  
+            },
             onBeforeRequest: $empty,
             onBeforeContract: $empty,
             onBeforeMove: $empty,
@@ -677,9 +691,9 @@ this.ST= (function() {
                     that.contract({
                         onComplete: function() {
                             Geom.setRightLevelToShow(node, canvas);
-                            var offset = {x: 0, y: 0};
-                            complete.onBeforeMove(node, offset);
-                            that.move(node, offset, {
+                            complete.onBeforeMove(node);
+                            that.move(node, {
+                                Move: complete.Move,
                                 onComplete: function() {
                                     complete.onBeforeExpand(node);
                                     that.expand(node, {
@@ -788,7 +802,7 @@ ST.Group = new Class({
             compute: function(delta) {
               if(delta == 1) delta = .99;
               that.plotStep(1 - delta, controller, this.$animating);
-              this.$animating = true;
+              this.$animating = 'contract';
             },
             
             complete: function() {
@@ -800,7 +814,10 @@ ST.Group = new Class({
     hide: function(nodes, controller) {
         var GUtil = Graph.Util, viz = this.viz;
         for(var i=0; i<nodes.length; i++) {
-            if (!controller || !controller.request) {
+            //TODO nodes are requested on demand, but not
+            //deleted when hidden. Would that be a good feature? 
+            //Currenty that feature is buggy, so I'll turn it off
+            if (true || !controller || !controller.request) {
                 GUtil.eachLevel(nodes[i], 1, false, function(elem){
                     if (elem.exist) {
                         $extend(elem, {
@@ -833,7 +850,7 @@ ST.Group = new Class({
             $animating: false,
             compute: function(delta) {
                 that.plotStep(delta, controller, this.$animating);
-                this.$animating = true;
+                this.$animating = 'expand';
             },
             
             complete: function() {
@@ -891,7 +908,7 @@ ST.Group = new Class({
         viz.fx.plotSubtree(node, controller, delta, animating);                
         ctx.restore();
         $each(siblings[node.id], function(elem) {
-            viz.fx.plotNode(elem, canvas);
+            viz.fx.plotNode(elem, canvas, false);
         });
       }
     },
@@ -1407,7 +1424,7 @@ ST.Plot = new Class({
                     var adj = node.getAdjacency(elem.id);
                     !animating && opt.onBeforePlotLine(adj);
                     ctx.globalAlpha = Math.min(node.alpha, elem.alpha);
-                    that.plotLine(adj, canvas);
+                    that.plotLine(adj, canvas, animating);
                     !animating && opt.onAfterPlotLine(adj);
                 }
                 that.plotTree(elem, plotLabel, opt, animating);
@@ -1417,7 +1434,7 @@ ST.Plot = new Class({
         if(node.drawn) {
             ctx.globalAlpha = node.alpha;
             !animating && opt.onBeforePlotNode(node);
-            this.plotNode(node, canvas);
+            this.plotNode(node, canvas, animating);
             !animating && opt.onAfterPlotNode(node);
             if(plotLabel && ctx.globalAlpha >= .95) 
                 this.plotLabel(canvas, node, opt);

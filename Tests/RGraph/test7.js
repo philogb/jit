@@ -1,13 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-        }
-    };
-    
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var hoveredNode = false;

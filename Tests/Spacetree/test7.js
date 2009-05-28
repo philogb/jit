@@ -1,13 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
-        }
-    };
     function get(id) {
       return document.getElementById(id);  
     };
@@ -752,7 +743,7 @@ function init(){
         'injectInto': 'infovis',
         'width': w,
         'height': h,
-        'backgroundColor': '#222'
+        'backgroundColor': '#1a1a1a'
     });
     //end
     
@@ -859,7 +850,7 @@ function init(){
     st.geom.translate(new Complex(-200, 0), "startPos");
     //emulate a click on the root node.
     st.onClick(st.root);
-    
+    //end
     //Add event handlers to switch spacetree orientation.
     var top = get('r-top'), 
     left = get('r-left'), 

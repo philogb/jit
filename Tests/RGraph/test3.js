@@ -1,13 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-        }
-    };
-
     var json = {
         "id": "190_0",
         "name": "Pearl Jam",

@@ -135,6 +135,9 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
     
      The configuration object can have the following properties (all properties are optional and have a default value)
       
+     *General*
+     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
+     
      *Node*
      
      Customize the visualization nodes' shape, color, and other style properties.
@@ -178,6 +181,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
      - _duration_ Duration of the animation in milliseconds. Default's 1500.
      - _fps_ Frames per second. Default's 40.
      - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
+     - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
 
     *Controller options*
 
@@ -204,6 +208,7 @@ This method is useful for adding some styles to a particular edge before being p
 
     (start code js)
       var ht = new Hypertree(canvas, {
+        
         Node: {
           overridable: false,
           type: 'circle',
@@ -223,7 +228,9 @@ This method is useful for adding some styles to a particular edge before being p
         duration: 1500,
         fps: 40,
         transition: Trans.Quart.easeInOut,
-
+        clearCanvas: true,
+        withLabels: true,
+        
         onBeforeCompute: function(node) {
           //do something onBeforeCompute
         },
@@ -267,6 +274,8 @@ this.Hypertree = new Class({
 		var config = { 
                 labelContainer: canvas.id + '-label', 
 		         
+                withLabels: true,
+                
                 Node: { 
                     overridable: false, 
                     type: 'circle', 
@@ -284,11 +293,9 @@ this.Hypertree = new Class({
                     color: '#ccb', 
                     lineWidth: 1 
                 }, 
- 
+                clearCanvas: true,
 		        fps:40, 
-		 
 		        duration: 1500, 
-		 
                 transition: Trans.Quart.easeInOut 
 		}; 
  

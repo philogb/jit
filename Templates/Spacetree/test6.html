@@ -1,0 +1,80 @@
+$def with (model)
+
+<table>
+    <tr>
+        <td>
+            node types:
+        </td>
+        <td>
+        <select id="nodeTypes">
+            <option>none</option>
+            <option>circle</option>
+            <option>square</option>
+            <option>rectangle</option>
+            <option>ellipse</option>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            edge types:
+        </td>
+        <td>
+        <select id="edgeTypes">
+            <option>none</option>
+            <option>line</option>
+            <option>quadratic:begin</option>
+            <option>quadratic:end</option>
+            <option>bezier</option>
+            <option>arrow</option>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            transitions:
+        </td>
+        <td>
+        <select id="transitions">
+            <option>linear</option>
+            <option>Quart</option>
+            <option>Circ</option>
+            <option>Sine</option>
+            <option>Bounce</option>
+            <option>Elastic</option>
+            <option>Back</option>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            easing:
+        </td>
+        <td>
+        <select id="easing">
+            <option>easeIn</option>
+            <option>easeOut</option>
+            <option>easeInOut</option>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Orientation:
+        </td>
+        <td>
+            <select id="switch">
+                <option>left</option>
+                <option>top</option>
+                <option>right</option>
+                <option>bottom</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>
+<div id="inner-details"></div>

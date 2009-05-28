@@ -55,10 +55,9 @@
 }
 
 /*TOOLTIPS*/
-.tool-tip {
+.tip {
     color: #fff;
     width: 139px;
-    z-index: 13000;
     background-color: black;
     opacity:0.9;
     filter:alpha(opacity=90);
@@ -67,22 +66,6 @@
     padding:7px;
 }
  
-.tip-title {
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0;
-    color: #9FD4FF;
-    padding: 8px 8px 4px;
-    background-color: black;
-    
-}
- 
-.tip-text {
-    font-size: 11px;
-    padding: 4px 8px 8px;
-    background-color: black;
-}
-
 .album {
     width:100px;
     margin:3px;

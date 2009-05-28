@@ -116,7 +116,6 @@
     The _plot_ method is called for plotting a Canvas image. 
 */
 this.Canvas = (function () {
-	var ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
 	var config = {
 		'injectInto': 'id',
 		
@@ -164,6 +163,7 @@ this.Canvas = (function () {
 	};
 	
 	return function(id, opt) {
+        var ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
 		if(arguments.length < 1) throw "Arguments missing";
 		var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
 		opt = $merge(config, opt || {});

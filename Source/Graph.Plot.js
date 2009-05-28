@@ -356,7 +356,8 @@ Graph.Plot = {
 		ctx = canvas.getCtx(), 
 		GUtil = Graph.Util;
         opt = opt || this.viz.controller;
-		canvas.clear();
+		opt.clearCanvas && canvas.clear();
+        
         var T = !!aGraph.getNode(id).visited;
         GUtil.eachNode(aGraph, function(node) {
             GUtil.eachAdjacency(node, function(adj) {
@@ -365,7 +366,7 @@ Graph.Plot = {
                     !animating && opt.onBeforePlotLine(adj);
                     ctx.save();
                     ctx.globalAlpha = Math.min(Math.min(node.alpha, nodeTo.alpha), adj.alpha);
-                    that.plotLine(adj, canvas);
+                    that.plotLine(adj, canvas, animating);
                     ctx.restore();
                     !animating && opt.onAfterPlotLine(adj);
                 }
@@ -374,10 +375,10 @@ Graph.Plot = {
 			if(node.drawn) {
 	            ctx.globalAlpha = node.alpha;
 	            !animating && opt.onBeforePlotNode(node);
-	            that.plotNode(node, canvas);
+	            that.plotNode(node, canvas, animating);
 	            !animating && opt.onAfterPlotNode(node);
 			}
-            if(!that.labelsHidden) {
+            if(!that.labelsHidden && opt.withLabels) {
 				if(node.drawn && ctx.globalAlpha >= .95) {
 					that.plotLabel(canvas, node, opt);
 				} else {
@@ -439,7 +440,7 @@ Graph.Plot = {
 		ctx.strokeStyle = color; 
 
         var f = node.data && node.data.$type || nconfig.type;
-        this.nodeTypes[f].call(this, node, canvas);
+        this.nodeTypes[f].call(this, node, canvas, animating);
     },
     
     /*
@@ -465,7 +466,7 @@ Graph.Plot = {
         ctx.strokeStyle = color; 
 
         var f = adj.data && adj.data.$type || econfig.type;
-        this.edgeTypes[f].call(this, adj, canvas);
+        this.edgeTypes[f].call(this, adj, canvas, animating);
     },    
 	
 	/*

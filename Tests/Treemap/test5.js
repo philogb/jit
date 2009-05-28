@@ -671,6 +671,16 @@ function init(){
         orientation: "h",
         offset: 0,
                 
+        //Add click handlers for
+        //zooming the Treemap in and out
+        addLeftClickHandler: true,
+        addRightClickHandler: true,
+        
+        //When hovering a node highlight the nodes
+        //between the root node and the hovered node. This
+        //is done by adding the 'in-path' CSS class to each node.
+        selectPathOnHover: true,
+        
         Color: {
             //Allow coloring
             allow: true,
@@ -686,114 +696,36 @@ function init(){
             maxColorValue: [255, 0, 50]
         },
         
-        //Here we manually create the tooltip and add tooltip event
-        //handlers for each DOM node.
-        //This code might seem a little bit complicated because
-        //its made library agnostic (i.e with pure JS and not some JS lib).
-        //I encourage anyone that uses the treemap to also use
-        //some DOM manipulation framework that has tooltip and event support
-        //like JQuery with some tooltip plugin or MooTools.
-        //You'll see that by using some DOM manipulation library
-        //this code gets really simpler.
-        makeTip: function(elem, json){
-            var title = json.name;
-            //create tooltip inner html
-            var html = this.makeHTMLFromData(json.data);
-            var tooltip = document.getElementById('tooltip');
-            //Add mousemove event handlers.
-            elem.onmousemove = function(e){
-                //get mouse position
-                var page = {
-                    x: e.pageX || e.clientX + document.scrollLeft,
-                    y: e.pageY || e.clientY + document.scrollTop
-                };
-                tooltip.style.display = '';
-                //get window dimensions
-                var win = {
-                    'height': document.body.clientHeight,
-                    'width': document.body.clientWidth
-                };
-                //get tooltip dimensions
-                var obj = {
-                  'width': tooltip.offsetWidth,
-                  'height': tooltip.offsetHeight  
-                };
-                //set tooltip position
-                var style = tooltip.style;
-                style.top = ((page.y + 20 + obj.height > win.height)?  
-                    (page.y - obj.height - 20) : page.y + 20) + 'px';
-                style.left = ((page.x + obj.width + 20 > win.width)? 
-                    (page.x - obj.width - 20) : page.x + 20) + 'px';
-            };
-            //show tooltip onmouseover
-            elem.onmouseover = function(e){
-                tooltip.style.display = '';
-                tooltip.innerHTML = '<div class=\'tool-title\' >' + title + '</div>';
-                tooltip.innerHTML += '<div class=\'tool-text\'> ' + html + ' </div>';
-            };
-            //hide tooltip onmouseout
-            elem.onmouseout = function(e){
-                tooltip.style.display = 'none';
-            };
-        },
+        //Allow tips
+        Tips: {
+          allow: true,
+          //add positioning offsets
+          offsetX: 20,
+          offsetY: 20,
+          //implement the onShow method to
+          //add content to the tooltip when a node
+          //is hovered
+          onShow: function(tip, node, isLeaf, domElement) {
+              tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>" + 
+                "<div class=\"tip-text\">" + this.makeHTMLFromData(node.data) + "</div>"; 
+          },  
 
-        //Build the tooltip inner html by taking each node data property
-        makeHTMLFromData: function(data){
-            var html = '';
-            html += "playcount" + ': ' + data.$area + '<br />';
-            if ("$color" in data) 
-                html += "rank" + ': ' + data.$color + '<br />';
-            if ("image" in data) 
-                html += "<img class=\"album\" src=\"" + data.image + "\" />";
-            return html;
+          //Build the tooltip inner html by taking each node data property
+          makeHTMLFromData: function(data){
+              var html = '';
+              html += "playcount" + ': ' + data.$area + '<br />';
+              if ("$color" in data) 
+                  html += "rank" + ': ' + data.$color + '<br />';
+              if ("image" in data) 
+                  html += "<img class=\"album\" src=\"" + data.image + "\" />";
+              return html;
+          }
         },
 
         //This method is invoked when a DOM element is created.
-        //Its useful to set all kind of DOM event handlers here.
-        //The code in this method could be a lot simpler if you
-        //used some event javascript framework like JQuery or MooTools,
-        //but unfortunately I have to make also these examples 
-        //library agnostic. I'll probably post this example with 
-        //JQuery and MooTools in my blog.
+        //Its useful to set DOM event handlers here or manipulate
+        //the DOM Treemap nodes.
         onCreateElement: function(content, tree, isLeaf, leaf){
-            var that = tm;
-            //Add tip events
-            if (tree) 
-                this.makeTip(leaf, tree);
-            //Change an element CSS class
-            //onmouseover
-            var prevmover = leaf.onmouseover;
-            leaf.onmouseover = function(e){
-                if (isLeaf) leaf.className += ' over-leaf';
-                prevmover();
-            };
-            //Change an element CSS class
-            //onmouseout
-            var prevmovout = leaf.onmouseout;
-            leaf.onmouseout = function(e){
-                leaf.className = leaf.className.split(" ")[0];
-                prevmovout();
-            };
-            //Add left and right click handlers
-            leaf.onmouseup = function(e){
-                var rightClick = (e.which == 3 || e.button == 2);
-                if (rightClick) 
-                    tm.out();
-                else 
-                    tm.enter(leaf);
-                
-                //Stop event propagation
-                if (e.stopPropagation) 
-                    e.stopPropagation();
-                else 
-                    e.cancelBubble = true;
-
-                if (e.preventDefault) 
-                    e.preventDefault();
-                else 
-                    e.returnValue = false;
-            };
-            
             //Add background image
             if(isLeaf) {
                 var style = leaf.style, 
@@ -809,9 +741,10 @@ function init(){
                 style.height = height + "px";
             }
         },
+
         //Remove all events for the element before destroying it.
         onDestroyElement: function(content, tree, isLeaf, leaf){
-            leaf.onmouseout = leaf.onmousemove = leaf.onmouseover = null;
+            if(leaf.clearAttributes) leaf.clearAttributes();
         }
     });
     

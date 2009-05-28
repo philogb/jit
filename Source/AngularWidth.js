@@ -21,14 +21,14 @@ var AngularWidth = {
      Sets nodes angular widths.
     */
     setAngularWidthForNodes: function() {
-        var config = this.config;
+        var config = this.config.Node;
 		var overridable = config.overridable;
-		var dim = config.Node.dim;
+		var dim = config.dim;
         
 		Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
             var diamValue = (overridable 
 			 && elem.data 
-			 && elem.data.$dim) || dim;
+			 && elem.data.$aw) || dim;
             elem._angularWidth = diamValue / i;
         }, "ignore");
     },

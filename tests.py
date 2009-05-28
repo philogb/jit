@@ -290,6 +290,28 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example': True
+        },
+        {
+            'Title': 'SpaceTree with on-demand nodes',
+            'Description': 
+            """
+            This example shows how you can use the <b>request</b> controller method to create a SpaceTree with <b>on demand</b> nodes<br /><br />
+            The basic JSON Tree structure is cloned and appended on demand on each node to create an <b>infinite large SpaceTree</b><br /><br />
+            You can select the <b>tree orientation</b> by changing the select box in the right column.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        },
+        {
+            'Title': 'Add/Remove Subtrees',
+            'Description': 
+            """
+            This example shows how to add/remove subtrees with the SpaceTree.<br /><br />
+            <b>Add</b> a subtree by clicking on the <em>Add</em> button located in the right column.<br /><br />
+            <b>Remove</b> a subtree by clicking on a red colored node
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
         }
    ],
     
@@ -354,6 +376,51 @@ tests_model = {
             """,
             'Extras': [],
             'Example':True        
+        }
+   ],
+    
+    'Other': [
+        {
+            'Title': 'Implementing Node Types',
+            'Description': 
+            """
+            In this example some custom node types are created for rendering pie charts with the RGraph.<br /><br /> 
+            Multiple instances of the RGraph are created using these node types. (top)<br /><br />
+            The SpaceTree is loaded with some custom data that individually changes nodes dimensions, making a bar chart (bottom).
+            
+            """,
+            'Extras': [],
+            'Build': ['RGraph', 'Spacetree'],
+            'Example': True
+            
+        },
+        {
+            'Title': 'Composing Visualizations',
+            'Description': 
+            """
+            In this example a RGraph is composed with another RGraph (for node rendering).<br /><br />
+            The RGraph used for node rendering implements a custom node type defined in the <em>"Implementing Node Types"</em> example.<br /><br />
+            This example shows that many visualizations can be composed to create new visualizations.
+            
+            """,
+            'Extras': [],
+            'Build': ['RGraph'],
+            'Example': True
+            
+        },
+        {
+            'Title': 'Composing Visualizations 2',
+            'Description': 
+            """
+            In this example a SpaceTree is composed with a RGraph (for node rendering).<br /><br />
+            The RGraph used for node rendering implements a custom node type defined in the <em>"Implementing Node Types"</em> example.<br /><br />
+            This example shows that many visualizations can be composed to create new visualizations.
+            
+            """,
+            'Extras': [],
+            'Build': ['RGraph', 'Spacetree'],
+            'Example': True
+            
         }
    ]   
 }

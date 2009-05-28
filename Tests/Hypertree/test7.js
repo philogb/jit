@@ -1,13 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-            this.elem.style.left = (500 - this.elem.offsetWidth / 2) + 'px';
-        }
-    };
     //init data
     //By defining properties with the dollar sign ($)
     //in nodes and edges we can override the global configuration
@@ -244,9 +235,13 @@ function init(){
             color: "#088"
         },
         
+        //Change the animation transition type
         transition: Trans.Back.easeOut,
         duration:1000,
         
+        //This method is called right before plotting an
+        //edge. This method is useful for adding individual
+        //styles to edges.
         onBeforePlotLine: function(adj){
             //Set random lineWidth for edges.
             if (!adj.data.$lineWidth) 
@@ -265,6 +260,8 @@ function init(){
             };
         },
         
+        //This method is called when moving/placing a label.
+        //You can add some positioning offsets to the labels here.
         onPlaceLabel: function(domElement, node){
             var width = domElement.offsetWidth;
             var intX = parseInt(domElement.style.left);

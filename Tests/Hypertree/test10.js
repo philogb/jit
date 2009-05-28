@@ -1,13 +1,4 @@
 function init(){
-    var Log = {
-        elem: false,
-        write: function(text){
-            if (!this.elem) 
-                this.elem = document.getElementById('log');
-            this.elem.innerHTML = text;
-        }
-    };
-    
     var json = {
         "id": "347_0",
         "name": "Nine Inch Nails",
@@ -364,9 +355,9 @@ function init(){
         
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
-            domElement.onclick = function(){
+            addEvent(domElement, 'click', function(){
                 ht.onClick(node.id);
-            };
+            });
         },
         
         //Take the left style property and substract half of the label actual width.
@@ -448,21 +439,21 @@ function init(){
         transitions = document.getElementById('transitions'), 
         easing = document.getElementById('easing');
     
-    nodeTypes.onchange = function(){
+    addEvent(nodeTypes, 'change', function(){
         var nodeOpt = nodeOptions[nodeTypes.selectedIndex];
         for (var prop in nodeOpt) {
             ht.config.Node[prop] = nodeOpt[prop];
         }
         ht.plot();
         ht.controller.onAfterCompute();
-    };
+    });
     
-    edgeTypes.onchange = function(){
+    addEvent(edgeTypes, 'change', function(){
         var edgeOpt = edgeOptions[edgeTypes.selectedIndex];
         ht.config.Edge.type = edgeOpt;
         ht.plot();
         ht.controller.onAfterCompute();
-    };
+    });
     
     transitions.onchange = function(){
         var transition = transitions.options[transitions.selectedIndex].text;

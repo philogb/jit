@@ -1,0 +1,57 @@
+$def with (model)
+
+<table>
+    <tr>
+        <td>
+            type:
+        </td>
+        <td>
+            <select id="select-type">
+                <option>fade:seq</option>
+                <option>fade:con</option>
+                <option>replot</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            duration:
+        </td>
+        <td>
+            <select id="select-duration">
+                <option>1000</option>
+                <option>3000</option>
+                <option>6000</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            fps:
+        </td>
+        <td>
+            <select id="select-fps">
+                <option>10</option>
+                <option selected="selected">30</option>
+                <option>60</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            hide labels:
+        </td>
+        <td>
+            <input type="checkbox" checked="checked" id="hide-labels" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Sum" id="sum" />    
+        </td>
+        <td>
+            <input type="button" value="Refresh" onclick="window.location = window.location" />
+        </td>
+    </tr>
+</table>
+<div id="inner-details"></div>

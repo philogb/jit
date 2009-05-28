@@ -66,6 +66,9 @@
     - _rootId_ The id of the div container where the Treemap will be injected. Default's 'infovis'.
     - _orientation_ For <TM.Strip> and <TM.SliceAndDice> only. The layout algorithm orientation. Possible values are 'h' or 'v'.
     - _levelsToShow_ Max depth of the plotted tree. Useful when using the request method.
+    - _addLeftClickHandler_ Add a left click event handler to zoom in the Treemap view when clicking a node. Default's *false*. 
+    - _addRightClickHandler_ Add a right click event handler to zoom out the Treemap view. Default's *false*.
+    - _selectPathOnHover_ If setted to *true* all nodes contained in the path between the hovered node and the root node will have an *in-path* CSS class. Default's *false*.
 
     *Nodes*
     
@@ -112,6 +115,21 @@
     - _minColorValue_ A three-element RGB array defining the color to be assigned to the _$color_ having _minValue_ as value. Default's [255, 0, 50].
     - _maxColorValue_ A three-element RGB array defining the color to be assigned to the _$color_ having _maxValue_ as value. Default's [0, 255, 50].
 
+    *Tips*
+
+    _Tips_ is an object containing as properties
+
+    - _allow_ If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. Default's *false*. 
+    - _offsetX_ An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
+    - _offsetY_ An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
+    - _onShow(tooltip, node, isLeaf, domElement)_ Implement this method to change the HTML content of the tooltip when hovering a node.
+    
+    Parameters:
+      tooltip - The tooltip div element.
+      node - The corresponding JSON tree node (See also <Loader.loadJSON>).
+      isLeaf - Whether is a leaf or inner node.
+      domElement - The current hovered DOM element.
+    
     *Controller options*
 
     You can also implement controller functions inside the configuration object. These functions are
@@ -165,13 +183,24 @@ this.TM = {
 			rootId: 'infovis',
 			offset:4,
 			levelsToShow: 3,
+            addLeftClickHandler: false,
+            addRightClickHandler: false,
+            selectPathOnHover: false,
+            
 			Color: {
 				allow: false,
 				minValue: -100,
 				maxValue: 100,
 				minColorValue: [255, 0, 50],
 				maxColorValue: [0, 255, 50]
-			}
+			},
+            
+            Tips: {
+                allow: false,
+                offsetX: 20,
+                offsetY: 20,
+                onShow: $empty
+            }
 		},
 	
 
@@ -183,6 +212,19 @@ this.TM = {
 										controller);
 		this.rootId = this.config.rootId;
 		this.layout.orientation = this.config.orientation;
+        
+        //add tooltip
+        if(this.config.Tips.allow && document.body) {
+            var tip = document.createElement('div');
+            tip.id = '_tooltip';
+            tip.className = 'tip';
+            var style = tip.style;
+            style.position = 'absolute';
+            style.display = 'none';
+            style.zIndex = 13000;
+            document.body.appendChild(tip);
+            this.tip = tip;
+        }
         
         //purge
         var that = this;
@@ -208,12 +250,11 @@ this.TM = {
         f - A function that takes as parameters the same as the onCreateElement and onDestroyElement methods described in <TM>.
     */
     each: function(f) {
-        var sl = Array.prototype.slice;
         (function rec(elem) {
           if(!elem) return;
           var ch = elem.childNodes, len = ch.length;
           if(len > 0) {
-              f.apply(this, [elem, len === 1].concat(sl.call(ch)));
+              f.apply(this, [elem, len === 1, ch[0], ch[1]]);
           }
           if (len > 1) {
             for(var chi = ch[1].childNodes, i=0; i<chi.length; i++) {
@@ -542,6 +583,37 @@ this.TM = {
 		this.view(elem.parentNode.id);
 	},
 	
+    /*
+       Method: onLeftClick
+    
+        Sets the _elem_ parameter as root and performs the layout. 
+        This method is called when _addLeftClickHandler_ is *true* and a 
+        node is left-clicked. You can override this method to add some custom behavior 
+        when the node is left clicked though.
+        
+        An Example for overriding this method could be
+        (start code js)
+        //TM.Strip or TM.SliceAndDice also work
+        TM.Squarified.implement({
+            'onLeftClick': function(elem) {
+                //some custom code...
+            }
+        });
+        (end code)
+        
+    
+       Parameters:
+    
+          elem - A JSON Tree node. See also <Loader.loadJSON>.
+          
+       See also:
+       
+          <TM.enter>
+    */
+    onLeftClick: function(elem) {
+        this.enter(elem);
+    },
+
 	/*
 	   Method: out
 	
@@ -557,6 +629,33 @@ this.TM = {
 		}
 	},
 	
+    /*
+       Method: onRightClick
+    
+        Sets the _parent_ node of the currently shown subtree as root and performs the layout. 
+        This method is called when _addRightClickHandler_ is *true* and a 
+        node is right-clicked. You can override this method to add some custom behavior 
+        when the node is right-clicked though.
+
+        An Example for overriding this method could be
+        (start code js)
+        //TM.Strip or TM.SliceAndDice also work
+        TM.Squarified.implement({
+            'onRightClick': function() {
+                //some custom code...
+            }
+        });
+        (end code)
+
+       See also:
+       
+          <TM.out>
+
+    */
+    onRightClick: function() {
+        this.out();
+    },
+
 	/*
 	   Method: view
 	
@@ -607,11 +706,11 @@ this.TM = {
                 if(container) {
                     var parent = getParent(container);
                     while(parent) {
-                        var elem = parent.childNodes[0], klasses = elem.className.split(" ");
-                        if(klasses.pop() == "in-path") {
-                            if(remove == undefined || !!remove) elem.className = klasses.join(" ");
+                        var elem = parent.childNodes[0]
+                        if($hasClass(elem, 'in-path')) {
+                            if(remove == undefined || !!remove) $removeClass(elem, 'in-path');
                         } else {
-                            if(!remove) elem.className += " in-path";
+                            if(!remove) $addClass(elem, 'in-path');
                         }
                         parent = getParent(parent);
                     }
@@ -632,12 +731,97 @@ this.TM = {
        node created. *By default, the Treemap wont add any event to its elements.*
     */
     initializeElements: function() {
-      if(this.controller.onCreateElement != $empty) {
-          var cont = this.controller, that = this;
-          this.each(function(content, isLeaf, elem1, elem2) {
-              cont.onCreateElement(content, TreeUtil.getSubtree(that.tree, content.id), isLeaf, elem1, elem2);
-          });
-      }  
+      var cont = this.controller, that = this;
+      var ff = $lambda(false), tipsAllow = cont.Tips.allow;
+      this.each(function(content, isLeaf, elem1, elem2) {
+          var tree = TreeUtil.getSubtree(that.tree, content.id);
+          cont.onCreateElement(content, tree, isLeaf, elem1, elem2);
+
+          //eliminate context menu when right clicking
+          if(cont.addRightClickHandler) elem1.oncontextmenu = ff;
+
+          //add click handlers
+          if(cont.addLeftClickHandler || cont.addRightClickHandler) {
+            $addEvent(elem1, 'mouseup', function(e) {
+                var rightClick = (e.which == 3 || e.button == 2);
+                if (rightClick) {
+                    if(cont.addRightClickHandler) that.onRightClick();
+                }                     
+                else {
+                    if(cont.addLeftClickHandler) that.onLeftClick(elem1);
+                } 
+                    
+                //prevent default 
+                if (e.preventDefault) 
+                    e.preventDefault();
+                else 
+                    e.returnValue = false;
+            });
+          }
+          
+          //add path selection on hovering nodes
+          if(cont.selectPathOnHover || tipsAllow) {
+            $addEvent(elem1, 'mouseover', function(e){
+                if(cont.selectPathOnHover) {
+                    if (isLeaf) {
+                        $addClass(elem1, 'over-leaf');
+                    }
+                    else {
+                        $addClass(elem1, 'over-head');
+                        $addClass(content, 'over-content');
+                    }
+                    if (content.id) 
+                        that.resetPath(tree);
+                }
+                if(tipsAllow)
+                    cont.Tips.onShow(that.tip, tree, isLeaf, elem1);
+            });
+            
+            $addEvent(elem1, 'mouseout', function(e){
+                if(cont.selectPathOnHover) {
+                    if (isLeaf) {
+                        $removeClass(elem1, 'over-leaf');
+                    }
+                    else {
+                        $removeClass(elem1, 'over-head');
+                        $removeClass(content, 'over-content');
+                    }
+                    that.resetPath();
+                }
+                if(tipsAllow)
+                    that.tip.style.display = 'none';
+            });
+
+            if(tipsAllow) {
+                //Add mousemove event handler
+                $addEvent(elem1, 'mousemove', function(e){
+                    var tip = that.tip;
+                    //get mouse position
+                    var page = {
+                        x: e.pageX || e.clientX + document.scrollLeft,
+                        y: e.pageY || e.clientY + document.scrollTop
+                    };
+                    tip.style.display = '';
+                    //get window dimensions
+                    var win = {
+                        'height': document.body.clientHeight,
+                        'width': document.body.clientWidth
+                    };
+                    //get tooltip dimensions
+                    var obj = {
+                      'width': tip.offsetWidth,
+                      'height': tip.offsetHeight  
+                    };
+                    //set tooltip position
+                    var style = tip.style, x = cont.Tips.offsetX, y = cont.Tips.offsetY;
+                    style.top = ((page.y + y + obj.height > win.height)?  
+                        (page.y - obj.height - y) : page.y + y) + 'px';
+                    style.left = ((page.x + obj.width + x > win.width)? 
+                        (page.x - obj.width - x) : page.x + x) + 'px';
+                });
+            }
+          }
+      });
     },
 
     /*
@@ -717,14 +901,25 @@ this.TM = {
 		rootId: 'infovis',
 		offset:4,
 		levelsToShow: 3,
+        addLeftClickHandler: false,
+        addRightClickHandler: false,
+        selectPathOnHover: false,
+            
 		Color: {
 			allow: false,
 			minValue: -100,
 			maxValue: 100,
 			minColorValue: [255, 0, 50],
 			maxColorValue: [0, 255, 50]
-          }
-  
+          },
+          
+          Tips: {
+            allow: false,
+            offsetX; 20,
+            offsetY: 20,
+            onShow: function(tooltip, node, isLeaf, domElement) {}
+          },
+            
           onBeforeCompute:  function(node) {
             //Some stuff on before compute...
           },
@@ -1037,13 +1232,24 @@ TM.Area = new Class({
 		rootId: 'infovis',
 		offset:4,
 		levelsToShow: 3,
+        addLeftClickHandler: false,
+        addRightClickHandler: false,
+        selectPathOnHover: false,
+            
 		Color: {
 			allow: false,
 			minValue: -100,
 			maxValue: 100,
 			minColorValue: [255, 0, 50],
 			maxColorValue: [0, 255, 50]
-          }
+          },
+          
+          Tips: {
+            allow: false,
+            offsetX: 20,
+            offsetY: 20,
+            onShow: function(tooltip, node, isLeaf, domElement) {}
+          },
   
           onBeforeCompute:  function(node) {
             //Some stuff on before compute...
@@ -1249,13 +1455,24 @@ TM.Squarified = new Class({
 		rootId: 'infovis',
 		offset:4,
 		levelsToShow: 3,
+        addLeftClickHandler: false,
+        addRightClickHandler: false,
+        selectPathOnHover: false,
+            
 		Color: {
 			allow: false,
 			minValue: -100,
 			maxValue: 100,
 			minColorValue: [255, 0, 50],
 			maxColorValue: [0, 255, 50]
-          }
+          },
+          
+          Tips: {
+            allow: false,
+            offsetX: 20,
+            offsetY: 20,
+            onShow: function(tooltip, node, isLeaf, domElement) {}
+          },
   
           onBeforeCompute:  function(node) {
             //Some stuff on before compute...
