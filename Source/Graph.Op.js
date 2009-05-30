@@ -296,6 +296,7 @@ Graph.Op = {
                 break;
             
             case 'replot':
+                viz.refresh(true);
                 this.sum(json, { type: 'nothing' });
                 viz.refresh(true);
                 break;
@@ -389,14 +390,16 @@ Graph.Op = {
                         if(!graph.getAdjacence(adj.nodeFrom.id, adj.nodeTo.id)) {
                             viz.graph.removeAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
                         }
-                        if(!viz.graph.hasNode(elem.id)) viz.graph.removeNode(elem.id);
                     });
+                    if(!graph.hasNode(elem.id)) viz.graph.removeNode(elem.id);
                 });
                 
                 break;
             
             case 'replot':
+                viz.refresh(true);
                 this.morph(json, { type: 'nothing' });
+                viz.fx.clearLabels();
                 viz.refresh(true);
                 break;
             

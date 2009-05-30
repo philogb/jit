@@ -348,7 +348,8 @@ this.Hypertree = new Class({
         if(reposition) { 
             this.reposition(); 
             Graph.Util.eachNode(this.graph, function(node) { 
-                node.startPos = node.pos = node.endPos; 
+                node.startPos.rho = node.pos.rho = node.endPos.rho;
+                node.startPos.theta = node.pos.theta = node.endPos.theta; 
             }); 
         } else { 
             this.compute(); 
@@ -370,7 +371,10 @@ this.Hypertree = new Class({
         var vector = this.graph.getNode(this.root).pos.getc().scale(-1); 
         Graph.Util.moebiusTransformation(this.graph, [vector], ['endPos'], 'endPos', "ignore"); 
         Graph.Util.eachNode(this.graph, function(node) { 
-            if(node.ignore) node.endPos = node.pos; 
+            if (node.ignore) {
+                node.endPos.rho = node.pos.rho;
+                node.endPos.theta = node.pos.theta;
+            } 
         }); 
     }, 
  
