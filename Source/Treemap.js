@@ -1320,9 +1320,12 @@ TM.Squarified = new Class({
 	processChildrenLayout: function(par, ch, coord) {
 		//compute children real areas
 		var parentArea = coord.width * coord.height;
-		var parentDataValue = parseFloat(par.data.$area);
-		for(var i=0; i<ch.length; i++) {
-			ch[i]._area = parentArea * parseFloat(ch[i].data.$area) / parentDataValue;
+		for(var totalChArea=0, chArea = [], i=0; i < ch.length; i++) {
+            chArea[i] = parseFloat(ch[i].data.$area);
+            totalChArea += chArea[i];
+        }
+        for(var i=0; i<chArea.length; i++) {
+			ch[i]._area = parentArea * chArea[i] / totalChArea;
 		}
 		var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
 		ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
