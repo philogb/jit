@@ -55,7 +55,7 @@ function init(){
                 data: {
                     $area: "153",
                     $color: "6",
-                    image: "http://cdn.last.fm/coverart/130x130/1721.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8590493.jpg"
                 },
                 id: "8bfac288-ccc5-448d-9573-c33ea2aa5c30One Hot Minute",
                 name: "One Hot Minute"
@@ -64,7 +64,7 @@ function init(){
                 data: {
                     $area: "69",
                     $color: "35",
-                    image: "http://cdn.last.fm/coverart/130x130/4791.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8593509.jpg"
                 },
                 id: "8bfac288-ccc5-448d-9573-c33ea2aa5c30Californication",
                 name: "Californication"
@@ -73,7 +73,7 @@ function init(){
                 data: {
                     $area: "69",
                     $color: "35",
-                    image: "http://cdn.last.fm/coverart/130x130/2024268.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8672727.jpg"
                 },
                 id: "8bfac288-ccc5-448d-9573-c33ea2aa5c30Greatest Hits",
                 name: "Greatest Hits"
@@ -98,7 +98,7 @@ function init(){
                 data: {
                     $area: "83",
                     $color: "28",
-                    image: "http://cdn.last.fm/coverart/130x130/20555-93189758.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8599099.jpg"
                 },
                 id: "ff6e677f-91dd-4986-a174-8db0474b1799On and On",
                 name: "On and On"
@@ -107,7 +107,7 @@ function init(){
                 data: {
                     $area: "62",
                     $color: "41",
-                    image: "http://cdn.last.fm/coverart/130x130/1434260-738979592.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8664981.jpg"
                 },
                 id: "ff6e677f-91dd-4986-a174-8db0474b1799Brushfire Fairytales",
                 name: "Brushfire Fairytales"
@@ -123,7 +123,7 @@ function init(){
                 data: {
                     $area: "65",
                     $color: "38",
-                    image: "http://cdn.last.fm/coverart/130x130/24926-741377443.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/23727633.jpg"
                 },
                 id: "83b9cbe7-9857-49e2-ab8e-b57b01038103Vs.",
                 name: "Vs."
@@ -132,7 +132,7 @@ function init(){
                 data: {
                     $area: "61",
                     $color: "44",
-                    image: "http://cdn.last.fm/coverart/130x130/2028322-185275774.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/19611679.jpg"
                 },
                 id: "83b9cbe7-9857-49e2-ab8e-b57b01038103Riot Act",
                 name: "Riot Act"
@@ -141,7 +141,7 @@ function init(){
                 data: {
                     $area: "61",
                     $color: "44",
-                    image: "http://cdn.last.fm/coverart/130x130/4911-553393077.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/17492447.jpg"
                 },
                 id: "83b9cbe7-9857-49e2-ab8e-b57b01038103Yield",
                 name: "Yield"
@@ -157,7 +157,7 @@ function init(){
                 data: {
                     $area: "115",
                     $color: "14",
-                    image: "http://cdn.last.fm/coverart/130x130/2039854-1850216884.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/17484209.jpg"
                 },
                 id: "bfd085b8-0bbf-46b3-8ab9-193bca5c85e7Above",
                 name: "Above"
@@ -246,7 +246,7 @@ function init(){
                 data: {
                     $area: "240",
                     $color: "1",
-                    image: "http://cdn.last.fm/coverart/130x130/2027953-348729467.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/21881921.jpg"
                 },
                 id: "a5585acd-9b65-49a7-a63b-3cc4ee18846eMother Love Bone",
                 name: "Mother Love Bone"
@@ -262,7 +262,7 @@ function init(){
                 data: {
                     $area: "67",
                     $color: "37",
-                    image: "http://cdn.last.fm/coverart/130x130/1418871.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8634595.jpg"
                 },
                 id: "7527f6c2-d762-4b88-b5e2-9244f1e34c46Around the Fur",
                 name: "Around the Fur"
@@ -310,7 +310,7 @@ function init(){
                 data: {
                     $area: "168",
                     $color: "5",
-                    image: "http://userserve-ak.last.fm/serve/130x130/4797435.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/23091681.jpg"
                 },
                 id: "c5998351-be49-49d8-8593-3e96f129c1fcMamagubida",
                 name: "Mamagubida"
@@ -319,7 +319,7 @@ function init(){
                 data: {
                     $area: "141",
                     $color: "7",
-                    image: "http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"
+                    image: "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_mega.png"
                 },
                 id: "c5998351-be49-49d8-8593-3e96f129c1fcReggae \xE0 Coup de Cirque",
                 name: "Reggae \xE0 Coup de Cirque"
@@ -328,7 +328,7 @@ function init(){
                 data: {
                     $area: "135",
                     $color: "8",
-                    image: "http://cdn.last.fm/coverart/130x130/1419776-1246197824.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/16799743.jpg"
                 },
                 id: "c5998351-be49-49d8-8593-3e96f129c1fcGrain de sable",
                 name: "Grain de sable"
@@ -337,7 +337,7 @@ function init(){
                 data: {
                     $area: "80",
                     $color: "30",
-                    image: "http://cdn.last.fm/coverart/130x130/1419747.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8635653.jpg"
                 },
                 id: "c5998351-be49-49d8-8593-3e96f129c1fcFaut qu'ils s'activent...",
                 name: "Faut qu'ils s'activent..."
@@ -353,7 +353,7 @@ function init(){
                 data: {
                     $area: "57",
                     $color: "48",
-                    image: "http://cdn.last.fm/coverart/130x130/1418895.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8634627.jpg"
                 },
                 id: "4bb4e4e4-5f66-4509-98af-62dbb90c45c5The Sickness",
                 name: "The Sickness"
@@ -369,7 +369,7 @@ function init(){
                 data: {
                     $area: "72",
                     $color: "34",
-                    image: "http://cdn.last.fm/coverart/130x130/2025293-1110011556.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8673813.jpg"
                 },
                 id: "95f5b748-d370-47fe-85bd-0af2dc450bc0Second-Hand Smoke",
                 name: "Second-Hand Smoke"
@@ -385,7 +385,7 @@ function init(){
                 data: {
                     $area: "73",
                     $color: "33",
-                    image: "http://cdn.last.fm/coverart/130x130/1417706-365935743.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/7737695.jpg"
                 },
                 id: "020bfbb4-05c3-4c86-b372-17825c262094Audioslave",
                 name: "Audioslave"
@@ -401,7 +401,7 @@ function init(){
                 data: {
                     $area: "124",
                     $color: "10",
-                    image: "http://cdn.last.fm/coverart/130x130/37911-493308434.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8605651.jpg"
                 },
                 id: "e9571c17-817f-4d34-ae3f-0c7a96f822c1Temple of the Dog",
                 name: "Temple of the Dog"
@@ -426,7 +426,7 @@ function init(){
                 data: {
                     $area: "64",
                     $color: "39",
-                    image: "http://cdn.last.fm/coverart/130x130/2201895-1337454629.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8729219.jpg"
                 },
                 id: "06fb1c8b-566e-4cb2-985b-b467c90781d4First Rays of the New Rising Sun",
                 name: "First Rays of the New Rising Sun"
@@ -458,7 +458,7 @@ function init(){
                 data: {
                     $area: "123",
                     $color: "11",
-                    image: "http://userserve-ak.last.fm/serve/130x130/5614343.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/11393921.jpg"
                 },
                 id: "078a9376-3c04-4280-b7d7-b20e158f345dMer de Noms",
                 name: "Mer de Noms"
@@ -467,7 +467,7 @@ function init(){
                 data: {
                     $area: "93",
                     $color: "24",
-                    image: "http://userserve-ak.last.fm/serve/130x130/5614421.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/11403219.jpg"
                 },
                 id: "078a9376-3c04-4280-b7d7-b20e158f345dThirteenth Step",
                 name: "Thirteenth Step"
@@ -508,7 +508,7 @@ function init(){
                 data: {
                     $area: "87",
                     $color: "25",
-                    image: "http://cdn.last.fm/coverart/130x130/2383135-239175892.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8772827.jpg"
                 },
                 id: "e795e03d-b5d5-4a5f-834d-162cfb308a2c4-Track Demos",
                 name: "4-Track Demos"
@@ -517,7 +517,7 @@ function init(){
                 data: {
                     $area: "77",
                     $color: "32",
-                    image: "http://cdn.last.fm/coverart/130x130/2039787-1138641862.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/9929071.jpg"
                 },
                 id: "e795e03d-b5d5-4a5f-834d-162cfb308a2cRid of Me",
                 name: "Rid of Me"
@@ -533,7 +533,7 @@ function init(){
                 data: {
                     $area: "102",
                     $color: "19",
-                    image: "http://cdn.last.fm/coverart/130x130/1428028-676341407.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/7410551.jpg"
                 },
                 id: "e3e0abcd-7671-4482-a9d8-462f5acc9be5Make Yourself",
                 name: "Make Yourself"
@@ -551,7 +551,7 @@ function init(){
                 data: {
                     $area: "60",
                     $color: "46",
-                    image: "http://cdn.last.fm/coverart/130x130/1427920-153080025.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/19681051.jpg"
                 },
                 id: "e3e0abcd-7671-4482-a9d8-462f5acc9be5Morning View",
                 name: "Morning View"
@@ -567,7 +567,7 @@ function init(){
                 data: {
                     $area: "130",
                     $color: "9",
-                    image: "http://userserve-ak.last.fm/serve/130x130/5618401.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/15113951.jpg"
                 },
                 id: "38c5cdab-5d6d-43d1-85b0-dac41bde186eNico",
                 name: "Nico"
@@ -594,7 +594,7 @@ function init(){
                 data: {
                     $area: "99",
                     $color: "20",
-                    image: "http://userserve-ak.last.fm/serve/130x130/5618415.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/15157989.jpg"
                 },
                 id: "38c5cdab-5d6d-43d1-85b0-dac41bde186eBlind Melon",
                 name: "Blind Melon"
@@ -610,7 +610,7 @@ function init(){
                 data: {
                     $area: "173",
                     $color: "4",
-                    image: "http://cdn.last.fm/coverart/130x130/1756-756643134.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8590515.jpg"
                 },
                 id: "153c9281-268f-4cf3-8938-f5a4593e5df4Superunknown",
                 name: "Superunknown"
@@ -619,7 +619,7 @@ function init(){
                 data: {
                     $area: "117",
                     $color: "13",
-                    image: "http://userserve-ak.last.fm/serve/130x130/5269310.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/5269310.jpg"
                 },
                 id: "153c9281-268f-4cf3-8938-f5a4593e5df4Louder Than Love",
                 name: "Louder Than Love"
@@ -628,7 +628,7 @@ function init(){
                 data: {
                     $area: "96",
                     $color: "21",
-                    image: "http://cdn.last.fm/coverart/130x130/24152-1070383690.jpg"
+                    image: "http://userserve-ak.last.fm/serve/174s/8600371.jpg"
                 },
                 id: "153c9281-268f-4cf3-8938-f5a4593e5df4Down on the Upside",
                 name: "Down on the Upside"
