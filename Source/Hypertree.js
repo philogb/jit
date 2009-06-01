@@ -539,7 +539,7 @@ this.Hypertree = new Class({
                 opt = $merge({ onComplete: $empty }, opt || {}); 
                 this.fx.animate($merge({ 
                     modes: ['moebius'], 
-                    hideLabels: true, 
+                    hideLabels: true 
                 }, opt, { 
                     onComplete: function(){ 
                         that.busy = false; 

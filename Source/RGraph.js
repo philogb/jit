@@ -431,7 +431,7 @@ this.RGraph = new Class({
 
 			this.fx.animate($merge({
                 hideLabels: true,
-                modes: [mode],
+                modes: [mode]
             }, opt, {
                 onComplete: function() {
                     that.busy = false;

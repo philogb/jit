@@ -231,7 +231,7 @@ this.TM = {
         var fn = function() {
             that.empty();
             if(window.CollectGarbage) window.CollectGarbage();
-            delete this;
+            delete fn;
         };
         if(window.addEventListener) {
             window.addEventListener('unload', fn, false);
@@ -794,12 +794,16 @@ this.TM = {
 
             if(tipsAllow) {
                 //Add mousemove event handler
-                $addEvent(elem1, 'mousemove', function(e){
+                $addEvent(elem1, 'mousemove', function(e, win){
                     var tip = that.tip;
                     //get mouse position
+                    win = win  || window;
+                    e = e || win.event;
+                    var doc = win.document;
+                    doc = doc.html || doc.body;
                     var page = {
-                        x: e.pageX || e.clientX + document.scrollLeft,
-                        y: e.pageY || e.clientY + document.scrollTop
+                        x: e.pageX || e.clientX + doc.scrollLeft,
+                        y: e.pageY || e.clientY + doc.scrollTop
                     };
                     tip.style.display = '';
                     //get window dimensions

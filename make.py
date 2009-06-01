@@ -18,11 +18,10 @@ def main():
 
 def make_docs():
     system("perl " 
-        + PROJECT_ROOT 
         + "NaturalDocs-1.4/NaturalDocs -i " 
-        + PROJECT_ROOT + "Source/ -o HTML "
-        + PROJECT_ROOT +"Docs/ -p "
-        + PROJECT_ROOT + "NaturalDocs-1.4 -img NaturalDocs-1.4/img -s docstyle -r")
+        + "Source/ -o HTML "
+        + "Docs/ -p "
+        + "NaturalDocs-1.4 -img NaturalDocs-1.4/img -s docstyle -r")
 
 def make_examples(fancy=False):
 #clean examples folder
