@@ -12,7 +12,7 @@
      
      Based on:
          
-     MooTools library <http://mootools.net>. MIT license <http://www.opensource.org/licenses/mit-license.php>.
+     Easing and Transition animation methods are based in the MooTools Framework <http://mootools.net>. Copyright (c) 2006-2009 Valerio Proietti, <http://mad4milk.net/>. MIT license <http://mootools.net/license.txt>.
 
      Used by:
 
@@ -219,7 +219,7 @@ this.Trans = {
    
    Based on:
    
-   Fx.Base from MooTools: <http://mootools.net>. (MIT license <http://www.opensource.org/licenses/mit-license.php>).
+   The Animation class is based in the MooTools Framework <http://mootools.net>. Copyright (c) 2006-2009 Valerio Proietti, <http://mad4milk.net/>. MIT license <http://mootools.net/license.txt>.
 
 */
 
