@@ -7,7 +7,7 @@
   
   Also provides the <TreeUtil> object for manipulating JSON tree structures
   
-  Some parts of this Script are based on Mootools core: <http://mootools.net> (MIT license <http://www.opensource.org/licenses/mit-license.php>).
+  Some parts of this Script are based on Mootools core: <http://mootools.net>. MIT license <http://www.opensource.org/licenses/mit-license.php>.
   
   Author: 
   

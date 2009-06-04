@@ -12,7 +12,7 @@
      
      Based on:
          
-     MooTools library <http://mootools.net>. (MIT license <http://www.opensource.org/licenses/mit-license.php>).
+     MooTools library <http://mootools.net>. MIT license <http://www.opensource.org/licenses/mit-license.php>.
 
      Used by:
 
