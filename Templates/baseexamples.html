@@ -15,7 +15,11 @@ $if extras:
             <!--[if IE]><script language="javascript" type="text/javascript" src="../../Extras/excanvas.js"></script><![endif]-->
 
 <!-- JIT Library File -->
-<script language="javascript" type="text/javascript" src="../../jit.js"></script>
+$if fancy:
+    <script language="javascript" type="text/javascript" src="../../jit-yc.js"></script>
+$else:
+    <script language="javascript" type="text/javascript" src="../../jit.js"></script>
+
 <!-- Example File -->
 <script language="javascript" type="text/javascript" src="${example}.js"></script>
 </head>

@@ -12,7 +12,7 @@
      
      Based on:
          
-     MooTools library <http://mootools.net>.
+     MooTools library <http://mootools.net>. (MIT license <http://www.opensource.org/licenses/mit-license.php>).
 
      Used by:
 
@@ -219,7 +219,7 @@ this.Trans = {
    
    Based on:
    
-   Fx.Base from MooTools: <http://mootools.net>.
+   Fx.Base from MooTools: <http://mootools.net>. (MIT license <http://www.opensource.org/licenses/mit-license.php>).
 
 */
 

@@ -389,7 +389,7 @@ tests_model = {
             The SpaceTree is loaded with some custom data that individually changes nodes dimensions, making a bar chart (bottom).
             
             """,
-            'Extras': [],
+            'Extras': ['excanvas.js'],
             'Build': ['RGraph', 'Spacetree'],
             'Example': True
             
@@ -403,7 +403,7 @@ tests_model = {
             This example shows that many visualizations can be composed to create new visualizations.
             
             """,
-            'Extras': [],
+            'Extras': ['excanvas.js'],
             'Build': ['RGraph'],
             'Example': True
             
@@ -417,7 +417,7 @@ tests_model = {
             This example shows that many visualizations can be composed to create new visualizations.
             
             """,
-            'Extras': [],
+            'Extras': ['excanvas.js'],
             'Build': ['RGraph', 'Spacetree'],
             'Example': True
             

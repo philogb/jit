@@ -35,7 +35,6 @@ function init(){
         },
         
         //Tooltip content is setted by setting the *title* of the element to be *tooltiped*.
-        //Read the mootools docs for further understanding.
         makeTip: function(elem, json){
             var title = json.name;
             var html = this.makeHTMLFromData(json.data);

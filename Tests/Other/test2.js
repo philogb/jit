@@ -279,7 +279,7 @@ function init() {
             var w = domElement.offsetWidth;
             style.left = (left - w / 2) + 'px';
             style.display = '';
-        },
+        }
     });
     //load graph.
     rgraph.loadJSON(json);
