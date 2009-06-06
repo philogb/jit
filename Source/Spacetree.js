@@ -359,13 +359,15 @@ this.ST= (function() {
          
          var cnode = config.Node;
          var s = auxs[ind], nots = auxs[1 - ind];
-         var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
-         
+
          var siblingOffset = config.siblingOffset;
          var subtreeOffset = config.subtreeOffset;
          
          var GUtil = Graph.Util;
          function $design(node) {
+             var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
+             var notsval = (cnode.overridable && node.data["$" + nots]) || cnode[nots];
+             
              var trees = [], extents = [];
              GUtil.eachSubnode(node, function(n) {
                  if(n.exist) {
@@ -381,7 +383,7 @@ this.ST= (function() {
              }
              var resultextent = [[-sval/2, sval/2]].concat(mergelist(pextents));
              node[prop][p] = 0;
-             node[prop][notp] = node._depth * (config.levelDistance + 50);
+             node[prop][notp] = node._depth * config.levelDistance + notsval;
              return {
                tree: node,
                extent: resultextent  
