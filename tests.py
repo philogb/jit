@@ -256,8 +256,7 @@ tests_model = {
             'Title': 'Test unbalanced tree.',
             'Description': 
             """
-            Tests the Spacetree layout algorithm with an unbalanced tree. Currently this test does not pass.<br>
-            This is a known bug and probably will remain like this for version 1.1.0.
+            Tests the Spacetree layout algorithm with an unbalanced tree. <br>
             """,
             'Extras': ['generators.js', 'excanvas.js']
         },

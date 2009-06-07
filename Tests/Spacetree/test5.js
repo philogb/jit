@@ -22,11 +22,12 @@ function init(){
     });
     //Create a new ST instance
     st = new ST(canvas, {
+        orientation: "left", 
         levelDistance: 50,
         Node: {
             overridable: true,
-            height: 20,
-            align: "right"
+            align: "left",
+            height: 20
         },
         
         Edge: {

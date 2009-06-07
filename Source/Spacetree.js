@@ -187,6 +187,160 @@ object must be called with the given result.
     - _fx_ Access a  <ST.Plot> instance.
  */
 
+(function () {
+
+//Layout functions
+var slice = Array.prototype.slice;
+
+/*
+   Calculates the max width and height nodes for a tree level
+*/  
+function getBoundaries(graph, config, level) {
+    var dim = config.Node, GUtil = Graph.Util;
+    if(dim.overridable) {
+        var w = -1, h = -1;
+        GUtil.eachNode(graph, function(n) {
+            if(n._depth == level) {
+                var dw = n.data.$width || dim.width;
+                var dh = n.data.$height || dim.height;
+                w = (w < dw)? dw : w;
+                h = (h < dh)? dh : h;
+            }
+        });
+        return {
+            'width':  w,
+            'height': h
+        };
+    } else {
+        return dim;
+    }
+};
+
+ function movetree(node, prop, val, orn) {
+   var p = (orn == "left" || orn == "right")? "y" : "x";
+   node[prop][p] += val;
+ };
+ 
+ function moveextent(extent, val) {
+     var ans = [];
+     $each(extent, function(elem) {
+         elem = slice.call(elem);
+         elem[0] += val;
+         elem[1] += val;
+         ans.push(elem);
+     });
+     return ans;
+ };
+ 
+ function merge(ps, qs) {
+   if(ps.length == 0) return qs;
+   if(qs.length == 0) return ps;
+   var p = ps.shift(), q = qs.shift();
+   return [[p[0], q[1]]].concat(merge(ps, qs));  
+ };
+ 
+ function mergelist(ls, def) {
+     def = def || [];
+     if(ls.length == 0) return def; 
+     var ps = ls.pop();
+     return mergelist(ls, merge(ps, def));
+ };
+ 
+ function fit(ext1, ext2, subtreeOffset, siblingOffset, i) {
+     i = i || 0;
+     if(ext1.length <= i || 
+        ext2.length <= i) return 0;
+     
+     var p = ext1[i][1], q = ext2[i][0];
+     return  Math.max(fit(ext1, ext2, subtreeOffset, siblingOffset, ++i) + subtreeOffset,
+                 p - q + siblingOffset);
+ };
+ 
+ function fitlistl(es, subtreeOffset, siblingOffset) {
+   function $fitlistl(acc, es, i) {
+       i = i || 0;
+       if(es.length <= i) return [];
+       var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset);
+       return [ans].concat($fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
+   };
+   return $fitlistl([], es);
+ };
+ 
+ function fitlistr(es, subtreeOffset, siblingOffset) {
+   function $fitlistr(acc, es, i) {
+       i = i || 0;
+       if(es.length <= i) return [];
+       var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset);
+       return [ans].concat($fitlistr(merge(moveextent(e, ans), acc), es, ++i));
+   };
+   es = slice.call(es);
+   var ans = $fitlistr([], es.reverse());
+   return ans.reverse();
+ };
+ 
+ function fitlist(es, subtreeOffset, siblingOffset) {
+    var esl = fitlistl(es, subtreeOffset, siblingOffset),
+        esr = fitlistr(es, subtreeOffset, siblingOffset);
+    for(var i = 0, ans = []; i < esl.length; i++) {
+        ans[i] = (esl[i] + esr[i]) / 2;
+    }
+    return ans;
+ };
+ 
+ function design(graph, node, prop, config) {
+     var orn = config.orientation;
+     var auxp = ['x', 'y'], auxs = ['width', 'height'];
+     var ind = +(orn == "left" || orn == "right");
+     var p = auxp[ind], notp = auxp[1 - ind];
+     
+     var cnode = config.Node;
+     var s = auxs[ind], nots = auxs[1 - ind];
+
+     var siblingOffset = config.siblingOffset;
+     var subtreeOffset = config.subtreeOffset;
+     
+     var GUtil = Graph.Util;
+     function $design(node, maxsize, acum) {
+         var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
+         var notsval = maxsize || ((cnode.overridable && node.data["$" + nots]) || cnode[nots]);
+         
+         var trees = [], extents = [], chmaxsize = false;
+         var chacum = notsval + config.levelDistance;
+         GUtil.eachSubnode(node, function(n) {
+             if(n.exist) {
+                 if(!chmaxsize) 
+                    chmaxsize = getBoundaries(graph, config, n._depth);
+                 
+                 var s = $design(n, chmaxsize[nots], acum + chacum);
+                 trees.push(s.tree);
+                 extents.push(s.extent);
+             }
+         });
+         var positions = fitlist(extents, subtreeOffset, siblingOffset);
+         for(var i=0, ptrees = [], pextents = []; i < trees.length; i++) {
+             movetree(trees[i], prop, positions[i], orn);
+             pextents.push(moveextent(extents[i], positions[i]));
+         }
+         var resultextent = [[-sval/2, sval/2]].concat(mergelist(pextents));
+         node[prop][p] = 0;
+
+         if (orn == "top" || orn == "left") {
+            node[prop][notp] = acum;
+         } else {
+            node[prop][notp] = -acum;
+         }
+
+
+         return {
+           tree: node,
+           extent: resultextent  
+         };
+     };
+     $design(node, false, 0);
+ };
+
+
+
 this.ST= (function() {
     //Define some private methods first...
     //Lowest Common Ancestor
@@ -276,122 +430,6 @@ this.ST= (function() {
          }
      };
      
-     
-     //Layout functions
-     var slice = Array.prototype.slice;
-     
-     function movetree(node, prop, val, orn) {
-       var p = (orn == "left" || orn == "right")? "y" : "x";
-       node[prop][p] += val;
-     };
-     
-     function moveextent(extent, val) {
-         var ans = [];
-         $each(extent, function(elem) {
-             elem = slice.call(elem);
-             elem[0] += val;
-             elem[1] += val;
-             ans.push(elem);
-         });
-         return ans;
-     };
-     
-     function merge(ps, qs) {
-       if(ps.length == 0) return qs;
-       if(qs.length == 0) return ps;
-       var p = ps.shift(), q = qs.shift();
-       return [[p[0], q[1]]].concat(merge(ps, qs));  
-     };
-     
-     function mergelist(ls, def) {
-         def = def || [];
-         if(ls.length == 0) return def; 
-         var ps = ls.pop();
-         return mergelist(ls, merge(ps, def));
-     };
-     
-     function fit(ext1, ext2, subtreeOffset, siblingOffset, i) {
-         i = i || 0;
-         if(ext1.length <= i || 
-            ext2.length <= i) return 0;
-         
-         var p = ext1[i][1], q = ext2[i][0];
-         return  Math.max(fit(ext1, ext2, subtreeOffset, siblingOffset, ++i) + subtreeOffset,
-                     p - q + siblingOffset);
-     };
-     
-     function fitlistl(es, subtreeOffset, siblingOffset) {
-       function $fitlistl(acc, es, i) {
-           i = i || 0;
-           if(es.length <= i) return [];
-           var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset);
-           return [ans].concat($fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
-       };
-       return $fitlistl([], es);
-     };
-     
-     function fitlistr(es, subtreeOffset, siblingOffset) {
-       function $fitlistr(acc, es, i) {
-           i = i || 0;
-           if(es.length <= i) return [];
-           var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset);
-           return [ans].concat($fitlistr(merge(moveextent(e, ans), acc), es, ++i));
-       };
-       es = slice.call(es);
-       var ans = $fitlistr([], es.reverse());
-       return ans.reverse();
-     };
-     
-     function fitlist(es, subtreeOffset, siblingOffset) {
-        var esl = fitlistl(es, subtreeOffset, siblingOffset),
-            esr = fitlistr(es, subtreeOffset, siblingOffset);
-        for(var i = 0, ans = []; i < esl.length; i++) {
-            ans[i] = (esl[i] + esr[i]) / 2;
-        }
-        return ans;
-     };
-     
-     function design(node, prop, config) {
-         var orn = config.orientation;
-         var auxp = ['x', 'y'], auxs = ['width', 'height'];
-         var ind = +(orn == "left" || orn == "right");
-         var p = auxp[ind], notp = auxp[1 - ind];
-         
-         var cnode = config.Node;
-         var s = auxs[ind], nots = auxs[1 - ind];
-
-         var siblingOffset = config.siblingOffset;
-         var subtreeOffset = config.subtreeOffset;
-         
-         var GUtil = Graph.Util;
-         function $design(node) {
-             var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
-             var notsval = (cnode.overridable && node.data["$" + nots]) || cnode[nots];
-             
-             var trees = [], extents = [];
-             GUtil.eachSubnode(node, function(n) {
-                 if(n.exist) {
-                     var s = $design(n);
-                     trees.push(s.tree);
-                     extents.push(s.extent);
-                 }
-             });
-             var positions = fitlist(extents, subtreeOffset, siblingOffset);
-             for(var i=0, ptrees = [], pextents = []; i < trees.length; i++) {
-                 movetree(trees[i], prop, positions[i], orn);
-                 pextents.push(moveextent(extents[i], positions[i]));
-             }
-             var resultextent = [[-sval/2, sval/2]].concat(mergelist(pextents));
-             node[prop][p] = 0;
-             node[prop][notp] = node._depth * config.levelDistance + notsval;
-             return {
-               tree: node,
-               extent: resultextent  
-             };
-         };
-         $design(node);
-     };
-    
     //Now define the actual class.    
     return new Class({
     
@@ -551,7 +589,7 @@ this.ST= (function() {
         },
         
         computePositions: function(node, prop) {
-            design(node, prop, this.config);
+            design(this.graph, node, prop, this.config);
             var orn = this.config.orientation;
             var GUtil = Graph.Util, i = ['x', 'y'][+(orn == "left" || orn == "right")];
             //absolutize
@@ -565,37 +603,6 @@ this.ST= (function() {
             })(node);
         },
         
-        computePositions2: function (node, initialPos, property, contracted) {
-            var GUtil = Graph.Util, geom = this.geom,
-            contracted = (arguments.length == 3) || contracted;
-    
-            if(lca && (node.id == lca) && contracted) 
-                  contracted = false;
-            
-            node[property] = initialPos;
-    
-            var ch = [];
-            GUtil.eachSubnode(node, function(n) {
-                ch.push(n);
-            });
-            
-            if (ch.length > 0) {
-                var baseHeight   = geom.getBaseSize(node, contracted);
-                var prevBaseSize = geom.getBaseSize(ch[0], contracted, 'available');
-                var subtreeOffset   = (ch.length == 1)? this.config.subtreeOffset : baseHeight - prevBaseSize;
-                var firstPos= ch[0][property]= geom.getFirstPos(node, initialPos, subtreeOffset);
-                this.computePositions(ch[0], firstPos, property, contracted);
-                for(var i=1; i<ch.length; i++) {
-                    var leaf = !GUtil.anySubnode(ch[i], "exist") || !GUtil.anySubnode(ch[i -1], "exist");
-                    var nextBaseSize = geom.getBaseSize(ch[i], contracted, 'available');
-                    var siblingOffset = leaf? (geom.getSize(ch[i], true) + geom.getSize(ch[i -1], true)) / 2 : (prevBaseSize + nextBaseSize) / 2;
-                    firstPos = geom.nextPosition(firstPos, siblingOffset);
-                    prevBaseSize = nextBaseSize;
-                    this.computePositions(ch[i], firstPos, property, contracted);
-                }
-            }
-        },
-    
           requestNodes: function(node, onComplete) {
             var handler = $merge(this.controller, onComplete), 
             lev = this.config.levelsToShow, GUtil = Graph.Util;
@@ -1168,149 +1175,113 @@ ST.Geom = new Class({
             return this.dispatch(w, h);
     },
     
-    /*
-       Calculates the max width and height for a tree's level.
-    */  
-    getMaxSiblingWidthAndHeight: function(node) {
-        var dim = this.node, GUtil = Graph.Util, graph = this.viz.graph;
-        var level = node._depth;
-        if(this.node.overridable) {
-            var w = -1, h = -1;
-            GUtil.eachNode(graph, function(n) {
-                if(n._depth == level) {
-                    var dw = n.data.$width || dim.width;
-                    var dh = n.data.$height || dim.height;
-                    w = (w < dw)? dw : w;
-                    h = (h < dh)? dh : h;
-                }
-            });
-            return {
-                'width':  w,
-                'height': h
-            };
-        } else {
-            return this.node;
-        }
-    },
+    getBoundingBox: function(node) {
+         var config = this.config;
+         var graph = this.viz.graph;
+         var orn = config.orientation;
+         var siblingOffset = config.siblingOffset;
+         var subtreeOffset = config.subtreeOffset;
+         var al = config.Node.align;
+         var GUtil = Graph.Util;
 
-    /*
-       Method: getBoundingBox
-       
-       Calculates a tree bounding box for a given node. TODO: refactor
+         var auxp = ['x', 'y'], auxs = ['width', 'height'];
+         var ind = +(orn == "left" || orn == "right");
+         var tl = +(orn == "top" || orn == "left");
+         var p = auxp[ind], notp = auxp[1 - ind];
+         var cnode = config.Node;
+         var s = auxs[ind], nots = auxs[1 - ind];
+         //boundaries array
+         var bl = [];
 
-       Parameters:
-
-       node - A <Graph.Node>, the root of the subtree to calculate its bounding box.
-    */  
-    getBoundingBox: function (node) {
-        var dim = this.node, pos = node.pos, siblingOffset = this.config.siblingOffset;
-        var GUtil = Graph.Util;
-        var calc = function(level, n) {
-            if(level === 0 || !Graph.Util.anySubnode(n, "exist")) {
-                calc.boundary = calc.boundary || { 'w': -1, 'h': -1 };
-                var w = n.data.$width || dim.width;
-                var h = n.data.$height || dim.height;
-                var b = calc.boundary;
-                b.w = (w > b.w)? w : b.w;
-                b.h = (h > b.h)? h : b.h;
-                calc.leaf = (calc.leaf && calc.leaf._depth > n._depth)? calc.leaf : n;
-                return true;                
-            }
-            return false;
-        };
-        var baseSize = this.getTreeBaseSize(node, Number.MAX_VALUE, calc);
-        var b = calc.boundary;
-        var leaf = calc.leaf;
-        var root = node;
-        var rw = root.data.$width || dim.width;
-        var rh = root.data.$height || dim.height;
-        
-        if(dim.align == "left") {
-            return this.dispatch({
-                left: root.pos.x - baseSize / 2,
-                bottom: leaf.pos.y + b.h,
-                top: root.pos.y + rh,
-                right: root.pos.x + baseSize / 2
-            }, {
-                left: leaf.pos.x,
-                bottom: root.pos.y + baseSize / 2,
-                top: root.pos.y - baseSize / 2,
-                right: root.pos.x
-            }, {
-                left: root.pos.x - baseSize / 2,
-                bottom: root.pos.y,
-                top: leaf.pos.y - b.h,
-                right: root.pos.x + baseSize / 2
-            }, {
-                left: root.pos.x + rw,
-                bottom: root.pos.y + baseSize / 2,
-                top: root.pos.y - baseSize / 2,
-                right: leaf.pos.x + b.w
-            });
-        } else if(dim.align == "center") {
-            return this.dispatch({
-                left: root.pos.x - baseSize / 2,
-                bottom: leaf.pos.y + b.h / 2,
-                top: root.pos.y + rh / 2,
-                right: root.pos.x + baseSize / 2
-            }, {
-                left: leaf.pos.x - b.w / 2,
-                bottom: root.pos.y + baseSize / 2,
-                top: root.pos.y - baseSize / 2,
-                right: root.pos.x - rw / 2
-            }, {
-                left: root.pos.x - baseSize / 2,
-                bottom: root.pos.y - rh / 2,
-                top: leaf.pos.y - b.h / 2,
-                right: root.pos.x + baseSize / 2
-            }, {
-                left: root.pos.x + rw / 2,
-                bottom: root.pos.y + baseSize / 2,
-                top: root.pos.y - baseSize / 2,
-                right: leaf.pos.x + b.w / 2
-            });
-        } else if(dim.align == "right") {
-            return this.dispatch({
-                left: root.pos.x - baseSize / 2,
-                bottom: leaf.pos.y,
-                top: root.pos.y,
-                right: root.pos.x + baseSize / 2
-            }, {
-                left: leaf.pos.x - b.w,
-                bottom: root.pos.y + baseSize / 2,
-                top: root.pos.y - baseSize / 2,
-                right: root.pos.x
-            }, {
-                left: root.pos.x - baseSize / 2,
-                bottom: root.pos.y - rh,
-                top: leaf.pos.y - b.h,
-                right: root.pos.x + baseSize / 2
-            }, {
-                left: root.pos.x,
-                bottom: root.pos.y + baseSize / 2,
-                top: root.pos.y - baseSize / 2,
-                right: leaf.pos.x + b.w
-            });
-        } else throw "align: not implemented";
-     },
-
-    /*
-       Calculates a subtree base size.
-    */  
-    getBaseSize: function(node, contracted, type) {
-        if(contracted) {
-            if(type == 'available') 
-             return this.getSize(node, true);
-            else
-             return this.getTreeBaseSize(node, 1, function(level, node) {
-                 return level === 0 && node.exist;
+         function $design(node, maxsize, acum) {
+             var sval = (cnode.overridable && 
+                node.data["$" + s]) || cnode[s];
+             var notsval = maxsize || ((cnode.overridable && 
+                node.data["$" + nots]) || cnode[nots]);
+             
+             var chacum = notsval + config.levelDistance;
+             var extents = [], chmaxsize = false;
+             GUtil.eachSubnode(node, function(n) {
+                 if(n.exist) {
+                     if(!chmaxsize) 
+                        bl[n._depth] = chmaxsize = getBoundaries(graph, config, n._depth);
+                      extents.push($design(n, chmaxsize[nots], acum + chacum));
+                 }
              });
-        }
-        return this.getTreeBaseSize(node, Number.MAX_VALUE, function(level, n) {
-            return level === 0 || !Graph.Util.anySubnode(n, "exist");
-        });
-    },
 
+             var positions = fitlist(extents, subtreeOffset, siblingOffset);
+             for(var i=0, pextents = []; i < extents.length; i++) {
+                 pextents.push(moveextent(extents[i], positions[i]));
+             }
+             var resultextent = [[-sval/2, sval/2]].concat(mergelist(pextents));
+
+             var d = node._depth; 
+             var val = acum;
+             if (tl) {
+                var dist = $design.dist || -1;
+                $design.dist = dist < val? val : dist;  
+             } else {
+                var dist = $design.dist || Number.MAX_VALUE;
+                $design.dist = dist > -val? -(val + notsval) : dist;  
+             }
+             return resultextent;
+         };
+         
+         var ans = $design(node, false, 0);
+         //get min and max
+         for(var i=0, min=Number.MAX_VALUE, max=-1; i < ans.length; i++) {
+             var ai = ans[i];
+             min = min > ai[0]? ai[0] : min;
+             max = max < ai[1]? ai[1] : max;
+         }
+
+         //get last shown level boundaries 
+         bl = bl[bl.length -1][nots];
+         //get subtree root node boundaries
+         var b = getBoundaries(graph, config, node._depth)[nots];
+         //get node dimensions
+         var nd = (cnode.overridable && 
+          node.data["$" + nots]) || cnode[nots];
+         
+         var left = al == "left"? (!ind * -1) * nd * !tl : 
+            (al == "right"? (ind * -1) * nd * tl :
+            0);
+         
+         if(tl) {
+             if(ind) {
+                 return {
+                     top: node.pos[p] + min,
+                     bottom: node.pos[p] + max,
+                     left: node.pos[notp],
+                     right: node.pos[notp]  + bl + b + $design.dist
+                 };
+             } else {
+                 return {
+                     left: node.pos[p] + min,
+                     right: node.pos[p] + max,
+                     top: node.pos[notp] + left,
+                     bottom: node.pos[notp] + left + $design.dist + bl + b
+                 };
+             }
+         } else {
+             if(ind) {
+                 return {
+                     top: node.pos[p] + min,
+                     bottom: node.pos[p] + max,
+                     left: node.pos[notp] + left + $design.dist - bl - b,
+                     right: node.pos[notp]
+                 };
+             } else {
+                 return {
+                     left: node.pos[p] + min,
+                     right: node.pos[p] + max,
+                     top: node.pos[notp] - left + -b -bl + $design.dist,
+                     bottom: node.pos[notp]
+                 };
+             }
+         }
+    },
+    
     /*
        Calculates a subtree base size. This is an utility function used by _getBaseSize_
     */  
@@ -1419,45 +1390,6 @@ ST.Geom = new Class({
           return level === 0 || !Graph.Util.anySubnode(node);
         });
         return (baseSize < size);
-    },
-    
-    /*
-       Calculates the _first_ children position given a node position.
-    */  
-    getFirstPos: function(node, initialPos, baseHeight) {
-        var $C = function(a, b) { 
-          return function() {
-            return new Complex(a, b);
-          }; 
-        };
-        var msize = this.getMaxSiblingWidthAndHeight(node);
-        var nSize = {
-            'data': {
-                '$width': msize.width,
-                '$height': msize.height
-            }
-        };
-        var size = this.getSize(nSize) + this.config.levelDistance;
-        var factor = -baseHeight / 2 + this.config.subtreeOffset / 2;
-        return this.dispatch($C(initialPos.x + factor, initialPos.y + size),
-                             $C(initialPos.x - size, initialPos.y + factor),
-                             $C(initialPos.x + factor, initialPos.y - size),
-                             $C(initialPos.x + size, initialPos.y + factor));
-    },
-    
-    /*
-       Calculates a siblings node position given a node position.
-    */  
-    nextPosition: function(firstPos, siblingOffset) {
-        var $C = function(a, b) { 
-          return function(){
-            return new Complex(a, b);
-          }; 
-        };
-        return this.dispatch($C(firstPos.x + siblingOffset, firstPos.y),
-                             $C(firstPos.x, firstPos.y + siblingOffset),
-                             $C(firstPos.x + siblingOffset, firstPos.y),
-                             $C(firstPos.x, firstPos.y + siblingOffset));
     },
     
     /*
@@ -1906,3 +1838,7 @@ ST.Plot.EdgeTypes = new Class({
         });
     }
 });
+
+    
+})();
+
