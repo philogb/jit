@@ -347,20 +347,31 @@ this.ST= (function() {
     var nodesInPath = [];
     //Nodes to contract
     function getNodesToHide(node) {
-        node = node || this.clickedNode;
-        var Geom = this.geom, GUtil = Graph.Util;
+    	node = node || this.clickedNode;
+    	var Geom = this.geom, GUtil = Graph.Util;
         var graph = this.graph;
         var canvas = this.canvas;
         var level = node._depth, nodeArray = [];
         GUtil.eachNode(graph, function(n) {
-            if(n._depth <= level && n.exist && !n.selected) {
-                nodeArray.push(n);
+            if(n.exist && !n.selected) {
+                if(GUtil.isDescendantOf(n, node.id)) {
+                	if(n._depth <= level) nodeArray.push(n);
+                } else {
+                	nodeArray.push(n);
+                }
             }
         });
         var leafLevel = Geom.getRightLevelToShow(node, canvas);
         GUtil.eachLevel(node, leafLevel, leafLevel, function(n) {
             if(n.exist && !n.selected) nodeArray.push(n);
         });
+        
+        for (var i = 0; i < nodesInPath.length; i++) {
+			var n = this.graph.getNode(nodesInPath[i]);
+        	if(!GUtil.isDescendantOf(n, node.id)) {
+        		nodeArray.push(n);
+        	}
+		}
         return nodeArray;       
      };
     //Nodes to expand
@@ -482,15 +493,46 @@ this.ST= (function() {
           }
         },
 
+        /*
+        Method: addNodeInPath
+       
+        Adds a node to the current path as selected node. This node will be visible (as in non-collapsed) at all times.
+        
+
+        Parameters:
+
+       id - A <Graph.Node> id.
+
+        Example:
+
+        (start code js)
+          st.addNodeInPath("somenodeid");
+        (end code)
+       */  
        addNodeInPath: function(id) {
            nodesInPath.push(id);
+           this.select((this.clickedNode && this.clickedNode.id) || this.root);
        },       
 
+       /*
+       Method: clearNodesInPath
+      
+       Removes all nodes tagged as selected by the <ST.addNodeInPath> method.
+       
+	   See also:
+	   
+	   <ST.addNodeInPath>
+	   
+       Example:
+
+       (start code js)
+         st.clearNodesInPath();
+       (end code)
+      */  
        clearNodesInPath: function(id) {
            nodesInPath.length = 0;
+           this.select((this.clickedNode && this.clickedNode.id) || this.root);
        },
-       
-         
         
        /*
          Method: refresh
@@ -733,11 +775,16 @@ this.ST= (function() {
             options - A group of options and callbacks such as
 
             - _onComplete_ an object callback called when the animation finishes.
+            - _Move_ an object that has as properties _offsetX_ or _offsetY_ for adding some offset position to the centered node.
 
         Example:
 
         (start code js)
           st.onClick('mynodeid', {
+        	Move: {
+        	  offsetX: 30,
+        	  offsetY: 5
+            },
             onComplete: function() {
               alert('yay!');
             }
@@ -838,8 +885,6 @@ ST.Group = new Class({
         this.config = viz.config;
         this.animation = new Animation;
         this.nodes = null;
-        this.siblings = null;
-        this.bbs = null;
     },
     
     /*
@@ -898,6 +943,8 @@ ST.Group = new Class({
             //TODO nodes are requested on demand, but not
             //deleted when hidden. Would that be a good feature? 
             //Currenty that feature is buggy, so I'll turn it off
+            //Actually this feature is buggy because trimming should take
+            //place onAfterCompute and not right after collapsing nodes.
             if (true || !controller || !controller.request) {
                 GUtil.eachLevel(nodes[i], 1, false, function(elem){
                     if (elem.exist) {
@@ -954,8 +1001,6 @@ ST.Group = new Class({
     
     prepare: function(nodes) {
         this.nodes = this.getNodesWithChildren(nodes);
-        this.siblings = this.getSiblings(this.nodes);
-        this.bbs = this.getBoundingBoxes(this.nodes);
         return this.nodes;
     },
     
@@ -965,36 +1010,53 @@ ST.Group = new Class({
     */
     getNodesWithChildren: function(nodes) {
         var ans = [], GUtil = Graph.Util;
+        nodes.sort(function(a, b) { return (a._depth <= b._depth) - (a._depth >= b._depth); });
         for(var i=0; i<nodes.length; i++) {
             if(GUtil.anySubnode(nodes[i], "exist")) {
-                ans.push(nodes[i]);
+                for ( var j = i+1, desc = false; !desc && j < nodes.length; j++) {
+					desc = desc || GUtil.isDescendantOf(nodes[i], nodes[j].id);
+				}
+            	if(!desc) ans.push(nodes[i]);
             }
         }
         return ans;
     },
     
     plotStep: function(delta, controller, animating) {
-      var viz = this.viz, 
-      canvas = viz.canvas, 
-      ctx = canvas.getCtx(),
-      bbs = this.bbs, 
-      siblings = this.siblings, 
-      nodes = this.nodes;
-      
-      for(var i=0; i<nodes.length; i++) {
-        ctx.save();
-        var node= nodes[i];
-        var bb= bbs[i];
-        canvas.clearRectangle(bb.top, bb.right, bb.bottom, bb.left);
-        viz.fx.plotSubtree(node, controller, delta, animating);                
-        ctx.restore();
-        $each(siblings[node.id], function(elem) {
-            viz.fx.plotNode(elem, canvas, false);
-        });
-      }
-    },
-    
-    getSiblings: function(nodes) {
+        var viz = this.viz, 
+        canvas = viz.canvas, 
+        ctx = canvas.getCtx(),
+        nodes = this.nodes,
+        GUtil = Graph.Util;
+        //hide nodes that are meant to be collapsed/expanded
+        var nds = {};
+        for(var i=0; i<nodes.length; i++) {
+            var node = nodes[i];
+        	nds[node.id] = [];
+        	GUtil.eachSubgraph(node, function(n) { 
+            	if(n.drawn) {
+            		n.drawn = false;
+            		nds[node.id].push(n);
+            	}
+            });
+            node.drawn = true;
+        }
+        //plot the whole (non-scaled) tree
+        if(nodes.length > 0) viz.fx.plot();
+        //show nodes that were previously hidden
+        for(var i in nds) {
+        	$each(nds[i], function(n) { n.drawn = true; });
+        }
+        //plot each scaled subtree
+        for(var i=0; i<nodes.length; i++) {
+            var node = nodes[i];
+        	ctx.save();
+            viz.fx.plotSubtree(node, controller, delta, animating);                
+            ctx.restore();
+        }
+      },
+
+      getSiblings: function(nodes) {
         var siblings = {}, GUtil = Graph.Util;
         $each(nodes, function(n) {
             var par = GUtil.getParents(n);
@@ -1009,14 +1071,6 @@ ST.Group = new Class({
             }
         });
         return siblings;
-    },
-    
-    getBoundingBoxes: function(nodes) {
-        var bbs = [], geom = this.viz.geom;
-        $each(nodes, function(n) {
-            bbs.push(geom.getBoundingBox(n));
-        });
-        return bbs;
     }
 });
 
@@ -1116,113 +1170,6 @@ ST.Geom = new Class({
             return this.dispatch(h, w);
         else
             return this.dispatch(w, h);
-    },
-    
-    getBoundingBox: function(node) {
-         var config = this.config;
-         var graph = this.viz.graph;
-         var orn = config.orientation;
-         var siblingOffset = config.siblingOffset;
-         var subtreeOffset = config.subtreeOffset;
-         var al = config.Node.align;
-         var GUtil = Graph.Util;
-
-         var auxp = ['x', 'y'], auxs = ['width', 'height'];
-         var ind = +(orn == "left" || orn == "right");
-         var tl = +(orn == "top" || orn == "left");
-         var p = auxp[ind], notp = auxp[1 - ind];
-         var cnode = config.Node;
-         var s = auxs[ind], nots = auxs[1 - ind];
-         //boundaries array
-         var bl = [];
-
-         function $design(node, maxsize, acum) {
-             var sval = (cnode.overridable && 
-                node.data["$" + s]) || cnode[s];
-             var notsval = maxsize || ((cnode.overridable && 
-                node.data["$" + nots]) || cnode[nots]);
-             
-             var chacum = notsval + config.levelDistance;
-             var extents = [], chmaxsize = false;
-             GUtil.eachSubnode(node, function(n) {
-                 if(n.exist) {
-                     if(!chmaxsize) 
-                        bl[n._depth] = chmaxsize = getBoundaries(graph, config, n._depth);
-                      extents.push($design(n, chmaxsize[nots], acum + chacum));
-                 }
-             });
-
-             var positions = fitlist(extents, subtreeOffset, siblingOffset);
-             for(var i=0, pextents = []; i < extents.length; i++) {
-                 pextents.push(moveextent(extents[i], positions[i]));
-             }
-             var resultextent = [[-sval/2, sval/2]].concat(mergelist(pextents));
-
-             var d = node._depth; 
-             var val = acum;
-             if (tl) {
-                var dist = $design.dist || -1;
-                $design.dist = dist < val? val : dist;  
-             } else {
-                var dist = $design.dist || Number.MAX_VALUE;
-                $design.dist = dist > -val? -(val + notsval) : dist;  
-             }
-             return resultextent;
-         };
-         
-         var ans = $design(node, false, 0);
-         //get min and max
-         for(var i=0, min=Number.MAX_VALUE, max=-1; i < ans.length; i++) {
-             var ai = ans[i];
-             min = min > ai[0]? ai[0] : min;
-             max = max < ai[1]? ai[1] : max;
-         }
-
-         //get last shown level boundaries 
-         bl = bl[bl.length -1][nots];
-         //get subtree root node boundaries
-         var b = getBoundaries(graph, config, node._depth)[nots];
-         //get node dimensions
-         var nd = (cnode.overridable && 
-          node.data["$" + nots]) || cnode[nots];
-         
-         var left = al == "left"? (!ind * -1) * nd * !tl : 
-            (al == "right"? (ind * -1) * nd * tl :
-            0);
-         
-         if(tl) {
-             if(ind) {
-                 return {
-                     top: node.pos[p] + min,
-                     bottom: node.pos[p] + max,
-                     left: node.pos[notp],
-                     right: node.pos[notp]  + bl + b + $design.dist
-                 };
-             } else {
-                 return {
-                     left: node.pos[p] + min,
-                     right: node.pos[p] + max,
-                     top: node.pos[notp] + left,
-                     bottom: node.pos[notp] + left + $design.dist + bl + b
-                 };
-             }
-         } else {
-             if(ind) {
-                 return {
-                     top: node.pos[p] + min,
-                     bottom: node.pos[p] + max,
-                     left: node.pos[notp] + left + $design.dist - bl - b,
-                     right: node.pos[notp]
-                 };
-             } else {
-                 return {
-                     left: node.pos[p] + min,
-                     right: node.pos[p] + max,
-                     top: node.pos[notp] - left + -b -bl + $design.dist,
-                     bottom: node.pos[notp]
-                 };
-             }
-         }
     },
     
     /*
