@@ -343,8 +343,6 @@ function getBoundaries(graph, config, level) {
 
 this.ST= (function() {
     //Define some private methods first...
-    //Lowest Common Ancestor
-    var lca;
     //Nodes in path
     var nodesInPath = [];
     //Nodes to contract
@@ -376,60 +374,6 @@ this.ST= (function() {
         });
         return nodeArray;
      };
-     //Lowest Common Ancestor
-     function getLCA(node) {
-         if (nodesInPath.length == 0) {
-            lca = node? node.id : false;
-            return;
-         }
-         //Preprocess
-         var GUtil = Graph.Util, graph = this.graph, root = this.root, treeDepth = 0;
-         GUtil.eachNode(graph, function(n) { 
-            treeDepth = (n._depth > treeDepth)? n._depth : treeDepth; 
-         });
-         var nr = Math.sqrt(treeDepth), p = {};
-         (function dfs(n) {
-             if(n._depth < nr) {
-                 p[n.id] = root;
-             } else {
-                 var par = GUtil.getParents(n)[0].id;
-                 if(!(n._depth % nr)) {
-                     p[n.id] = par;
-                 } else {
-                     p[n.id] = p[par];
-                 }
-             }
-             GUtil.eachSubnode(n, dfs);
-         })(graph.getNode(root));
-         
-         //Find LCA algorithm
-         function findLCA(n, m) {
-           while(p[n] != p[m]) {
-               var noden = graph.getNode(n), nodem = graph.getNode(m);
-               if(n._depth > m._depth) {
-                   n = p[n];
-               } else {
-                   m = p[m];
-               }
-           }
-           
-           while(n != m) {
-               var noden = graph.getNode(n), nodem = graph.getNode(m);
-               if(n._depth > m._depth) {
-                   n = GUtil.getParents(noden)[0].id;
-               } else {
-                   m = GUtil.getParents(nodem)[0].id;
-               }
-           }
-           return n;  
-         };
-         //Reduce LCA for all nodes
-         lca = root;
-         for(var i = 0; i < nodesInPath.length; i++) {
-             lca = findLCA(lca, nodesInPath[i]);
-         }
-     };
-     
     //Now define the actual class.    
     return new Class({
     
@@ -584,7 +528,6 @@ this.ST= (function() {
             });
             if(!!computeLevels || !("_depth" in node))
                 Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
-            getLCA.call(this, this.clickedNode);
             this.computePositions(node, prop);
         },
         
