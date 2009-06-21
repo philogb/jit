@@ -7,7 +7,7 @@
  *
  * <Hypertree>, <RGraph> and <ST>.
  *
- */
+*/
 
 /*
  Class: Graph
@@ -34,744 +34,713 @@
  Example:
 
  (start code js)
- var st = new ST(canvas, config);
- st.graph.getNode //or any other <Graph> method.
-
- var ht = new Hypertree(canvas, config);
- ht.graph.getNode //or any other <Graph> method.
-
- var rg = new RGraph(canvas, config);
- rg.graph.getNode //or any other <Graph> method.
+   var st = new ST(canvas, config);
+   st.graph.getNode //or any other <Graph> method.
+   
+   var ht = new Hypertree(canvas, config);
+   ht.graph.getNode //or any other <Graph> method.
+   
+   var rg = new RGraph(canvas, config);
+   rg.graph.getNode //or any other <Graph> method.
  (end code)
+ 
+*/  
 
- */
+this.Graph = new Class({
 
-this.Graph = new Class( {
+ initialize: function(opt) {
+    var innerOptions = {
+		'complex': false,
+		'Node': {}
+	};
+    this.opt = $merge(innerOptions, opt || {});
+    this.nodes= {};
+ },
 
-	initialize : function(opt) {
-		var innerOptions = {
-			'complex' : false,
-			'Node' : {}
-		};
-		this.opt = $merge(innerOptions, opt || {});
-		this.nodes = {};
-	},
+/*
+     Method: getNode
+    
+     Returns a <Graph.Node> by _id_.
 
-	/*
-	 Method: getNode
-	
-	 Returns a <Graph.Node> by _id_.
+     Parameters:
 
-	 Parameters:
+     id - A <Graph.Node> id.
 
-	 id - A <Graph.Node> id.
+     Returns:
 
-	 Returns:
+     A <Graph.Node> having _id_ as id. Returns *false* otherwise.
 
-	 A <Graph.Node> having _id_ as id. Returns *false* otherwise.
+     Example:
 
-	 Example:
+     (start code js)
+       var node = graph.getNode('someid');
+     (end code)
+*/  
+ getNode: function(id) {
+    if(this.hasNode(id)) return this.nodes[id];
+    return false;
+ },
 
-	 (start code js)
-	 var node = graph.getNode('someid');
-	 (end code)
-	 */
-	getNode : function(id) {
-		if (this.hasNode(id))
-			return this.nodes[id];
-		return false;
-	},
+/*
+     Method: getAdjacence
+    
+     Returns an array of <Graph.Adjacence> objects connecting nodes with ids _id_ and _id2_.
 
-	/*
-	 Method: getAdjacence
-	
-	 Returns an array of <Graph.Adjacence> objects connecting nodes with ids _id_ and _id2_.
+     Parameters:
 
-	 Parameters:
+     id - A <Graph.Node> id.
+     id2 - A <Graph.Node> id.
 
-	 id - A <Graph.Node> id.
-	 id2 - A <Graph.Node> id.
+     Returns:
 
-	 Returns:
+     An Array of <Graph.Adjacence> objects. Returns *false* if there's not a <Graph.Adjacence> connecting those two nodes.
+*/  
+  getAdjacence: function (id, id2) {
+    var adjs = [];
+    if(this.hasNode(id)     && this.hasNode(id2) 
+    && this.nodes[id].adjacentTo({ 'id':id2 }) && this.nodes[id2].adjacentTo({ 'id':id })) {
+        adjs.push(this.nodes[id].getAdjacency(id2));
+        adjs.push(this.nodes[id2].getAdjacency(id));
+        return adjs;
+    }
+    return false;   
+ },
 
-	 An Array of <Graph.Adjacence> objects. Returns *false* if there's not a <Graph.Adjacence> connecting those two nodes.
-	 */
-	getAdjacence : function(id, id2) {
-		var adjs = [];
-		if (this.hasNode(id) && this.hasNode(id2)
-				&& this.nodes[id].adjacentTo( {
-					'id' : id2
-				}) && this.nodes[id2].adjacentTo( {
-					'id' : id
-				})) {
-			adjs.push(this.nodes[id].getAdjacency(id2));
-			adjs.push(this.nodes[id2].getAdjacency(id));
-			return adjs;
-		}
-		return false;
-	},
+    /*
+     Method: addNode
+    
+     Adds a node.
+     
+     Parameters:
+    
+        obj - An object containing as properties
 
-	/*
-	 Method: addNode
-	
-	 Adds a node.
-	 
-	 Parameters:
-	
-	    obj - An object containing as properties
+        - _id_ node's id
+        - _name_ node's name
+        - _data_ node's data hash
 
-	    - _id_ node's id
-	    - _name_ node's name
-	    - _data_ node's data hash
+    See also:
+    <Graph.Node>
 
-	See also:
-	<Graph.Node>
+  */  
+  addNode: function(obj) {
+    if(!this.nodes[obj.id]) {
+        this.nodes[obj.id] = new Graph.Node($extend({
+			'id': obj.id,
+			'name': obj.name,
+			'data': obj.data
+		}, this.opt.Node), this.opt.complex);
+    }
+    return this.nodes[obj.id];
+  },
+  
+    /*
+     Method: addAdjacence
+    
+     Connects nodes specified by _obj_ and _obj2_. If not found, nodes are created.
+     
+     Parameters:
+    
+        obj - a <Graph.Node> object.
+        obj2 - Another <Graph.Node> object.
+        data - A DataSet object. Used to store some extra information in the <Graph.Adjacence> object created.
 
-	 */
-	addNode : function(obj) {
-		if (!this.nodes[obj.id]) {
-			this.nodes[obj.id] = new Graph.Node($extend( {
-				'id' : obj.id,
-				'name' : obj.name,
-				'data' : obj.data
-			}, this.opt.Node), this.opt.complex);
-		}
-		return this.nodes[obj.id];
-	},
+    See also:
 
-	/*
-	 Method: addAdjacence
-	
-	 Connects nodes specified by _obj_ and _obj2_. If not found, nodes are created.
-	 
-	 Parameters:
-	
-	    obj - a <Graph.Node> object.
-	    obj2 - Another <Graph.Node> object.
-	    data - A DataSet object. Used to store some extra information in the <Graph.Adjacence> object created.
+    <Graph.Node>, <Graph.Adjacence>
+    */  
+  addAdjacence: function (obj, obj2, data) {
+    var adjs = []
+    if(!this.hasNode(obj.id)) this.addNode(obj);
+    if(!this.hasNode(obj2.id)) this.addNode(obj2);
+    obj = this.nodes[obj.id]; obj2 = this.nodes[obj2.id];
+    
+    for(var i in this.nodes) {
+        if(this.nodes[i].id == obj.id) {
+            if(!this.nodes[i].adjacentTo(obj2)) {
+                adjs.push(this.nodes[i].addAdjacency(obj2, data));
+            }
+        }
+        
+        if(this.nodes[i].id == obj2.id) {   
+            if(!this.nodes[i].adjacentTo(obj)) {
+                adjs.push(this.nodes[i].addAdjacency(obj, data));
+            }
+        }
+    }
+    return adjs;
+ },
 
-	See also:
+    /*
+     Method: removeNode
+    
+     Removes a <Graph.Node> matching the specified _id_.
 
-	<Graph.Node>, <Graph.Adjacence>
-	 */
-	addAdjacence : function(obj, obj2, data) {
-		var adjs = []
-		if (!this.hasNode(obj.id))
-			this.addNode(obj);
-		if (!this.hasNode(obj2.id))
-			this.addNode(obj2);
-		obj = this.nodes[obj.id];
-		obj2 = this.nodes[obj2.id];
+     Parameters:
 
-		for ( var i in this.nodes) {
-			if (this.nodes[i].id == obj.id) {
-				if (!this.nodes[i].adjacentTo(obj2)) {
-					adjs.push(this.nodes[i].addAdjacency(obj2, data));
-				}
-			}
+     id - A node's id.
 
-			if (this.nodes[i].id == obj2.id) {
-				if (!this.nodes[i].adjacentTo(obj)) {
-					adjs.push(this.nodes[i].addAdjacency(obj, data));
-				}
-			}
-		}
-		return adjs;
-	},
+    */  
+  removeNode: function(id) {
+    if(this.hasNode(id)) {
+        var node = this.nodes[id];
+        for(var i=0 in node.adjacencies) {
+            var adj = node.adjacencies[i];
+            this.removeAdjacence(id, adj.nodeTo.id);
+        }
+        delete this.nodes[id];
+    }
+  },
+  
+/*
+     Method: removeAdjacence
+    
+     Removes a <Graph.Adjacence> matching _id1_ and _id2_.
 
-	/*
-	 Method: removeNode
-	
-	 Removes a <Graph.Node> matching the specified _id_.
+     Parameters:
 
-	 Parameters:
+     id1 - A <Graph.Node> id.
+     id2 - A <Graph.Node> id.
+*/  
+  removeAdjacence: function(id1, id2) {
+    if(this.hasNode(id1)) this.nodes[id1].removeAdjacency(id2);
+    if(this.hasNode(id2)) this.nodes[id2].removeAdjacency(id1);
+  },
 
-	 id - A node's id.
+    /*
+     Method: hasNode
+    
+     Returns a Boolean instance indicating if the node belongs to the <Graph> or not.
+     
+     Parameters:
+    
+        id - Node id.
 
-	 */
-	removeNode : function(id) {
-		if (this.hasNode(id)) {
-			var node = this.nodes[id];
-			for ( var i = 0 in node.adjacencies) {
-				var adj = node.adjacencies[i];
-				this.removeAdjacence(id, adj.nodeTo.id);
-			}
-			delete this.nodes[id];
-		}
-	},
-
-	/*
-	 Method: removeAdjacence
-	
-	 Removes a <Graph.Adjacence> matching _id1_ and _id2_.
-
-	 Parameters:
-
-	 id1 - A <Graph.Node> id.
-	 id2 - A <Graph.Node> id.
-	 */
-	removeAdjacence : function(id1, id2) {
-		if (this.hasNode(id1))
-			this.nodes[id1].removeAdjacency(id2);
-		if (this.hasNode(id2))
-			this.nodes[id2].removeAdjacency(id1);
-	},
-
-	/*
-	 Method: hasNode
-	
-	 Returns a Boolean instance indicating if the node belongs to the <Graph> or not.
-	 
-	 Parameters:
-	
-	    id - Node id.
-
-	 Returns:
-	  
-	 A Boolean instance indicating if the node belongs to the graph or not.
-	 */
-	hasNode : function(id) {
-		return id in this.nodes;
-	}
+     Returns:
+      
+     A Boolean instance indicating if the node belongs to the graph or not.
+    */  
+  hasNode: function(id) {
+    return id in this.nodes;
+  }
 });
 
 /*
- * Class: Graph.Node
- * 
- * A <Graph> node.
- * 
- * Parameters:
- * 
- * obj - An object containing an 'id', 'name' and 'data' properties as described
- * in <Graph.addNode>. complex - Whether node position properties should contain
- * <Complex> or <Polar> instances.
- * 
- * See also:
- * 
- * <Graph>
- * 
- * Description:
- * 
- * An instance of <Graph.Node> is usually passed as parameter for most
- * configuration/controller methods in the <Hypertree>, <RGraph> and <ST>
- * classes.
- * 
- * A <Graph.Node> object has as properties
- * 
- * id - Node id. name - Node name. data - Node data property containing a hash
- * (i.e {}) with custom options. For more information see <Loader.loadJSON>.
- * selected - Whether the node is selected or not. Used by <ST> for selecting
- * nodes that are between the root node and the selected node. angleSpan - For
- * radial layouts such as the ones performed by the <Hypertree> and the
- * <RGraph>. Contains _begin_ and _end_ properties containing angle values
- * describing the angle span for this subtree. alpha - Current opacity value.
- * startAlpha - Opacity begin value. Used for interpolation. endAlpha - Opacity
- * end value. Used for interpolation. pos - Current position. Can be a <Complex>
- * or <Polar> instance. startPos - Starting position. Used for interpolation.
- * endPos - Ending position. Used for interpolation.
- */
-Graph.Node = new Class( {
+     Class: Graph.Node
 
-	initialize : function(opt, complex) {
+     A <Graph> node.
+
+     Parameters:
+
+     obj - An object containing an 'id', 'name' and 'data' properties as described in <Graph.addNode>.
+     complex - Whether node position properties should contain <Complex> or <Polar> instances.
+
+     See also:
+
+     <Graph>
+
+     Description:
+
+     An instance of <Graph.Node> is usually passed as parameter for most configuration/controller methods in the 
+     <Hypertree>, <RGraph> and <ST> classes.
+
+     A <Graph.Node> object has as properties
+
+      id - Node id.
+      name - Node name.
+      data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
+      selected - Whether the node is selected or not. Used by <ST> for selecting nodes that are between the root node and the selected node.
+      angleSpan - For radial layouts such as the ones performed by the <Hypertree> and the <RGraph>. Contains _begin_ and _end_ properties containing angle values describing the angle span for this subtree.
+      alpha - Current opacity value.
+      startAlpha - Opacity begin value. Used for interpolation.
+      endAlpha - Opacity end value. Used for interpolation.
+      pos - Current position. Can be a <Complex> or <Polar> instance.
+      startPos - Starting position. Used for interpolation.
+      endPos - Ending position. Used for interpolation.
+*/
+Graph.Node = new Class({
+    
+    initialize: function(opt, complex) {
 		var innerOptions = {
-			'id' : '',
-			'name' : '',
-			'data' : {},
-			'adjacencies' : {},
+			'id': '',
+			'name': '',
+			'data': {},
+			'adjacencies': {},
 
-			'selected' : false,
-			'drawn' : false,
-			'exist' : false,
+			'selected': false,
+			'drawn': false,
+			'exist': false,
 
-			'angleSpan' : {
-				'begin' : 0,
+			'angleSpan': {
+				'begin': 0,
 				'end' : 0
 			},
 
-			'alpha' : 1,
-			'startAlpha' : 1,
-			'endAlpha' : 1,
-
-			'pos' : (complex && $C(0, 0)) || $P(0, 0),
-			'startPos' : (complex && $C(0, 0)) || $P(0, 0),
-			'endPos' : (complex && $C(0, 0)) || $P(0, 0)
+			'alpha': 1,
+			'startAlpha': 1,
+			'endAlpha': 1,
+			
+			'pos': (complex && $C(0, 0)) || $P(0, 0),
+			'startPos': (complex && $C(0, 0)) || $P(0, 0),
+			'endPos': (complex && $C(0, 0)) || $P(0, 0)
 		};
-
+		
 		$extend(this, $extend(innerOptions, opt));
 	},
 
-	/*
-	   Method: adjacentTo
-	
-	   Indicates if the node is adjacent to the node specified by id
+    /*
+       Method: adjacentTo
+    
+       Indicates if the node is adjacent to the node specified by id
 
-	   Parameters:
-	
-	      id - A node id.
-	
-	   Returns:
-	
-	     A Boolean instance indicating whether this node is adjacent to the specified by id or not.
+       Parameters:
+    
+          id - A node id.
+    
+       Returns:
+    
+         A Boolean instance indicating whether this node is adjacent to the specified by id or not.
 
-	   Example:
-	   (start code js)
-	    node.adjacentTo('mynodeid');
-	   (end code)
-	 */
-	adjacentTo : function(node) {
-		return node.id in this.adjacencies;
-	},
+       Example:
+       (start code js)
+        node.adjacentTo('mynodeid');
+       (end code)
+    */
+    adjacentTo: function(node) {
+        return node.id in this.adjacencies;
+    },
 
-	/*
-	   Method: getAdjacency
-	
-	   Returns a <Graph.Adjacence> object connecting the current <Graph.Node> and the node having _id_ as id.
+    /*
+       Method: getAdjacency
+    
+       Returns a <Graph.Adjacence> object connecting the current <Graph.Node> and the node having _id_ as id.
 
-	   Parameters:
-	
-	      id - A node id.
+       Parameters:
+    
+          id - A node id.
 
-	   Returns:
+       Returns:
 
-	      A <Graph.Adjacence> object or undefined.
-	 */
-	getAdjacency : function(id) {
-		return this.adjacencies[id];
-	},
-	/*
-	   Method: addAdjacency
-	
-	   Connects the current node and the given node.
+          A <Graph.Adjacence> object or undefined.
+    */  
+    getAdjacency: function(id) {
+        return this.adjacencies[id];
+    },
+    /*
+       Method: addAdjacency
+    
+       Connects the current node and the given node.
 
-	   Parameters:
-	
-	      node - A <Graph.Node>.
-	      data - Some custom hash information.
-	 */
-	addAdjacency : function(node, data) {
-		var adj = new Graph.Adjacence(this, node, data);
-		return this.adjacencies[node.id] = adj;
-	},
+       Parameters:
+    
+          node - A <Graph.Node>.
+          data - Some custom hash information.
+    */  
+    addAdjacency: function(node, data) {
+        var adj = new Graph.Adjacence(this, node, data);
+        return this.adjacencies[node.id] = adj;
+    },
+    
+    /*
+       Method: removeAdjacency
+    
+       Removes a <Graph.Adjacence> by _id_.
 
-	/*
-	   Method: removeAdjacency
-	
-	   Removes a <Graph.Adjacence> by _id_.
-
-	   Parameters:
-	
-	      id - A node id.
-	 */
-	removeAdjacency : function(id) {
-		delete this.adjacencies[id];
-	}
+       Parameters:
+    
+          id - A node id.
+    */  
+    removeAdjacency: function(id) {
+        delete this.adjacencies[id];
+    }
 });
 
 /*
- * Class: Graph.Adjacence
- * 
- * A <Graph> adjacence (or edge). Connects two <Graph.Nodes>.
- * 
- * Parameters:
- * 
- * nodeFrom - A <Graph.Node>. nodeTo - A <Graph.Node>. data - Some custom hash
- * data.
- * 
- * See also:
- * 
- * <Graph>
- * 
- * Description:
- * 
- * An instance of <Graph.Adjacence> is usually passed as parameter for some
- * configuration/controller methods in the <Hypertree>, <RGraph> and <ST>
- * classes.
- * 
- * A <Graph.Adjacence> object has as properties
- * 
- * nodeFrom - A <Graph.Node> connected by this edge. nodeTo - Another
- * <Graph.Node> connected by this edge. data - Node data property containing a
- * hash (i.e {}) with custom options. For more information see
- * <Loader.loadJSON>. alpha - Current opacity value. startAlpha - Opacity begin
- * value. Used for interpolation. endAlpha - Opacity end value. Used for
- * interpolation.
- */
+     Class: Graph.Adjacence
+
+     A <Graph> adjacence (or edge). Connects two <Graph.Nodes>.
+
+     Parameters:
+
+     nodeFrom - A <Graph.Node>.
+     nodeTo - A <Graph.Node>.
+     data - Some custom hash data.
+
+     See also:
+
+     <Graph>
+
+     Description:
+
+     An instance of <Graph.Adjacence> is usually passed as parameter for some configuration/controller methods in the 
+     <Hypertree>, <RGraph> and <ST> classes.
+
+     A <Graph.Adjacence> object has as properties
+
+      nodeFrom - A <Graph.Node> connected by this edge.
+      nodeTo - Another  <Graph.Node> connected by this edge.
+      data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
+      alpha - Current opacity value.
+      startAlpha - Opacity begin value. Used for interpolation.
+      endAlpha - Opacity end value. Used for interpolation.
+*/
 Graph.Adjacence = function(nodeFrom, nodeTo, data) {
-	this.nodeFrom = nodeFrom;
-	this.nodeTo = nodeTo;
-	this.data = data || {};
-	this.alpha = 1;
-	this.startAlpha = 1;
-	this.endAlpha = 1;
+    this.nodeFrom = nodeFrom;
+    this.nodeTo = nodeTo;
+    this.data = data || {};
+    this.alpha = 1;
+    this.startAlpha = 1;
+    this.endAlpha = 1;
 };
 
 /*
- * Object: Graph.Util
- * 
- * <Graph> traversal and processing utility object.
- */
+   Object: Graph.Util
+
+   <Graph> traversal and processing utility object.
+*/
 Graph.Util = {
-	/*
-	   filter
-	
-	   For internal use only. Provides a filtering function based on flags.
-	 */
-	filter : function(param) {
-		if (!param || !($type(param) == 'string'))
-			return function() {
-				return true;
-			};
-		var props = param.split(" ");
-		return function(elem) {
-			for ( var i = 0; i < props.length; i++)
-				if (elem[props[i]])
-					return false;
-			return true;
-		};
-	},
-	/*
-	   Method: getNode
-	
-	   Returns a <Graph.Node> by _id_.
+    /*
+       filter
+    
+       For internal use only. Provides a filtering function based on flags.
+    */
+    filter: function(param) {
+        if(!param || !($type(param) == 'string')) return function() { return true; };
+        var props = param.split(" ");
+        return function(elem) {
+            for(var i=0; i<props.length; i++) if(elem[props[i]]) return false;
+            return true;
+        };
+    },
+    /*
+       Method: getNode
+    
+       Returns a <Graph.Node> by _id_.
 
-	   Parameters:
+       Parameters:
 
-	   graph - A <Graph> instance.
-	   id - A <Graph.Node> id.
+       graph - A <Graph> instance.
+       id - A <Graph.Node> id.
 
-	   Returns:
+       Returns:
 
-	   A <Graph> node.
+       A <Graph> node.
 
-	   Example:
+       Example:
 
-	   (start code js)
-	     Graph.Util.getNode(graph, 'nodeid');
-	   (end code)
-	 */
-	getNode : function(graph, id) {
-		return graph.getNode(id);
-	},
+       (start code js)
+         Graph.Util.getNode(graph, 'nodeid');
+       (end code)
+    */
+    getNode: function(graph, id) {
+        return graph.getNode(id);
+    },
+    
+    /*
+       Method: eachNode
+    
+       Iterates over <Graph> nodes performing an _action_.
 
-	/*
-	   Method: eachNode
-	
-	   Iterates over <Graph> nodes performing an _action_.
+       Parameters:
 
-	   Parameters:
+       graph - A <Graph> instance.
+       action - A callback function having a <Graph.Node> as first formal parameter.
 
-	   graph - A <Graph> instance.
-	   action - A callback function having a <Graph.Node> as first formal parameter.
+       Example:
+       (start code js)
+         Graph.Util.each(graph, function(node) {
+          alert(node.name);
+         });
+       (end code)
+    */
+    eachNode: function(graph, action, flags) {
+        var filter = this.filter(flags);
+        for(var i in graph.nodes) if(filter(graph.nodes[i])) action(graph.nodes[i]);
+    },
+    
+    /*
+       Method: eachAdjacency
+    
+       Iterates over <Graph.Node> adjacencies applying the _action_ function.
 
-	   Example:
-	   (start code js)
-	     Graph.Util.each(graph, function(node) {
-	      alert(node.name);
-	     });
-	   (end code)
-	 */
-	eachNode : function(graph, action, flags) {
-		var filter = this.filter(flags);
-		for ( var i in graph.nodes)
-			if (filter(graph.nodes[i]))
-				action(graph.nodes[i]);
-	},
+       Parameters:
 
-	/*
-	   Method: eachAdjacency
-	
-	   Iterates over <Graph.Node> adjacencies applying the _action_ function.
+       node - A <Graph.Node>.
+       action - A callback function having <Graph.Adjacence> as first formal parameter.
 
-	   Parameters:
+       Example:
+       (start code js)
+         Graph.Util.eachAdjacency(node, function(adj) {
+          alert(adj.nodeTo.name);
+         });
+       (end code)
+    */
+    eachAdjacency: function(node, action, flags) {
+        var adj = node.adjacencies, filter = this.filter(flags);
+        for(var id in adj) if(filter(adj[id])) action(adj[id], id);
+    },
 
-	   node - A <Graph.Node>.
-	   action - A callback function having <Graph.Adjacence> as first formal parameter.
+     /*
+       Method: computeLevels
+    
+       Performs a BFS traversal setting the correct depth for each node.
 
-	   Example:
-	   (start code js)
-	     Graph.Util.eachAdjacency(node, function(adj) {
-	      alert(adj.nodeTo.name);
-	     });
-	   (end code)
-	 */
-	eachAdjacency : function(node, action, flags) {
-		var adj = node.adjacencies, filter = this.filter(flags);
-		for ( var id in adj)
-			if (filter(adj[id]))
-				action(adj[id], id);
-	},
+       The depth of each node can then be accessed by 
+       >node._depth
 
-	/*
-	  Method: computeLevels
-	
-	  Performs a BFS traversal setting the correct depth for each node.
+       Parameters:
 
-	  The depth of each node can then be accessed by 
-	  >node._depth
+       graph - A <Graph>.
+       id - A starting node id for the BFS traversal.
+       startDepth - _optional_ A minimum depth value. Default's 0.
 
-	  Parameters:
-
-	  graph - A <Graph>.
-	  id - A starting node id for the BFS traversal.
-	  startDepth - _optional_ A minimum depth value. Default's 0.
-
-	 */
-	computeLevels : function(graph, id, startDepth, flags) {
-		startDepth = startDepth || 0;
-		var filter = this.filter(flags);
-		this.eachNode(graph, function(elem) {
-			elem._flag = false;
-			elem._depth = -1;
-		}, flags);
+    */
+    computeLevels: function(graph, id, startDepth, flags) {
+        startDepth = startDepth || 0;
+        var filter = this.filter(flags);
+        this.eachNode(graph, function(elem) {
+            elem._flag = false;
+            elem._depth = -1;
+        }, flags);
 		var root = graph.getNode(id);
-		root._depth = startDepth;
-		var queue = [ root ];
-		while (queue.length != 0) {
-			var node = queue.pop();
-			node._flag = true;
-			this.eachAdjacency(node, function(adj) {
-				var n = adj.nodeTo;
-				if (n._flag == false && filter(n)) {
-					if (n._depth < 0)
-						n._depth = node._depth + 1 + startDepth;
-					queue.unshift(n);
-				}
-			}, flags);
-		}
-	},
+        root._depth = startDepth;
+        var queue = [root];
+        while(queue.length != 0) {
+            var node = queue.pop();
+            node._flag = true;
+            this.eachAdjacency(node, function(adj) {
+                var n = adj.nodeTo;
+                if(n._flag == false && filter(n)) {
+                    if(n._depth < 0) n._depth = node._depth + 1 + startDepth;
+                    queue.unshift(n);
+                }
+            }, flags);
+        }
+    },
 
-	/*
-	   Method: eachBFS
-	
-	   Performs a BFS traversal applying _action_ to each <Graph.Node>.
+    /*
+       Method: eachBFS
+    
+       Performs a BFS traversal applying _action_ to each <Graph.Node>.
 
-	   Parameters:
+       Parameters:
 
-	   graph - A <Graph>.
-	   id - A starting node id for the BFS traversal.
-	   action - A callback function having a <Graph.Node> as first formal parameter.
+       graph - A <Graph>.
+       id - A starting node id for the BFS traversal.
+       action - A callback function having a <Graph.Node> as first formal parameter.
 
-	   Example:
-	   (start code js)
-	     Graph.Util.eachBFS(graph, 'mynodeid', function(node) {
-	      alert(node.name);
-	     });
-	   (end code)
-	 */
-	eachBFS : function(graph, id, action, flags) {
-		var filter = this.filter(flags);
-		this.clean(graph);
-		var queue = [ graph.getNode(id) ];
-		while (queue.length != 0) {
-			var node = queue.pop();
-			node._flag = true;
-			action(node, node._depth);
-			this.eachAdjacency(node, function(adj) {
-				var n = adj.nodeTo;
-				if (n._flag == false && filter(n)) {
-					n._flag = true;
-					queue.unshift(n);
-				}
-			}, flags);
-		}
-	},
+       Example:
+       (start code js)
+         Graph.Util.eachBFS(graph, 'mynodeid', function(node) {
+          alert(node.name);
+         });
+       (end code)
+    */
+    eachBFS: function(graph, id, action, flags) {
+        var filter = this.filter(flags);
+        this.clean(graph);
+        var queue = [graph.getNode(id)];
+        while(queue.length != 0) {
+            var node = queue.pop();
+            node._flag = true;
+            action(node, node._depth);
+            this.eachAdjacency(node, function(adj) {
+                var n = adj.nodeTo;
+                if(n._flag == false && filter(n)) {
+                    n._flag = true;
+                    queue.unshift(n);
+                }
+            }, flags);
+        }
+    },
+    
+    /*
+       Method: eachLevel
+    
+       Iterates over a node's subgraph applying _action_ to the nodes of relative depth between _levelBegin_ and _levelEnd_.
 
-	/*
-	   Method: eachLevel
-	
-	   Iterates over a node's subgraph applying _action_ to the nodes of relative depth between _levelBegin_ and _levelEnd_.
+       Parameters:
+       
+       node - A <Graph.Node>.
+       levelBegin - A relative level value.
+       levelEnd - A relative level value.
+       action - A callback function having a <Graph.Node> as first formal parameter.
 
-	   Parameters:
-	   
-	   node - A <Graph.Node>.
-	   levelBegin - A relative level value.
-	   levelEnd - A relative level value.
-	   action - A callback function having a <Graph.Node> as first formal parameter.
+    */
+    eachLevel: function(node, levelBegin, levelEnd, action, flags) {
+        var d = node._depth, filter = this.filter(flags), that = this;
+		levelEnd = levelEnd === false? Number.MAX_VALUE -d : levelEnd;
+        (function loopLevel(node, levelBegin, levelEnd) {
+            var d = node._depth;
+            if(d >= levelBegin && d <= levelEnd && filter(node)) action(node, d);
+            if(d < levelEnd) {
+                that.eachAdjacency(node, function(adj) {
+                    var n = adj.nodeTo;
+                    if(n._depth > d) loopLevel(n, levelBegin, levelEnd);
+                });
+            }
+        })(node, levelBegin + d, levelEnd + d);      
+    },
 
-	 */
-	eachLevel : function(node, levelBegin, levelEnd, action, flags) {
-		var d = node._depth, filter = this.filter(flags), that = this;
-		levelEnd = levelEnd === false ? Number.MAX_VALUE - d : levelEnd;
-		( function loopLevel(node, levelBegin, levelEnd) {
-			var d = node._depth;
-			if (d >= levelBegin && d <= levelEnd && filter(node))
-				action(node, d);
-			if (d < levelEnd) {
-				that.eachAdjacency(node, function(adj) {
-					var n = adj.nodeTo;
-					if (n._depth > d)
-						loopLevel(n, levelBegin, levelEnd);
-				});
-			}
-		})(node, levelBegin + d, levelEnd + d);
-	},
+    /*
+       Method: eachSubgraph
+    
+       Iterates over a node's children recursively.
 
-	/*
-	   Method: eachSubgraph
-	
-	   Iterates over a node's children recursively.
+       Parameters:
+       node - A <Graph.Node>.
+       action - A callback function having a <Graph.Node> as first formal parameter.
 
-	   Parameters:
-	   node - A <Graph.Node>.
-	   action - A callback function having a <Graph.Node> as first formal parameter.
-
-	   Example:
-	   (start code js)
-	     Graph.Util.eachSubgraph(node, function(node) {
-	      alert(node.name);
-	     });
-	   (end code)
-	 */
-	eachSubgraph : function(node, action, flags) {
+       Example:
+       (start code js)
+         Graph.Util.eachSubgraph(node, function(node) {
+          alert(node.name);
+         });
+       (end code)
+    */
+    eachSubgraph: function(node, action, flags) {
 		this.eachLevel(node, 0, false, action, flags);
-	},
+    },
 
-	/*
-	   Method: eachSubnode
-	
-	   Iterates over a node's children (without deeper recursion).
-	   
-	   Parameters:
-	   node - A <Graph.Node>.
-	   action - A callback function having a <Graph.Node> as first formal parameter.
+    /*
+       Method: eachSubnode
+    
+       Iterates over a node's children (without deeper recursion).
+       
+       Parameters:
+       node - A <Graph.Node>.
+       action - A callback function having a <Graph.Node> as first formal parameter.
 
-	   Example:
-	   (start code js)
-	     Graph.Util.eachSubnode(node, function(node) {
-	      alert(node.name);
-	     });
-	   (end code)
-	 */
-	eachSubnode : function(node, action, flags) {
-		this.eachLevel(node, 1, 1, action, flags);
-	},
+       Example:
+       (start code js)
+         Graph.Util.eachSubnode(node, function(node) {
+          alert(node.name);
+         });
+       (end code)
+    */
+    eachSubnode: function(node, action, flags) {
+        this.eachLevel(node, 1, 1, action, flags);
+    },
 
-	/*
-	   Method: anySubnode
-	
-	   Returns *true* if any subnode matches the given condition.
+    /*
+       Method: anySubnode
+    
+       Returns *true* if any subnode matches the given condition.
 
-	   Parameters:
-	   node - A <Graph.Node>.
-	   cond - A callback function returning a Boolean instance. This function has as first formal parameter a <Graph.Node>.
+       Parameters:
+       node - A <Graph.Node>.
+       cond - A callback function returning a Boolean instance. This function has as first formal parameter a <Graph.Node>.
 
-	   Returns:
-	   A boolean value.
+       Returns:
+       A boolean value.
 
-	   Example:
-	   (start code js)
-	     Graph.Util.anySubnode(node, function(node) { return node.name == "mynodename"; });
-	   (end code)
-	 */
-	anySubnode : function(node, cond, flags) {
-		var flag = false;
+       Example:
+       (start code js)
+         Graph.Util.anySubnode(node, function(node) { return node.name == "mynodename"; });
+       (end code)
+    */
+    anySubnode: function(node, cond, flags) {
+        var flag = false;
 		cond = cond || $lambda(true);
-		var c = $type(cond) == 'string' ? function(n) {
-			return n[cond];
-		} : cond;
+		var c = $type(cond) == 'string'? function(n) { return n[cond]; } : cond;
 		this.eachSubnode(node, function(elem) {
-			if (c(elem))
-				flag = true;
+			if(c(elem)) flag = true;
 		}, flags);
 		return flag;
-	},
-
-	/*
-	   Method: getSubnodes
+    },
 	
-	   Collects all subnodes for a specified node. The _level_ parameter filters nodes having relative depth of _level_ from the root node.
+    /*
+       Method: getSubnodes
+    
+       Collects all subnodes for a specified node. The _level_ parameter filters nodes having relative depth of _level_ from the root node.
 
-	   Parameters:
-	   node - A <Graph.Node>.
-	   level - _optional_ A starting relative depth for collecting nodes. Default's 0.
+       Parameters:
+       node - A <Graph.Node>.
+       level - _optional_ A starting relative depth for collecting nodes. Default's 0.
 
-	   Returns:
-	   An array of nodes.
+       Returns:
+       An array of nodes.
 
-	 */
-	getSubnodes : function(node, level, flags) {
-		var ans = [], that = this;
-		level = level || 0;
-		if ($type(level) == 'array') {
-			var levelStart = level[0];
-			var levelEnd = level[1];
-		} else {
-			var levelStart = level;
-			var levelEnd = Number.MAX_VALUE - node._depth;
-		}
-		this.eachLevel(node, levelStart, levelEnd, function(n) {
+    */
+    getSubnodes: function(node, level, flags) {
+        var ans = [], that = this;
+        level = level || 0;
+        if($type(level) == 'array') {
+            var levelStart = level[0];
+            var levelEnd = level[1];
+        } else {
+            var levelStart = level;
+            var levelEnd = Number.MAX_VALUE - node._depth;
+        }
+        this.eachLevel(node, levelStart, levelEnd, function(n) {
 			ans.push(n);
 		}, flags);
-		return ans;
-	},
-
-	/*
-	   Method: getParents
+        return ans;
+    },
 	
-	   Returns an Array of <Graph.Nodes> wich are parents of the given node. 
-
-	   Parameters:
-	   node - A <Graph.Node>.
-
-	   Returns:
-	   An Array of <Graph.Nodes>.
-
-	   Example:
-	   (start code js)
-	     var pars = Graph.Util.getParents(node);
-	     if(pars.length > 0) {
-	       //do stuff with parents
-	     }
-	   (end code)
-	 */
-	getParents : function(node) {
-		var ans = [];
-		this.eachAdjacency(node, function(adj) {
-			var n = adj.nodeTo;
-			if (n._depth < node._depth)
-				ans.push(n);
-		});
-		return ans;
-	},
-
-	/*
-	Method: isDescendantOf
 	
-	Returns a Boolean instance indicating if some node is descendant of the node with the given id. 
+    /*
+       Method: getParents
+    
+       Returns an Array of <Graph.Nodes> wich are parents of the given node. 
 
-	Parameters:
-	node - A <Graph.Node>.
-	id - A <Graph.Node> id.
+       Parameters:
+       node - A <Graph.Node>.
 
-	Returns:
-	Ture if _node_ is descendant of the node with the given _id_. False otherwise.
+       Returns:
+       An Array of <Graph.Nodes>.
 
-	Example:
-	(start code js)
-	  var pars = Graph.Util.isDescendantOf(node, "nodeid");
-	(end code)
-	 */
-	isDescendantOf : function(node, id) {
-		if (node.id == id)
-			return true;
-		var pars = this.getParents(node), ans = false;
-		for ( var i = 0; !ans && i < pars.length; i++) {
-			ans = ans || this.isDescendantOf(pars[i], id);
-		}
-		return ans;
-	},
+       Example:
+       (start code js)
+         var pars = Graph.Util.getParents(node);
+         if(pars.length > 0) {
+           //do stuff with parents
+         }
+       (end code)
+    */
+    getParents: function(node) {
+        var ans = [];
+        this.eachAdjacency(node, function(adj) {
+            var n = adj.nodeTo;
+            if(n._depth < node._depth) ans.push(n);
+        });
+        return ans;
+    },
+    
+    /*
+    Method: isDescendantOf
+ 
+    Returns a Boolean instance indicating if some node is descendant of the node with the given id. 
 
-	/*
-	      Method: clean
-	   
-	      Cleans flags from nodes (by setting the _flag_ property to false).
+    Parameters:
+    node - A <Graph.Node>.
+    id - A <Graph.Node> id.
 
-	      Parameters:
-	      graph - A <Graph> instance.
-	 */
-	clean : function(graph) {
-		this.eachNode(graph, function(elem) {
-			elem._flag = false;
-		});
+    Returns:
+    Ture if _node_ is descendant of the node with the given _id_. False otherwise.
+
+    Example:
+    (start code js)
+      var pars = Graph.Util.isDescendantOf(node, "nodeid");
+    (end code)
+ */
+ isDescendantOf: function(node, id) {
+    if(node.id == id) return true;
+    var pars = this.getParents(node), ans = false;
+    for ( var i = 0; !ans && i < pars.length; i++) {
+		ans = ans || this.isDescendantOf(pars[i], id);
 	}
+    return ans;
+ },
+
+ /*
+       Method: clean
+    
+       Cleans flags from nodes (by setting the _flag_ property to false).
+
+       Parameters:
+       graph - A <Graph> instance.
+    */
+    clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); }
 };
+
