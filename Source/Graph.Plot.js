@@ -151,15 +151,19 @@ Graph.Plot = {
 
        Useful when using a new visualization with the same canvas element/widget.
 
+       Parameters:
+
+       force - Forces deletion of all labels.
+
        Example:
        (start code js)
         var rg = new RGraph(canvas, config); //can be also Hypertree or ST
         rg.fx.clearLabels();
         (end code)
     */
-    clearLabels: function() {
+    clearLabels: function(force) {
         for(var id in this.labels) 
-            if(!this.viz.graph.hasNode(id)) {
+            if(force || !this.viz.graph.hasNode(id)) {
                 this.disposeLabel(id);
                 delete this.labels[id];
             }
