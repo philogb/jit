@@ -128,9 +128,11 @@ this.Canvas = (function(){
     function create(tag, prop, styles){
         var elem = document.createElement(tag);
         (function(obj, prop){
-            if (prop) 
-                for (var p in prop) 
-                    obj[p] = prop[p];
+            if (prop) {
+	            for (var p in prop) {
+		            obj[p] = prop[p];
+							}  
+						}
             return arguments.callee;
         })(elem, prop)(elem.style, styles);
         //feature check
@@ -204,13 +206,15 @@ this.Canvas = (function(){
         ctx = canvas.getContext('2d');
         translateToCenter(canvas, ctx);
         var st = opt.styles;
-        for (var s in st) 
+				var s;
+        for (s in st) 
             ctx[s] = st[s];
         if (bc) {
             bkctx = bkcanvas.getContext('2d');
-            var st = bc.styles;
-            for (var s in st) 
-                bkctx[s] = st[s];
+            st = bc.styles;
+            for (s in st) {
+							bkctx[s] = st[s];
+						}
             translateToCenter(bkcanvas, bkctx);
             bc.impl.init(bkcanvas, bkctx);
             bc.impl.plot(bkcanvas, bkctx);
@@ -288,11 +292,13 @@ this.Canvas = (function(){
                 }
                 translateToCenter(canvas, ctx);
                 var st = opt.styles;
-                for (var s in st) 
-                    ctx[s] = st[s];
+								var s;
+                for (s in st) {
+									ctx[s] = st[s];
+								}
                 if (bc) {
-                    var st = bc.styles;
-                    for (var s in st) 
+                    st = bc.styles;
+                    for (s in st) 
                         bkctx[s] = st[s];
                     translateToCenter(bkcanvas, bkctx);
                     bc.impl.init(bkcanvas, bkctx);

@@ -71,11 +71,12 @@ Graph.Op = {
 	
     removeNode: function(node, opt) {
         var viz = this.viz;
-		var options = $merge(this.options, viz.controller, opt);
+				var options = $merge(this.options, viz.controller, opt);
         var n = $splat(node);
+				var i, that, nodeObj;
         switch(options.type) {
             case 'nothing':
-                for(var i=0; i<n.length; i++) viz.graph.removeNode(n[i]);
+                for(i=0; i<n.length; i++) viz.graph.removeNode(n[i]);
                 break;
             
             case 'replot':
@@ -85,10 +86,10 @@ Graph.Op = {
                 break;
             
             case 'fade:seq': case 'fade':
-                var that = this;
+                that = this;
                 //set alpha to 0 for nodes to remove.
-                for(var i=0; i<n.length; i++) {
-                    var nodeObj = viz.graph.getNode(n[i]);
+                for(i=0; i<n.length; i++) {
+                    nodeObj = viz.graph.getNode(n[i]);
                     nodeObj.endAlpha = 0;
                 }
                 viz.fx.animate($merge(options, {
@@ -105,10 +106,10 @@ Graph.Op = {
                 break;
             
             case 'fade:con':
-                var that = this;
+                that = this;
                 //set alpha to 0 for nodes to remove. Tag them for being ignored on computing positions.
-                for(var i=0; i<n.length; i++) {
-                    var nodeObj = viz.graph.getNode(n[i]);
+                for(i=0; i<n.length; i++) {
+                    nodeObj = viz.graph.getNode(n[i]);
                     nodeObj.endAlpha = 0;
                     nodeObj.ignore = true;
                 }
@@ -122,7 +123,7 @@ Graph.Op = {
                 break;
             
             case 'iter':
-                var that = this;
+                that = this;
                 viz.fx.sequence({
                     condition: function() { return n.length != 0; },
                     step: function() { that.removeNode(n.shift(), { type: 'nothing' });  viz.fx.clearLabels(); },
@@ -172,11 +173,12 @@ Graph.Op = {
     */
     removeEdge: function(vertex, opt) {
         var viz = this.viz;
-		var options = $merge(this.options, viz.controller, opt);
+				var options = $merge(this.options, viz.controller, opt);
         var v = ($type(vertex[0]) == 'string')? [vertex] : vertex;
+				var i, that, adjs;
         switch(options.type) {
             case 'nothing':
-                for(var i=0; i<v.length; i++)   viz.graph.removeAdjacence(v[i][0], v[i][1]);
+                for(i=0; i<v.length; i++)   viz.graph.removeAdjacence(v[i][0], v[i][1]);
                 break;
             
             case 'replot':
@@ -185,10 +187,10 @@ Graph.Op = {
                 break;
             
             case 'fade:seq': case 'fade':
-                var that = this;
+                that = this;
                 //set alpha to 0 for edges to remove.
-                for(var i=0; i<v.length; i++) {
-                    var adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
+                for(i=0; i<v.length; i++) {
+                    adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
                     if(adjs) {
                         adjs[0].endAlpha = 0;
                         adjs[1].endAlpha = 0;
@@ -207,10 +209,10 @@ Graph.Op = {
                 break;
             
             case 'fade:con':
-                var that = this;
+                that = this;
                 //set alpha to 0 for nodes to remove. Tag them for being ignored when computing positions.
-                for(var i=0; i<v.length; i++) {
-                    var adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
+                for(i=0; i<v.length; i++) {
+                    adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
                     if(adjs) {
                         adjs[0].endAlpha = 0;
                         adjs[0].ignore = true;
@@ -228,7 +230,7 @@ Graph.Op = {
                 break;
             
             case 'iter':
-                var that = this;
+                that = this;
                 viz.fx.sequence({
                     condition: function() { return v.length != 0; },
                     step: function() { that.removeEdge(v.shift(), { type: 'nothing' }); viz.fx.clearLabels(); },
@@ -282,12 +284,14 @@ Graph.Op = {
     
     */
     sum: function(json, opt) {
-		var viz = this.viz;
+				var viz = this.viz;
         var options = $merge(this.options, viz.controller, opt), root = viz.root;
+				var GUtil, graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
-                var graph = viz.construct(json), GUtil = Graph.Util;
+                graph = viz.construct(json);
+								GUtil = Graph.Util;
                 GUtil.eachNode(graph, function(elem) {
                     GUtil.eachAdjacency(elem, function(adj) {
                         viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
@@ -302,7 +306,10 @@ Graph.Op = {
                 break;
             
             case 'fade:seq': case 'fade': case 'fade:con':
-                var GUtil = Graph.Util, that = this, graph = viz.construct(json);
+                GUtil = Graph.Util;
+								that = this;
+								graph = viz.construct(json);
+
                 //set alpha to 0 for nodes to add.
                 var fadeEdges = this.preprocessSum(graph);
                 var modes = !fadeEdges? ['fade:nodes'] : ['fade:nodes', 'fade:vertex'];
@@ -375,11 +382,13 @@ Graph.Op = {
     */
     morph: function(json, opt) {
         var viz = this.viz;
-		var options = $merge(this.options, viz.controller, opt), root = viz.root;
+				var options = $merge(this.options, viz.controller, opt), root = viz.root;
+				var GUtil, graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
-                var graph = viz.construct(json), GUtil = Graph.Util;
+                graph = viz.construct(json);
+								GUtil = Graph.Util;
                 GUtil.eachNode(graph, function(elem) {
                     GUtil.eachAdjacency(elem, function(adj) {
                         viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
@@ -404,7 +413,9 @@ Graph.Op = {
                 break;
             
             case 'fade:seq': case 'fade': case 'fade:con':
-                var GUtil = Graph.Util, that = this, graph = viz.construct(json);
+                GUtil = Graph.Util;
+								that = this;
+								graph = viz.construct(json);
                 //preprocessing for adding nodes.
                 var fadeEdges = this.preprocessSum(graph);
                 //preprocessing for nodes to delete.

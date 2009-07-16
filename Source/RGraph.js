@@ -411,7 +411,8 @@ this.RGraph = new Class({
     onClick: function(id, opt) {
         if(this.root != id && !this.busy) {
             this.busy = true;
-            this.root = id, that = this;
+            this.root = id; 
+						that = this;
             this.controller.onBeforeCompute(this.graph.getNode(id));
             var obj = this.getNodeAndParentAngle(id);
             

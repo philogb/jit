@@ -42,8 +42,14 @@ var Loader = {
             //make graph
             (function (ans, json) {
                 var getNode = function(id) {
-                    for(var w=0; w<json.length; w++) if(json[w].id == id) return json[w];
+                    for(var w=0; w<json.length; w++) { 
+											if(json[w].id == id) {
+												return json[w];
+											}
+										}
+										return undefined;
                 };
+
                 for(var i=0; i<json.length; i++) {
                     ans.addNode(json[i]);
                     for(var j=0, adj = json[i].adjacencies; j<adj.length; j++) {

@@ -162,11 +162,12 @@ Graph.Plot = {
         (end code)
     */
     clearLabels: function(force) {
-        for(var id in this.labels) 
-            if(force || !this.viz.graph.hasNode(id)) {
+        for(var id in this.labels) {
+            if (force || !this.viz.graph.hasNode(id)) {
                 this.disposeLabel(id);
                 delete this.labels[id];
             }
+				}
     },
     
     /*
@@ -211,7 +212,8 @@ Graph.Plot = {
 		node = $splat(node);
 		var st = flag? "" : "none", lab, that = this;
 		$each(node, function(n) {
-			if(lab = that.getLabel(n.id)) {
+			var lab = that.getLabel(n.id);
+			if (lab) {
 			     lab.style.display = st;
 			} 
 		});
@@ -383,7 +385,7 @@ Graph.Plot = {
 	            !animating && opt.onAfterPlotNode(node);
 			}
             if(!that.labelsHidden && opt.withLabels) {
-				if(node.drawn && ctx.globalAlpha >= .95) {
+				if(node.drawn && ctx.globalAlpha >= 0.95) {
 					that.plotLabel(canvas, node, opt);
 				} else {
 					that.hideLabel(node, false);

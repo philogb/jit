@@ -335,10 +335,12 @@ this.TM = {
 
 	*/
 	createBox: function(json, coord, html) {
-		if(!this.leaf(json))
-			var box = this.headBox(json, coord) + this.bodyBox(html, coord);
-		 else 
-			var box = this.leafBox(json, coord);
+		var box;
+		if(!this.leaf(json)) {
+			box = this.headBox(json, coord) + this.bodyBox(html, coord);
+		} else {
+			box = this.leafBox(json, coord);
+		}
 		return this.contentBox(json, coord, box);
 	},
 	
@@ -706,7 +708,7 @@ this.TM = {
                 if(container) {
                     var parent = getParent(container);
                     while(parent) {
-                        var elem = parent.childNodes[0]
+                        elem = parent.childNodes[0];
                         if($hasClass(elem, 'in-path')) {
                             if(remove == undefined || !!remove) $removeClass(elem, 'in-path');
                         } else {
@@ -807,7 +809,7 @@ this.TM = {
                     };
                     tip.style.display = '';
                     //get window dimensions
-                    var win = {
+                    win = {
                         'height': document.body.clientHeight,
                         'width': document.body.clientWidth
                     };
@@ -997,21 +999,22 @@ TM.SliceAndDice = new Class({
 		height = coord.height - offst - config.titleHeight,
 		pdata = par.data,
 		fact = (pdata && ("$area" in pdata))? json.data.$area / pdata.$area : 1;
-
+		var otherSize, size, dim, pos, pos2;
+		
 		var horizontal = (orientation == "h");
 		if(horizontal) {
 			orientation = 'v';		
-			var size = Math.round(width * fact),
-			otherSize = height,
-			dim = 'height',
-			pos = 'top',
+			otherSize = height;
+			size = Math.round(width * fact);
+			dim = 'height';
+			pos = 'top';
 			pos2 = 'left';
 		} else {
 			orientation = 'h';		
-			var otherSize = Math.round(height * fact),
-			size = width,
-			dim = 'width',
-			pos = 'left',
+			otherSize = Math.round(height * fact);
+			size = width;
+			dim = 'width';
+			pos = 'left';
 			pos2 = 'top';
 		}
 		json.coord = {
@@ -1299,7 +1302,7 @@ TM.Squarified = new Class({
 				offst = config.offset,
 				height = chcoord.height - (config.titleHeight + offst),
 				width = chcoord.width - offst;
-				var coord = {
+				coord = {
 					'width':width,
 					'height':height,
 					'top':0,
@@ -1324,11 +1327,12 @@ TM.Squarified = new Class({
 	processChildrenLayout: function(par, ch, coord) {
 		//compute children real areas
 		var parentArea = coord.width * coord.height;
-		for(var totalChArea=0, chArea = [], i=0; i < ch.length; i++) {
+		var i, totalChArea=0, chArea = [];
+		for(i=0; i < ch.length; i++) {
             chArea[i] = parseFloat(ch[i].data.$area);
             totalChArea += chArea[i];
         }
-        for(var i=0; i<chArea.length; i++) {
+        for(i=0; i<chArea.length; i++) {
 			ch[i]._area = parentArea * chArea[i] / totalChArea;
 		}
 		var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
@@ -1523,7 +1527,7 @@ TM.Strip = new Class({
 				offst = config.offset,
 				height = chcoord.height - (config.titleHeight + offst),
 				width = chcoord.width - offst;
-				var coord = {
+				coord = {
 					'width':width,
 					'height':height,
 					'top':0,

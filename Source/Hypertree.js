@@ -442,13 +442,13 @@ this.Hypertree = new Class({
                 depth = (node._depth > depth)? node._depth : depth; 
 				node._scale = scale; 
             }, "ignore"); 
-            for(var i=0.51; i<=1; i+=.01) { 
+            for(var i=0.51; i<=1; i+=0.01) { 
                 var valSeries = (function(a, n) { 
                     return (1 - Math.pow(a, n)) / (1 - a); 
                 })(i, depth + 1); 
-                if(valSeries >= 2) return i - .01; 
+                if(valSeries >= 2) return i - 0.01; 
             } 
-            return .5; 
+            return 0.5; 
         })(); 
          
         GUtil.eachBFS(this.graph, this.root, function (elem) { 

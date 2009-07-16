@@ -114,7 +114,7 @@ Complex.prototype = {
     
     */
     setp: function(theta, rho) {
-        this.x = Math.cos(theta) * rho
+        this.x = Math.cos(theta) * rho;
         this.y = Math.sin(theta) * rho;
     },
 
@@ -306,7 +306,7 @@ Complex.prototype = {
          The result of multiplying two complex numbers.
     */
     $prod:function(pos) {
-        var x = this.x, y = this.y
+        var x = this.x, y = this.y;
         this.x = x*pos.x - y*pos.y;
         this.y = y*pos.x + x*pos.y;
         return this;

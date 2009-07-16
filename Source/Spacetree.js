@@ -926,7 +926,7 @@ ST.Group = new Class({
         this.animation.setOptions($merge(controller, {
             $animating: false,
             compute: function(delta) {
-              if(delta == 1) delta = .99;
+              if(delta == 1) delta = 0.99;
               that.plotStep(1 - delta, controller, this.$animating);
               this.$animating = 'contract';
             },
@@ -1028,10 +1028,11 @@ ST.Group = new Class({
         ctx = canvas.getCtx(),
         nodes = this.nodes,
         GUtil = Graph.Util;
+				var i, node;
         //hide nodes that are meant to be collapsed/expanded
         var nds = {};
-        for(var i=0; i<nodes.length; i++) {
-            var node = nodes[i];
+        for(i=0; i<nodes.length; i++) {
+          node = nodes[i];
         	nds[node.id] = [];
         	GUtil.eachSubgraph(node, function(n) { 
             	if(n.drawn) {
@@ -1044,12 +1045,12 @@ ST.Group = new Class({
         //plot the whole (non-scaled) tree
         if(nodes.length > 0) viz.fx.plot();
         //show nodes that were previously hidden
-        for(var i in nds) {
+        for(i in nds) {
         	$each(nds[i], function(n) { n.drawn = true; });
         }
         //plot each scaled subtree
-        for(var i=0; i<nodes.length; i++) {
-            var node = nodes[i];
+        for(i=0; i<nodes.length; i++) {
+          node = nodes[i];
         	ctx.save();
             viz.fx.plotSubtree(node, controller, delta, animating);                
             ctx.restore();
@@ -1156,6 +1157,7 @@ ST.Geom = new Class({
                 case "left": return val(args[3]);
             }
         }
+				return undefined;
     },
 
     /*
@@ -1259,7 +1261,7 @@ ST.Geom = new Class({
         } else if(dim.align == "right") {
             return this.dispatch($C(0, 0), $C(-w, 0),
                                  $C(0, -h),$C(0, 0));
-        } else throw "align: not implemented"
+        } else throw "align: not implemented";
     },
 
     /*
@@ -1389,7 +1391,7 @@ ST.Plot = new Class({
             !animating && opt.onBeforePlotNode(node);
             this.plotNode(node, canvas, animating);
             !animating && opt.onAfterPlotNode(node);
-            if(plotLabel && ctx.globalAlpha >= .95) 
+            if(plotLabel && ctx.globalAlpha >= 0.95) 
                 this.plotLabel(canvas, node, opt);
             else 
                 this.hideLabel(node, false);
@@ -1415,33 +1417,34 @@ ST.Plot = new Class({
         var w = dim.overridable && node.data.$width || dim.width;
         var h = dim.overridable && node.data.$height || dim.height;
         var radius = canvas.getSize();
+				var labelPos, orn;
         if(dim.align == "center") {
-            var labelPos= {
+            labelPos= {
                 x: Math.round(pos.x - w / 2 + radius.width/2),
                 y: Math.round(pos.y - h / 2 + radius.height/2)
             };
         } else if (dim.align == "left") {
-            var orn = this.config.orientation;
+            orn = this.config.orientation;
             if(orn == "bottom" || orn == "top") {
-                var labelPos= {
+                labelPos= {
                     x: Math.round(pos.x - w / 2 + radius.width/2),
                     y: Math.round(pos.y + radius.height/2)
                 };
             } else {
-                var labelPos= {
+                labelPos= {
                     x: Math.round(pos.x + radius.width/2),
                     y: Math.round(pos.y - h / 2 + radius.height/2)
                 };
             }
         } else if(dim.align == "right") {
-            var orn = this.config.orientation;
+            orn = this.config.orientation;
             if(orn == "bottom" || orn == "top") {
-                var labelPos= {
+                labelPos= {
                     x: Math.round(pos.x - w / 2 + radius.width/2),
                     y: Math.round(pos.y - h + radius.height/2)
                 };
             } else {
-                var labelPos= {
+                labelPos= {
                     x: Math.round(pos.x - w + radius.width/2),
                     y: Math.round(pos.y - h / 2 + radius.height/2)
                 };
@@ -1458,33 +1461,34 @@ ST.Plot = new Class({
     
     getAlignedPos: function(pos, width, height) {
         var nconfig = this.node;
+				var square, orn;
         if(nconfig.align == "center") {
-            var square = {
+            square = {
                 x: pos.x - width / 2,
                 y: pos.y - height / 2
             };
         } else if (nconfig.align == "left") {
-            var orn = this.config.orientation;
+            orn = this.config.orientation;
             if(orn == "bottom" || orn == "top") {
-                var square = {
+                square = {
                     x: pos.x - width / 2,
                     y: pos.y
                 };
             } else {
-                var square = {
+                square = {
                     x: pos.x,
                     y: pos.y - height / 2
                 };
             }
         } else if(nconfig.align == "right") {
-            var orn = this.config.orientation;
+            orn = this.config.orientation;
             if(orn == "bottom" || orn == "top") {
-                var square = {
+                square = {
                     x: pos.x - width / 2,
                     y: pos.y - height
                 };
             } else {
-                var square = {
+                square = {
                     x: pos.x - width,
                     y: pos.y - height / 2
                 };

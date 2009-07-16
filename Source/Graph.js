@@ -150,9 +150,9 @@ this.Graph = new Class({
     <Graph.Node>, <Graph.Adjacence>
     */  
   addAdjacence: function (obj, obj2, data) {
-    var adjs = []
-    if(!this.hasNode(obj.id)) this.addNode(obj);
-    if(!this.hasNode(obj2.id)) this.addNode(obj2);
+    var adjs = [];
+    if(!this.hasNode(obj.id)) { this.addNode(obj); }
+    if(!this.hasNode(obj2.id)) { this.addNode(obj2); }
     obj = this.nodes[obj.id]; obj2 = this.nodes[obj2.id];
     
     for(var i in this.nodes) {
@@ -408,7 +408,11 @@ Graph.Util = {
         if(!param || !($type(param) == 'string')) return function() { return true; };
         var props = param.split(" ");
         return function(elem) {
-            for(var i=0; i<props.length; i++) if(elem[props[i]]) return false;
+            for(var i=0; i<props.length; i++) { 
+							if(elem[props[i]]) { 
+								return false; 
+							}
+						}
             return true;
         };
     },
@@ -455,7 +459,9 @@ Graph.Util = {
     */
     eachNode: function(graph, action, flags) {
         var filter = this.filter(flags);
-        for(var i in graph.nodes) if(filter(graph.nodes[i])) action(graph.nodes[i]);
+        for(var i in graph.nodes) {
+					if(filter(graph.nodes[i])) action(graph.nodes[i]);
+				} 
     },
     
     /*
@@ -477,7 +483,11 @@ Graph.Util = {
     */
     eachAdjacency: function(node, action, flags) {
         var adj = node.adjacencies, filter = this.filter(flags);
-        for(var id in adj) if(filter(adj[id])) action(adj[id], id);
+        for(var id in adj) {
+					if(filter(adj[id])) {
+						action(adj[id], id);
+					}
+				}
     },
 
      /*
@@ -665,12 +675,13 @@ Graph.Util = {
     getSubnodes: function(node, level, flags) {
         var ans = [], that = this;
         level = level || 0;
+				var levelStart, levelEnd;
         if($type(level) == 'array') {
-            var levelStart = level[0];
-            var levelEnd = level[1];
+            levelStart = level[0];
+            levelEnd = level[1];
         } else {
-            var levelStart = level;
-            var levelEnd = Number.MAX_VALUE - node._depth;
+            levelStart = level;
+            levelEnd = Number.MAX_VALUE - node._depth;
         }
         this.eachLevel(node, levelStart, levelEnd, function(n) {
 			ans.push(n);
