@@ -26,7 +26,7 @@
    The <Loader.loadJSON> method accepts JSON Trees and Graph objects. This will be explained in detail in the <Loader.loadJSON> method definition.
 */
 var Loader = {
-	   construct: function(json) {
+     construct: function(json) {
         var isGraph = ($type(json) == 'array');
         var ans = new Graph(this.graphOptions);
         if(!isGraph) 
@@ -43,11 +43,11 @@ var Loader = {
             (function (ans, json) {
                 var getNode = function(id) {
                     for(var w=0; w<json.length; w++) { 
-											if(json[w].id == id) {
-												return json[w];
-											}
-										}
-										return undefined;
+                      if(json[w].id == id) {
+                        return json[w];
+                      }
+                    }
+                    return undefined;
                 };
 
                 for(var i=0; i<json.length; i++) {
@@ -175,13 +175,13 @@ var Loader = {
 
     */
     loadJSON: function(json, i) {
-		this.json = json;
-		this.graph = this.construct(json);
-		if($type(json) != 'array'){
-			this.root = json.id;
-		} else {
-			this.root = json[i? i : 0].id;
-		}
-	}
+    this.json = json;
+    this.graph = this.construct(json);
+    if($type(json) != 'array'){
+      this.root = json.id;
+    } else {
+      this.root = json[i? i : 0].id;
+    }
+  }
 };
 

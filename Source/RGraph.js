@@ -172,54 +172,54 @@ This method is useful for adding some styles to a particular edge before being p
 */
 
 this.RGraph = new Class({
-	
+  
     Implements: [Loader, AngularWidth],
     
-	initialize: function(canvas, controller) {
-		var config= {
-		        labelContainer: canvas.id + '-label',
+  initialize: function(canvas, controller) {
+    var config= {
+            labelContainer: canvas.id + '-label',
 
                 interpolation: 'linear',
-		        levelDistance: 100,
-		        withLabels: true,
+            levelDistance: 100,
+            withLabels: true,
                 
-				Node: {
-					overridable: false,
-				    type: 'circle',
-					dim: 3,
-					color: '#ccb',
+        Node: {
+          overridable: false,
+            type: 'circle',
+          dim: 3,
+          color: '#ccb',
                     width: 5,
                     height: 5,   
-					lineWidth: 1
-				},
-				
-				Edge: {
-					overridable: false,
-				    type: 'line',
-					color: '#ccb',
-					lineWidth: 1
-				},
+          lineWidth: 1
+        },
+        
+        Edge: {
+          overridable: false,
+            type: 'line',
+          color: '#ccb',
+          lineWidth: 1
+        },
 
-		        fps:40,
-		        duration: 2500,
+            fps:40,
+            duration: 2500,
                 transition: Trans.Quart.easeInOut,
                 clearCanvas: true
-		};
+    };
 
-	    var innerController = {
-	        onBeforeCompute: $empty,
-	        onAfterCompute:  $empty,
-	        onCreateLabel:   $empty,
-	        onPlaceLabel:    $empty,
-	        onComplete:      $empty,
-	        onBeforePlotLine:$empty,
-	        onAfterPlotLine: $empty,
-	        onBeforePlotNode:$empty,
-	        onAfterPlotNode: $empty
-	    };
-		
-	    this.controller = this.config = $merge(config, innerController, controller);
-	    this.graphOptions = {
+      var innerController = {
+          onBeforeCompute: $empty,
+          onAfterCompute:  $empty,
+          onCreateLabel:   $empty,
+          onPlaceLabel:    $empty,
+          onComplete:      $empty,
+          onBeforePlotLine:$empty,
+          onAfterPlotLine: $empty,
+          onBeforePlotNode:$empty,
+          onAfterPlotNode: $empty
+      };
+    
+      this.controller = this.config = $merge(config, innerController, controller);
+      this.graphOptions = {
             'complex': false,
             'Node': {
                 'selected': false,
@@ -227,15 +227,15 @@ this.RGraph = new Class({
                 'drawn': true
             }
         };
-		this.graph = new Graph(this.graphOptions);
-	    this.fx = new RGraph.Plot(this);
-		this.op = new RGraph.Op(this);
-		this.json = null;
-	    this.canvas = canvas;
-	    this.root = null;
-	    this.busy = false;
-	    this.parent = false;
-	},
+    this.graph = new Graph(this.graphOptions);
+      this.fx = new RGraph.Plot(this);
+    this.op = new RGraph.Op(this);
+    this.json = null;
+      this.canvas = canvas;
+      this.root = null;
+      this.busy = false;
+      this.parent = false;
+  },
     /* 
      Method: refresh 
      
@@ -300,7 +300,7 @@ this.RGraph = new Class({
         var GUtil = Graph.Util;
         var root = this.graph.getNode(this.root);
         var parent = this.parent;
-		var config = this.config;
+    var config = this.config;
 
         for(var i=0; i<propArray.length; i++)
             root[propArray[i]] = $P(0, 0);
@@ -316,10 +316,10 @@ this.RGraph = new Class({
             var rho = (elem._depth + 1) * config.levelDistance;
             var angleInit = elem.angleSpan.begin;
             
-			var totalAngularWidths = 0, subnodes = [];
+      var totalAngularWidths = 0, subnodes = [];
             GUtil.eachSubnode(elem, function(sib) {
                 totalAngularWidths += sib._treeAngularWidth;
-				subnodes.push(sib);
+        subnodes.push(sib);
             }, "ignore");
             
             if(parent && parent.id == elem.id && subnodes.length > 0 && subnodes[0].dist) {
@@ -412,12 +412,12 @@ this.RGraph = new Class({
         if(this.root != id && !this.busy) {
             this.busy = true;
             this.root = id; 
-						that = this;
+            that = this;
             this.controller.onBeforeCompute(this.graph.getNode(id));
             var obj = this.getNodeAndParentAngle(id);
             
-			//second constraint
-			this.tagChildren(obj.parent, id);
+      //second constraint
+      this.tagChildren(obj.parent, id);
             this.parent = obj.parent;
             this.compute('endPos');
             
@@ -430,7 +430,7 @@ this.RGraph = new Class({
             var mode = this.config.interpolation;
             opt = $merge({ onComplete: $empty }, opt || {});
 
-			this.fx.animate($merge({
+      this.fx.animate($merge({
                 hideLabels: true,
                 modes: [mode]
             }, opt, {
@@ -495,17 +495,17 @@ RGraph.Op = new Class({
 
 */
 RGraph.Plot = new Class({
-	
-	Implements: Graph.Plot,
-	
+  
+  Implements: Graph.Plot,
+  
     initialize: function(viz) {
         this.viz = viz;
-		this.config = viz.config;
-		this.node = viz.config.Node;
-		this.edge = viz.config.Edge;
-		this.animation = new Animation;
-	    this.nodeTypes = new RGraph.Plot.NodeTypes;
-		this.edgeTypes = new RGraph.Plot.EdgeTypes;
+    this.config = viz.config;
+    this.node = viz.config.Node;
+    this.edge = viz.config.Edge;
+    this.animation = new Animation;
+      this.nodeTypes = new RGraph.Plot.NodeTypes;
+    this.edgeTypes = new RGraph.Plot.EdgeTypes;
     },
 
     /* 
@@ -532,7 +532,7 @@ RGraph.Plot = new Class({
         style.top  = labelPos.y + 'px';
         style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
         controller.onPlaceLabel(tag, node);
-	}
+  }
 });
 
 /*
@@ -568,14 +568,14 @@ RGraph.Plot.NodeTypes = new Class({
     'square': function(node, canvas) {
         var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
         var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
-		var nodeDim2 = 2 * nodeDim;
+    var nodeDim2 = 2 * nodeDim;
         canvas.getCtx().fillRect(pos.x - nodeDim, pos.y - nodeDim, nodeDim2, nodeDim2);
     },
     
     'rectangle': function(node, canvas) {
         var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
         var width = nconfig.overridable && data && data.$width || nconfig.width;
-		var height = nconfig.overridable && data && data.$height || nconfig.height;
+    var height = nconfig.overridable && data && data.$height || nconfig.height;
         canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);
     },
     
@@ -638,7 +638,7 @@ RGraph.Plot.EdgeTypes = new Class({
     
     'line': function(adj, canvas) {
         var pos = adj.nodeFrom.pos.getc(true);
-		var posChild = adj.nodeTo.pos.getc(true);
+    var posChild = adj.nodeTo.pos.getc(true);
         canvas.path('stroke', function(context) {
             context.moveTo(pos.x, pos.y);
             context.lineTo(posChild.x, posChild.y);
@@ -647,10 +647,10 @@ RGraph.Plot.EdgeTypes = new Class({
     
     'arrow': function(adj, canvas) {
         var node = adj.nodeFrom, child = adj.nodeTo;
-		var data = adj.data, econfig = this.edge;
+    var data = adj.data, econfig = this.edge;
         //get edge dim
-		var cond = econfig.overridable && data;
-		var edgeDim = cond && data.$dim || 14;
+    var cond = econfig.overridable && data;
+    var edgeDim = cond && data.$dim || 14;
         //get edge direction
         if(cond && data.$direction && data.$direction.length > 1) {
             var nodeHash = {};
@@ -670,10 +670,10 @@ RGraph.Plot.EdgeTypes = new Class({
             context.moveTo(posFrom.x, posFrom.y);
             context.lineTo(posTo.x, posTo.y);
         });
-		canvas.path('fill', function(context) {
+    canvas.path('fill', function(context) {
             context.moveTo(v1.x, v1.y);
             context.lineTo(v2.x, v2.y);
             context.lineTo(posTo.x, posTo.y);
         });
-	}
+  }
 });

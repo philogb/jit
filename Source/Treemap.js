@@ -26,7 +26,7 @@
 /*
    Object: TM
 
-	Abstract Treemap object.
+  Abstract Treemap object.
 
    Implemented By:
     
@@ -155,45 +155,45 @@ object should be called with the given result.
 */
 this.TM = {
 
-	layout: {
-		orientation: "h",
-		vertical: function() { 
-			return this.orientation == "v"; 
-		},
-		horizontal: function() { 
-			return this.orientation == "h"; 
-		},
-		change: function() { 
-			this.orientation = this.vertical()? "h" : "v"; 
-		}
-	},
-	
-	innerController: {
-			onBeforeCompute:  $empty,
-			onAfterCompute:   $empty,
-			onComplete:       $empty,
+  layout: {
+    orientation: "h",
+    vertical: function() { 
+      return this.orientation == "v"; 
+    },
+    horizontal: function() { 
+      return this.orientation == "h"; 
+    },
+    change: function() { 
+      this.orientation = this.vertical()? "h" : "v"; 
+    }
+  },
+  
+  innerController: {
+      onBeforeCompute:  $empty,
+      onAfterCompute:   $empty,
+      onComplete:       $empty,
             onCreateElement:  $empty,
             onDestroyElement: $empty,
-			request:          false
-		},
+      request:          false
+    },
 
-		config: {
-			orientation: "h",
-			titleHeight: 13,
-			rootId: 'infovis',
-			offset:4,
-			levelsToShow: 3,
+    config: {
+      orientation: "h",
+      titleHeight: 13,
+      rootId: 'infovis',
+      offset:4,
+      levelsToShow: 3,
             addLeftClickHandler: false,
             addRightClickHandler: false,
             selectPathOnHover: false,
             
-			Color: {
-				allow: false,
-				minValue: -100,
-				maxValue: 100,
-				minColorValue: [255, 0, 50],
-				maxColorValue: [0, 255, 50]
-			},
+      Color: {
+        allow: false,
+        minValue: -100,
+        maxValue: 100,
+        minColorValue: [255, 0, 50],
+        maxColorValue: [0, 255, 50]
+      },
             
             Tips: {
                 allow: false,
@@ -201,17 +201,17 @@ this.TM = {
                 offsetY: 20,
                 onShow: $empty
             }
-		},
-	
+    },
+  
 
-	initialize: function(controller) {
-		this.tree = null;
-		this.shownTree = null;
-		this.controller = this.config = $merge(this.config, 
-										this.innerController, 
-										controller);
-		this.rootId = this.config.rootId;
-		this.layout.orientation = this.config.orientation;
+  initialize: function(controller) {
+    this.tree = null;
+    this.shownTree = null;
+    this.controller = this.config = $merge(this.config, 
+                    this.innerController, 
+                    controller);
+    this.rootId = this.config.rootId;
+    this.layout.orientation = this.config.orientation;
         
         //add tooltip
         if(this.config.Tips.allow && document.body) {
@@ -238,7 +238,7 @@ this.TM = {
         } else {
             window.attachEvent('onunload', fn);
         }
-	},
+  },
 
     /*
        Method: each
@@ -264,40 +264,40 @@ this.TM = {
         })($get(this.rootId).firstChild);
     },
 
-	/*
-	   toStyle
-	
-		Transforms a JSON into a CSS style string.
-	*/
-	toStyle: function(obj) {
-		var ans = "";
-		for(var s in obj) ans += s + ":" + obj[s] + ";";
-		return ans;
-	},
+  /*
+     toStyle
+  
+    Transforms a JSON into a CSS style string.
+  */
+  toStyle: function(obj) {
+    var ans = "";
+    for(var s in obj) ans += s + ":" + obj[s] + ";";
+    return ans;
+  },
 
-	/*
-	   leaf
-	
-		Returns a boolean value specifying if the node is a tree leaf or not.
-	
-	   Parameters:
-	
-	      tree - A tree node (which is also a JSON tree object of course). <http://blog.thejit.org>
+  /*
+     leaf
+  
+    Returns a boolean value specifying if the node is a tree leaf or not.
+  
+     Parameters:
+  
+        tree - A tree node (which is also a JSON tree object of course). <http://blog.thejit.org>
 
-	   Returns:
-	
-	   	  A boolean value specifying if the node is a tree leaf or not.
+     Returns:
+  
+         A boolean value specifying if the node is a tree leaf or not.
  
-	*/
-	leaf: function(tree) {
-		return tree.children == 0;
-	},
+  */
+  leaf: function(tree) {
+    return tree.children == 0;
+  },
 
-	/*
-	   Method: createBox
-	
-		Constructs the proper DOM layout from a json node.
-		
+  /*
+     Method: createBox
+  
+    Constructs the proper DOM layout from a json node.
+    
         If the node's an _inner node_, 
         this method calls <TM.contentBox>, <TM.bodyBox> and <TM.leafBox> 
         to create the following HTML structure
@@ -319,10 +319,10 @@ this.TM = {
         (end code)
 
 
-	   Parameters:
+     Parameters:
 
-	      json - A JSON subtree. See also <Loader.loadJSON>. 
-		  coord - A coordinates object specifying width, height, left and top style properties.
+        json - A JSON subtree. See also <Loader.loadJSON>. 
+      coord - A coordinates object specifying width, height, left and top style properties.
           html - html to inject into the _body_ element if the node is an inner Tree node.
 
       Returns:
@@ -333,21 +333,21 @@ this.TM = {
 
         <TM>, <TM.contentBox>, <TM.bodyBox>, <TM.headBox>, <TM.leafBox>.
 
-	*/
-	createBox: function(json, coord, html) {
-		var box;
-		if(!this.leaf(json)) {
-			box = this.headBox(json, coord) + this.bodyBox(html, coord);
-		} else {
-			box = this.leafBox(json, coord);
-		}
-		return this.contentBox(json, coord, box);
-	},
-	
-	/*
-	   Method: plot
-	
-		Renders the Treemap.
+  */
+  createBox: function(json, coord, html) {
+    var box;
+    if(!this.leaf(json)) {
+      box = this.headBox(json, coord) + this.bodyBox(html, coord);
+    } else {
+      box = this.leafBox(json, coord);
+    }
+    return this.contentBox(json, coord, box);
+  },
+  
+  /*
+     Method: plot
+  
+    Renders the Treemap.
 
       Parameters:
 
@@ -362,156 +362,156 @@ this.TM = {
         <TM.createBox>.
 
 
-	*/
-	plot: function(json) {
-		var coord = json.coord, html = "";
-		
-		if(this.leaf(json)) 
-			return this.createBox(json, coord, null);
-		
-		for(var i=0, ch=json.children; i<ch.length; i++) 
-			html+= this.plot(ch[i]);
-		
-		return this.createBox(json, coord, html);
-	},
+  */
+  plot: function(json) {
+    var coord = json.coord, html = "";
+    
+    if(this.leaf(json)) 
+      return this.createBox(json, coord, null);
+    
+    for(var i=0, ch=json.children; i<ch.length; i++) 
+      html+= this.plot(ch[i]);
+    
+    return this.createBox(json, coord, html);
+  },
 
 
-	/*
-	   Method: headBox
-	
-		Creates the _head_ div dom element that usually contains the name of a parent JSON tree node.
-	
-	   Parameters:
-	
-	      json - A JSON subtree. See also <Loader.loadJSON>.
-	      coord - width and height base coordinate object.
+  /*
+     Method: headBox
+  
+    Creates the _head_ div dom element that usually contains the name of a parent JSON tree node.
+  
+     Parameters:
+  
+        json - A JSON subtree. See also <Loader.loadJSON>.
+        coord - width and height base coordinate object.
 
-	   Returns:
-	
-	   	  A new _head_ div dom element that has _head_ as class name.
+     Returns:
+  
+         A new _head_ div dom element that has _head_ as class name.
 
         See also:
 
           <TM.createBox>.
  
-	*/
-	headBox: function(json, coord) {
-		var config = this.config, offst = config.offset;
-		var c = {
-			'height': config.titleHeight + "px",
-			'width': (coord.width - offst) + "px",
-			'left':  offst / 2 + "px"
-		};
-		return "<div class=\"head\" style=\"" + this.toStyle(c) + "\">"
-				 + json.name + "</div>";
-	},
+  */
+  headBox: function(json, coord) {
+    var config = this.config, offst = config.offset;
+    var c = {
+      'height': config.titleHeight + "px",
+      'width': (coord.width - offst) + "px",
+      'left':  offst / 2 + "px"
+    };
+    return "<div class=\"head\" style=\"" + this.toStyle(c) + "\">"
+         + json.name + "</div>";
+  },
 
-	/*
-	   Method: bodyBox
-	
-		Creates the _body_ div dom element that usually contains a subtree dom element layout.
-	
-	   Parameters:
-	
-	      html - html that should be contained in the body html.
-	      coord - width and height base coordinate object.
+  /*
+     Method: bodyBox
+  
+    Creates the _body_ div dom element that usually contains a subtree dom element layout.
+  
+     Parameters:
+  
+        html - html that should be contained in the body html.
+        coord - width and height base coordinate object.
 
-	   Returns:
-	
-	   	  A new _body_ div dom element that has _body_ as class name.
+     Returns:
+  
+         A new _body_ div dom element that has _body_ as class name.
  
         See also:
 
           <TM.createBox>.
  
-	*/
-	bodyBox: function(html, coord) {
-		var config = this.config,
-		th = config.titleHeight,
-		offst = config.offset;
-		var c = {
-			'width': (coord.width - offst) + "px",
-			'height':(coord.height - offst - th) + "px",
-			'top':   (th + offst / 2) +  "px",
-			'left':  (offst / 2) + "px"
-		};
-		return "<div class=\"body\" style=\""
-		  + this.toStyle(c) +"\">" + html + "</div>";
-	},
+  */
+  bodyBox: function(html, coord) {
+    var config = this.config,
+    th = config.titleHeight,
+    offst = config.offset;
+    var c = {
+      'width': (coord.width - offst) + "px",
+      'height':(coord.height - offst - th) + "px",
+      'top':   (th + offst / 2) +  "px",
+      'left':  (offst / 2) + "px"
+    };
+    return "<div class=\"body\" style=\""
+      + this.toStyle(c) +"\">" + html + "</div>";
+  },
 
 
 
-	/*
-	   Method: contentBox
-	
-		Creates the _content_ div dom element that usually contains a _leaf_ div dom element or _head_ and _body_ div dom elements.
-	
-	   Parameters:
-	
-	      json - A JSON node. See also <Loader.loadJSON>. 
-	      coord - An object containing width, height, left and top coordinates.
-	      html - input html wrapped by this tag.
-	      
-	   Returns:
-	
-	   	  A new _content_ div dom element that has _content_ as class name.
+  /*
+     Method: contentBox
+  
+    Creates the _content_ div dom element that usually contains a _leaf_ div dom element or _head_ and _body_ div dom elements.
+  
+     Parameters:
+  
+        json - A JSON node. See also <Loader.loadJSON>. 
+        coord - An object containing width, height, left and top coordinates.
+        html - input html wrapped by this tag.
+        
+     Returns:
+  
+         A new _content_ div dom element that has _content_ as class name.
 
        See also:
 
           <TM.createBox>.
  
-	*/
-	contentBox: function(json, coord, html) {
-		var c = {};
-		for(var i in coord) c[i] = coord[i] + "px";
-		return "<div class=\"content\" style=\"" + this.toStyle(c) 
-		   + "\" id=\"" + json.id + "\">" + html + "</div>";
-	},
+  */
+  contentBox: function(json, coord, html) {
+    var c = {};
+    for(var i in coord) c[i] = coord[i] + "px";
+    return "<div class=\"content\" style=\"" + this.toStyle(c) 
+       + "\" id=\"" + json.id + "\">" + html + "</div>";
+  },
 
 
-	/*
-	   Method: leafBox
-	
-		Creates the _leaf_ div dom element that usually contains nothing else.
-	
-	   Parameters:
-	
-	      json - A JSON subtree. See also <Loader.loadJSON>. 
-	      coord - base with and height coordinate object.
-	      
-	   Returns:
-	
-	   	  A new _leaf_ div dom element having _leaf_ as class name.
+  /*
+     Method: leafBox
+  
+    Creates the _leaf_ div dom element that usually contains nothing else.
+  
+     Parameters:
+  
+        json - A JSON subtree. See also <Loader.loadJSON>. 
+        coord - base with and height coordinate object.
+        
+     Returns:
+  
+         A new _leaf_ div dom element having _leaf_ as class name.
  
        See also:
 
           <TM.createBox>.
  
 
-	*/
-	leafBox: function(json, coord) {
-		var config = this.config;
-		var backgroundColor = config.Color.allow && this.setColor(json), 
-		offst = config.offset,
-		width = coord.width - offst,
-		height = coord.height - offst;
-		var c = {
-			'top':   (offst / 2)  + "px",
-			'height':height + "px",
-			'width': width + "px",
-			'left': (offst / 2) + "px"
-		};
-		if(backgroundColor) c['background-color'] = backgroundColor;
-		return "<div class=\"leaf\" style=\"" + this.toStyle(c) + "\">" 
-				+ json.name + "</div>";
-	},
+  */
+  leafBox: function(json, coord) {
+    var config = this.config;
+    var backgroundColor = config.Color.allow && this.setColor(json), 
+    offst = config.offset,
+    width = coord.width - offst,
+    height = coord.height - offst;
+    var c = {
+      'top':   (offst / 2)  + "px",
+      'height':height + "px",
+      'width': width + "px",
+      'left': (offst / 2) + "px"
+    };
+    if(backgroundColor) c['background-color'] = backgroundColor;
+    return "<div class=\"leaf\" style=\"" + this.toStyle(c) + "\">" 
+        + json.name + "</div>";
+  },
 
 
-	/*
-	   Method: setColor
-	
-	      Calculates an hexa color string based on the _$color_ data node property.	
-	
+  /*
+     Method: setColor
+  
+        Calculates an hexa color string based on the _$color_ data node property.  
+  
           This method is called by <TM.leafBox> to assign an hexadecimal color to each leaf node.
           
           This color is calculated by making a linear interpolation between _$color_ max and min values and 
@@ -547,44 +547,44 @@ this.TM = {
 
       So that it returns the previously assigned hex string.
 
-	   Parameters:
-	
-	      json - A JSON tree node.
+     Parameters:
+  
+        json - A JSON tree node.
 
-	   Returns:
-	
-	   	  A String that represents a color in hex value.
+     Returns:
+  
+         A String that represents a color in hex value.
  
-	*/
-	setColor: function(json) {
-		var c = this.config.Color,
-		maxcv = c.maxColorValue,
-		mincv = c.minColorValue,
-		maxv = c.maxValue,
-		minv = c.minValue,
-		diff = maxv - minv,
-		x = (json.data.$color - 0);
-		//linear interpolation		
-		var comp = function(i, x) { 
-			return Math.round((((maxcv[i] - mincv[i]) / diff) * (x - minv) + mincv[i])); 
-		};
-		
-		return $rgbToHex([ comp(0, x), comp(1, x), comp(2, x) ]);
-	},
+  */
+  setColor: function(json) {
+    var c = this.config.Color,
+    maxcv = c.maxColorValue,
+    mincv = c.minColorValue,
+    maxv = c.maxValue,
+    minv = c.minValue,
+    diff = maxv - minv,
+    x = (json.data.$color - 0);
+    //linear interpolation    
+    var comp = function(i, x) { 
+      return Math.round((((maxcv[i] - mincv[i]) / diff) * (x - minv) + mincv[i])); 
+    };
+    
+    return $rgbToHex([ comp(0, x), comp(1, x), comp(2, x) ]);
+  },
 
-	/*
-	   Method: enter
-	
-		Sets the _elem_ parameter as root and performs the layout.
-	
-	   Parameters:
-	
-	      elem - A JSON Tree node. See also <Loader.loadJSON>. 
-	*/
-	enter: function(elem) {
-		this.view(elem.parentNode.id);
-	},
-	
+  /*
+     Method: enter
+  
+    Sets the _elem_ parameter as root and performs the layout.
+  
+     Parameters:
+  
+        elem - A JSON Tree node. See also <Loader.loadJSON>. 
+  */
+  enter: function(elem) {
+    this.view(elem.parentNode.id);
+  },
+  
     /*
        Method: onLeftClick
     
@@ -616,21 +616,21 @@ this.TM = {
         this.enter(elem);
     },
 
-	/*
-	   Method: out
-	
-		Sets the _parent_ node of the currently shown subtree as root and performs the layout.
-	
-	*/
-	out: function() {
-		var parent = TreeUtil.getParent(this.tree, this.shownTree.id);
-		if(parent) {
-			if(this.controller.request)
-				TreeUtil.prune(parent, this.config.levelsToShow);
-			this.view(parent.id);
-		}
-	},
-	
+  /*
+     Method: out
+  
+    Sets the _parent_ node of the currently shown subtree as root and performs the layout.
+  
+  */
+  out: function() {
+    var parent = TreeUtil.getParent(this.tree, this.shownTree.id);
+    if(parent) {
+      if(this.controller.request)
+        TreeUtil.prune(parent, this.config.levelsToShow);
+      this.view(parent.id);
+    }
+  },
+  
     /*
        Method: onRightClick
     
@@ -658,45 +658,45 @@ this.TM = {
         this.out();
     },
 
-	/*
-	   Method: view
-	
-		Sets the root of the treemap to the specified node id and performs the layout.
-	
-	   Parameters:
-	
-		  id - A node identifier
-	*/
-	view: function(id) {
-		var config = this.config, that = this;
-		var post = {
-			onComplete: function() {
-				that.loadTree(id);
-				$get(config.rootId).focus();
-			}
-		};
+  /*
+     Method: view
+  
+    Sets the root of the treemap to the specified node id and performs the layout.
+  
+     Parameters:
+  
+      id - A node identifier
+  */
+  view: function(id) {
+    var config = this.config, that = this;
+    var post = {
+      onComplete: function() {
+        that.loadTree(id);
+        $get(config.rootId).focus();
+      }
+    };
 
-		if (this.controller.request) {
-			var TUtil = TreeUtil;
-			TUtil.loadSubtrees(TUtil.getSubtree(this.tree, id),
-							 $merge(this.controller, post));
-		} else {
-			post.onComplete();
-		}
-	},
-	
-	/*
-	   Method: resetPath
-	
+    if (this.controller.request) {
+      var TUtil = TreeUtil;
+      TUtil.loadSubtrees(TUtil.getSubtree(this.tree, id),
+               $merge(this.controller, post));
+    } else {
+      post.onComplete();
+    }
+  },
+  
+  /*
+     Method: resetPath
+  
        Sets an 'in-path' className for _leaf_ and _head_ elements which belong to the path between the given tree node 
        and the visualization's root node.
-	
-	   Parameters:
-	
-	      tree - A JSON  tree node. See also <Loader.loadJSON>.
-	*/
-	resetPath: function(tree) {
-		var root = this.rootId, previous = this.resetPath.previous;
+  
+     Parameters:
+  
+        tree - A JSON  tree node. See also <Loader.loadJSON>.
+  */
+  resetPath: function(tree) {
+    var root = this.rootId, previous = this.resetPath.previous;
         this.resetPath.previous = tree || false;
         function getParent(c) { 
             var p = c.parentNode;
@@ -721,7 +721,7 @@ this.TM = {
          };
          toggleInPath(previous, true);
          toggleInPath(tree, false);                
-	},
+  },
 
     
     /*
@@ -857,28 +857,28 @@ this.TM = {
         $clean($get(this.rootId));
     },
 
-	/*
-	   Method: loadTree
-	
-		Loads the subtree specified by _id_ and plots it on the layout container.
-	
-	   Parameters:
-	
-	      id - A subtree id.
-	*/
-	loadTree: function(id) {
-		this.empty();
-		this.loadJSON(TreeUtil.getSubtree(this.tree, id));
-	}
-	
+  /*
+     Method: loadTree
+  
+    Loads the subtree specified by _id_ and plots it on the layout container.
+  
+     Parameters:
+  
+        id - A subtree id.
+  */
+  loadTree: function(id) {
+    this.empty();
+    this.loadJSON(TreeUtil.getSubtree(this.tree, id));
+  }
+  
 };
 
 /*
    Class: TM.SliceAndDice
 
-	A JavaScript implementation of the Slice and Dice Treemap algorithm.
+  A JavaScript implementation of the Slice and Dice Treemap algorithm.
 
-	The <TM.SliceAndDice> constructor takes an _optional_ configuration object described in <TM>.
+  The <TM.SliceAndDice> constructor takes an _optional_ configuration object described in <TM>.
 
     This visualization (as all other Treemap visualizations) is fed with JSON Tree structures.
 
@@ -897,26 +897,26 @@ this.TM = {
     Example:
 
 
-	Here's a way of instanciating the <TM.SliceAndDice> will all its _optional_ configuration features
-	
-	(start code js)
+  Here's a way of instanciating the <TM.SliceAndDice> will all its _optional_ configuration features
+  
+  (start code js)
 
-	var tm = new TM.SliceAndDice({
-  		orientation: "h",
-		titleHeight: 13,
-		rootId: 'infovis',
-		offset:4,
-		levelsToShow: 3,
+  var tm = new TM.SliceAndDice({
+      orientation: "h",
+    titleHeight: 13,
+    rootId: 'infovis',
+    offset:4,
+    levelsToShow: 3,
         addLeftClickHandler: false,
         addRightClickHandler: false,
         selectPathOnHover: false,
             
-		Color: {
-			allow: false,
-			minValue: -100,
-			maxValue: 100,
-			minColorValue: [255, 0, 50],
-			maxColorValue: [0, 255, 50]
+    Color: {
+      allow: false,
+      minValue: -100,
+      maxValue: 100,
+      minColorValue: [255, 0, 50],
+      maxColorValue: [0, 255, 50]
           },
           
           Tips: {
@@ -938,107 +938,107 @@ this.TM = {
           onDestroyElement: function(content, node, isLeaf, head, body) {
             //Some stuff onDestroyElement
           },
-    	  request:          false
+        request:          false
     });
-	tm.loadJSON(json);
+  tm.loadJSON(json);
 
-	(end code)
+  (end code)
 
 */
 TM.SliceAndDice = new Class({
-	Implements: TM,
-	/*
-	   Method: loadJSON
-	
-		Loads the specified JSON tree and lays it on the main container.
-	
-	   Parameters:
-	
-	      json - A JSON Tree. See also <Loader.loadJSON>. 
-	*/
-	loadJSON: function (json) {
-		this.controller.onBeforeCompute(json);
-		var container = $get(this.rootId),
-		config = this.config,
-		width = container.offsetWidth,
-		height = container.offsetHeight;
-		
-		var p = {
-			'coord': {
-				'top': 0,
-				'left': 0,
-				'width':  width,
-				'height': height + config.titleHeight + config.offset
-			}
-		};
-		
-		if(this.tree == null) this.tree = json;
-		this.shownTree = json;
-		this.compute(p, json, this.layout.orientation);
-		container.innerHTML = this.plot(json);
+  Implements: TM,
+  /*
+     Method: loadJSON
+  
+    Loads the specified JSON tree and lays it on the main container.
+  
+     Parameters:
+  
+        json - A JSON Tree. See also <Loader.loadJSON>. 
+  */
+  loadJSON: function (json) {
+    this.controller.onBeforeCompute(json);
+    var container = $get(this.rootId),
+    config = this.config,
+    width = container.offsetWidth,
+    height = container.offsetHeight;
+    
+    var p = {
+      'coord': {
+        'top': 0,
+        'left': 0,
+        'width':  width,
+        'height': height + config.titleHeight + config.offset
+      }
+    };
+    
+    if(this.tree == null) this.tree = json;
+    this.shownTree = json;
+    this.compute(p, json, this.layout.orientation);
+    container.innerHTML = this.plot(json);
         this.initializeElements();
-		this.controller.onAfterCompute(json);
-	},
-	
-	/*
-	   Method: compute
-	
-		Called by loadJSON to calculate recursively all node positions and lay out the tree.
-	
-	   Parameters:
+    this.controller.onAfterCompute(json);
+  },
+  
+  /*
+     Method: compute
+  
+    Called by loadJSON to calculate recursively all node positions and lay out the tree.
+  
+     Parameters:
 
-	      par - The parent node of the json subtree.	
-	      json - A JSON subtree. See also <Loader.loadJSON>.
-	      orientation - The current orientation. This value is switched recursively.
-	*/
-	compute: function(par, json, orientation) {
-		var config = this.config, 
-		coord = par.coord,
-		offst = config.offset,
-		width  = coord.width - offst,
-		height = coord.height - offst - config.titleHeight,
-		pdata = par.data,
-		fact = (pdata && ("$area" in pdata))? json.data.$area / pdata.$area : 1;
-		var otherSize, size, dim, pos, pos2;
-		
-		var horizontal = (orientation == "h");
-		if(horizontal) {
-			orientation = 'v';		
-			otherSize = height;
-			size = Math.round(width * fact);
-			dim = 'height';
-			pos = 'top';
-			pos2 = 'left';
-		} else {
-			orientation = 'h';		
-			otherSize = Math.round(height * fact);
-			size = width;
-			dim = 'width';
-			pos = 'left';
-			pos2 = 'top';
-		}
-		json.coord = {
-			'width':size,
-			'height':otherSize,
-			'top':0,
-			'left':0
-		};
-		var offsetSize = 0, tm = this;
-		$each(json.children, function(elem){
-			tm.compute(json, elem, orientation);
-			elem.coord[pos] = offsetSize;
-			elem.coord[pos2] = 0;
-			offsetSize += Math.floor(elem.coord[dim]);
-		});
-	}
+        par - The parent node of the json subtree.  
+        json - A JSON subtree. See also <Loader.loadJSON>.
+        orientation - The current orientation. This value is switched recursively.
+  */
+  compute: function(par, json, orientation) {
+    var config = this.config, 
+    coord = par.coord,
+    offst = config.offset,
+    width  = coord.width - offst,
+    height = coord.height - offst - config.titleHeight,
+    pdata = par.data,
+    fact = (pdata && ("$area" in pdata))? json.data.$area / pdata.$area : 1;
+    var otherSize, size, dim, pos, pos2;
+    
+    var horizontal = (orientation == "h");
+    if(horizontal) {
+      orientation = 'v';    
+      otherSize = height;
+      size = Math.round(width * fact);
+      dim = 'height';
+      pos = 'top';
+      pos2 = 'left';
+    } else {
+      orientation = 'h';    
+      otherSize = Math.round(height * fact);
+      size = width;
+      dim = 'width';
+      pos = 'left';
+      pos2 = 'top';
+    }
+    json.coord = {
+      'width':size,
+      'height':otherSize,
+      'top':0,
+      'left':0
+    };
+    var offsetSize = 0, tm = this;
+    $each(json.children, function(elem){
+      tm.compute(json, elem, orientation);
+      elem.coord[pos] = offsetSize;
+      elem.coord[pos2] = 0;
+      offsetSize += Math.floor(elem.coord[dim]);
+    });
+  }
 });
 
 
 /*
    Class: TM.Area
 
-	Abstract Treemap class containing methods that are common to
-	 aspect ratio related algorithms such as <TM.Squarified> and <TM.Strip>.
+  Abstract Treemap class containing methods that are common to
+   aspect ratio related algorithms such as <TM.Squarified> and <TM.Strip>.
 
     Implemented by:
 
@@ -1046,161 +1046,161 @@ TM.SliceAndDice = new Class({
 */
 TM.Area = new Class({
 
-	/*
-	   Method: loadJSON
-	
-		Loads the specified JSON tree and lays it on the main container.
-	
-	   Parameters:
-	
-	      json - A JSON tree. See also <Loader.loadJSON>.
-	*/
-	loadJSON: function (json) {
-		this.controller.onBeforeCompute(json);
-		var container = $get(this.rootId),
-		width = container.offsetWidth,
-		height = container.offsetHeight,
-		offst = this.config.offset,
-		offwdth = width - offst,
-		offhght = height - offst - this.config.titleHeight;
+  /*
+     Method: loadJSON
+  
+    Loads the specified JSON tree and lays it on the main container.
+  
+     Parameters:
+  
+        json - A JSON tree. See also <Loader.loadJSON>.
+  */
+  loadJSON: function (json) {
+    this.controller.onBeforeCompute(json);
+    var container = $get(this.rootId),
+    width = container.offsetWidth,
+    height = container.offsetHeight,
+    offst = this.config.offset,
+    offwdth = width - offst,
+    offhght = height - offst - this.config.titleHeight;
 
-		json.coord =  {
-			'height': height,
-			'width': width,
-			'top': 0,
-			'left': 0
-		};
-		var coord = $merge(json.coord, {
-			'width': offwdth,
-			'height': offhght
-		});
+    json.coord =  {
+      'height': height,
+      'width': width,
+      'top': 0,
+      'left': 0
+    };
+    var coord = $merge(json.coord, {
+      'width': offwdth,
+      'height': offhght
+    });
 
-		this.compute(json, coord);
-		container.innerHTML = this.plot(json);
-		if(this.tree == null) this.tree = json;
-		this.shownTree = json;
-		this.initializeElements();
-		this.controller.onAfterCompute(json);
-	},
-	
-	/*
-	   Method: computeDim
-	
-		Computes dimensions and positions of a group of nodes
-		according to a custom layout row condition. 
-	
-	   Parameters:
+    this.compute(json, coord);
+    container.innerHTML = this.plot(json);
+    if(this.tree == null) this.tree = json;
+    this.shownTree = json;
+    this.initializeElements();
+    this.controller.onAfterCompute(json);
+  },
+  
+  /*
+     Method: computeDim
+  
+    Computes dimensions and positions of a group of nodes
+    according to a custom layout row condition. 
+  
+     Parameters:
 
-	      tail - An array of nodes.	
+        tail - An array of nodes.  
           initElem - An array of nodes (containing the initial node to be laid).
-	      w - A fixed dimension where nodes will be layed out.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-		  comp - A custom comparison function
-	*/
-	computeDim: function(tail, initElem, w, coord, comp) {
-		if(tail.length + initElem.length == 1) {
-			var l = (tail.length == 1)? tail : initElem;
-			this.layoutLast(l, w, coord);
-			return;
-		}
-		if(tail.length >= 2 && initElem.length == 0) {
-			initElem = [tail[0]];
-			tail = tail.slice(1);
-		}
-		if(tail.length == 0) {
-			if(initElem.length > 0) this.layoutRow(initElem, w, coord);
-			return;
-		}
-		var c = tail[0];
-		if(comp(initElem, w) >= comp([c].concat(initElem), w)) {
-			this.computeDim(tail.slice(1), initElem.concat([c]), w, coord, comp);
-		} else {
-			var newCoords = this.layoutRow(initElem, w, coord);
-			this.computeDim(tail, [], newCoords.dim, newCoords, comp);
-		}
-	},
+        w - A fixed dimension where nodes will be layed out.
+      coord - A coordinates object specifying width, height, left and top style properties.
+      comp - A custom comparison function
+  */
+  computeDim: function(tail, initElem, w, coord, comp) {
+    if(tail.length + initElem.length == 1) {
+      var l = (tail.length == 1)? tail : initElem;
+      this.layoutLast(l, w, coord);
+      return;
+    }
+    if(tail.length >= 2 && initElem.length == 0) {
+      initElem = [tail[0]];
+      tail = tail.slice(1);
+    }
+    if(tail.length == 0) {
+      if(initElem.length > 0) this.layoutRow(initElem, w, coord);
+      return;
+    }
+    var c = tail[0];
+    if(comp(initElem, w) >= comp([c].concat(initElem), w)) {
+      this.computeDim(tail.slice(1), initElem.concat([c]), w, coord, comp);
+    } else {
+      var newCoords = this.layoutRow(initElem, w, coord);
+      this.computeDim(tail, [], newCoords.dim, newCoords, comp);
+    }
+  },
 
-	
-	/*
-	   Method: worstAspectRatio
-	
-		Calculates the worst aspect ratio of a group of rectangles. 
+  
+  /*
+     Method: worstAspectRatio
+  
+    Calculates the worst aspect ratio of a group of rectangles. 
         
         See also:
         
         <http://en.wikipedia.org/wiki/Aspect_ratio>
-		
-	   Parameters:
+    
+     Parameters:
 
-		  ch - An array of nodes.	
-	      w - The fixed dimension where rectangles are being laid out.
+      ch - An array of nodes.  
+        w - The fixed dimension where rectangles are being laid out.
 
-	   Returns:
-	
-	   	  The worst aspect ratio.
+     Returns:
+  
+         The worst aspect ratio.
  
 
-	*/
-	worstAspectRatio: function(ch, w) {
-		if(!ch || ch.length == 0) return Number.MAX_VALUE;
-		var areaSum = 0, maxArea = 0, minArea = Number.MAX_VALUE;
-		for(var i=0; i<ch.length; i++) {
-			var area = ch[i]._area;
-			areaSum += area; 
-			minArea = (minArea < area)? minArea : area;
-			maxArea = (maxArea > area)? maxArea : area; 
-		}
-		var sqw = w * w, sqAreaSum = areaSum * areaSum;
-		return Math.max(sqw * maxArea / sqAreaSum,
-						sqAreaSum / (sqw * minArea));
-	},
-	
-	/*
-	   Method: avgAspectRatio
-	
-		Calculates the average aspect ratio of a group of rectangles. 
+  */
+  worstAspectRatio: function(ch, w) {
+    if(!ch || ch.length == 0) return Number.MAX_VALUE;
+    var areaSum = 0, maxArea = 0, minArea = Number.MAX_VALUE;
+    for(var i=0; i<ch.length; i++) {
+      var area = ch[i]._area;
+      areaSum += area; 
+      minArea = (minArea < area)? minArea : area;
+      maxArea = (maxArea > area)? maxArea : area; 
+    }
+    var sqw = w * w, sqAreaSum = areaSum * areaSum;
+    return Math.max(sqw * maxArea / sqAreaSum,
+            sqAreaSum / (sqw * minArea));
+  },
+  
+  /*
+     Method: avgAspectRatio
+  
+    Calculates the average aspect ratio of a group of rectangles. 
         
         See also:
         
         <http://en.wikipedia.org/wiki/Aspect_ratio>
-		
-	   Parameters:
+    
+     Parameters:
 
-		  ch - An array of nodes.	
-	      w - The fixed dimension where rectangles are being laid out.
+      ch - An array of nodes.  
+        w - The fixed dimension where rectangles are being laid out.
 
-	   Returns:
-	
-	   	  The average aspect ratio.
+     Returns:
+  
+         The average aspect ratio.
  
 
-	*/
-	avgAspectRatio: function(ch, w) {
-		if(!ch || ch.length == 0) return Number.MAX_VALUE;
-		var arSum = 0;
-		for(var i=0; i<ch.length; i++) {
-			var area = ch[i]._area;
-			var h = area / w;
-			arSum += (w > h)? w / h : h / w;
-		}
-		return arSum / ch.length;
-	},
+  */
+  avgAspectRatio: function(ch, w) {
+    if(!ch || ch.length == 0) return Number.MAX_VALUE;
+    var arSum = 0;
+    for(var i=0; i<ch.length; i++) {
+      var area = ch[i]._area;
+      var h = area / w;
+      arSum += (w > h)? w / h : h / w;
+    }
+    return arSum / ch.length;
+  },
 
-	/*
-	   layoutLast
-	
-		Performs the layout of the last computed sibling.
-	
-	   Parameters:
+  /*
+     layoutLast
+  
+    Performs the layout of the last computed sibling.
+  
+     Parameters:
 
-	      ch - An array of nodes.	
-	      w - A fixed dimension where nodes will be layed out.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	layoutLast: function(ch, w, coord) {
-		ch[0].coord = coord;
-	}
-	
+        ch - An array of nodes.  
+        w - A fixed dimension where nodes will be layed out.
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  layoutLast: function(ch, w, coord) {
+    ch[0].coord = coord;
+  }
+  
 });
 
 
@@ -1209,9 +1209,9 @@ TM.Area = new Class({
 /*
    Class: TM.Squarified
 
-	A JavaScript implementation of the Squarified Treemap algorithm.
+  A JavaScript implementation of the Squarified Treemap algorithm.
 
-	The <TM.Squarified> constructor takes an _optional_ configuration object described in <TM>.
+  The <TM.Squarified> constructor takes an _optional_ configuration object described in <TM>.
 
     This visualization (as all other Treemap visualizations) is fed with JSON Tree structures.
 
@@ -1230,25 +1230,25 @@ TM.Area = new Class({
     Example:
 
 
-	Here's a way of instanciating the <TM.Squarified> will all its _optional_ configuration features
-	
-	(start code js)
+  Here's a way of instanciating the <TM.Squarified> will all its _optional_ configuration features
+  
+  (start code js)
 
-	var tm = new TM.Squarified({
-		titleHeight: 13,
-		rootId: 'infovis',
-		offset:4,
-		levelsToShow: 3,
+  var tm = new TM.Squarified({
+    titleHeight: 13,
+    rootId: 'infovis',
+    offset:4,
+    levelsToShow: 3,
         addLeftClickHandler: false,
         addRightClickHandler: false,
         selectPathOnHover: false,
             
-		Color: {
-			allow: false,
-			minValue: -100,
-			maxValue: 100,
-			minColorValue: [255, 0, 50],
-			maxColorValue: [0, 255, 50]
+    Color: {
+      allow: false,
+      minValue: -100,
+      maxValue: 100,
+      minColorValue: [255, 0, 50],
+      maxColorValue: [0, 255, 50]
           },
           
           Tips: {
@@ -1270,174 +1270,174 @@ TM.Area = new Class({
           onDestroyElement: function(content, node, isLeaf, head, body) {
             //Some stuff onDestroyElement
           },
-    	  request:          false
+        request:          false
     });
-	tm.loadJSON(json);
+  tm.loadJSON(json);
 
-	(end code)
+  (end code)
 
 */
-	
+  
 TM.Squarified = new Class({
-	Implements: [TM, TM.Area],
+  Implements: [TM, TM.Area],
 
-	/*
-	   Method: compute
-	
-		Called by loadJSON to calculate recursively all node positions and lay out the tree.
-	
-	   Parameters:
+  /*
+     Method: compute
+  
+    Called by loadJSON to calculate recursively all node positions and lay out the tree.
+  
+     Parameters:
 
-	      json - A JSON tree. See also <Loader.loadJSON>.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	compute: function(json, coord) {
-		if (!(coord.width >= coord.height && this.layout.horizontal())) 
-			this.layout.change();
-		var ch = json.children, config = this.config;
-		if(ch.length > 0) {
-			this.processChildrenLayout(json, ch, coord);
-			for(var i=0; i<ch.length; i++) {
-				var chcoord = ch[i].coord,
-				offst = config.offset,
-				height = chcoord.height - (config.titleHeight + offst),
-				width = chcoord.width - offst;
-				coord = {
-					'width':width,
-					'height':height,
-					'top':0,
-					'left':0
-				};
-				this.compute(ch[i], coord);
-			}
-		}
-	},
+        json - A JSON tree. See also <Loader.loadJSON>.
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  compute: function(json, coord) {
+    if (!(coord.width >= coord.height && this.layout.horizontal())) 
+      this.layout.change();
+    var ch = json.children, config = this.config;
+    if(ch.length > 0) {
+      this.processChildrenLayout(json, ch, coord);
+      for(var i=0; i<ch.length; i++) {
+        var chcoord = ch[i].coord,
+        offst = config.offset,
+        height = chcoord.height - (config.titleHeight + offst),
+        width = chcoord.width - offst;
+        coord = {
+          'width':width,
+          'height':height,
+          'top':0,
+          'left':0
+        };
+        this.compute(ch[i], coord);
+      }
+    }
+  },
 
-	/*
-	   Method: processChildrenLayout
-	
-		Computes children real areas and other useful parameters for performing the Squarified algorithm.
-	
-	   Parameters:
+  /*
+     Method: processChildrenLayout
+  
+    Computes children real areas and other useful parameters for performing the Squarified algorithm.
+  
+     Parameters:
 
-	      par - The parent node of the json subtree.	
-	      ch - An Array of nodes
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	processChildrenLayout: function(par, ch, coord) {
-		//compute children real areas
-		var parentArea = coord.width * coord.height;
-		var i, totalChArea=0, chArea = [];
-		for(i=0; i < ch.length; i++) {
+        par - The parent node of the json subtree.  
+        ch - An Array of nodes
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  processChildrenLayout: function(par, ch, coord) {
+    //compute children real areas
+    var parentArea = coord.width * coord.height;
+    var i, totalChArea=0, chArea = [];
+    for(i=0; i < ch.length; i++) {
             chArea[i] = parseFloat(ch[i].data.$area);
             totalChArea += chArea[i];
         }
         for(i=0; i<chArea.length; i++) {
-			ch[i]._area = parentArea * chArea[i] / totalChArea;
-		}
-		var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
-		ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
-		var initElem = [ch[0]];
-		var tail = ch.slice(1);
-		this.squarify(tail, initElem, minimumSideValue, coord);
-	},
+      ch[i]._area = parentArea * chArea[i] / totalChArea;
+    }
+    var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
+    ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
+    var initElem = [ch[0]];
+    var tail = ch.slice(1);
+    this.squarify(tail, initElem, minimumSideValue, coord);
+  },
 
-	/*
-	   Method: squarify
-	
-		Performs an heuristic method to calculate div elements sizes in order to have a good aspect ratio.
-	
-	   Parameters:
+  /*
+     Method: squarify
+  
+    Performs an heuristic method to calculate div elements sizes in order to have a good aspect ratio.
+  
+     Parameters:
 
-	      tail - An array of nodes.	
-	      initElem - An array of nodes, containing the initial node to be laid out.
-	      w - A fixed dimension where nodes will be laid out.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	squarify: function(tail, initElem, w, coord) {
-		this.computeDim(tail, initElem, w, coord, this.worstAspectRatio);
-	},
-	
-	/*
-	   Method: layoutRow
-	
-		Performs the layout of an array of nodes.
-	
-	   Parameters:
+        tail - An array of nodes.  
+        initElem - An array of nodes, containing the initial node to be laid out.
+        w - A fixed dimension where nodes will be laid out.
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  squarify: function(tail, initElem, w, coord) {
+    this.computeDim(tail, initElem, w, coord, this.worstAspectRatio);
+  },
+  
+  /*
+     Method: layoutRow
+  
+    Performs the layout of an array of nodes.
+  
+     Parameters:
 
-	      ch - An array of nodes.	
-	      w - A fixed dimension where nodes will be laid out.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	layoutRow: function(ch, w, coord) {
-		if(this.layout.horizontal()) {
-			return this.layoutV(ch, w, coord);
-		} else {
-			return this.layoutH(ch, w, coord);
-		}
-	},
-	
-	layoutV: function(ch, w, coord) {
-		var totalArea = 0; 
-		$each(ch, function(elem) { totalArea += elem._area; });
-		var width = totalArea / w, top =  0; 
-		for(var i=0; i<ch.length; i++) {
-			var h = ch[i]._area / width;
-			ch[i].coord = {
-				'height': h,
-				'width': width,
-				'top': coord.top + (w - h - top),
-				'left': coord.left
-			};
-			top += h;
-		}
-		var ans = {
-			'height': coord.height,
-			'width': coord.width - width,
-			'top': coord.top,
-			'left': coord.left + width
-		};
-		//take minimum side value.
-		ans.dim = Math.min(ans.width, ans.height);
-		if(ans.dim != ans.height) this.layout.change();
-		return ans;
-	},
-	
-	layoutH: function(ch, w, coord) {
-		var totalArea = 0; 
-		$each(ch, function(elem) { totalArea += elem._area; });
-		var height = totalArea / w,
-		top = coord.height - height, 
-		left = 0;
-		
-		for(var i=0; i<ch.length; i++) {
-			ch[i].coord = {
-				'height': height,
-				'width': ch[i]._area / height,
-				'top': top,
-				'left': coord.left + left
-			};
-			left += ch[i].coord.width;
-		}
-		var ans = {
-			'height': coord.height - height,
-			'width': coord.width,
-			'top': coord.top,
-			'left': coord.left
-		};
-		ans.dim = Math.min(ans.width, ans.height);
-		if(ans.dim != ans.width) this.layout.change();
-		return ans;
-	}
+        ch - An array of nodes.  
+        w - A fixed dimension where nodes will be laid out.
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  layoutRow: function(ch, w, coord) {
+    if(this.layout.horizontal()) {
+      return this.layoutV(ch, w, coord);
+    } else {
+      return this.layoutH(ch, w, coord);
+    }
+  },
+  
+  layoutV: function(ch, w, coord) {
+    var totalArea = 0; 
+    $each(ch, function(elem) { totalArea += elem._area; });
+    var width = totalArea / w, top =  0; 
+    for(var i=0; i<ch.length; i++) {
+      var h = ch[i]._area / width;
+      ch[i].coord = {
+        'height': h,
+        'width': width,
+        'top': coord.top + (w - h - top),
+        'left': coord.left
+      };
+      top += h;
+    }
+    var ans = {
+      'height': coord.height,
+      'width': coord.width - width,
+      'top': coord.top,
+      'left': coord.left + width
+    };
+    //take minimum side value.
+    ans.dim = Math.min(ans.width, ans.height);
+    if(ans.dim != ans.height) this.layout.change();
+    return ans;
+  },
+  
+  layoutH: function(ch, w, coord) {
+    var totalArea = 0; 
+    $each(ch, function(elem) { totalArea += elem._area; });
+    var height = totalArea / w,
+    top = coord.height - height, 
+    left = 0;
+    
+    for(var i=0; i<ch.length; i++) {
+      ch[i].coord = {
+        'height': height,
+        'width': ch[i]._area / height,
+        'top': top,
+        'left': coord.left + left
+      };
+      left += ch[i].coord.width;
+    }
+    var ans = {
+      'height': coord.height - height,
+      'width': coord.width,
+      'top': coord.top,
+      'left': coord.left
+    };
+    ans.dim = Math.min(ans.width, ans.height);
+    if(ans.dim != ans.width) this.layout.change();
+    return ans;
+  }
 });
 
 
 /*
    Class: TM.Strip
 
-	A JavaScript implementation of the Strip Treemap algorithm.
+  A JavaScript implementation of the Strip Treemap algorithm.
 
-	The <TM.Strip> constructor takes an _optional_ configuration object described in <TM>.
+  The <TM.Strip> constructor takes an _optional_ configuration object described in <TM>.
 
     This visualization (as all other Treemap visualizations) is fed with JSON Tree structures.
 
@@ -1456,26 +1456,26 @@ TM.Squarified = new Class({
     Example:
 
 
-	Here's a way of instanciating the <TM.Strip> will all its _optional_ configuration features
-	
-	(start code js)
+  Here's a way of instanciating the <TM.Strip> will all its _optional_ configuration features
+  
+  (start code js)
 
-	var tm = new TM.Strip({
-		titleHeight: 13,
-  		orientation: "h",
-		rootId: 'infovis',
-		offset:4,
-		levelsToShow: 3,
+  var tm = new TM.Strip({
+    titleHeight: 13,
+      orientation: "h",
+    rootId: 'infovis',
+    offset:4,
+    levelsToShow: 3,
         addLeftClickHandler: false,
         addRightClickHandler: false,
         selectPathOnHover: false,
             
-		Color: {
-			allow: false,
-			minValue: -100,
-			maxValue: 100,
-			minColorValue: [255, 0, 50],
-			maxColorValue: [0, 255, 50]
+    Color: {
+      allow: false,
+      minValue: -100,
+      maxValue: 100,
+      minColorValue: [255, 0, 50],
+      maxColorValue: [0, 255, 50]
           },
           
           Tips: {
@@ -1497,156 +1497,156 @@ TM.Squarified = new Class({
           onDestroyElement: function(content, node, isLeaf, head, body) {
             //Some stuff onDestroyElement
           },
-    	  request:          false
+        request:          false
     });
-	tm.loadJSON(json);
+  tm.loadJSON(json);
 
-	(end code)
+  (end code)
 
 */
-	
+  
 TM.Strip = new Class({
-	Implements: [ TM, TM.Area ],
+  Implements: [ TM, TM.Area ],
 
-	/*
-	   Method: compute
-	
-		Called by loadJSON to calculate recursively all node positions and lay out the tree.
-	
-	   Parameters:
+  /*
+     Method: compute
+  
+    Called by loadJSON to calculate recursively all node positions and lay out the tree.
+  
+     Parameters:
 
-	      json - A JSON subtree. See also <Loader.loadJSON>. 
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	compute: function(json, coord) {
-		var ch = json.children, config = this.config;
-		if(ch.length > 0) {
-			this.processChildrenLayout(json, ch, coord);
-			for(var i=0; i<ch.length; i++) {
-				var chcoord = ch[i].coord,
-				offst = config.offset,
-				height = chcoord.height - (config.titleHeight + offst),
-				width = chcoord.width - offst;
-				coord = {
-					'width':width,
-					'height':height,
-					'top':0,
-					'left':0
-				};
-				this.compute(ch[i], coord);
-			}
-		}
-	},
+        json - A JSON subtree. See also <Loader.loadJSON>. 
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  compute: function(json, coord) {
+    var ch = json.children, config = this.config;
+    if(ch.length > 0) {
+      this.processChildrenLayout(json, ch, coord);
+      for(var i=0; i<ch.length; i++) {
+        var chcoord = ch[i].coord,
+        offst = config.offset,
+        height = chcoord.height - (config.titleHeight + offst),
+        width = chcoord.width - offst;
+        coord = {
+          'width':width,
+          'height':height,
+          'top':0,
+          'left':0
+        };
+        this.compute(ch[i], coord);
+      }
+    }
+  },
 
-	/*
-	   Method: processChildrenLayout
-	
-		Computes children real areas and other useful parameters for performing the Strip algorithm.
-	
-	   Parameters:
+  /*
+     Method: processChildrenLayout
+  
+    Computes children real areas and other useful parameters for performing the Strip algorithm.
+  
+     Parameters:
 
-	      par - The parent node of the json subtree.	
-	      ch - An Array of nodes
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	processChildrenLayout: function(par, ch, coord) {
-		//compute children real areas
-		var area = coord.width * coord.height;
-		var dataValue = parseFloat(par.data.$area);
-		$each(ch, function(elem) {
-			elem._area = area * parseFloat(elem.data.$area) / dataValue;
-		});
-		var side = (this.layout.horizontal())? coord.width : coord.height;
-		var initElem = [ch[0]];
-		var tail = ch.slice(1);
-		this.stripify(tail, initElem, side, coord);
-	},
+        par - The parent node of the json subtree.  
+        ch - An Array of nodes
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  processChildrenLayout: function(par, ch, coord) {
+    //compute children real areas
+    var area = coord.width * coord.height;
+    var dataValue = parseFloat(par.data.$area);
+    $each(ch, function(elem) {
+      elem._area = area * parseFloat(elem.data.$area) / dataValue;
+    });
+    var side = (this.layout.horizontal())? coord.width : coord.height;
+    var initElem = [ch[0]];
+    var tail = ch.slice(1);
+    this.stripify(tail, initElem, side, coord);
+  },
 
-	/*
-	   Method: stripify
-	
-		Performs an heuristic method to calculate div elements sizes in order to have 
-		a good compromise between aspect ratio and order.
-	
-	   Parameters:
+  /*
+     Method: stripify
+  
+    Performs an heuristic method to calculate div elements sizes in order to have 
+    a good compromise between aspect ratio and order.
+  
+     Parameters:
 
-	      tail - An array of nodes.	
-	      initElem - An array of nodes.
-	      w - A fixed dimension where nodes will be layed out.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	stripify: function(tail, initElem, w, coord) {
-		this.computeDim(tail, initElem, w, coord, this.avgAspectRatio);
-	},
-	
-	/*
-	   Method: layoutRow
-	
-		Performs the layout of an array of nodes.
-	
-	   Parameters:
+        tail - An array of nodes.  
+        initElem - An array of nodes.
+        w - A fixed dimension where nodes will be layed out.
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  stripify: function(tail, initElem, w, coord) {
+    this.computeDim(tail, initElem, w, coord, this.avgAspectRatio);
+  },
+  
+  /*
+     Method: layoutRow
+  
+    Performs the layout of an array of nodes.
+  
+     Parameters:
 
-	      ch - An array of nodes.	
-	      w - A fixed dimension where nodes will be laid out.
-		  coord - A coordinates object specifying width, height, left and top style properties.
-	*/
-	layoutRow: function(ch, w, coord) {
-		if(this.layout.horizontal()) {
-			return this.layoutH(ch, w, coord);
-		} else {
-			return this.layoutV(ch, w, coord);
-		}
-	},
-	
-	layoutV: function(ch, w, coord) {
-		var totalArea = 0; 
-		$each(ch, function(elem) { totalArea += elem._area; });
-		var width = (totalArea / w), top =  0; 
-		for(var i=0; i<ch.length; i++) {
-			var h = (ch[i]._area / width);
-			ch[i].coord = {
-				'height': h,
-				'width': width,
-				'top': coord.top + (w - h - top),
-				'left': coord.left
-			};
-			top += h;
-		}
+        ch - An array of nodes.  
+        w - A fixed dimension where nodes will be laid out.
+      coord - A coordinates object specifying width, height, left and top style properties.
+  */
+  layoutRow: function(ch, w, coord) {
+    if(this.layout.horizontal()) {
+      return this.layoutH(ch, w, coord);
+    } else {
+      return this.layoutV(ch, w, coord);
+    }
+  },
+  
+  layoutV: function(ch, w, coord) {
+    var totalArea = 0; 
+    $each(ch, function(elem) { totalArea += elem._area; });
+    var width = (totalArea / w), top =  0; 
+    for(var i=0; i<ch.length; i++) {
+      var h = (ch[i]._area / width);
+      ch[i].coord = {
+        'height': h,
+        'width': width,
+        'top': coord.top + (w - h - top),
+        'left': coord.left
+      };
+      top += h;
+    }
 
-		var ans = {
-			'height': coord.height,
-			'width': coord.width - width,
-			'top': coord.top,
-			'left': coord.left + width,
-			'dim': w
-		};
-		return ans;
-	},
-	
-	layoutH: function(ch, w, coord) {
-		var totalArea = 0; 
-		$each(ch, function(elem) { totalArea += elem._area; });
-		var height = totalArea / w,
-		top = coord.height - height, 
-		left = 0;
-		
-		for(var i=0; i<ch.length; i++) {
-			ch[i].coord = {
-				'height': height,
-				'width': ch[i]._area / height,
-				'top': top,
-				'left': coord.left + left
-			};
-			left += ch[i].coord.width;
-		}
-		var ans = {
-			'height': coord.height - height,
-			'width': coord.width,
-			'top': coord.top,
-			'left': coord.left,
-			'dim': w
-		};
-		return ans;
-	}
+    var ans = {
+      'height': coord.height,
+      'width': coord.width - width,
+      'top': coord.top,
+      'left': coord.left + width,
+      'dim': w
+    };
+    return ans;
+  },
+  
+  layoutH: function(ch, w, coord) {
+    var totalArea = 0; 
+    $each(ch, function(elem) { totalArea += elem._area; });
+    var height = totalArea / w,
+    top = coord.height - height, 
+    left = 0;
+    
+    for(var i=0; i<ch.length; i++) {
+      ch[i].coord = {
+        'height': height,
+        'width': ch[i]._area / height,
+        'top': top,
+        'left': coord.left + left
+      };
+      left += ch[i].coord.width;
+    }
+    var ans = {
+      'height': coord.height - height,
+      'width': coord.width,
+      'top': coord.top,
+      'left': coord.left,
+      'dim': w
+    };
+    return ans;
+  }
 });
 

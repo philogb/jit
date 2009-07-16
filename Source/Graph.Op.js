@@ -30,10 +30,10 @@ Graph.Op = {
     options: {
         type: 'nothing',
         duration: 2000,
-		hideLabels: true,
+    hideLabels: true,
         fps:30
     },
-	
+  
     /*
        Method: removeNode
     
@@ -68,12 +68,12 @@ Graph.Op = {
         });
       (end code)
     */
-	
+  
     removeNode: function(node, opt) {
         var viz = this.viz;
-				var options = $merge(this.options, viz.controller, opt);
+        var options = $merge(this.options, viz.controller, opt);
         var n = $splat(node);
-				var i, that, nodeObj;
+        var i, that, nodeObj;
         switch(options.type) {
             case 'nothing':
                 for(i=0; i<n.length; i++) viz.graph.removeNode(n[i]);
@@ -173,9 +173,9 @@ Graph.Op = {
     */
     removeEdge: function(vertex, opt) {
         var viz = this.viz;
-				var options = $merge(this.options, viz.controller, opt);
+        var options = $merge(this.options, viz.controller, opt);
         var v = ($type(vertex[0]) == 'string')? [vertex] : vertex;
-				var i, that, adjs;
+        var i, that, adjs;
         switch(options.type) {
             case 'nothing':
                 for(i=0; i<v.length; i++)   viz.graph.removeAdjacence(v[i][0], v[i][1]);
@@ -284,14 +284,14 @@ Graph.Op = {
     
     */
     sum: function(json, opt) {
-				var viz = this.viz;
+        var viz = this.viz;
         var options = $merge(this.options, viz.controller, opt), root = viz.root;
-				var GUtil, graph;
+        var GUtil, graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
                 graph = viz.construct(json);
-								GUtil = Graph.Util;
+                GUtil = Graph.Util;
                 GUtil.eachNode(graph, function(elem) {
                     GUtil.eachAdjacency(elem, function(adj) {
                         viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
@@ -307,8 +307,8 @@ Graph.Op = {
             
             case 'fade:seq': case 'fade': case 'fade:con':
                 GUtil = Graph.Util;
-								that = this;
-								graph = viz.construct(json);
+                that = this;
+                graph = viz.construct(json);
 
                 //set alpha to 0 for nodes to add.
                 var fadeEdges = this.preprocessSum(graph);
@@ -382,13 +382,13 @@ Graph.Op = {
     */
     morph: function(json, opt) {
         var viz = this.viz;
-				var options = $merge(this.options, viz.controller, opt), root = viz.root;
-				var GUtil, graph;
+        var options = $merge(this.options, viz.controller, opt), root = viz.root;
+        var GUtil, graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
                 graph = viz.construct(json);
-								GUtil = Graph.Util;
+                GUtil = Graph.Util;
                 GUtil.eachNode(graph, function(elem) {
                     GUtil.eachAdjacency(elem, function(adj) {
                         viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
@@ -411,11 +411,11 @@ Graph.Op = {
                 viz.fx.clearLabels();
                 viz.refresh(true);
                 break;
-            
+                
             case 'fade:seq': case 'fade': case 'fade:con':
                 GUtil = Graph.Util;
-								that = this;
-								graph = viz.construct(json);
+                that = this;
+                graph = viz.construct(json);
                 //preprocessing for adding nodes.
                 var fadeEdges = this.preprocessSum(graph);
                 //preprocessing for nodes to delete.
@@ -467,7 +467,7 @@ Graph.Op = {
     
     preprocessSum: function(graph) {
         var viz = this.viz;
-		var GUtil = Graph.Util;
+    var GUtil = Graph.Util;
         GUtil.eachNode(graph, function(elem) {
             if(!viz.graph.hasNode(elem.id)) {
                 viz.graph.addNode(elem);

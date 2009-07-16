@@ -347,17 +347,17 @@ this.ST= (function() {
     var nodesInPath = [];
     //Nodes to contract
     function getNodesToHide(node) {
-    	node = node || this.clickedNode;
-    	var Geom = this.geom, GUtil = Graph.Util;
+      node = node || this.clickedNode;
+      var Geom = this.geom, GUtil = Graph.Util;
         var graph = this.graph;
         var canvas = this.canvas;
         var level = node._depth, nodeArray = [];
         GUtil.eachNode(graph, function(n) {
             if(n.exist && !n.selected) {
                 if(GUtil.isDescendantOf(n, node.id)) {
-                	if(n._depth <= level) nodeArray.push(n);
+                  if(n._depth <= level) nodeArray.push(n);
                 } else {
-                	nodeArray.push(n);
+                  nodeArray.push(n);
                 }
             }
         });
@@ -367,11 +367,11 @@ this.ST= (function() {
         });
         
         for (var i = 0; i < nodesInPath.length; i++) {
-			var n = this.graph.getNode(nodesInPath[i]);
-        	if(!GUtil.isDescendantOf(n, node.id)) {
-        		nodeArray.push(n);
-        	}
-		}
+      var n = this.graph.getNode(nodesInPath[i]);
+          if(!GUtil.isDescendantOf(n, node.id)) {
+            nodeArray.push(n);
+          }
+    }
         return nodeArray;       
      };
     //Nodes to expand
@@ -519,10 +519,10 @@ this.ST= (function() {
       
        Removes all nodes tagged as selected by the <ST.addNodeInPath> method.
        
-	   See also:
-	   
-	   <ST.addNodeInPath>
-	   
+     See also:
+     
+     <ST.addNodeInPath>
+     
        Example:
 
        (start code js)
@@ -781,9 +781,9 @@ this.ST= (function() {
 
         (start code js)
           st.onClick('mynodeid', {
-        	Move: {
-        	  offsetX: 30,
-        	  offsetY: 5
+          Move: {
+            offsetX: 30,
+            offsetY: 5
             },
             onComplete: function() {
               alert('yay!');
@@ -1014,9 +1014,9 @@ ST.Group = new Class({
         for(var i=0; i<nodes.length; i++) {
             if(GUtil.anySubnode(nodes[i], "exist")) {
                 for ( var j = i+1, desc = false; !desc && j < nodes.length; j++) {
-					desc = desc || GUtil.isDescendantOf(nodes[i], nodes[j].id);
-				}
-            	if(!desc) ans.push(nodes[i]);
+          desc = desc || GUtil.isDescendantOf(nodes[i], nodes[j].id);
+        }
+              if(!desc) ans.push(nodes[i]);
             }
         }
         return ans;
@@ -1028,17 +1028,17 @@ ST.Group = new Class({
         ctx = canvas.getCtx(),
         nodes = this.nodes,
         GUtil = Graph.Util;
-				var i, node;
+        var i, node;
         //hide nodes that are meant to be collapsed/expanded
         var nds = {};
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
-        	nds[node.id] = [];
-        	GUtil.eachSubgraph(node, function(n) { 
-            	if(n.drawn) {
-            		n.drawn = false;
-            		nds[node.id].push(n);
-            	}
+          nds[node.id] = [];
+          GUtil.eachSubgraph(node, function(n) { 
+              if(n.drawn) {
+                n.drawn = false;
+                nds[node.id].push(n);
+              }
             });
             node.drawn = true;
         }
@@ -1046,12 +1046,12 @@ ST.Group = new Class({
         if(nodes.length > 0) viz.fx.plot();
         //show nodes that were previously hidden
         for(i in nds) {
-        	$each(nds[i], function(n) { n.drawn = true; });
+          $each(nds[i], function(n) { n.drawn = true; });
         }
         //plot each scaled subtree
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
-        	ctx.save();
+          ctx.save();
             viz.fx.plotSubtree(node, controller, delta, animating);                
             ctx.restore();
         }
@@ -1157,7 +1157,7 @@ ST.Geom = new Class({
                 case "left": return val(args[3]);
             }
         }
-				return undefined;
+        return undefined;
     },
 
     /*
@@ -1417,7 +1417,7 @@ ST.Plot = new Class({
         var w = dim.overridable && node.data.$width || dim.width;
         var h = dim.overridable && node.data.$height || dim.height;
         var radius = canvas.getSize();
-				var labelPos, orn;
+        var labelPos, orn;
         if(dim.align == "center") {
             labelPos= {
                 x: Math.round(pos.x - w / 2 + radius.width/2),
@@ -1461,7 +1461,7 @@ ST.Plot = new Class({
     
     getAlignedPos: function(pos, width, height) {
         var nconfig = this.node;
-				var square, orn;
+        var square, orn;
         if(nconfig.align == "center") {
             square = {
                 x: pos.x - width / 2,

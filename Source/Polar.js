@@ -33,8 +33,8 @@
 */
 
 this.Polar = function(theta, rho) {
-	this.theta = theta;
-	this.rho = rho;
+  this.theta = theta;
+  this.rho = rho;
 };
 
 Polar.prototype = {

@@ -76,17 +76,17 @@ function $splat(obj){
 };
 
 var $type = function(elem) {
-	return $type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+  return $type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
 };
 $type.s = Object.prototype.toString;
 
 function $each(iterable, fn){
     var type = $type(iterable);
-	if(type == 'object') {
-		for (var key in iterable) fn(iterable[key], key);
-	} else {
-		for(var i=0; i < iterable.length; i++) fn(iterable[i], i);
-	}
+  if(type == 'object') {
+    for (var key in iterable) fn(iterable[key], key);
+  } else {
+    for(var i=0; i < iterable.length; i++) fn(iterable[i], i);
+  }
 };
 
 function $merge(){
@@ -165,28 +165,28 @@ function $get(id) {
 };
 
 var Class = function(properties){
-	properties = properties || {};
-	var klass = function(){
+  properties = properties || {};
+  var klass = function(){
 //      not defining any attributes in Class properties.
-//		for (var key in this){
-//	        if (typeof this[key] != 'function') this[key] = $unlink(this[key]);
-//	    }
-	    this.constructor = klass;
-	    if (Class.prototyping) return this;
-	    var instance = (this.initialize) ? this.initialize.apply(this, arguments) : this;
-	    return instance;
-	};
-	
-	for (var mutator in Class.Mutators){
-	    if (!properties[mutator]) continue;
-	    properties = Class.Mutators[mutator](properties, properties[mutator]);
-	    delete properties[mutator];
-	}
-	
-	$extend(klass, this);
-	klass.constructor = Class;
-	klass.prototype = properties;
-	return klass;
+//    for (var key in this){
+//          if (typeof this[key] != 'function') this[key] = $unlink(this[key]);
+//      }
+      this.constructor = klass;
+      if (Class.prototyping) return this;
+      var instance = (this.initialize) ? this.initialize.apply(this, arguments) : this;
+      return instance;
+  };
+  
+  for (var mutator in Class.Mutators){
+      if (!properties[mutator]) continue;
+      properties = Class.Mutators[mutator](properties, properties[mutator]);
+      delete properties[mutator];
+  }
+  
+  $extend(klass, this);
+  klass.constructor = Class;
+  klass.prototype = properties;
+  return klass;
 };
 
 Class.Mutators = {

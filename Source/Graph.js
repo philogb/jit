@@ -50,9 +50,9 @@ this.Graph = new Class({
 
  initialize: function(opt) {
     var innerOptions = {
-		'complex': false,
-		'Node': {}
-	};
+    'complex': false,
+    'Node': {}
+  };
     this.opt = $merge(innerOptions, opt || {});
     this.nodes= {};
  },
@@ -126,10 +126,10 @@ this.Graph = new Class({
   addNode: function(obj) {
     if(!this.nodes[obj.id]) {
         this.nodes[obj.id] = new Graph.Node($extend({
-			'id': obj.id,
-			'name': obj.name,
-			'data': obj.data
-		}, this.opt.Node), this.opt.complex);
+      'id': obj.id,
+      'name': obj.name,
+      'data': obj.data
+    }, this.opt.Node), this.opt.complex);
     }
     return this.nodes[obj.id];
   },
@@ -261,32 +261,32 @@ this.Graph = new Class({
 Graph.Node = new Class({
     
     initialize: function(opt, complex) {
-		var innerOptions = {
-			'id': '',
-			'name': '',
-			'data': {},
-			'adjacencies': {},
+    var innerOptions = {
+      'id': '',
+      'name': '',
+      'data': {},
+      'adjacencies': {},
 
-			'selected': false,
-			'drawn': false,
-			'exist': false,
+      'selected': false,
+      'drawn': false,
+      'exist': false,
 
-			'angleSpan': {
-				'begin': 0,
-				'end' : 0
-			},
+      'angleSpan': {
+        'begin': 0,
+        'end' : 0
+      },
 
-			'alpha': 1,
-			'startAlpha': 1,
-			'endAlpha': 1,
-			
-			'pos': (complex && $C(0, 0)) || $P(0, 0),
-			'startPos': (complex && $C(0, 0)) || $P(0, 0),
-			'endPos': (complex && $C(0, 0)) || $P(0, 0)
-		};
-		
-		$extend(this, $extend(innerOptions, opt));
-	},
+      'alpha': 1,
+      'startAlpha': 1,
+      'endAlpha': 1,
+      
+      'pos': (complex && $C(0, 0)) || $P(0, 0),
+      'startPos': (complex && $C(0, 0)) || $P(0, 0),
+      'endPos': (complex && $C(0, 0)) || $P(0, 0)
+    };
+    
+    $extend(this, $extend(innerOptions, opt));
+  },
 
     /*
        Method: adjacentTo
@@ -409,10 +409,10 @@ Graph.Util = {
         var props = param.split(" ");
         return function(elem) {
             for(var i=0; i<props.length; i++) { 
-							if(elem[props[i]]) { 
-								return false; 
-							}
-						}
+              if(elem[props[i]]) { 
+                return false; 
+              }
+            }
             return true;
         };
     },
@@ -460,8 +460,8 @@ Graph.Util = {
     eachNode: function(graph, action, flags) {
         var filter = this.filter(flags);
         for(var i in graph.nodes) {
-					if(filter(graph.nodes[i])) action(graph.nodes[i]);
-				} 
+          if(filter(graph.nodes[i])) action(graph.nodes[i]);
+        } 
     },
     
     /*
@@ -484,10 +484,10 @@ Graph.Util = {
     eachAdjacency: function(node, action, flags) {
         var adj = node.adjacencies, filter = this.filter(flags);
         for(var id in adj) {
-					if(filter(adj[id])) {
-						action(adj[id], id);
-					}
-				}
+          if(filter(adj[id])) {
+            action(adj[id], id);
+          }
+        }
     },
 
      /*
@@ -512,7 +512,7 @@ Graph.Util = {
             elem._flag = false;
             elem._depth = -1;
         }, flags);
-		var root = graph.getNode(id);
+    var root = graph.getNode(id);
         root._depth = startDepth;
         var queue = [root];
         while(queue.length != 0) {
@@ -579,7 +579,7 @@ Graph.Util = {
     */
     eachLevel: function(node, levelBegin, levelEnd, action, flags) {
         var d = node._depth, filter = this.filter(flags), that = this;
-		levelEnd = levelEnd === false? Number.MAX_VALUE -d : levelEnd;
+    levelEnd = levelEnd === false? Number.MAX_VALUE -d : levelEnd;
         (function loopLevel(node, levelBegin, levelEnd) {
             var d = node._depth;
             if(d >= levelBegin && d <= levelEnd && filter(node)) action(node, d);
@@ -609,7 +609,7 @@ Graph.Util = {
        (end code)
     */
     eachSubgraph: function(node, action, flags) {
-		this.eachLevel(node, 0, false, action, flags);
+    this.eachLevel(node, 0, false, action, flags);
     },
 
     /*
@@ -651,14 +651,14 @@ Graph.Util = {
     */
     anySubnode: function(node, cond, flags) {
         var flag = false;
-		cond = cond || $lambda(true);
-		var c = $type(cond) == 'string'? function(n) { return n[cond]; } : cond;
-		this.eachSubnode(node, function(elem) {
-			if(c(elem)) flag = true;
-		}, flags);
-		return flag;
+    cond = cond || $lambda(true);
+    var c = $type(cond) == 'string'? function(n) { return n[cond]; } : cond;
+    this.eachSubnode(node, function(elem) {
+      if(c(elem)) flag = true;
+    }, flags);
+    return flag;
     },
-	
+  
     /*
        Method: getSubnodes
     
@@ -675,7 +675,7 @@ Graph.Util = {
     getSubnodes: function(node, level, flags) {
         var ans = [], that = this;
         level = level || 0;
-				var levelStart, levelEnd;
+        var levelStart, levelEnd;
         if($type(level) == 'array') {
             levelStart = level[0];
             levelEnd = level[1];
@@ -684,12 +684,12 @@ Graph.Util = {
             levelEnd = Number.MAX_VALUE - node._depth;
         }
         this.eachLevel(node, levelStart, levelEnd, function(n) {
-			ans.push(n);
-		}, flags);
+      ans.push(n);
+    }, flags);
         return ans;
     },
-	
-	
+  
+  
     /*
        Method: getParents
     
@@ -739,8 +739,8 @@ Graph.Util = {
     if(node.id == id) return true;
     var pars = this.getParents(node), ans = false;
     for ( var i = 0; !ans && i < pars.length; i++) {
-		ans = ans || this.isDescendantOf(pars[i], id);
-	}
+    ans = ans || this.isDescendantOf(pars[i], id);
+  }
     return ans;
  },
 

@@ -34,8 +34,8 @@
 */
 
 this.Complex = function(x, y) {
-	this.x = x;
-	this.y = y;
+  this.x = x;
+  this.y = y;
 };
 
 Complex.prototype = {
@@ -83,7 +83,7 @@ Complex.prototype = {
     set: function(c) {
         c = c.getc(true);
         this.x = c.x; 
-		this.y = c.y;
+    this.y = c.y;
     },
 
     /*

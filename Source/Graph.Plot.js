@@ -33,12 +33,12 @@ Graph.Plot = {
     Interpolator: {
         'moebius': function(elem, delta, vector) {
             if(delta <= 1 || vector.norm() <= 1) {
-				var x = vector.x, y = vector.y;
-	            var ans = elem.startPos.getc().moebiusTransformation(vector);
-	            elem.pos.setc(ans.x, ans.y);
-	            vector.x = x; vector.y = y;
+        var x = vector.x, y = vector.y;
+              var ans = elem.startPos.getc().moebiusTransformation(vector);
+              elem.pos.setc(ans.x, ans.y);
+              vector.x = x; vector.y = y;
             }           
-		},
+    },
 
         'linear': function(elem, delta) {
             var from = elem.startPos.getc(true);
@@ -62,7 +62,7 @@ Graph.Plot = {
         'polar': function(elem, delta) {
             var from = elem.startPos.getp(true);
             var to = elem.endPos.getp();
-			var ans = to.interpolate(from, delta);
+      var ans = to.interpolate(from, delta);
             elem.pos.setp(ans.theta, ans.rho);
         }
     },
@@ -167,7 +167,7 @@ Graph.Plot = {
                 this.disposeLabel(id);
                 delete this.labels[id];
             }
-				}
+        }
     },
     
     /*
@@ -188,8 +188,8 @@ Graph.Plot = {
     disposeLabel: function(id) {
         var elem = this.getLabel(id);
         if(elem && elem.parentNode) {
-			elem.parentNode.removeChild(elem);
-		}  
+      elem.parentNode.removeChild(elem);
+    }  
     },
 
     /*
@@ -209,14 +209,14 @@ Graph.Plot = {
        (end code)
     */
     hideLabel: function(node, flag) {
-		node = $splat(node);
-		var st = flag? "" : "none", lab, that = this;
-		$each(node, function(n) {
-			var lab = that.getLabel(n.id);
-			if (lab) {
-			     lab.style.display = st;
-			} 
-		});
+    node = $splat(node);
+    var st = flag? "" : "none", lab, that = this;
+    $each(node, function(n) {
+      var lab = that.getLabel(n.id);
+      if (lab) {
+           lab.style.display = st;
+      } 
+    });
     },
 
     /*
@@ -253,7 +253,7 @@ Graph.Plot = {
     */
     sequence: function(options) {
         var that = this;
-		options = $merge({
+    options = $merge({
             condition: $lambda(false),
             step: $empty,
             onComplete: $empty,
@@ -305,20 +305,20 @@ Graph.Plot = {
     */
     animate: function(opt, versor) {
         var that = this,
-		viz = this.viz,
-		graph  = viz.graph,
-		GUtil = Graph.Util;
-		opt = $merge(viz.controller, opt || {}); 
-		
+    viz = this.viz,
+    graph  = viz.graph,
+    GUtil = Graph.Util;
+    opt = $merge(viz.controller, opt || {}); 
+    
         if(opt.hideLabels) this.hideLabels(true);
         this.animation.setOptions($merge(opt, {
             $animating: false,
             compute: function(delta) {
-				var vector = versor? versor.scale(-delta) : null;
-				GUtil.eachNode(graph, function(node) { 
+        var vector = versor? versor.scale(-delta) : null;
+        GUtil.eachNode(graph, function(node) { 
                     for(var i=0; i<opt.modes.length; i++) {
-						that.Interpolator[opt.modes[i]](node, delta, vector);
-					} 
+            that.Interpolator[opt.modes[i]](node, delta, vector);
+          } 
                 });
                 that.plot(opt, this.$animating);
                 this.$animating = true;
@@ -333,7 +333,7 @@ Graph.Plot = {
                 opt.onComplete();
                 opt.onAfterCompute();
             }       
-		})).start();
+    })).start();
     },
     
     /*
@@ -355,19 +355,19 @@ Graph.Plot = {
     */
     plot: function(opt, animating) {
         var viz = this.viz, 
-		aGraph = viz.graph, 
-		canvas = viz.canvas, 
-		id = viz.root, 
-		that = this, 
-		ctx = canvas.getCtx(), 
-		GUtil = Graph.Util;
+    aGraph = viz.graph, 
+    canvas = viz.canvas, 
+    id = viz.root, 
+    that = this, 
+    ctx = canvas.getCtx(), 
+    GUtil = Graph.Util;
         opt = opt || this.viz.controller;
-		opt.clearCanvas && canvas.clear();
+    opt.clearCanvas && canvas.clear();
         
         var T = !!aGraph.getNode(id).visited;
         GUtil.eachNode(aGraph, function(node) {
             GUtil.eachAdjacency(node, function(adj) {
-				var nodeTo = adj.nodeTo;
+        var nodeTo = adj.nodeTo;
                 if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
                     !animating && opt.onBeforePlotLine(adj);
                     ctx.save();
@@ -378,19 +378,19 @@ Graph.Plot = {
                 }
             });
             ctx.save();
-			if(node.drawn) {
-	            ctx.globalAlpha = node.alpha;
-	            !animating && opt.onBeforePlotNode(node);
-	            that.plotNode(node, canvas, animating);
-	            !animating && opt.onAfterPlotNode(node);
-			}
+      if(node.drawn) {
+              ctx.globalAlpha = node.alpha;
+              !animating && opt.onBeforePlotNode(node);
+              that.plotNode(node, canvas, animating);
+              !animating && opt.onAfterPlotNode(node);
+      }
             if(!that.labelsHidden && opt.withLabels) {
-				if(node.drawn && ctx.globalAlpha >= 0.95) {
-					that.plotLabel(canvas, node, opt);
-				} else {
-					that.hideLabel(node, false);
-				}
-			}
+        if(node.drawn && ctx.globalAlpha >= 0.95) {
+          that.plotLabel(canvas, node, opt);
+        } else {
+          that.hideLabel(node, false);
+        }
+      }
             ctx.restore();
             node.visited = !T;
         });
@@ -409,7 +409,7 @@ Graph.Plot = {
 
     */
     plotLabel: function(canvas, node, controller) {
-		var id = node.id, tag = this.getLabel(id);
+    var id = node.id, tag = this.getLabel(id);
         if(!tag && !(tag = document.getElementById(id))) {
             tag = document.createElement('div');
             var container = this.getLabelContainer();
@@ -420,10 +420,10 @@ Graph.Plot = {
             controller.onCreateLabel(tag, node);
             this.labels[node.id] = tag;
         }
-		this.placeLabel(tag, node, controller);
+    this.placeLabel(tag, node, controller);
     },
-	
-	/*
+  
+  /*
        Method: plotNode
     
        Plots a <Graph.Node>.
@@ -442,8 +442,8 @@ Graph.Plot = {
         var ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
-		ctx.fillStyle = color;
-		ctx.strokeStyle = color; 
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color; 
 
         var f = node.data && node.data.$type || nconfig.type;
         this.nodeTypes[f].call(this, node, canvas, animating);
@@ -474,8 +474,8 @@ Graph.Plot = {
         var f = adj.data && adj.data.$type || econfig.type;
         this.edgeTypes[f].call(this, adj, canvas, animating);
     },    
-	
-	/*
+  
+  /*
        Method: fitsInCanvas
     
        Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.

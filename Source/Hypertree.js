@@ -41,9 +41,9 @@
 */ 
  
 Complex.prototype.moebiusTransformation = function(c) { 
-		var num = this.add(c); 
-		var den = c.$conjugate().$prod(this); den.x++; 
-		return num.$div(den); 
+    var num = this.add(c); 
+    var den = c.$conjugate().$prod(this); den.x++; 
+    return num.$div(den); 
 }; 
  
 /* 
@@ -266,14 +266,14 @@ This method is useful for adding some styles to a particular edge before being p
 */ 
  
 this.Hypertree = new Class({ 
-	 
-	Implements: [Loader, AngularWidth], 
-	 
-	initialize: function(canvas, controller) { 
+   
+  Implements: [Loader, AngularWidth], 
+   
+  initialize: function(canvas, controller) { 
  
-		var config = { 
+    var config = { 
                 labelContainer: canvas.id + '-label', 
-		         
+             
                 withLabels: true,
                 
                 Node: { 
@@ -294,24 +294,24 @@ this.Hypertree = new Class({
                     lineWidth: 1 
                 }, 
                 clearCanvas: true,
-		        fps:40, 
-		        duration: 1500, 
+            fps:40, 
+            duration: 1500, 
                 transition: Trans.Quart.easeInOut 
-		}; 
+    }; 
  
-	    var innerController = { 
-	        onBeforeCompute: $empty, 
-	        onAfterCompute:  $empty, 
-	        onCreateLabel:   $empty, 
-	        onPlaceLabel:    $empty, 
-	        onComplete:      $empty, 
-	        onBeforePlotLine:$empty, 
-	        onAfterPlotLine: $empty, 
-	        onBeforePlotNode:$empty, 
-	        onAfterPlotNode: $empty 
-	    }; 
-	     
-	    this.controller = this.config = $merge(config, innerController, controller); 
+      var innerController = { 
+          onBeforeCompute: $empty, 
+          onAfterCompute:  $empty, 
+          onCreateLabel:   $empty, 
+          onPlaceLabel:    $empty, 
+          onComplete:      $empty, 
+          onBeforePlotLine:$empty, 
+          onAfterPlotLine: $empty, 
+          onBeforePlotNode:$empty, 
+          onAfterPlotNode: $empty 
+      }; 
+       
+      this.controller = this.config = $merge(config, innerController, controller); 
         this.graphOptions = { 
             'complex': false, 
             'Node': { 
@@ -320,14 +320,14 @@ this.Hypertree = new Class({
                 'drawn': true 
             } 
         }; 
-		this.graph = new Graph(this.graphOptions); 
-		this.fx = new Hypertree.Plot(this); 
-		this.op = new Hypertree.Op(this); 
-	    this.json = null; 
-	    this.canvas = canvas; 
+    this.graph = new Graph(this.graphOptions); 
+    this.fx = new Hypertree.Plot(this); 
+    this.op = new Hypertree.Op(this); 
+      this.json = null; 
+      this.canvas = canvas; 
  
-	    this.root = null; 
-	    this.busy = false; 
+      this.root = null; 
+      this.busy = false; 
     }, 
  
     /* 
@@ -433,14 +433,14 @@ this.Hypertree = new Class({
             begin: 0, 
             end: 2 * Math.PI 
         }; 
-		root._rel = 1; 
-		 
+    root._rel = 1; 
+     
         //Estimate better edge length. 
         var edgeLength = (function() { 
             var depth = 0; 
             GUtil.eachNode(aGraph, function(node) { 
                 depth = (node._depth > depth)? node._depth : depth; 
-				node._scale = scale; 
+        node._scale = scale; 
             }, "ignore"); 
             for(var i=0.51; i<=1; i+=0.01) { 
                 var valSeries = (function(a, n) { 
@@ -605,16 +605,16 @@ Hypertree.Op = new Class({
 Hypertree.Plot = new Class({ 
  
     Implements: Graph.Plot, 
-	 
-	initialize: function(viz) { 
+   
+  initialize: function(viz) { 
         this.viz = viz; 
         this.config = viz.config; 
-		this.node = this.config.Node; 
-		this.edge = this.config.Edge; 
+    this.node = this.config.Node; 
+    this.edge = this.config.Edge; 
         this.animation = new Animation; 
         this.nodeTypes = new Hypertree.Plot.NodeTypes; 
         this.edgeTypes = new Hypertree.Plot.EdgeTypes; 
-	}, 
+  }, 
      
     /* 
        Method: hyperline 
@@ -636,16 +636,16 @@ Hypertree.Plot = new Class({
             canvas.path('stroke', function(ctx) { 
                 ctx.moveTo(pos.x * scale, pos.y * scale); 
                 ctx.lineTo(posChild.x * scale, posChild.y * scale); 
-			}); 
-		} else { 
-	        var angleBegin = Math.atan2(posChild.y - centerOfCircle.y, posChild.x - centerOfCircle.x); 
-	        var angleEnd   = Math.atan2(pos.y - centerOfCircle.y, pos.x - centerOfCircle.x); 
-	        var sense      = this.sense(angleBegin, angleEnd); 
-	        var context = canvas.getCtx(); 
-	        canvas.path('stroke', function(ctx) { 
-	            ctx.arc(centerOfCircle.x*scale, centerOfCircle.y*scale, centerOfCircle.ratio*scale, angleBegin, angleEnd, sense); 
-	        }); 
-		} 
+      }); 
+    } else { 
+          var angleBegin = Math.atan2(posChild.y - centerOfCircle.y, posChild.x - centerOfCircle.x); 
+          var angleEnd   = Math.atan2(pos.y - centerOfCircle.y, pos.x - centerOfCircle.x); 
+          var sense      = this.sense(angleBegin, angleEnd); 
+          var context = canvas.getCtx(); 
+          canvas.path('stroke', function(ctx) { 
+              ctx.arc(centerOfCircle.x*scale, centerOfCircle.y*scale, centerOfCircle.ratio*scale, angleBegin, angleEnd, sense); 
+          }); 
+    } 
     }, 
      
     /* 
@@ -689,24 +689,24 @@ Hypertree.Plot = new Class({
         return out; 
   }, 
  
-	/* 
-	   sense 
-	 
-	   Sets angle direction to clockwise (true) or counterclockwise (false). 
-	    
-	   Parameters: 
-	 
-	      angleBegin - Starting angle for drawing the arc. 
-	      angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
-	 
-	   Returns: 
-	 
-	      A Boolean instance describing the sense for drawing the HyperLine. 
-	*/ 
-	sense: function(angleBegin, angleEnd) { 
-	   return (angleBegin < angleEnd)? ((angleBegin + Math.PI > angleEnd)? false : true) :  
-	       ((angleEnd + Math.PI > angleBegin)? true : false); 
-	}, 
+  /* 
+     sense 
+   
+     Sets angle direction to clockwise (true) or counterclockwise (false). 
+      
+     Parameters: 
+   
+        angleBegin - Starting angle for drawing the arc. 
+        angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
+   
+     Returns: 
+   
+        A Boolean instance describing the sense for drawing the HyperLine. 
+  */ 
+  sense: function(angleBegin, angleEnd) { 
+     return (angleBegin < angleEnd)? ((angleBegin + Math.PI > angleEnd)? false : true) :  
+         ((angleEnd + Math.PI > angleBegin)? true : false); 
+  }, 
    
 
     /* 
@@ -722,19 +722,19 @@ Hypertree.Plot = new Class({
      
      */
     placeLabel: function(tag, node, controller) { 
-	    var pos = node.pos.getc(true), canvas = this.viz.canvas; 
-	    var radius= canvas.getSize(); 
-	    var scale = node._scale; 
-	    var labelPos= { 
-	        x: Math.round(pos.x * scale + radius.width/2), 
-	        y: Math.round(pos.y * scale + radius.height/2) 
-	    }; 
-	    var style = tag.style; 
-	    style.left = labelPos.x + 'px'; 
-	    style.top  = labelPos.y + 'px'; 
-	    style.display = ''; 
-	    controller.onPlaceLabel(tag, node); 
-	} 
+      var pos = node.pos.getc(true), canvas = this.viz.canvas; 
+      var radius= canvas.getSize(); 
+      var scale = node._scale; 
+      var labelPos= { 
+          x: Math.round(pos.x * scale + radius.width/2), 
+          y: Math.round(pos.y * scale + radius.height/2) 
+      }; 
+      var style = tag.style; 
+      style.left = labelPos.x + 'px'; 
+      style.top  = labelPos.y + 'px'; 
+      style.display = ''; 
+      controller.onPlaceLabel(tag, node); 
+  } 
 }); 
 
 /*
@@ -762,13 +762,13 @@ Hypertree.Plot.NodeTypes = new Class({
     'circle': function(node, canvas) { 
         var nconfig = this.node, data = node.data; 
         var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim; 
-		var p = node.pos.getc(), pos = p.scale(node._scale); 
-		var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
-		if(prod >= nodeDim / 4) { 
-	        canvas.path('fill', function(context) { 
-	            context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);           
-	        }); 
-		} 
+    var p = node.pos.getc(), pos = p.scale(node._scale); 
+    var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
+    if(prod >= nodeDim / 4) { 
+          canvas.path('fill', function(context) { 
+              context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);           
+          }); 
+    } 
     }, 
      
     'square': function(node, canvas) { 
@@ -778,8 +778,8 @@ Hypertree.Plot.NodeTypes = new Class({
         var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
         var nodeDim2 = 2 * prod; 
         if (prod >= nodeDim / 4) { 
-			canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2, nodeDim2); 
-		} 
+      canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2, nodeDim2); 
+    } 
     }, 
  
     'rectangle': function(node, canvas) { 
@@ -787,12 +787,12 @@ Hypertree.Plot.NodeTypes = new Class({
         var width = nconfig.overridable && data && data.$width || nconfig.width; 
         var height = nconfig.overridable && data && data.$height || nconfig.height; 
         var p = node.pos.getc(), pos = p.scale(node._scale); 
-		var prod = 1 - p.squaredNorm(); 
+    var prod = 1 - p.squaredNorm(); 
         width = nconfig.transform?  width * prod : width; 
-		height = nconfig.transform?  height * prod : height; 
-		if(prod >= 0.25) { 
-            canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);			 
-		} 
+    height = nconfig.transform?  height * prod : height; 
+    if(prod >= 0.25) { 
+            canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);       
+    } 
  
     }, 
      
@@ -802,18 +802,18 @@ Hypertree.Plot.NodeTypes = new Class({
         var p = node.pos.getc(), pos = p.scale(node._scale); 
         var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
         if (prod >= nodeDim / 4) { 
-			var c1x = pos.x,  
-			c1y = pos.y - prod,  
-			c2x = c1x - prod,  
-			c2y = pos.y + prod,  
-			c3x = c1x + prod,  
-			c3y = c2y; 
-			canvas.path('fill', function(ctx){ 
-				ctx.moveTo(c1x, c1y); 
-				ctx.lineTo(c2x, c2y); 
-				ctx.lineTo(c3x, c3y); 
-			}); 
-		} 
+      var c1x = pos.x,  
+      c1y = pos.y - prod,  
+      c2x = c1x - prod,  
+      c2y = pos.y + prod,  
+      c3x = c1x + prod,  
+      c3y = c2y; 
+      canvas.path('fill', function(ctx){ 
+        ctx.moveTo(c1x, c1y); 
+        ctx.lineTo(c2x, c2y); 
+        ctx.lineTo(c3x, c3y); 
+      }); 
+    } 
     }, 
      
     'star': function(node, canvas) { 
@@ -822,24 +822,24 @@ Hypertree.Plot.NodeTypes = new Class({
         var p = node.pos.getc(), pos = p.scale(node._scale); 
         var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
         if (prod >= nodeDim / 4) { 
-			var ctx = canvas.getCtx(), pi5 = Math.PI / 5; 
-			ctx.save(); 
-			ctx.translate(pos.x, pos.y); 
-			ctx.beginPath(); 
-			ctx.moveTo(nodeDim, 0); 
-			for (var i = 0; i < 9; i++) { 
-				ctx.rotate(pi5); 
-				if (i % 2 == 0) { 
-					ctx.lineTo((prod / 0.525731) * 0.200811, 0); 
-				} 
-				else { 
-					ctx.lineTo(prod, 0); 
-				} 
-			} 
-			ctx.closePath(); 
-			ctx.fill(); 
-			ctx.restore(); 
-		} 
+      var ctx = canvas.getCtx(), pi5 = Math.PI / 5; 
+      ctx.save(); 
+      ctx.translate(pos.x, pos.y); 
+      ctx.beginPath(); 
+      ctx.moveTo(nodeDim, 0); 
+      for (var i = 0; i < 9; i++) { 
+        ctx.rotate(pi5); 
+        if (i % 2 == 0) { 
+          ctx.lineTo((prod / 0.525731) * 0.200811, 0); 
+        } 
+        else { 
+          ctx.lineTo(prod, 0); 
+        } 
+      } 
+      ctx.closePath(); 
+      ctx.fill(); 
+      ctx.restore(); 
+    } 
     } 
 }); 
  
@@ -866,7 +866,7 @@ Hypertree.Plot.EdgeTypes = new Class({
     'none': function() {}, 
      
     'line': function(adj, canvas) { 
-		var s = adj.nodeFrom._scale; 
+    var s = adj.nodeFrom._scale; 
         var pos = adj.nodeFrom.pos.getc(true); 
         var posChild = adj.nodeTo.pos.getc(true); 
         canvas.path('stroke', function(context) { 
@@ -876,6 +876,6 @@ Hypertree.Plot.EdgeTypes = new Class({
     }, 
  
     'hyperline': function(adj, canvas) { 
-		this.hyperline(adj, canvas); 
-	} 
+    this.hyperline(adj, canvas); 
+  } 
 }); 

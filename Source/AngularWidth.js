@@ -22,13 +22,13 @@ var AngularWidth = {
     */
     setAngularWidthForNodes: function() {
         var config = this.config.Node;
-		var overridable = config.overridable;
-		var dim = config.dim;
+    var overridable = config.overridable;
+    var dim = config.dim;
         
-		Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
+    Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
             var diamValue = (overridable 
-			 && elem.data 
-			 && elem.data.$aw) || dim;
+       && elem.data 
+       && elem.data.$aw) || dim;
             elem._angularWidth = diamValue / i;
         }, "ignore");
     },
@@ -68,5 +68,5 @@ var AngularWidth = {
         this.setAngularWidthForNodes();
         this.setSubtreesAngularWidth();
     }
-	
+  
 };
