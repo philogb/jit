@@ -172,8 +172,8 @@ this.TM = {
       onBeforeCompute:  $empty,
       onAfterCompute:   $empty,
       onComplete:       $empty,
-            onCreateElement:  $empty,
-            onDestroyElement: $empty,
+      onCreateElement:  $empty,
+      onDestroyElement: $empty,
       request:          false
     },
 
@@ -183,9 +183,9 @@ this.TM = {
       rootId: 'infovis',
       offset:4,
       levelsToShow: 3,
-            addLeftClickHandler: false,
-            addRightClickHandler: false,
-            selectPathOnHover: false,
+      addLeftClickHandler: false,
+      addRightClickHandler: false,
+      selectPathOnHover: false,
             
       Color: {
         allow: false,
@@ -195,12 +195,12 @@ this.TM = {
         maxColorValue: [0, 255, 50]
       },
             
-            Tips: {
-                allow: false,
-                offsetX: 20,
-                offsetY: 20,
-                onShow: $empty
-            }
+      Tips: {
+        allow: false,
+        offsetX: 20,
+        offsetY: 20,
+        onShow: $empty
+      }
     },
   
 
@@ -322,8 +322,8 @@ this.TM = {
      Parameters:
 
         json - A JSON subtree. See also <Loader.loadJSON>. 
-      coord - A coordinates object specifying width, height, left and top style properties.
-          html - html to inject into the _body_ element if the node is an inner Tree node.
+      	coord - A coordinates object specifying width, height, left and top style properties.
+        html - html to inject into the _body_ element if the node is an inner Tree node.
 
       Returns:
 
@@ -369,9 +369,13 @@ this.TM = {
     if(this.leaf(json)) 
       return this.createBox(json, coord, null);
     
-    for(var i=0, ch=json.children; i<ch.length; i++) 
-      html+= this.plot(ch[i]);
-    
+    for(var i=0, ch=json.children; i<ch.length; i++) {
+    	var chi = ch[i], chcoord = chi.coord;
+    	//skip tiny nodes
+    	if(chcoord.width * chcoord.height > 1) {
+    		html+= this.plot(chi);	
+    	}
+    } 
     return this.createBox(json, coord, html);
   },
 
