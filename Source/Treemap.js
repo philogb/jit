@@ -1098,8 +1098,8 @@ TM.Area = new Class({
         tail - An array of nodes.  
           initElem - An array of nodes (containing the initial node to be laid).
         w - A fixed dimension where nodes will be layed out.
-      coord - A coordinates object specifying width, height, left and top style properties.
-      comp - A custom comparison function
+      	coord - A coordinates object specifying width, height, left and top style properties.
+      	comp - A custom comparison function
   */
   computeDim: function(tail, initElem, w, coord, comp) {
     if(tail.length + initElem.length == 1) {
@@ -1243,9 +1243,9 @@ TM.Area = new Class({
     rootId: 'infovis',
     offset:4,
     levelsToShow: 3,
-        addLeftClickHandler: false,
-        addRightClickHandler: false,
-        selectPathOnHover: false,
+    addLeftClickHandler: false,
+    addRightClickHandler: false,
+    selectPathOnHover: false,
             
     Color: {
       allow: false,
@@ -1253,30 +1253,31 @@ TM.Area = new Class({
       maxValue: 100,
       minColorValue: [255, 0, 50],
       maxColorValue: [0, 255, 50]
-          },
+    },
           
-          Tips: {
-            allow: false,
-            offsetX: 20,
-            offsetY: 20,
-            onShow: function(tooltip, node, isLeaf, domElement) {}
-          },
+    Tips: {
+      allow: false,
+      offsetX: 20,
+      offsetY: 20,
+      onShow: function(tooltip, node, isLeaf, domElement) {}
+    },
   
-          onBeforeCompute:  function(node) {
-            //Some stuff on before compute...
-          },
-          onAfterCompute:   function() {
-            //Some stuff on after compute...
-          },
-          onCreateElement:  function(content, node, isLeaf, head, body) {
-            //Some stuff onCreateElement
-          },
-          onDestroyElement: function(content, node, isLeaf, head, body) {
-            //Some stuff onDestroyElement
-          },
-        request:          false
+      onBeforeCompute:  function(node) {
+        //Some stuff on before compute...
+      },
+      onAfterCompute:   function() {
+        //Some stuff on after compute...
+      },
+      onCreateElement:  function(content, node, isLeaf, head, body) {
+        //Some stuff onCreateElement
+      },
+      onDestroyElement: function(content, node, isLeaf, head, body) {
+        //Some stuff onDestroyElement
+      },
+      request:          false
     });
-  tm.loadJSON(json);
+  
+  	tm.loadJSON(json);
 
   (end code)
 
@@ -1293,7 +1294,7 @@ TM.Squarified = new Class({
      Parameters:
 
         json - A JSON tree. See also <Loader.loadJSON>.
-      coord - A coordinates object specifying width, height, left and top style properties.
+      	coord - A coordinates object specifying width, height, left and top style properties.
   */
   compute: function(json, coord) {
     if (!(coord.width >= coord.height && this.layout.horizontal())) 
@@ -1333,11 +1334,11 @@ TM.Squarified = new Class({
     var parentArea = coord.width * coord.height;
     var i, totalChArea=0, chArea = [];
     for(i=0; i < ch.length; i++) {
-            chArea[i] = parseFloat(ch[i].data.$area);
-            totalChArea += chArea[i];
-        }
-        for(i=0; i<chArea.length; i++) {
-      ch[i]._area = parentArea * chArea[i] / totalChArea;
+    	chArea[i] = parseFloat(ch[i].data.$area);
+    	totalChArea += chArea[i];
+    }
+    for(i=0; i<chArea.length; i++) {
+    	ch[i]._area = parentArea * chArea[i] / totalChArea;
     }
     var minimumSideValue = (this.layout.horizontal())? coord.height : coord.width;
     ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
@@ -1347,7 +1348,7 @@ TM.Squarified = new Class({
   },
 
   /*
-     Method: squarify
+    Method: squarify
   
     Performs an heuristic method to calculate div elements sizes in order to have a good aspect ratio.
   
@@ -1356,7 +1357,7 @@ TM.Squarified = new Class({
         tail - An array of nodes.  
         initElem - An array of nodes, containing the initial node to be laid out.
         w - A fixed dimension where nodes will be laid out.
-      coord - A coordinates object specifying width, height, left and top style properties.
+      	coord - A coordinates object specifying width, height, left and top style properties.
   */
   squarify: function(tail, initElem, w, coord) {
     this.computeDim(tail, initElem, w, coord, this.worstAspectRatio);
@@ -1390,7 +1391,7 @@ TM.Squarified = new Class({
       ch[i].coord = {
         'height': h,
         'width': width,
-        'top': coord.top + (w - h - top),
+        'top': coord.top + top,
         'left': coord.left
       };
       top += h;
@@ -1411,7 +1412,7 @@ TM.Squarified = new Class({
     var totalArea = 0, rnd = Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
     var height = rnd(totalArea / w),
-    top = coord.height - height, 
+    top = coord.top, 
     left = 0;
     
     for(var i=0; i<ch.length; i++) {
@@ -1426,7 +1427,7 @@ TM.Squarified = new Class({
     var ans = {
       'height': coord.height - height,
       'width': coord.width,
-      'top': coord.top,
+      'top': coord.top + height,
       'left': coord.left
     };
     ans.dim = Math.min(ans.width, ans.height);
