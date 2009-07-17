@@ -9,9 +9,12 @@
  */
 /*
  Class: Canvas
- A multi-purpose Canvas Class. This Class can be used with the ExCanvas library to provide
+ 
+ 	A multi-purpose Canvas Class. This Class can be used with the ExCanvas library to provide
  cross browser Canvas based visualizations.
+ 
  Parameters:
+ 
  id - The canvas id. This id will be used as prefix for the canvas widget DOM elements ids.
  options - An object containing multiple options such as
  
@@ -22,84 +25,96 @@
  - _backgroundColor_ Used for compatibility with IE. The canvas' background color.
  Default's to '#333'
  - _styles_ A hash containing canvas specific style properties such as _fillStyle_ and _strokeStyle_ among others.
+ 
  Example:
+ 
  Suppose we have this HTML
+ 
  (start code xml)
- <div id="infovis"></div>
+ 	<div id="infovis"></div>
  (end code)
+ 
  Now we create a new Canvas instance
+ 
  (start code js)
- //Create a new canvas instance
- var canvas = new Canvas('mycanvas', {
- //Where to inject the canvas. Any div container will do.
- 'injectInto':'infovis',
- //width and height for canvas. Default's to 200.
- 'width': 900,
- 'height':500,
- //Canvas styles
- 'styles': {
- 'fillStyle': '#ccddee',
- 'strokeStyle': '#772277'
- }
- });
+ 	//Create a new canvas instance
+ 	var canvas = new Canvas('mycanvas', {
+ 		//Where to inject the canvas. Any div container will do.
+ 		'injectInto':'infovis',
+		 //width and height for canvas. Default's to 200.
+		 'width': 900,
+		 'height':500,
+		 //Canvas styles
+		 'styles': {
+		 'fillStyle': '#ccddee',
+		 'strokeStyle': '#772277'
+		 }
+	 });
  (end code)
+
  The generated HTML will look like this
+ 
  (start code xml)
  <div id="infovis">
- <div id="mycanvas" style="position:relative;">
- <canvas id="mycanvas-canvas" width=900 height=500
- style="position:absolute; top:0; left:0; width:900px; height:500px;" />
- <div id="mycanvas-label"
- style="overflow:visible; position:absolute; top:0; left:0; width:900px; height:0px">
- </div>
- </div>
+ 	<div id="mycanvas" style="position:relative;">
+ 	<canvas id="mycanvas-canvas" width=900 height=500
+ 	style="position:absolute; top:0; left:0; width:900px; height:500px;" />
+ 	<div id="mycanvas-label"
+ 	style="overflow:visible; position:absolute; top:0; left:0; width:900px; height:0px">
+ 	</div>
+ 	</div>
  </div>
  (end code)
+ 
  As you can see, the generated HTML consists of a canvas DOM element of id _mycanvas-canvas_ and a div label container
  of id _mycanvas-label_, wrapped in a main div container of id _mycanvas_.
  You can also add a background canvas, for making background drawings.
  This is how the <RGraph> background concentric circles are drawn
+ 
  Example:
+ 
  (start code js)
- //Create a new canvas instance.
- var canvas = new Canvas('mycanvas', {
- //Where to inject the canvas. Any div container will do.
- 'injectInto':'infovis',
- //width and height for canvas. Default's to 200.
- 'width': 900,
- 'height':500,
- //Canvas styles
- 'styles': {
- 'fillStyle': '#ccddee',
- 'strokeStyle': '#772277'
- },
- //Add a background canvas for plotting
- //concentric circles.
- 'backgroundCanvas': {
- //Add Canvas styles for the bck canvas.
- 'styles': {
- 'fillStyle': '#444',
- 'strokeStyle': '#444'
- },
- //Add the initialization and plotting functions.
- 'impl': {
- 'init': function() {},
- 'plot': function(canvas, ctx) {
- var times = 6, d = 100;
- var pi2 = Math.PI*2;
- for(var i=1; i<=times; i++) {
- ctx.beginPath();
- ctx.arc(0, 0, i * d, 0, pi2, true);
- ctx.stroke();
- ctx.closePath();
- }
- }
- }
- }
- });
+ 	//Create a new canvas instance.
+ 	var canvas = new Canvas('mycanvas', {
+		//Where to inject the canvas. Any div container will do.
+		'injectInto':'infovis',
+		//width and height for canvas. Default's to 200.
+		'width': 900,
+		'height':500,
+		//Canvas styles
+		'styles': {
+			'fillStyle': '#ccddee',
+			'strokeStyle': '#772277'
+		},
+		//Add a background canvas for plotting
+		//concentric circles.
+		'backgroundCanvas': {
+			//Add Canvas styles for the bck canvas.
+			'styles': {
+				'fillStyle': '#444',
+				'strokeStyle': '#444'
+			},
+			//Add the initialization and plotting functions.
+			'impl': {
+				'init': function() {},
+				'plot': function(canvas, ctx) {
+					var times = 6, d = 100;
+					var pi2 = Math.PI*2;
+					for(var i=1; i<=times; i++) {
+						ctx.beginPath();
+						ctx.arc(0, 0, i * d, 0, pi2, true);
+						ctx.stroke();
+						ctx.closePath();
+					}
+				}
+			}
+		}
+	});
  (end code)
+ 
  The _backgroundCanvas_ object contains a canvas _styles_ property and
  an _impl_ key to be used for implementing background canvas specific code.
+ 
  The _init_ method is only called once, at the instanciation of the background canvas.
  The _plot_ method is called for plotting a Canvas image.
  */
@@ -109,7 +124,7 @@ this.Canvas = (function(){
         
         'width': 200,
         'height': 200,
-        
+        //deprecated
         'backgroundColor': '#333333',
         
         'styles': {
@@ -148,8 +163,8 @@ this.Canvas = (function(){
     };
     
     function translateToCenter(canvas, ctx, w, h){
-        var width = w ? (w - canvas.width) : canvas.width;
-        var height = h ? (h - canvas.height) : canvas.height;
+        var width = w ? (canvas.width - w) : canvas.width;
+        var height = h ? (canvas.height - h) : canvas.height;
         ctx.translate(width / 2, height / 2);
     };
     
@@ -158,8 +173,7 @@ this.Canvas = (function(){
         if (arguments.length < 1) 
             throw "Arguments missing";
         var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
-        opt = $merge(config, opt ||
-        {});
+        opt = $merge(config, opt || {});
         //create elements
         var dim = {
             'width': opt.width,
@@ -226,15 +240,18 @@ this.Canvas = (function(){
              Method: getCtx
              
              Returns the main canvas context object
+             
              Returns:
              
              Main canvas context
+             
              Example:
+             
              (start code js)
-             var ctx = canvas.getCtx();
-             //Now I can use the native canvas context
-             //and for example change some canvas styles
-             ctx.globalAlpha = 1;
+             	var ctx = canvas.getCtx();
+             	//Now I can use the native canvas context
+             	//and for example change some canvas styles
+             	ctx.globalAlpha = 1;
              (end code)
              */
             getCtx: function(){
@@ -246,12 +263,12 @@ this.Canvas = (function(){
              Returns the main Canvas DOM wrapper
              
              Returns:
-             
              DOM canvas wrapper generated, (i.e the div wrapper element with id _mycanvas_)
+             
              Example:
              (start code js)
-             var wrapper = canvas.getElement();
-             //Returns <div id="mycanvas" ... >...</div> as element
+             	var wrapper = canvas.getElement();
+             	//Returns <div id="mycanvas" ... >...</div> as element
              (end code)
              */
             getElement: function(){
@@ -267,20 +284,24 @@ this.Canvas = (function(){
              
              width - New canvas width.
              height - New canvas height.
+             
              This method can be used with the <ST>, <Hypertree> or <RGraph> visualizations to resize
              the visualizations
+             
              Example:
+             
              (start code js)
-             function resizeViz(width, height) {
-             canvas.resize(width, height);
-             rgraph.refresh(); //ht.refresh or st.refresh() also work.
-             rgraph.onAfterCompute();
-             }
+             	function resizeViz(width, height) {
+             		canvas.resize(width, height);
+             		rgraph.refresh(); //ht.refresh or st.refresh() also work.
+             		rgraph.onAfterCompute();
+             	}
              (end code)
              
              */
             resize: function(width, height){
-                canvas.width = width;
+                var pwidth = canvas.width, pheight = canvas.height;
+            	canvas.width = width;
                 canvas.height = height;
                 canvas.style.width = width + "px";
                 canvas.style.height = height + "px";
@@ -290,7 +311,13 @@ this.Canvas = (function(){
                     bkcanvas.style.width = width + "px";
                     bkcanvas.style.height = height + "px";
                 }
-                translateToCenter(canvas, ctx);
+                //small ExCanvas fix
+                if(!hasCanvas()) {
+                	translateToCenter(canvas, ctx, pwidth, pheight);
+                } else {
+                	translateToCenter(canvas, ctx);
+                }
+                
                 var st = opt.styles;
                 var s;
                 for (s in st) {
@@ -300,7 +327,13 @@ this.Canvas = (function(){
                     st = bc.styles;
                     for (s in st) 
                         bkctx[s] = st[s];
-                    translateToCenter(bkcanvas, bkctx);
+                    //same ExCanvas fix here
+                    if(!hasCanvas()) {
+                    	translateToCenter(bkcanvas, bkctx, pwidth, pheight);
+                    } else {
+                    	translateToCenter(bkcanvas, bkctx);	
+                    }
+                    
                     bc.impl.init(bkcanvas, bkctx);
                     bc.impl.plot(bkcanvas, bkctx);
                 }
