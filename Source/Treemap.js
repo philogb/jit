@@ -1371,7 +1371,7 @@ TM.Squarified = new Class({
 
         ch - An array of nodes.  
         w - A fixed dimension where nodes will be laid out.
-      coord - A coordinates object specifying width, height, left and top style properties.
+      	coord - A coordinates object specifying width, height, left and top style properties.
   */
   layoutRow: function(ch, w, coord) {
     if(this.layout.horizontal()) {
@@ -1382,11 +1382,11 @@ TM.Squarified = new Class({
   },
   
   layoutV: function(ch, w, coord) {
-    var totalArea = 0; 
+    var totalArea = 0, rnd = Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
-    var width = totalArea / w, top =  0; 
+    var width = rnd(totalArea / w), top =  0; 
     for(var i=0; i<ch.length; i++) {
-      var h = ch[i]._area / width;
+      var h = rnd(ch[i]._area / width);
       ch[i].coord = {
         'height': h,
         'width': width,
@@ -1408,16 +1408,16 @@ TM.Squarified = new Class({
   },
   
   layoutH: function(ch, w, coord) {
-    var totalArea = 0; 
+    var totalArea = 0, rnd = Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
-    var height = totalArea / w,
+    var height = rnd(totalArea / w),
     top = coord.height - height, 
     left = 0;
     
     for(var i=0; i<ch.length; i++) {
       ch[i].coord = {
         'height': height,
-        'width': ch[i]._area / height,
+        'width': rnd(ch[i]._area / height),
         'top': top,
         'left': coord.left + left
       };
@@ -1592,7 +1592,7 @@ TM.Strip = new Class({
 
         ch - An array of nodes.  
         w - A fixed dimension where nodes will be laid out.
-      coord - A coordinates object specifying width, height, left and top style properties.
+      	coord - A coordinates object specifying width, height, left and top style properties.
   */
   layoutRow: function(ch, w, coord) {
     if(this.layout.horizontal()) {
@@ -1603,11 +1603,11 @@ TM.Strip = new Class({
   },
   
   layoutV: function(ch, w, coord) {
-    var totalArea = 0; 
+    var totalArea = 0, rnd = Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
-    var width = (totalArea / w), top =  0; 
+    var width = rnd(totalArea / w), top =  0; 
     for(var i=0; i<ch.length; i++) {
-      var h = (ch[i]._area / width);
+      var h = rnd(ch[i]._area / width);
       ch[i].coord = {
         'height': h,
         'width': width,
@@ -1628,16 +1628,16 @@ TM.Strip = new Class({
   },
   
   layoutH: function(ch, w, coord) {
-    var totalArea = 0; 
+    var totalArea = 0, rnd = Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
-    var height = totalArea / w,
+    var height = rnd(totalArea / w),
     top = coord.height - height, 
     left = 0;
     
     for(var i=0; i<ch.length; i++) {
       ch[i].coord = {
         'height': height,
-        'width': ch[i]._area / height,
+        'width': rnd(ch[i]._area / height),
         'top': top,
         'left': coord.left + left
       };
