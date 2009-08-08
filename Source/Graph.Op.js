@@ -406,9 +406,9 @@ Graph.Op = {
                 break;
             
             case 'replot':
-                viz.refresh(true);
+                viz.fx.clearLabels(true);
                 this.morph(json, { type: 'nothing' });
-                viz.fx.clearLabels();
+                viz.refresh(true);
                 viz.refresh(true);
                 break;
                 

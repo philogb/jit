@@ -247,34 +247,31 @@ function getBoundaries(graph, config, level) {
  };
  
  function fit(ext1, ext2, subtreeOffset, siblingOffset, i) {
-     i = i || 0;
      if(ext1.length <= i || 
         ext2.length <= i) return 0;
      
      var p = ext1[i][1], q = ext2[i][0];
-     return  Math.max(fit(ext1, ext2, subtreeOffset, siblingOffset, ++i) + subtreeOffset,
-                 p - q + siblingOffset);
+     return  Math.max(fit(ext1, ext2, subtreeOffset, siblingOffset, ++i) 
+    		 + subtreeOffset, p - q + siblingOffset);
  };
  
  function fitlistl(es, subtreeOffset, siblingOffset) {
    function $fitlistl(acc, es, i) {
-       i = i || 0;
        if(es.length <= i) return [];
-       var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset);
+       var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset, 0);
        return [ans].concat($fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
    };
-   return $fitlistl([], es);
+   return $fitlistl([], es, 0);
  };
  
  function fitlistr(es, subtreeOffset, siblingOffset) {
    function $fitlistr(acc, es, i) {
-       i = i || 0;
        if(es.length <= i) return [];
-       var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset);
+       var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset, 0);
        return [ans].concat($fitlistr(merge(moveextent(e, ans), acc), es, ++i));
    };
    es = slice.call(es);
-   var ans = $fitlistr([], es.reverse());
+   var ans = $fitlistr([], es.reverse(), 0);
    return ans.reverse();
  };
  
@@ -329,7 +326,6 @@ function getBoundaries(graph, config, level) {
          } else {
             node[prop][notp] = -acum;
          }
-
 
          return {
            tree: node,
