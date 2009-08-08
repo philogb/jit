@@ -45,6 +45,7 @@
      - _siblingOffset_ Separation offset between siblings. Default's 5.
      - _levelDistance_ Distance between levels. Default's 30.
      - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
+     - _align_ Whether the tree alignment is left, center or right.
 
      *Node*
      
@@ -129,6 +130,7 @@ object must be called with the given result.
         siblingOffset: 5,
         levelDistance: 30,
         withLabels: true,
+        align: "center",
         Node: {
           overridable: false,
           type: 'rectangle',
@@ -275,9 +277,15 @@ function getBoundaries(graph, config, level) {
    return ans.reverse();
  };
  
- function fitlist(es, subtreeOffset, siblingOffset) {
+ function fitlist(es, subtreeOffset, siblingOffset, align) {
     var esl = fitlistl(es, subtreeOffset, siblingOffset),
         esr = fitlistr(es, subtreeOffset, siblingOffset);
+    
+    if(align == "left")
+    	esr = esl;
+    else if(align == "right")
+    	esl = esr;
+    
     for(var i = 0, ans = []; i < esl.length; i++) {
         ans[i] = (esl[i] + esr[i]) / 2;
     }
@@ -295,6 +303,7 @@ function getBoundaries(graph, config, level) {
 
      var siblingOffset = config.siblingOffset;
      var subtreeOffset = config.subtreeOffset;
+     var align = config.align;
      
      var GUtil = Graph.Util;
      function $design(node, maxsize, acum) {
@@ -313,7 +322,7 @@ function getBoundaries(graph, config, level) {
                  extents.push(s.extent);
              }
          });
-         var positions = fitlist(extents, subtreeOffset, siblingOffset);
+         var positions = fitlist(extents, subtreeOffset, siblingOffset, align);
          for(var i=0, ptrees = [], pextents = []; i < trees.length; i++) {
              movetree(trees[i], prop, positions[i], orn);
              pextents.push(moveextent(extents[i], positions[i]));
@@ -409,6 +418,7 @@ this.ST= (function() {
                 levelDistance: 30,
                 withLabels: true,
                 clearCanvas: true,
+                align: "center",
                 Node: {
                     overridable: false,
                     type: 'rectangle',
@@ -490,6 +500,32 @@ this.ST= (function() {
         },
 
         /*
+        Method: switchAlignment
+       
+        Switches the tree alignment.
+
+        Parameters:
+
+       align - The new tree alignment. Possible values are "left", "center" and "right".
+       onComplete - _optional_ This callback is called once the "switching" animation is complete.
+
+        Example:
+
+        (start code js)
+          st.switchAlignment("right", {
+           onComplete: function() {
+             alert('completed!');
+           } 
+          });
+        (end code)
+       */  
+       switchAlignment: function(align, onComplete) {
+        this.config.align = align;
+        this.compute('endPos', false);
+        this.onClick(this.clickedNode.id, onComplete);
+       },
+
+       /*
         Method: addNodeInPath
        
         Adds a node to the current path as selected node. This node will be visible (as in non-collapsed) at all times.
@@ -617,8 +653,10 @@ this.ST= (function() {
                 'x': move.offsetX,
                 'y': move.offsetY 
             };
-            this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
-            this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete));
+            if(move.enable) {
+                this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
+                this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete));
+            }
          },
       
       
@@ -792,6 +830,7 @@ this.ST= (function() {
         var canvas = this.canvas, that = this, Fx = this.fx, Util = Graph.Util, Geom = this.geom;
         var innerController = {
             Move: {
+        	  enable: true,
               offsetX: 0,
               offsetY: 0  
             },
