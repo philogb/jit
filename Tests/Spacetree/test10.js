@@ -805,20 +805,7 @@ function init(){
             label.id = node.id;            
             label.innerHTML = node.name;
             label.onclick = function(){
-            	var rootNode = st.graph.getNode(st.root);
-            	var clickedNode = st.graph.getNode(node.id);
-            	if(clickedNode.data.$orn) {
-            		var orn = clickedNode.data.$orn;
-            		rootNode.data.$orn = {
-            				'left': 'right',
-            				'right': 'left',
-            				'top': 'bottom',
-            				'bottom': 'top'
-            		}[orn];
-            		delete clickedNode.data.$orn;
-            	}
-            	st.root = node.id;
-            	st.onClick(st.root);
+            	st.setRoot(node.id, 'animate');
             };
             //set label styles
             var style = label.style;

@@ -669,7 +669,7 @@ this.ST= (function() {
           },
       
          move: function(node, onComplete) {
-            this.compute('endPos', true);
+            this.compute('endPos', false);
             var move = onComplete.Move, offset = {
                 'x': move.offsetX,
                 'y': move.offsetY 
@@ -708,6 +708,56 @@ this.ST= (function() {
         },
       
         /*
+        Method: setRoot
+     
+         Switches the current root node.
+     
+        Parameters:
+           id - The id of the node to be set as root.
+           method - Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+           onComplete - _optional_ An action to perform after the animation (if any).
+ 
+        Example:
+
+        (start code js)
+          st.setRoot('my_node_id', 'animate', {
+             onComplete: function() {
+               alert('complete!');
+             }
+          });
+        (end code)
+     */
+     setRoot: function(id, method, onComplete) {
+        	var rootNode = this.graph.getNode(this.root);
+        	var clickedNode = this.graph.getNode(id);
+        	Graph.Util.computeLevels(this.graph, id, 0);
+        	if(this.config.multitree && clickedNode.data.$orn) {
+        		var orn = clickedNode.data.$orn;
+        		var opp = {
+        				'left': 'right',
+        				'right': 'left',
+        				'top': 'bottom',
+        				'bottom': 'top'
+        		}[orn];
+        		rootNode.data.$orn = opp;
+        		Graph.Util.eachSubgraph(rootNode, function(n) {
+        			n.data.$orn = opp;
+        		});
+        		delete clickedNode.data.$orn;
+        	}
+        	this.root = id;
+        	this.clickedNode = clickedNode;
+        	this.compute('endPos', false);
+        	if(method == 'animate') {
+            	this.onClick(this.root);
+        		//this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete || {}));
+        	} else if(method == 'replot') {
+        		//this.refresh();
+        		this.select(this.root);
+        	}
+     },
+
+     /*
            Method: addSubtree
         
             Adds a subtree, performing optionally an animation.
