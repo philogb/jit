@@ -311,7 +311,19 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example': True
-        }
+        },
+        {
+            'Title': 'MultiTree',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            Clicking on a node should move the tree and center that node.<br /><br />
+            Leaves color depend on the number of children they actually have.<br /><br />
+            You can select the <b>tree orientation</b> by changing the select box in the right column.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        },
    ],
     
     'Treemap': [

@@ -197,12 +197,16 @@ var slice = Array.prototype.slice;
 /*
    Calculates the max width and height nodes for a tree level
 */  
-function getBoundaries(graph, config, level) {
+function getBoundaries(graph, config, level, orn) {
     var dim = config.Node, GUtil = Graph.Util;
+    var multitree = config.multitree;
     if(dim.overridable) {
         var w = -1, h = -1;
         GUtil.eachNode(graph, function(n) {
-            if(n._depth == level) {
+            if(n._depth == level && (!multitree || 
+             		('$orn' in n.data) && 
+             		n.data.$orn == orn)) {
+
                 var dw = n.data.$width || dim.width;
                 var dh = n.data.$height || dim.height;
                 w = (w < dw)? dw : w;
@@ -210,8 +214,8 @@ function getBoundaries(graph, config, level) {
             }
         });
         return {
-            'width':  w,
-            'height': h
+            'width':  w < 0? dim.width : w,
+            'height': h < 0? dim.height : h
         };
     } else {
         return dim;
@@ -292,8 +296,8 @@ function getBoundaries(graph, config, level) {
     return ans;
  };
  
- function design(graph, node, prop, config) {
-     var orn = config.orientation;
+ function design(graph, node, prop, config, orn) {
+     var multitree = config.multitree;
      var auxp = ['x', 'y'], auxs = ['width', 'height'];
      var ind = +(orn == "left" || orn == "right");
      var p = auxp[ind], notp = auxp[1 - ind];
@@ -306,6 +310,7 @@ function getBoundaries(graph, config, level) {
      var align = config.align;
      
      var GUtil = Graph.Util;
+
      function $design(node, maxsize, acum) {
          var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
          var notsval = maxsize || ((cnode.overridable && node.data["$" + nots]) || cnode[nots]);
@@ -313,9 +318,12 @@ function getBoundaries(graph, config, level) {
          var trees = [], extents = [], chmaxsize = false;
          var chacum = notsval + config.levelDistance;
          GUtil.eachSubnode(node, function(n) {
-             if(n.exist) {
+             if(n.exist && (!multitree ||  
+             		('$orn' in n.data) && 
+             		n.data.$orn == orn)) {
+            	 
                  if(!chmaxsize) 
-                    chmaxsize = getBoundaries(graph, config, n._depth);
+                    chmaxsize = getBoundaries(graph, config, n._depth, orn);
                  
                  var s = $design(n, chmaxsize[nots], acum + chacum);
                  trees.push(s.tree);
@@ -419,6 +427,8 @@ this.ST= (function() {
                 withLabels: true,
                 clearCanvas: true,
                 align: "center",
+                multitree: false,
+                
                 Node: {
                     overridable: false,
                     type: 'rectangle',
@@ -606,18 +616,29 @@ this.ST= (function() {
         },
         
         computePositions: function(node, prop) {
-            design(this.graph, node, prop, this.config);
-            var orn = this.config.orientation;
-            var GUtil = Graph.Util, i = ['x', 'y'][+(orn == "left" || orn == "right")];
-            //absolutize
-            (function red(node) {
-                GUtil.eachSubnode(node, function(n) {
-                    if(n.exist) {
-                        n[prop][i] += node[prop][i];
-                        red(n);
-                    }
-                });
-            })(node);
+        	var config = this.config;
+        	var multitree = config.multitree;
+        	var orn = config.orientation;
+        	var orns = multitree? ['top', 'right', 'bottom', 'left'] : [orn];
+        	
+        	var that = this;
+        	$each(orns, function(orn) {
+        		//calculate layout
+        		design(that.graph, node, prop, that.config, orn);
+        		var i = ['x', 'y'][+(orn == "left" || orn == "right")];
+        		//absolutize
+                (function red(node) {
+                    Graph.Util.eachSubnode(node, function(n) {
+                        if(n.exist && (!multitree || 
+                        		('$orn' in n.data) && 
+                        		n.data.$orn == orn)) {
+
+                        	n[prop][i] += node[prop][i];
+                            red(n);
+                        }
+                    });
+                })(node);
+        	}); 
         },
         
           requestNodes: function(node, onComplete) {
@@ -648,15 +669,15 @@ this.ST= (function() {
           },
       
          move: function(node, onComplete) {
-            this.compute('endPos', false);
+            this.compute('endPos', true);
             var move = onComplete.Move, offset = {
                 'x': move.offsetX,
                 'y': move.offsetY 
             };
             if(move.enable) {
                 this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
-                this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete));
             }
+            this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete));
          },
       
       
@@ -1165,14 +1186,8 @@ ST.Geom = new Class({
 
        You should usually use <ST.switchPosition> instead.
     */  
-    switchOrientation: function() {
-        var args = arguments;
-        if(args.length > 0) {
-          this.config.orientation = args[0];
-        } else {
-          var s = this.dispatch("bottom", "top", "left", "right");
-          this.config.orientation = s;   
-        }
+    switchOrientation: function(orn) {
+    	this.config.orientation = orn;
     },
 
     /*
@@ -1180,7 +1195,9 @@ ST.Geom = new Class({
        Works like a CSS property, either _top-right-bottom-left_ or _top|bottom - left|right_.
      */
     dispatch: function() {
-        var args = arguments, len = args.length, s = this.config.orientation;
+    	//TODO(nico) should store Array.prototype.slice.call somewhere.
+        var args = Array.prototype.slice.call(arguments);
+        var s = args.shift(), len = args.length;
         var val = function(a) { return typeof a == 'function'? a() : a; };
         if(len == 2) {
             return (s == "top" || s == "bottom")? val(args[0]) : val(args[1]);
@@ -1199,14 +1216,17 @@ ST.Geom = new Class({
        Returns label height or with, depending on the tree current orientation.
     */  
     getSize: function(n, invert) {
-        var node = this.node, data = n.data;
-        var cond = this.node.overridable, siblingOffset = this.config.siblingOffset;
+        var node = this.node, data = n.data, config = this.config;
+        var cond = node.overridable, siblingOffset = config.siblingOffset;
+        var s = (this.config.multitree 
+        		&& ('$orn' in n.data) 
+        		&& n.data.$orn) || this.config.orientation;
         var w = (cond && data.$width || node.width) + siblingOffset;
         var h = (cond && data.$height || node.height) + siblingOffset;
         if(!invert)
-            return this.dispatch(h, w);
+            return this.dispatch(s, h, w);
         else
-            return this.dispatch(w, h);
+            return this.dispatch(s, w, h);
     },
     
     /*
@@ -1237,7 +1257,7 @@ ST.Geom = new Class({
 
        A <Complex> number specifying the begin or end position.
     */  
-    getEdge: function(node, type) {
+    getEdge: function(node, type, s) {
         var $C = function(a, b) { 
           return function(){
             return node.pos.add(new Complex(a, b));
@@ -1247,28 +1267,29 @@ ST.Geom = new Class({
         var cond = this.node.overridable, data = node.data;
         var w = cond && data.$width || dim.width;
         var h = cond && data.$height || dim.height;
+
         if(type == 'begin') {
             if(dim.align == "center") {
-                return this.dispatch($C(0, h/2), $C(-w/2, 0),
+                return this.dispatch(s, $C(0, h/2), $C(-w/2, 0),
                                      $C(0, -h/2),$C(w/2, 0));
             } else if(dim.align == "left") {
-                return this.dispatch($C(0, h), $C(0, 0),
+                return this.dispatch(s, $C(0, h), $C(0, 0),
                                      $C(0, 0), $C(w, 0));
             } else if(dim.align == "right") {
-                return this.dispatch($C(0, 0), $C(-w, 0),
+                return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                      $C(0, -h),$C(0, 0));
             } else throw "align: not implemented";
             
             
         } else if(type == 'end') {
             if(dim.align == "center") {
-                return this.dispatch($C(0, -h/2), $C(w/2, 0),
+                return this.dispatch(s, $C(0, -h/2), $C(w/2, 0),
                                      $C(0, h/2),  $C(-w/2, 0));
             } else if(dim.align == "left") {
-                return this.dispatch($C(0, 0), $C(w, 0),
+                return this.dispatch(s, $C(0, 0), $C(w, 0),
                                      $C(0, h), $C(0, 0));
             } else if(dim.align == "right") {
-                return this.dispatch($C(0, -h),$C(0, 0),
+                return this.dispatch(s, $C(0, -h),$C(0, 0),
                                      $C(0, 0), $C(-w, 0));
             } else throw "align: not implemented";
         }
@@ -1282,19 +1303,23 @@ ST.Geom = new Class({
         var cond = this.node.overridable, data = node.data;
         var w = (cond && data.$width || dim.width);
         var h = (cond && data.$height || dim.height);
+        var s = (this.config.multitree 
+        		&& ('$orn' in node.data) 
+        		&& node.data.$orn) || this.config.orientation;
+
         var $C = function(a, b) { 
           return function(){
             return node.pos.add(new Complex(a, b)).$scale(1 - scale);
           }; 
         };
         if(dim.align == "left") {
-            return this.dispatch($C(0, h), $C(0, 0),
+            return this.dispatch(s, $C(0, h), $C(0, 0),
                                  $C(0, 0), $C(w, 0));
         } else if(dim.align == "center") {
-            return this.dispatch($C(0, h / 2), $C(-w / 2, 0),
+            return this.dispatch(s, $C(0, h / 2), $C(-w / 2, 0),
                                  $C(0, -h / 2),$C(w / 2, 0));
         } else if(dim.align == "right") {
-            return this.dispatch($C(0, 0), $C(-w, 0),
+            return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                  $C(0, -h),$C(0, 0));
         } else throw "align: not implemented";
     },
@@ -1312,7 +1337,11 @@ ST.Geom = new Class({
     */  
     treeFitsInCanvas: function(node, canvas, level) {
         var csize = canvas.getSize(node);
-        var size = this.dispatch(csize.width, csize.height);
+        var s = (this.config.multitree 
+        		&& ('$orn' in node.data) 
+        		&& node.data.$orn) || this.config.orientation;
+
+        var size = this.dispatch(s, csize.width, csize.height);
         var baseSize = this.getTreeBaseSize(node, level, function(level, node) { 
           return level === 0 || !Graph.Util.anySubnode(node);
         });
@@ -1531,6 +1560,22 @@ ST.Plot = new Class({
         } else throw "align: not implemented";
         
         return square;
+    },
+    
+    getOrientation: function(adj) {
+    	var config = this.config;
+    	var orn = config.orientation;
+
+    	if(config.multitree) {
+        	var nodeFrom = adj.nodeFrom;
+        	var nodeTo = adj.nodeTo;
+    		orn = (('$orn' in nodeFrom.data) 
+        		&& nodeFrom.data.$orn) 
+        		|| (('$orn' in nodeTo.data) 
+        		&& nodeTo.data.$orn);
+    	}
+
+    	return orn; 
     }
 });
 
@@ -1622,8 +1667,9 @@ ST.Plot.EdgeTypes = new Class({
     'none': function() {},
     
     'line': function(adj, canvas) {
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin');
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end');
+    	var orn = this.getOrientation(adj);
+        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
+        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
         canvas.path('stroke', function(ctx) {
             ctx.moveTo(begin.x, begin.y);
             ctx.lineTo(end.x, end.y);
@@ -1631,10 +1677,10 @@ ST.Plot.EdgeTypes = new Class({
     },
     
     'quadratic:begin': function(adj, canvas) {
-        var orn = this.config.orientation;
+    	var orn = this.getOrientation(adj);
         var data = adj.data, econfig = this.edge;
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin');
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end');
+        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
+        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
         var cond = econfig.overridable && data;
         var dim = cond && data.$dim || econfig.dim;
         switch(orn) {
@@ -1666,10 +1712,10 @@ ST.Plot.EdgeTypes = new Class({
     },
 
     'quadratic:end': function(adj, canvas) {
-        var orn = this.config.orientation;
+    	var orn = this.getOrientation(adj);
         var data = adj.data, econfig = this.edge;
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin');
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end');
+        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
+        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
         var cond = econfig.overridable && data;
         var dim = cond && data.$dim || econfig.dim;
         switch(orn) {
@@ -1701,9 +1747,10 @@ ST.Plot.EdgeTypes = new Class({
     },
 
     'bezier': function(adj, canvas) {
-        var data = adj.data, econfig = this.edge, orn = this.config.orientation;
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin');
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end');
+        var data = adj.data, econfig = this.edge;
+    	var orn = this.getOrientation(adj);
+        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
+        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
         var cond = econfig.overridable && data;
         var dim = cond && data.$dim || econfig.dim;
         switch(orn) {
@@ -1735,7 +1782,8 @@ ST.Plot.EdgeTypes = new Class({
     },
 
     'arrow': function(adj, canvas) {
-        var node = adj.nodeFrom, child = adj.nodeTo;
+    	var orn = this.getOrientation(adj);
+    	var node = adj.nodeFrom, child = adj.nodeTo;
         var data = adj.data, econfig = this.edge;
         //get edge dim
         var cond = econfig.overridable && data;
@@ -1749,8 +1797,8 @@ ST.Plot.EdgeTypes = new Class({
             node = nodeHash[sense[0]];
             child = nodeHash[sense[1]];
         }
-        var posFrom = this.viz.geom.getEdge(node, 'begin');
-        var posTo =  this.viz.geom.getEdge(child, 'end');
+        var posFrom = this.viz.geom.getEdge(node, 'begin', orn);
+        var posTo =  this.viz.geom.getEdge(child, 'end', orn);
         var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
         vect.$scale(edgeDim / vect.norm());
         var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
