@@ -322,7 +322,7 @@ tests_model = {
             You can select the <b>tree orientation</b> by changing the select box in the right column.
             """,
             'Extras': ['excanvas.js'],
-            'Example': True
+            'Example': False 
         },
    ],
     
