@@ -728,31 +728,43 @@ this.ST= (function() {
         (end code)
      */
      setRoot: function(id, method, onComplete) {
+        	var that = this;
         	var rootNode = this.graph.getNode(this.root);
         	var clickedNode = this.graph.getNode(id);
-        	Graph.Util.computeLevels(this.graph, id, 0);
-        	if(this.config.multitree && clickedNode.data.$orn) {
-        		var orn = clickedNode.data.$orn;
-        		var opp = {
-        				'left': 'right',
-        				'right': 'left',
-        				'top': 'bottom',
-        				'bottom': 'top'
-        		}[orn];
-        		rootNode.data.$orn = opp;
-        		Graph.Util.eachSubgraph(rootNode, function(n) {
-        			n.data.$orn = opp;
-        		});
-        		delete clickedNode.data.$orn;
+        	function $setRoot() {
+            	if(this.config.multitree && clickedNode.data.$orn) {
+            		var orn = clickedNode.data.$orn;
+            		var opp = {
+            				'left': 'right',
+            				'right': 'left',
+            				'top': 'bottom',
+            				'bottom': 'top'
+            		}[orn];
+            		rootNode.data.$orn = opp;
+            		(function tag(rootNode) {
+                		Graph.Util.eachSubnode(rootNode, function(n) {
+                			if(n.id != id) {
+                				n.data.$orn = opp;
+                				tag(n);
+                			}
+                		});
+            		})(rootNode);
+            		delete clickedNode.data.$orn;
+            	}
+            	this.root = id;
+            	this.clickedNode = clickedNode;
+            	Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
         	}
-        	this.root = id;
-        	this.clickedNode = clickedNode;
-        	this.compute('endPos', false);
         	if(method == 'animate') {
-            	this.onClick(this.root);
-        		//this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete || {}));
+        		this.onClick(id, {
+        			onBeforeMove: function() {
+        				$setRoot.call(that);
+        				that.selectPath(clickedNode);
+        				
+        			}
+        		});
         	} else if(method == 'replot') {
-        		//this.refresh();
+        		$setRoot();
         		this.select(this.root);
         	}
      },
@@ -1308,7 +1320,7 @@ ST.Geom = new Class({
        A <Complex> number specifying the begin or end position.
     */  
     getEdge: function(node, type, s) {
-        var $C = function(a, b) { 
+    	var $C = function(a, b) { 
           return function(){
             return node.pos.add(new Complex(a, b));
           }; 
@@ -1718,8 +1730,9 @@ ST.Plot.EdgeTypes = new Class({
     
     'line': function(adj, canvas) {
     	var orn = this.getOrientation(adj);
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
+    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
+        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
+        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
         canvas.path('stroke', function(ctx) {
             ctx.moveTo(begin.x, begin.y);
             ctx.lineTo(end.x, end.y);
@@ -1729,8 +1742,9 @@ ST.Plot.EdgeTypes = new Class({
     'quadratic:begin': function(adj, canvas) {
     	var orn = this.getOrientation(adj);
         var data = adj.data, econfig = this.edge;
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
+    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
+        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
+        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
         var cond = econfig.overridable && data;
         var dim = cond && data.$dim || econfig.dim;
         switch(orn) {
@@ -1764,8 +1778,9 @@ ST.Plot.EdgeTypes = new Class({
     'quadratic:end': function(adj, canvas) {
     	var orn = this.getOrientation(adj);
         var data = adj.data, econfig = this.edge;
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
+    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
+        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
+        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
         var cond = econfig.overridable && data;
         var dim = cond && data.$dim || econfig.dim;
         switch(orn) {
@@ -1799,8 +1814,9 @@ ST.Plot.EdgeTypes = new Class({
     'bezier': function(adj, canvas) {
         var data = adj.data, econfig = this.edge;
     	var orn = this.getOrientation(adj);
-        var begin = this.viz.geom.getEdge(adj.nodeFrom, 'begin', orn);
-        var end =  this.viz.geom.getEdge(adj.nodeTo, 'end', orn);
+    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
+        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
+        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
         var cond = econfig.overridable && data;
         var dim = cond && data.$dim || econfig.dim;
         switch(orn) {
