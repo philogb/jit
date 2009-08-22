@@ -206,7 +206,6 @@ function getBoundaries(graph, config, level, orn) {
             if(n._depth == level && (!multitree || 
              		('$orn' in n.data) && 
              		n.data.$orn == orn)) {
-
                 var dw = n.data.$width || dim.width;
                 var dh = n.data.$height || dim.height;
                 w = (w < dw)? dw : w;
@@ -362,38 +361,41 @@ this.ST= (function() {
     function getNodesToHide(node) {
       node = node || this.clickedNode;
       var Geom = this.geom, GUtil = Graph.Util;
-        var graph = this.graph;
-        var canvas = this.canvas;
-        var level = node._depth, nodeArray = [];
-        GUtil.eachNode(graph, function(n) {
-            if(n.exist && !n.selected) {
-                if(GUtil.isDescendantOf(n, node.id)) {
-                  if(n._depth <= level) nodeArray.push(n);
-                } else {
-                  nodeArray.push(n);
-                }
+      var graph = this.graph;
+      var canvas = this.canvas;
+      var level = node._depth, nodeArray = [];
+	  GUtil.eachNode(graph, function(n) {
+        if(n.exist && !n.selected) {
+            if(GUtil.isDescendantOf(n, node.id)) {
+              if(n._depth <= level) nodeArray.push(n);
+            } else {
+              nodeArray.push(n);
             }
-        });
-        var leafLevel = Geom.getRightLevelToShow(node, canvas);
-        GUtil.eachLevel(node, leafLevel, leafLevel, function(n) {
-            if(n.exist && !n.selected) nodeArray.push(n);
-        });
-        
-        for (var i = 0; i < nodesInPath.length; i++) {
-      var n = this.graph.getNode(nodesInPath[i]);
-          if(!GUtil.isDescendantOf(n, node.id)) {
-            nodeArray.push(n);
-          }
-    }
-        return nodeArray;       
-     };
+        }
+	  });
+	  var leafLevel = Geom.getRightLevelToShow(node, canvas);
+	  GUtil.eachLevel(node, leafLevel, leafLevel, function(n) {
+        if(n.exist && !n.selected) nodeArray.push(n);
+	  });
+	    
+	  for (var i = 0; i < nodesInPath.length; i++) {
+	    var n = this.graph.getNode(nodesInPath[i]);
+	    if(!GUtil.isDescendantOf(n, node.id)) {
+	      nodeArray.push(n);
+	    }
+	  } 
+	  return nodeArray;       
+    };
     //Nodes to expand
      function getNodesToShow(node) {
-        var nodeArray= [], GUtil = Graph.Util;
+        var nodeArray= [], GUtil = Graph.Util, config = this.config;
         node = node || this.clickedNode;
-        GUtil.eachLevel(this.clickedNode, 0, this.config.levelsToShow, function(n) {
-            if(n.drawn && !GUtil.anySubnode(n, "drawn")) {
-                nodeArray.push(n);
+        GUtil.eachLevel(this.clickedNode, 0, config.levelsToShow, function(n) {
+            if(config.multitree && !('$orn' in n.data) 
+            		&& GUtil.anySubnode(n, function(ch){ return ch.exist && !ch.drawn; })) {
+            	nodeArray.push(n);
+            } else if(n.drawn && !GUtil.anySubnode(n, "drawn")) {
+        		nodeArray.push(n);
             }
         });
         return nodeArray;
@@ -728,7 +730,7 @@ this.ST= (function() {
         (end code)
      */
      setRoot: function(id, method, onComplete) {
-        	var that = this;
+        	var that = this, canvas = this.canvas;
         	var rootNode = this.graph.getNode(this.root);
         	var clickedNode = this.graph.getNode(id);
         	function $setRoot() {
@@ -755,16 +757,19 @@ this.ST= (function() {
             	this.clickedNode = clickedNode;
             	Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
         	}
+
+        	//delete previous orientations (if any)
+        	delete rootNode.data.$orns;
+
         	if(method == 'animate') {
         		this.onClick(id, {
         			onBeforeMove: function() {
         				$setRoot.call(that);
         				that.selectPath(clickedNode);
-        				
         			}
         		});
         	} else if(method == 'replot') {
-        		$setRoot();
+        		$setRoot.call(this);
         		this.select(this.root);
         	}
      },
@@ -898,13 +903,14 @@ this.ST= (function() {
 
         (start code js)
           st.onClick('mynodeid', {
-          Move: {
-            offsetX: 30,
-            offsetY: 5
-            },
-            onComplete: function() {
-              alert('yay!');
-            }
+	          Move: {
+	          	enable: true,
+	            offsetX: 30,
+	            offsetY: 5
+	          },
+	          onComplete: function() {
+	              alert('yay!');
+	          }
           });
         (end code)
     
@@ -1060,7 +1066,7 @@ ST.Group = new Class({
         for(var i=0; i<nodes.length; i++) {
             //TODO nodes are requested on demand, but not
             //deleted when hidden. Would that be a good feature? 
-            //Currenty that feature is buggy, so I'll turn it off
+            //Currently that feature is buggy, so I'll turn it off
             //Actually this feature is buggy because trimming should take
             //place onAfterCompute and not right after collapsing nodes.
             if (true || !controller || !controller.request) {
@@ -1110,9 +1116,22 @@ ST.Group = new Class({
     show: function(nodes) {
         var GUtil = Graph.Util, config = this.config;
         this.prepare(nodes);
-        $each(nodes, function(n) { 
+        $each(nodes, function(n) {
+        	//check for root nodes if multitree
+        	if(config.multitree && !('$orn' in n.data)) {
+        		delete n.data.$orns;
+        		var orns = ' ';
+        		GUtil.eachSubnode(n, function(ch) {
+        			if(('$orn' in ch.data) 
+        					&& orns.indexOf(ch.data.$orn) < 0 
+        					&& ch.exist && !ch.drawn) {
+        				orns += ch.data.$orn + ' ';
+        			}
+        		});
+        		n.data.$orns = orns;
+        	}
             GUtil.eachLevel(n, 0, config.levelsToShow, function(n) {
-                if(n.exist) n.drawn = true;
+            	if(n.exist) n.drawn = true;
             });     
         });
     },
@@ -1123,25 +1142,27 @@ ST.Group = new Class({
     },
     
     /*
-    
        Filters an array of nodes leaving only nodes with children.
     */
     getNodesWithChildren: function(nodes) {
-        var ans = [], GUtil = Graph.Util;
+        var ans = [], GUtil = Graph.Util, config = this.config, root = this.viz.root;
         nodes.sort(function(a, b) { return (a._depth <= b._depth) - (a._depth >= b._depth); });
         for(var i=0; i<nodes.length; i++) {
             if(GUtil.anySubnode(nodes[i], "exist")) {
-                for ( var j = i+1, desc = false; !desc && j < nodes.length; j++) {
-          desc = desc || GUtil.isDescendantOf(nodes[i], nodes[j].id);
-        }
-              if(!desc) ans.push(nodes[i]);
+            	for (var j = i+1, desc = false; !desc && j < nodes.length; j++) {
+                    if(!config.multitree || '$orn' in nodes[j].data) {
+                		desc = desc || GUtil.isDescendantOf(nodes[i], nodes[j].id);                    	
+                    }
+                }
+                if(!desc) ans.push(nodes[i]);
             }
         }
         return ans;
     },
     
     plotStep: function(delta, controller, animating) {
-        var viz = this.viz, 
+        var viz = this.viz,
+        config = this.config,
         canvas = viz.canvas, 
         ctx = canvas.getCtx(),
         nodes = this.nodes,
@@ -1152,12 +1173,21 @@ ST.Group = new Class({
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
           nds[node.id] = [];
+          var root = config.multitree && !('$orn' in node.data);
+          var orns = root && node.data.$orns;
           GUtil.eachSubgraph(node, function(n) { 
-              if(n.drawn) {
+              //TODO(nico): Cleanup
+        	  //special check for root node subnodes when
+        	  //multitree is checked.
+        	  if(root && orns && orns.indexOf(n.data.$orn) > 0 
+        			  && n.drawn) {
+        		  n.drawn = false;
+                  nds[node.id].push(n);
+              } else if((!root || !orns) && n.drawn) {
                 n.drawn = false;
                 nds[node.id].push(n);
               }
-            });
+            });	
             node.drawn = true;
         }
         //plot the whole (non-scaled) tree
@@ -1170,8 +1200,8 @@ ST.Group = new Class({
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
           ctx.save();
-            viz.fx.plotSubtree(node, controller, delta, animating);                
-            ctx.restore();
+          viz.fx.plotSubtree(node, controller, delta, animating);                
+          ctx.restore();
         }
       },
 
@@ -1498,18 +1528,21 @@ ST.Plot = new Class({
         var that = this, 
         viz = this.viz, 
         canvas = viz.canvas,
+        config = this.config,
         ctx = canvas.getCtx();
+        var root = config.multitree && !('$orn' in node.data);
+        var orns = root && node.data.$orns;
         Graph.Util.eachSubnode(node, function(elem) {
-            if(elem.exist) {
-                if(elem.drawn) {
-                    var adj = node.getAdjacency(elem.id);
-                    !animating && opt.onBeforePlotLine(adj);
-                    ctx.globalAlpha = Math.min(node.alpha, elem.alpha);
-                    that.plotLine(adj, canvas, animating);
-                    !animating && opt.onAfterPlotLine(adj);
-                }
-                that.plotTree(elem, plotLabel, opt, animating);
-            }
+            //multitree root node check
+        	if((!root || orns.indexOf(elem.data.$orn) > 0)
+        			&& elem.exist && elem.drawn) {
+	            var adj = node.getAdjacency(elem.id);
+	            !animating && opt.onBeforePlotLine(adj);
+	            ctx.globalAlpha = Math.min(node.alpha, elem.alpha);
+	            that.plotLine(adj, canvas, animating);
+	            !animating && opt.onAfterPlotLine(adj);
+	            that.plotTree(elem, plotLabel, opt, animating);
+        	}
         });
 
         if(node.drawn) {

@@ -765,7 +765,7 @@ function init(){
     
     //init st
     //Create a new ST instance
-    var st = new ST(canvas, {
+    st = new ST(canvas, {
     	//multitree
     	multitree: true,
         //set duration for the animation
@@ -805,6 +805,7 @@ function init(){
             label.id = node.id;            
             label.innerHTML = node.name;
             label.onclick = function(){
+            	//st.onClick(node.id);
             	st.setRoot(node.id, 'animate');
             };
             //set label styles
