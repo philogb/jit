@@ -212,10 +212,9 @@ this.TM = {
                     controller);
     this.rootId = this.config.rootId;
     this.layout.orientation = this.config.orientation;
-        
         //add tooltip
         if(this.config.Tips.allow && document.body) {
-            var tip = document.createElement('div');
+            var tip = document.getElementById('_tooltip') || document.createElement('div');
             tip.id = '_tooltip';
             tip.className = 'tip';
             var style = tip.style;
@@ -1604,7 +1603,8 @@ TM.Strip = new Class({
   },
   
   layoutV: function(ch, w, coord) {
-    var totalArea = 0, rnd = Math.round; 
+	//TODO(nico): handle node dimensions properly
+    var totalArea = 0, rnd = function(x) { return x; }; //Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
     var width = rnd(totalArea / w), top =  0; 
     for(var i=0; i<ch.length; i++) {
@@ -1629,7 +1629,7 @@ TM.Strip = new Class({
   },
   
   layoutH: function(ch, w, coord) {
-    var totalArea = 0, rnd = Math.round; 
+    var totalArea = 0, rnd = function(x) { return x; }; //Math.round; 
     $each(ch, function(elem) { totalArea += elem._area; });
     var height = rnd(totalArea / w),
     top = coord.height - height, 
