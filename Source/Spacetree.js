@@ -46,6 +46,7 @@
      - _levelDistance_ Distance between levels. Default's 30.
      - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
      - _align_ Whether the tree alignment is left, center or right.
+     - _indent_ Used when alignment is left or right and shows an indentation between parent and children. Default's 0.
 
      *Node*
      
@@ -429,6 +430,7 @@ this.ST= (function() {
                 withLabels: true,
                 clearCanvas: true,
                 align: "center",
+                indent:0,
                 multitree: false,
                 
                 Node: {
@@ -620,6 +622,8 @@ this.ST= (function() {
         computePositions: function(node, prop) {
         	var config = this.config;
         	var multitree = config.multitree;
+        	var align = config.align;
+        	var indent = align !== 'center' && config.indent;
         	var orn = config.orientation;
         	var orns = multitree? ['top', 'right', 'bottom', 'left'] : [orn];
         	
@@ -636,6 +640,9 @@ this.ST= (function() {
                         		n.data.$orn == orn)) {
 
                         	n[prop][i] += node[prop][i];
+                        	if(indent) {
+                        		n[prop][i] += align == 'left'? indent : -indent; 
+                        	}
                             red(n);
                         }
                     });
