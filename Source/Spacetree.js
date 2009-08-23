@@ -39,14 +39,15 @@
       
      *General*
 
-     - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
-     - _levelsToShow_ Depth of the plotted tree. The plotted tree will be pruned in order to fit the specified depth. Default's 2.
+     - _levelsToShow_ Depth of the plotted tree. The plotted tree will be pruned in order to fit the specified depth if constrained=true. Default's 2.
+     - _constrained_ If true, the algorithm will try to plot only the part of the tree that fits the Canvas.
      - _subtreeOffset_ Separation offset between subtrees. Default's 8.
      - _siblingOffset_ Separation offset between siblings. Default's 5.
      - _levelDistance_ Distance between levels. Default's 30.
-     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
+     - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
      - _align_ Whether the tree alignment is left, center or right.
-     - _indent_ Used when alignment is left or right and shows an indentation between parent and children. Default's 0.
+     - _indent_ Used when alignment is left or right and shows an indentation between parent and children. Default's 10.
+     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
 
      *Node*
      
@@ -132,6 +133,8 @@ object must be called with the given result.
         levelDistance: 30,
         withLabels: true,
         align: "center",
+        multitree: false,
+        indent: 10,
         Node: {
           overridable: false,
           type: 'rectangle',
@@ -430,8 +433,9 @@ this.ST= (function() {
                 withLabels: true,
                 clearCanvas: true,
                 align: "center",
-                indent:0,
+                indent:10,
                 multitree: false,
+                constrained: true,
                 
                 Node: {
                     overridable: false,
@@ -486,19 +490,20 @@ this.ST= (function() {
          Parameters:
 
         pos - The new tree orientation. Possible values are "top", "left", "right" and "bottom".
+        method - Set this to "animate" if you want to animate the tree when switching its position. You can also set this parameter to "replot" to just replot the subtree.
         onComplete - _optional_ This callback is called once the "switching" animation is complete.
 
          Example:
 
          (start code js)
-           st.switchPosition("right", {
+           st.switchPosition("right", "animate", {
             onComplete: function() {
               alert('completed!');
             } 
            });
          (end code)
         */  
-        switchPosition: function(pos, onComplete) {
+        switchPosition: function(pos, method, onComplete) {
           var Geom = this.geom, Plot = this.fx, that = this;
           if(!Plot.busy) {
               Plot.busy = true;
@@ -507,7 +512,11 @@ this.ST= (function() {
                       Geom.switchOrientation(pos);
                       that.compute('endPos', false);
                       Plot.busy = false;
-                      that.onClick(that.clickedNode.id, onComplete);
+                      if(method == 'animate') {
+                    	  that.onClick(that.clickedNode.id, onComplete);  
+                      } else if(method == 'replot') {
+                    	  that.select(that.clickedNode.id, onComplete);
+                      }
                   }
               }, pos);
           }
@@ -521,22 +530,26 @@ this.ST= (function() {
         Parameters:
 
        align - The new tree alignment. Possible values are "left", "center" and "right".
+       method - Set this to "animate" if you want to animate the tree after aligning its position. You can also set this parameter to "replot" to just replot the subtree.
        onComplete - _optional_ This callback is called once the "switching" animation is complete.
 
         Example:
 
         (start code js)
-          st.switchAlignment("right", {
+          st.switchAlignment("right", "animate", {
            onComplete: function() {
              alert('completed!');
            } 
           });
         (end code)
        */  
-       switchAlignment: function(align, onComplete) {
+       switchAlignment: function(align, method, onComplete) {
         this.config.align = align;
-        this.compute('endPos', false);
-        this.onClick(this.clickedNode.id, onComplete);
+        if(method == 'animate') {
+        	this.select(this.clickedNode.id, onComplete);
+        } else if(method == 'replot') {
+        	this.onClick(this.clickedNode.id, onComplete);	
+        }
        },
 
        /*
@@ -1469,7 +1482,10 @@ ST.Geom = new Class({
        Returns the right level to show for the current tree in order to fit in canvas.
     */  
     getRightLevelToShow: function(node, canvas) {
-        var level = this.config.levelsToShow;
+        var config = this.config;
+    	var level = config.levelsToShow;
+    	var constrained = config.constrained;
+        if(!constrained) return level;
         while(!this.treeFitsInCanvas(node, canvas, level) && level > 1) { level-- ; }
         return level;
     }

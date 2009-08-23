@@ -741,15 +741,14 @@ function init(){
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
-        'height': h,
-        'backgroundColor': '#1a1a1a'
+        'height': h
     });
     //end
     
     //init st
     //Create a new ST instance
     var st = new ST(canvas, {
-        //add styles/shapes/colors
+    	//add styles/shapes/colors
         //to nodes and edges
         
         //set overridable=true if you want
@@ -758,7 +757,7 @@ function init(){
           overridable: true,
           width: 60,
           height: 20,
-          color: '#ccc'  
+          color: '#ccc'
         },
         //change the animation/transition effect
         transition: Trans.Quart.easeOut,

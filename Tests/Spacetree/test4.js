@@ -74,7 +74,7 @@ function init(){
         var index = select.selectedIndex;
         var or = select.options[index].text;
         select.disabled = true;
-        st.switchPosition(or, {
+        st.switchPosition(or, "animate", {
             onComplete: function(){
                 select.disabled = false;
             }
