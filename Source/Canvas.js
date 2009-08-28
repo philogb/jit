@@ -214,7 +214,11 @@ this.Canvas = (function(){
         }
         mainContainer.appendChild(canvas);
         mainContainer.appendChild(labelContainer);
-        get(opt.injectInto).appendChild(mainContainer);
+        if($type(opt.injectInto) == 'string') {
+          get(opt.injectInto).appendChild(mainContainer);
+        } else {
+          opt.injectInto.appendChild(mainContainer);
+        }
         
         //create contexts
         ctx = canvas.getContext('2d');

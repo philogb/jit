@@ -109,5 +109,7 @@ def make_build(fancy=False):
     f.close()
     print "Done. Compressing Library..."
     system('java -jar Extras/' + YC + ' Jit/jit.js > Jit/jit-yc.js')
+    print "Done. Zipping..."
+    system('zip -r Jit/ Jit.zip')
     print "Done, I guess."
 if __name__ == "__main__": main()

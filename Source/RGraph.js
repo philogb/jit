@@ -527,10 +527,16 @@ RGraph.Plot = new Class({
             x: Math.round(pos.x + radius.width/2),
             y: Math.round(pos.y + radius.height/2)
         };
+        tag.setAttribute('x', labelPos.x);
+        tag.setAttribute('y', labelPos.y);
+        tag.setAttribute('transform', 'rotate(' + node.pos.theta * 360 / (Math.PI *2) 
+          + ' ' + labelPos.x + ' ' + labelPos.y + ')');
+/*
         var style = tag.style;
         style.left = labelPos.x + 'px';
         style.top  = labelPos.y + 'px';
         style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
+*/
         controller.onPlaceLabel(tag, node);
   }
 });

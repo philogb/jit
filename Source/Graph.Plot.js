@@ -92,12 +92,12 @@ Graph.Plot = {
       (end code)
     */
     getLabelContainer: function() {
-        return this.labelContainer? this.labelContainer : this.labelContainer = document.getElementById(this.viz.config.labelContainer);
+        return this.labelContainer? this.labelContainer : this.labelContainer = document.getElementById('svg-labelcontainer');//this.viz.config.labelContainer);
     },
     
     /*
        Method: getLabel
-    
+      
        Lazy fetcher for the label DOM element.
 
        Parameters:
@@ -188,8 +188,8 @@ Graph.Plot = {
     disposeLabel: function(id) {
         var elem = this.getLabel(id);
         if(elem && elem.parentNode) {
-      elem.parentNode.removeChild(elem);
-    }  
+          elem.parentNode.removeChild(elem);
+        }  
     },
 
     /*
@@ -411,16 +411,26 @@ Graph.Plot = {
     plotLabel: function(canvas, node, controller) {
     var id = node.id, tag = this.getLabel(id);
         if(!tag && !(tag = document.getElementById(id))) {
-            tag = document.createElement('div');
+            var ns = 'http://www.w3.org/2000/svg';
+            tag = document.createElementNS(ns, 'svg:text');
+            var tspan = document.createElementNS(ns, 'svg:tspan');
+            tspan.appendChild(document.createTextNode('some text node'));
+            tag.appendChild(tspan);
+
+            //tag = document.createElement('div');
             var container = this.getLabelContainer();
             container.appendChild(tag);
-            tag.id = id;
-            tag.className = 'node';
-            tag.style.position = 'absolute';
-            controller.onCreateLabel(tag, node);
+            tag.setAttribute('id', id);
+            tag.setAttribute('class', 'node');
+            tag.setAttribute('font-size', '22');
+            tag.setAttribute('fill','red');
+            //tag.id = id;
+            //tag.className = 'node';
+            //tag.style.position = 'absolute';
+            //controller.onCreateLabel(tag, node);
             this.labels[node.id] = tag;
         }
-    this.placeLabel(tag, node, controller);
+        this.placeLabel(tag, node, controller);
     },
   
   /*
@@ -442,8 +452,8 @@ Graph.Plot = {
         var ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
-    ctx.fillStyle = color;
-    ctx.strokeStyle = color; 
+        ctx.fillStyle = color;
+        ctx.strokeStyle = color; 
 
         var f = node.data && node.data.$type || nconfig.type;
         this.nodeTypes[f].call(this, node, canvas, animating);

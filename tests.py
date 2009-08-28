@@ -93,6 +93,19 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':True
+        },
+        {
+            'Title': 'SVG label interface',
+            'Description': 
+            """
+            You can do the following operations with the RGraph<br /><br />
+            1.- Removing subtrees or nodes<br /><br />
+            2.- Removing edges<br /><br />
+            3.- Adding another graph, also called sum<br /><br />
+            4.- Morphing (or transforming) the graph into another one<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':False
         }]
     ,
 
