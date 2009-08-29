@@ -396,7 +396,7 @@ function init(){
     //end
 
     //init RGraph
-    var rgraph = new RGraph(canvas, {
+    var rgraph = new Hypertree(canvas, {
         //Set Node and Edge colors.
         Node: {
             color: '#ccddee'

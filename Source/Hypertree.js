@@ -263,6 +263,7 @@ This method is useful for adding some styles to a particular edge before being p
     - _graph_ Access a <Graph> instance.
     - _op_ Access a <Hypertree.Op> instance.
     - _fx_ Access a <Hypertree.Plot> instance.
+    - _labels_ Access a <Hypertree.Label> instance.
 */ 
  
 this.Hypertree = new Class({ 
@@ -321,7 +322,7 @@ this.Hypertree = new Class({
             } 
         }; 
     this.graph = new Graph(this.graphOptions); 
-    this.labels = new Hypertree.Label[canvas.getConfig().labels]();
+    this.labels = new Hypertree.Label[canvas.getConfig().labels](this);
     this.fx = new Hypertree.Plot(this); 
     this.op = new Hypertree.Op(this); 
     this.json = null; 
@@ -608,13 +609,14 @@ Hypertree.Plot = new Class({
     Implements: Graph.Plot, 
    
   initialize: function(viz) { 
-        this.viz = viz; 
-        this.config = viz.config; 
+    this.viz = viz; 
+    this.config = viz.config; 
     this.node = this.config.Node; 
     this.edge = this.config.Edge; 
-        this.animation = new Animation; 
-        this.nodeTypes = new Hypertree.Plot.NodeTypes; 
-        this.edgeTypes = new Hypertree.Plot.EdgeTypes; 
+    this.animation = new Animation; 
+    this.nodeTypes = new Hypertree.Plot.NodeTypes; 
+    this.edgeTypes = new Hypertree.Plot.EdgeTypes;
+    this.labels = viz.labels;
   }, 
      
     /* 
@@ -737,7 +739,26 @@ Hypertree.Label = {};
 
 */
 Hypertree.Label.Native = new Class({
-  Implements: Graph.Label.Native
+  Extends: Graph.Label.Native,
+
+  /*
+       Method: plotLabel
+    
+       Plots a label for a given node.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+
+    */
+    plotLabel: function(canvas, node, controller) {
+        var ctx = canvas.getCtx();
+        var coord = node.pos.getc(true);
+        var scale = node._scale;
+        ctx.fillText(node.name, coord.x * scale, coord.y * scale);
+    }
 });
 
 /*
@@ -776,13 +797,13 @@ Hypertree.Label.SVG = new Class({
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), canvas = this.viz.canvas; 
         var radius= canvas.getSize();
+        var scale = node._scale;
         var labelPos= {
-            x: Math.round(pos.x + radius.width/2),
-            y: Math.round(pos.y + radius.height/2)
+            x: Math.round(pos.x * scale + radius.width/2),
+            y: Math.round(pos.y * scale + radius.height/2)
         };
         tag.setAttribute('x', labelPos.x);
         tag.setAttribute('y', labelPos.y);
-        
         controller.onPlaceLabel(tag, node);
   }
 });
@@ -822,11 +843,11 @@ Hypertree.Label.HTML = new Class({
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), canvas = this.viz.canvas; 
         var radius= canvas.getSize();
+        var scale = node._scale;
         var labelPos= {
-            x: Math.round(pos.x + radius.width/2),
-            y: Math.round(pos.y + radius.height/2)
+            x: Math.round(pos.x * scale + radius.width/2),
+            y: Math.round(pos.y * scale + radius.height/2)
         };
-        
         var style = tag.style;
         style.left = labelPos.x + 'px';
         style.top  = labelPos.y + 'px';

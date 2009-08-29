@@ -93,21 +93,8 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':True
-        },
-        {
-            'Title': 'SVG label interface',
-            'Description': 
-            """
-            You can do the following operations with the RGraph<br /><br />
-            1.- Removing subtrees or nodes<br /><br />
-            2.- Removing edges<br /><br />
-            3.- Adding another graph, also called sum<br /><br />
-            4.- Morphing (or transforming) the graph into another one<br />
-            """,
-            'Extras': ['excanvas.js'],
-            'Example':False
-        }]
-    ,
+        } 
+    ],
 
     
     'Hypertree': [
@@ -445,6 +432,22 @@ tests_model = {
             'Build': ['RGraph', 'Spacetree'],
             'Example': True
             
+        },
+        {
+            'Title': 'SVG and Native Labels',
+            'Description': 
+            """
+            In this example we're using three different types of labels.<br /><br />
+            HTML labels are classic DOM elements.<br />
+            SVG labels are very similar to HTML labels (they're also DOM elements) but they can be rotated and transformed.<br />
+            Native labels are drawn with the Native Canvas HTML5 API.<br /><br />.
+            HTML labels are supported by all browsers. SVG labels are supported by all browsers except IE. Native Canvas labels are 
+            supported by all browsers except Opera.
+            """,
+            'Extras': ['excanvas.js'],
+            'Build': ['RGraph', 'Hypertree'],
+            'Example': False 
+            
         }
-   ]   
-}
+  ]
+}   

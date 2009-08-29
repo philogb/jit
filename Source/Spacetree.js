@@ -191,6 +191,7 @@ object must be called with the given result.
     - _graph_ Access a <Graph> instance.
     - _op_ Access a <ST.Op> instance.
     - _fx_ Access a  <ST.Plot> instance.
+    - _labels_ Access a <ST.Label> instance.
  */
 
 (function () {
@@ -465,6 +466,7 @@ this.ST= (function() {
                 'complex': true
             };
             this.graph = new Graph(this.graphOptions);
+            this.labels = new ST.Label[canvas.getConfig().labels](this);
             this.fx = new ST.Plot(this);
             this.op = new ST.Op(this);
             this.group = new ST.Group(this);
@@ -1526,6 +1528,7 @@ ST.Plot = new Class({
         this.animation = new Animation;
         this.nodeTypes = new ST.Plot.NodeTypes;
         this.edgeTypes = new ST.Plot.EdgeTypes;        
+        this.labels = viz.labels;
     },
     
     /*
@@ -1574,73 +1577,15 @@ ST.Plot = new Class({
             this.plotNode(node, canvas, animating);
             !animating && opt.onAfterPlotNode(node);
             if(plotLabel && ctx.globalAlpha >= 0.95) 
-                this.plotLabel(canvas, node, opt);
+                this.labels.plotLabel(canvas, node, opt);
             else 
-                this.hideLabel(node, false);
+                this.labels.hideLabel(node, false);
         } else {
-            this.hideLabel(node, true);
+            this.labels.hideLabel(node, true);
         }
     },
     
-    /* 
-      Method: placeLabel
-
-      Overrides abstract method placeLabel in <Graph.Plot>.
-
-      Parameters:
-
-      tag - A DOM label element.
-      node - A <Graph.Node>.
-      controller - A configuration/controller object passed to the visualization.
-     
-    */
-    placeLabel: function(tag, node, controller) {
-        var pos = node.pos.getc(true), dim = this.node, canvas = this.viz.canvas;
-        var w = dim.overridable && node.data.$width || dim.width;
-        var h = dim.overridable && node.data.$height || dim.height;
-        var radius = canvas.getSize();
-        var labelPos, orn;
-        if(dim.align == "center") {
-            labelPos= {
-                x: Math.round(pos.x - w / 2 + radius.width/2),
-                y: Math.round(pos.y - h / 2 + radius.height/2)
-            };
-        } else if (dim.align == "left") {
-            orn = this.config.orientation;
-            if(orn == "bottom" || orn == "top") {
-                labelPos= {
-                    x: Math.round(pos.x - w / 2 + radius.width/2),
-                    y: Math.round(pos.y + radius.height/2)
-                };
-            } else {
-                labelPos= {
-                    x: Math.round(pos.x + radius.width/2),
-                    y: Math.round(pos.y - h / 2 + radius.height/2)
-                };
-            }
-        } else if(dim.align == "right") {
-            orn = this.config.orientation;
-            if(orn == "bottom" || orn == "top") {
-                labelPos= {
-                    x: Math.round(pos.x - w / 2 + radius.width/2),
-                    y: Math.round(pos.y - h + radius.height/2)
-                };
-            } else {
-                labelPos= {
-                    x: Math.round(pos.x - w + radius.width/2),
-                    y: Math.round(pos.y - h / 2 + radius.height/2)
-                };
-            }
-        } else throw "align: not implemented";
-
-        var style = tag.style;
-        style.left = labelPos.x + 'px';
-        style.top  = labelPos.y + 'px';
-        style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
-        controller.onPlaceLabel(tag, node);
-    },
-    
-    
+   
     getAlignedPos: function(pos, width, height) {
         var nconfig = this.node;
         var square, orn;
@@ -1696,6 +1641,163 @@ ST.Plot = new Class({
     	return orn; 
     }
 });
+
+/*
+  Object: ST.Label
+
+  Label interface implementation for the ST
+
+  See Also:
+
+  <Graph.Label>, <ST.Label.HTML>, <RGraph.Label.SVG>
+
+ */ 
+ST.Label = {};
+
+/*
+   Class: ST.Label.Native
+
+   Implements labels natively, using the Canvas text API.
+
+   Extends:
+
+   <Graph.Label.Native>
+
+   See also:
+
+   <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+ST.Label.Native = new Class({
+  Extends: Graph.Label.Native,
+  /*
+       Method: plotLabel
+    
+       Plots a label for a given node.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+
+    */
+    plotLabel: function(canvas, node, controller) {
+        var ctx = canvas.getCtx();
+        var coord = node.pos.getc(true);
+        ctx.save();
+        ctx.fillStyle = ctx.strokeStyle = '#000';
+        ctx.fillText(node.name, coord.x, coord.y);
+        ctx.restore();
+    }
+});
+
+ST.Label.DOM = new Class({
+  Implements: Graph.Label.DOM,
+
+  /* 
+      Method: placeLabel
+
+      Overrides abstract method placeLabel in <Graph.Plot>.
+
+      Parameters:
+
+      tag - A DOM label element.
+      node - A <Graph.Node>.
+      controller - A configuration/controller object passed to the visualization.
+     
+    */
+    placeLabel: function(tag, node, controller) {
+        var pos = node.pos.getc(true), dim = this.viz.config.Node, canvas = this.viz.canvas;
+        var w = dim.overridable && node.data.$width || dim.width;
+        var h = dim.overridable && node.data.$height || dim.height;
+        var radius = canvas.getSize();
+        var labelPos, orn;
+        if(dim.align == "center") {
+            labelPos= {
+                x: Math.round(pos.x - w / 2 + radius.width/2),
+                y: Math.round(pos.y - h / 2 + radius.height/2)
+            };
+        } else if (dim.align == "left") {
+            orn = this.config.orientation;
+            if(orn == "bottom" || orn == "top") {
+                labelPos= {
+                    x: Math.round(pos.x - w / 2 + radius.width/2),
+                    y: Math.round(pos.y + radius.height/2)
+                };
+            } else {
+                labelPos= {
+                    x: Math.round(pos.x + radius.width/2),
+                    y: Math.round(pos.y - h / 2 + radius.height/2)
+                };
+            }
+        } else if(dim.align == "right") {
+            orn = this.config.orientation;
+            if(orn == "bottom" || orn == "top") {
+                labelPos= {
+                    x: Math.round(pos.x - w / 2 + radius.width/2),
+                    y: Math.round(pos.y - h + radius.height/2)
+                };
+            } else {
+                labelPos= {
+                    x: Math.round(pos.x - w + radius.width/2),
+                    y: Math.round(pos.y - h / 2 + radius.height/2)
+                };
+            }
+        } else throw "align: not implemented";
+
+        var style = tag.style;
+        style.left = labelPos.x + 'px';
+        style.top  = labelPos.y + 'px';
+        style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
+        controller.onPlaceLabel(tag, node);
+    }
+});
+
+/*
+   Class: ST.Label.SVG
+
+   Implements labels using SVG (currently not supported in IE).
+
+   Extends:
+
+   <ST.Label.DOM>, <Graph.Label.SVG>
+
+   See also:
+
+   <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+ST.Label.SVG = new Class({
+  Implements: [ST.Label.DOM, Graph.Label.SVG],
+
+  initialize: function(viz) {
+    this.viz = viz;
+  }
+});
+
+/*
+   Class: ST.Label.HTML
+
+   Implements labels using plain old HTML.
+
+   Extends:
+
+   <ST.Label.DOM>, <Graph.Label.HTML>
+
+   See also:
+
+   <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+ST.Label.HTML = new Class({
+  Implements: [ST.Label.DOM, Graph.Label.HTML],
+
+  initialize: function(viz) {
+    this.viz = viz;
+  }
+});
+
 
 /*
   Class: ST.Plot.NodeTypes

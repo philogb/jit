@@ -586,8 +586,6 @@ RGraph.Label.SVG = new Class({
         tag.setAttribute('x', labelPos.x);
         tag.setAttribute('y', labelPos.y);
         
-        //tag.setAttribute('transform', 'rotate(' + node.pos.theta * 360 / (Math.PI *2) 
-        //  + ' ' + labelPos.x + ' ' + labelPos.y + ')');
         
         controller.onPlaceLabel(tag, node);
   }

@@ -296,29 +296,8 @@ Graph.Plot = {
 
         var f = adj.data && adj.data.$type || econfig.type;
         this.edgeTypes[f].call(this, adj, canvas, animating);
-    },    
+    }    
   
-  /*
-       Method: fitsInCanvas
-    
-       Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.
-
-       Parameters:
-
-       pos - A <Complex> instance (I'm doing duck typing here so any object with _x_ and _y_ parameters will do).
-       canvas - A <Canvas> instance.
-       
-       Returns:
-
-       A boolean value specifying if the label is contained in the <Canvas> DOM element or not.
-
-    */
-    fitsInCanvas: function(pos, canvas) {
-        var size = canvas.getSize();
-        if(pos.x >= size.width || pos.x < 0 
-            || pos.y >= size.height || pos.y < 0) return false;
-        return true;                    
-    }
 };
 
 /*
@@ -380,7 +359,9 @@ Graph.Label.Native = new Class({
         var ctx = canvas.getCtx();
         var coord = node.pos.getc(true);
         ctx.fillText(node.name, coord.x, coord.y);
-    }
+    },
+
+    hideLabel: $empty
 });
 
 /*
@@ -550,6 +531,27 @@ Graph.Label.DOM = new Class({
            lab.style.display = st;
         } 
       });
+    },
+  /*
+       Method: fitsInCanvas
+    
+       Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.
+
+       Parameters:
+
+       pos - A <Complex> instance (I'm doing duck typing here so any object with _x_ and _y_ parameters will do).
+       canvas - A <Canvas> instance.
+       
+       Returns:
+
+       A boolean value specifying if the label is contained in the <Canvas> DOM element or not.
+
+    */
+    fitsInCanvas: function(pos, canvas) {
+        var size = canvas.getSize();
+        if(pos.x >= size.width || pos.x < 0 
+            || pos.y >= size.height || pos.y < 0) return false;
+        return true;                    
     }
 });
 
