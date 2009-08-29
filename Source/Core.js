@@ -167,10 +167,9 @@ function $get(id) {
 var Class = function(properties){
   properties = properties || {};
   var klass = function(){
-//      not defining any attributes in Class properties.
-//    for (var key in this){
-//          if (typeof this[key] != 'function') this[key] = $unlink(this[key]);
-//      }
+      for (var key in this){
+          if (typeof this[key] != 'function') this[key] = $unlink(this[key]);
+      }
       this.constructor = klass;
       if (Class.prototyping) return this;
       var instance = (this.initialize) ? this.initialize.apply(this, arguments) : this;

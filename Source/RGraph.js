@@ -169,6 +169,8 @@ This method is useful for adding some styles to a particular edge before being p
    - _graph_ Access a <Graph> instance.
    - _op_ Access a <RGraph.Op> instance.
    - _fx_ Access a <RGraph.Plot> instance.
+   - _labels_ Access a <RGraph.Label> interface implementation.
+
 */
 
 this.RGraph = new Class({
@@ -177,33 +179,32 @@ this.RGraph = new Class({
     
   initialize: function(canvas, controller) {
     var config= {
-            labelContainer: canvas.id + '-label',
-
-                interpolation: 'linear',
-            levelDistance: 100,
-            withLabels: true,
+      labelContainer: canvas.id + '-label',
+      interpolation: 'linear',
+      levelDistance: 100,
+      withLabels: true,
                 
-        Node: {
-          overridable: false,
-            type: 'circle',
-          dim: 3,
-          color: '#ccb',
-                    width: 5,
-                    height: 5,   
-          lineWidth: 1
-        },
+      Node: {
+        overridable: false,
+        type: 'circle',
+        dim: 3,
+        color: '#ccb',
+        width: 5,
+        height: 5,   
+        lineWidth: 1
+      },
         
-        Edge: {
-          overridable: false,
-            type: 'line',
-          color: '#ccb',
-          lineWidth: 1
-        },
+      Edge: {
+        overridable: false,
+        type: 'line',
+        color: '#ccb',
+        lineWidth: 1
+      },
 
-            fps:40,
-            duration: 2500,
-                transition: Trans.Quart.easeInOut,
-                clearCanvas: true
+      fps:40,
+      duration: 2500,
+      transition: Trans.Quart.easeInOut,
+      clearCanvas: true
     };
 
       var innerController = {
@@ -228,13 +229,14 @@ this.RGraph = new Class({
             }
         };
     this.graph = new Graph(this.graphOptions);
-      this.fx = new RGraph.Plot(this);
+    this.labels = new RGraph.Label[canvas.getConfig().labels](this);
+    this.fx = new RGraph.Plot(this);
     this.op = new RGraph.Op(this);
     this.json = null;
-      this.canvas = canvas;
-      this.root = null;
-      this.busy = false;
-      this.parent = false;
+    this.canvas = canvas;
+    this.root = null;
+    this.busy = false;
+    this.parent = false;
   },
     /* 
      Method: refresh 
@@ -499,16 +501,70 @@ RGraph.Plot = new Class({
   Implements: Graph.Plot,
   
     initialize: function(viz) {
-        this.viz = viz;
-    this.config = viz.config;
-    this.node = viz.config.Node;
-    this.edge = viz.config.Edge;
-    this.animation = new Animation;
+      this.viz = viz;
+      this.config = viz.config;
+      this.node = viz.config.Node;
+      this.edge = viz.config.Edge;
+      this.animation = new Animation;
       this.nodeTypes = new RGraph.Plot.NodeTypes;
-    this.edgeTypes = new RGraph.Plot.EdgeTypes;
-    },
+      this.edgeTypes = new RGraph.Plot.EdgeTypes;
+      this.labels = viz.labels;
+    }
+});
 
-    /* 
+
+/*
+  Object: RGraph.Label
+
+  Label interface implementation for the RGraph
+
+  See Also:
+
+  <Graph.Label>, <RGraph.Label.HTML>, <RGraph.Label.SVG>
+
+ */ 
+RGraph.Label = {};
+
+/*
+   Class: RGraph.Label.Native
+
+   Implements labels natively, using the Canvas text API.
+
+   Extends:
+
+   <Graph.Label.Native>
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+RGraph.Label.Native = new Class({
+  Implements: Graph.Label.Native
+});
+
+/*
+   Class: RGraph.Label.SVG
+
+   Implements labels using SVG (currently not supported in IE).
+
+   Extends:
+
+   <Graph.Label.SVG>
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+RGraph.Label.SVG = new Class({
+  Implements: Graph.Label.SVG,
+
+  initialize: function(viz) {
+    this.viz = viz;
+  },
+
+   /* 
       Method: placeLabel
 
       Overrides abstract method placeLabel in <Graph.Plot>.
@@ -519,7 +575,7 @@ RGraph.Plot = new Class({
       node - A <Graph.Node>.
       controller - A configuration/controller object passed to the visualization.
      
-     */
+    */
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), canvas = this.viz.canvas; 
         var radius= canvas.getSize();
@@ -529,17 +585,63 @@ RGraph.Plot = new Class({
         };
         tag.setAttribute('x', labelPos.x);
         tag.setAttribute('y', labelPos.y);
-        tag.setAttribute('transform', 'rotate(' + node.pos.theta * 360 / (Math.PI *2) 
-          + ' ' + labelPos.x + ' ' + labelPos.y + ')');
+        
+        //tag.setAttribute('transform', 'rotate(' + node.pos.theta * 360 / (Math.PI *2) 
+        //  + ' ' + labelPos.x + ' ' + labelPos.y + ')');
+        
+        controller.onPlaceLabel(tag, node);
+  }
+});
+
 /*
+   Class: RGraph.Label.HTML
+
+   Implements labels using plain old HTML.
+
+   Extends:
+
+   <Graph.Label.HTML>
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+RGraph.Label.HTML = new Class({
+  Implements: Graph.Label.HTML,
+
+  initialize: function(viz) {
+    this.viz = viz;
+  },
+   /* 
+      Method: placeLabel
+
+      Overrides abstract method placeLabel in <Graph.Plot>.
+
+      Parameters:
+
+      tag - A DOM label element.
+      node - A <Graph.Node>.
+      controller - A configuration/controller object passed to the visualization.
+     
+    */
+    placeLabel: function(tag, node, controller) {
+        var pos = node.pos.getc(true), canvas = this.viz.canvas; 
+        var radius= canvas.getSize();
+        var labelPos= {
+            x: Math.round(pos.x + radius.width/2),
+            y: Math.round(pos.y + radius.height/2)
+        };
+        
         var style = tag.style;
         style.left = labelPos.x + 'px';
         style.top  = labelPos.y + 'px';
         style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
-*/
+        
         controller.onPlaceLabel(tag, node);
   }
 });
+
 
 /*
   Class: RGraph.Plot.NodeTypes

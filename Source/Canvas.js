@@ -10,7 +10,7 @@
 /*
  Class: Canvas
  
- 	A multi-purpose Canvas Class. This Class can be used with the ExCanvas library to provide
+ 	A multi-purpose Canvas Widget Class. This Class can be used with the ExCanvas library to provide
  cross browser Canvas based visualizations.
  
  Parameters:
@@ -19,11 +19,9 @@
  options - An object containing multiple options such as
  
  - _injectInto_ This property is _required_ and it specifies the id of the DOM element
- to which the Canvas widget will be appended
+ to which the Canvas widget will be appended. It can also be the actual DOM element container.
  - _width_ The width of the Canvas widget. Default's to 200px
  - _height_ The height of the Canvas widget. Default's to 200px
- - _backgroundColor_ Used for compatibility with IE. The canvas' background color.
- Default's to '#333'
  - _styles_ A hash containing canvas specific style properties such as _fillStyle_ and _strokeStyle_ among others.
  
  Example:
@@ -131,6 +129,8 @@ this.Canvas = (function(){
             'fillStyle': '#000000',
             'strokeStyle': '#000000'
         },
+
+        'labels': 'HTML', //can also be 'SVG' or 'Native'
         
         'backgroundCanvas': false
     };
@@ -154,9 +154,44 @@ this.Canvas = (function(){
         if (tag == "canvas" && !hasCanvas() && G_vmlCanvasManager) {
             elem = G_vmlCanvasManager.initElement(document.body.appendChild(elem));
         }
-        
         return elem;
     };
+
+    function createLabelContainer(labels, idLabel, dim) {
+      var NS = 'http://www.w3.org/2000/svg';
+
+      if(labels == 'HTML' || labels == 'Native') {
+        return create("div", {
+            'id': idLabel
+        }, {
+            'overflow': 'visible',
+            'position': 'absolute',
+            'top': 0,
+            'left': 0,
+            'width': dim.width + 'px',
+            'height': 0
+        });
+
+      } else if(labels == 'SVG') {
+        var svgContainer = document.createElementNS(NS, 'svg:svg');
+        svgContainer.setAttribute("width", dim.width);
+        svgContainer.setAttribute('height', dim.height);
+        var style = svgContainer.style;
+        style.position = 'absolute';
+        style.left = style.top = '0px';
+    
+        var labelContainer = document.createElementNS(NS, 'svg:g');
+        labelContainer.setAttribute('width', dim.width);
+        labelContainer.setAttribute('height', dim.height);
+        labelContainer.setAttribute('x', 0);
+        labelContainer.setAttribute('y', 0);
+        labelContainer.setAttribute('id', idLabel);
+
+        svgContainer.appendChild(labelContainer);
+
+        return svgContainer;
+      }
+    }; 
     
     function get(id){
         return document.getElementById(id);
@@ -184,16 +219,7 @@ this.Canvas = (function(){
         }, $merge(dim, {
             'position': 'relative'
         }));
-        labelContainer = create("div", {
-            'id': idLabel
-        }, {
-            'overflow': 'visible',
-            'position': 'absolute',
-            'top': 0,
-            'left': 0,
-            'width': dim.width + 'px',
-            'height': 0
-        });
+        labelContainer =  createLabelContainer(opt.labels, idLabel, dim);       
         var dimPos = {
             'position': 'absolute',
             'top': 0,
@@ -262,6 +288,24 @@ this.Canvas = (function(){
                 return ctx;
             },
             
+            /*
+             Method: getConfig
+             
+             Returns the current Configuration for this Canvas Widget.
+             
+             Returns:
+             
+             Canvas Widget Configuration
+             
+             Example:
+             
+             (start code js)
+             	var config = canvas.getConfig();
+             (end code)
+             */
+            getConfig: function(){
+                return opt;
+            },
             /*
              Method: getElement
              Returns the main Canvas DOM wrapper

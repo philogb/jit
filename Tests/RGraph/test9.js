@@ -363,30 +363,14 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     
-     var NS = "http://www.w3.org/2000/svg" ;
-     var svgContainer = document.createElementNS(NS, 'svg:svg');
-     svgContainer.setAttribute("width", w);
-     svgContainer.setAttribute('height',h);
-     var style = svgContainer.style;
-     style.position = 'absolute';
-     style.left = style.top = '0px';
-    
-    var labelContainer = document.createElementNS(NS, 'svg:g');
-    labelContainer.setAttribute('width', w);
-    labelContainer.setAttribute('height', h);
-    labelContainer.setAttribute('x', 0);
-    labelContainer.setAttribute('y', 0);
-    labelContainer.setAttribute('id', 'svg-labelcontainer');
-
-    svgContainer.appendChild(labelContainer);
-
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         //Where to append the canvas widget
         'injectInto': infovis,
         'width': w,
         'height': h,
-        
+        'labels': 'Native',
+
         //Optional: create a background canvas and plot
         //concentric circles in it.
         'backgroundCanvas': {
@@ -410,8 +394,6 @@ function init(){
         }
     });
     //end
-    //One we injected the CanvasWidget we can inject the SVG label container
-   infovis.appendChild(svgContainer);
 
     //init RGraph
     var rgraph = new RGraph(canvas, {
@@ -438,33 +420,62 @@ function init(){
         //and a click handler to move the graph.
         //This method is called once, on label creation.
         onCreateLabel: function(domElement, node){
+            domElement.firstChild
+              .appendChild(document
+                .createTextNode(node.name));
+            
+           
+            /*
             domElement.innerHTML = node.name;
+            */
             domElement.onclick = function(){
-                rgraph.onClick(node.id);
+                rgraph.onClick(node.id, {
+                  hideLabels: false
+                });
             };
         },
         //Change some label dom properties.
         //This method is called each time a label is plotted.
         onPlaceLabel: function(domElement, node){
-            var style = domElement.style;
+            var bb = domElement.getBBox();
+            if(bb) {
+              //center the label
+              var x = domElement.getAttribute('x');
+              var y = domElement.getAttribute('y');
+              //get polar coordinates
+              var p = node.pos.getp(true);
+              //get angle in degrees
+              var pi = Math.PI;
+              var cond = (p.theta > pi/2 && p.theta < 3* pi /2);
+              if(cond) {
+                domElement.setAttribute('x', x - bb.width );
+                domElement.setAttribute('y', y - bb.height );
+              } else if(node.id == rgraph.root) {
+                domElement.setAttribute('x', x - bb.width/2); 
+              }
+              
+              var thetap =  cond? p.theta + pi : p.theta;
+                domElement.setAttribute('transform', 'rotate('
+                + thetap * 360 / (2 * pi) + ' ' + x + ' ' + y + ')');
+            }
+           
+            //styling
+            var fch = domElement.firstChild;
+            var style = fch.style;
             style.display = '';
             style.cursor = 'pointer';
 
             if (node._depth <= 1) {
                 style.fontSize = "0.8em";
-                style.color = "#ccc";
+                fch.setAttribute('fill', "#ccc");
             
             } else if(node._depth == 2){
                 style.fontSize = "0.7em";
-                style.color = "#494949";
+                fch.setAttribute('fill', "#494949");
             
             } else {
                 style.display = 'none';
             }
-
-            var left = parseInt(style.left);
-            var w = domElement.offsetWidth;
-            style.left = (left - w / 2) + 'px';
         }
     });
     

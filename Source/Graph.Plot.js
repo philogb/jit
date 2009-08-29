@@ -1,7 +1,7 @@
 /*
  * File: Graph.Plot.js
  *
- * Defines an abstract class for performing <Graph> rendering and animation.
+ * Defines an abstract classes for performing <Graph> rendering and animation.
  *
  */
 
@@ -33,12 +33,12 @@ Graph.Plot = {
     Interpolator: {
         'moebius': function(elem, delta, vector) {
             if(delta <= 1 || vector.norm() <= 1) {
-        var x = vector.x, y = vector.y;
+              var x = vector.x, y = vector.y;
               var ans = elem.startPos.getc().moebiusTransformation(vector);
               elem.pos.setc(ans.x, ans.y);
               vector.x = x; vector.y = y;
             }           
-    },
+        },
 
         'linear': function(elem, delta) {
             var from = elem.startPos.getc(true);
@@ -62,163 +62,12 @@ Graph.Plot = {
         'polar': function(elem, delta) {
             var from = elem.startPos.getp(true);
             var to = elem.endPos.getp();
-      var ans = to.interpolate(from, delta);
+            var ans = to.interpolate(from, delta);
             elem.pos.setp(ans.theta, ans.rho);
         }
     },
     
-    //A flag value indicating if node labels are being displayed or not.
-    labelsHidden: false,
-    //Label DOM element
-    labelContainer: false,
-    //Label DOM elements hash.
-    labels: {},
-
-    /*
-       Method: getLabelContainer
-    
-       Lazy fetcher for the label container.
-
-       Returns:
-
-       The label container DOM element.
-
-       Example:
-
-      (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        var labelContainer = rg.fx.getLabelContainer();
-        alert(labelContainer.innerHTML);
-      (end code)
-    */
-    getLabelContainer: function() {
-        return this.labelContainer? this.labelContainer : this.labelContainer = document.getElementById('svg-labelcontainer');//this.viz.config.labelContainer);
-    },
-    
-    /*
-       Method: getLabel
-      
-       Lazy fetcher for the label DOM element.
-
-       Parameters:
-
-       id - The label id (which is also a <Graph.Node> id).
-
-       Returns:
-
-       The label DOM element.
-
-       Example:
-
-      (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        var label = rg.fx.getLabel('someid');
-        alert(label.innerHTML);
-      (end code)
-      
-    */
-    getLabel: function(id) {
-        return (id in this.labels && this.labels[id] != null)? this.labels[id] : this.labels[id] = document.getElementById(id);
-    },
-    
-    /*
-       Method: hideLabels
-    
-       Hides all labels (by hiding the label container).
-
-       Parameters:
-
-       hide - A boolean value indicating if the label container must be hidden or not.
-
-       Example:
-       (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.hideLabels(true);
-       (end code)
-       
-    */
-    hideLabels: function (hide) {
-        var container = this.getLabelContainer();
-        if(hide) container.style.display = 'none';
-        else container.style.display = '';
-        this.labelsHidden = hide;
-    },
-    
-    /*
-       Method: clearLabels
-    
-       Clears the label container.
-
-       Useful when using a new visualization with the same canvas element/widget.
-
-       Parameters:
-
-       force - Forces deletion of all labels.
-
-       Example:
-       (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.clearLabels();
-        (end code)
-    */
-    clearLabels: function(force) {
-        for(var id in this.labels) {
-            if (force || !this.viz.graph.hasNode(id)) {
-                this.disposeLabel(id);
-                delete this.labels[id];
-            }
-        }
-    },
-    
-    /*
-       Method: disposeLabel
-    
-       Removes a label.
-
-       Parameters:
-
-       id - A label id (which generally is also a <Graph.Node> id).
-
-       Example:
-       (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.disposeLabel('labelid');
-       (end code)
-    */
-    disposeLabel: function(id) {
-        var elem = this.getLabel(id);
-        if(elem && elem.parentNode) {
-          elem.parentNode.removeChild(elem);
-        }  
-    },
-
-    /*
-       Method: hideLabel
-    
-       Hides the corresponding <Graph.Node> label.
-        
-       Parameters:
-
-       node - A <Graph.Node>. Can also be an array of <Graph.Nodes>.
-       flag - If *true*, nodes will be shown. Otherwise nodes will be hidden.
-
-       Example:
-       (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.hideLabel(rg.graph.getNode('someid'), false);
-       (end code)
-    */
-    hideLabel: function(node, flag) {
-    node = $splat(node);
-    var st = flag? "" : "none", lab, that = this;
-    $each(node, function(n) {
-      var lab = that.getLabel(n.id);
-      if (lab) {
-           lab.style.display = st;
-      } 
-    });
-    },
-
+  
     /*
        Method: sequence
     
@@ -253,7 +102,7 @@ Graph.Plot = {
     */
     sequence: function(options) {
         var that = this;
-    options = $merge({
+        options = $merge({
             condition: $lambda(false),
             step: $empty,
             onComplete: $empty,
@@ -304,36 +153,36 @@ Graph.Plot = {
        
     */
     animate: function(opt, versor) {
-        var that = this,
-    viz = this.viz,
-    graph  = viz.graph,
-    GUtil = Graph.Util;
-    opt = $merge(viz.controller, opt || {}); 
+      var that = this,
+      viz = this.viz,
+      graph  = viz.graph,
+      GUtil = Graph.Util;
+      opt = $merge(viz.controller, opt || {}); 
     
-        if(opt.hideLabels) this.hideLabels(true);
-        this.animation.setOptions($merge(opt, {
-            $animating: false,
-            compute: function(delta) {
-        var vector = versor? versor.scale(-delta) : null;
-        GUtil.eachNode(graph, function(node) { 
-                    for(var i=0; i<opt.modes.length; i++) {
-            that.Interpolator[opt.modes[i]](node, delta, vector);
-          } 
-                });
-                that.plot(opt, this.$animating);
-                this.$animating = true;
-            },
-            complete: function() {
-                GUtil.eachNode(graph, function(node) { 
-                    node.startPos.set(node.pos);
-                    node.startAlpha = node.alpha;
-                });
-                if(opt.hideLabels) that.hideLabels(false);
-                that.plot(opt);
-                opt.onComplete();
-                opt.onAfterCompute();
-            }       
-    })).start();
+      if(opt.hideLabels) this.labels.hideLabels(true);
+      this.animation.setOptions($merge(opt, {
+        $animating: false,
+        compute: function(delta) {
+          var vector = versor? versor.scale(-delta) : null;
+          GUtil.eachNode(graph, function(node) { 
+            for(var i=0; i<opt.modes.length; i++) {
+              that.Interpolator[opt.modes[i]](node, delta, vector);
+            } 
+          });
+          that.plot(opt, this.$animating);
+          this.$animating = true;
+        },
+        complete: function() {
+          GUtil.eachNode(graph, function(node) { 
+            node.startPos.set(node.pos);
+            node.startAlpha = node.alpha;
+          });
+          if(opt.hideLabels) that.labels.hideLabels(false);
+          that.plot(opt);
+          opt.onComplete();
+          opt.onAfterCompute();
+        }       
+      })).start();
     },
     
     /*
@@ -354,85 +203,49 @@ Graph.Plot = {
 
     */
     plot: function(opt, animating) {
-        var viz = this.viz, 
-    aGraph = viz.graph, 
-    canvas = viz.canvas, 
-    id = viz.root, 
-    that = this, 
-    ctx = canvas.getCtx(), 
-    GUtil = Graph.Util;
-        opt = opt || this.viz.controller;
-    opt.clearCanvas && canvas.clear();
+      var viz = this.viz, 
+      aGraph = viz.graph, 
+      canvas = viz.canvas, 
+      id = viz.root, 
+      that = this, 
+      ctx = canvas.getCtx(), 
+      GUtil = Graph.Util;
+      opt = opt || this.viz.controller;
+      opt.clearCanvas && canvas.clear();
         
-        var T = !!aGraph.getNode(id).visited;
-        GUtil.eachNode(aGraph, function(node) {
-            GUtil.eachAdjacency(node, function(adj) {
-        var nodeTo = adj.nodeTo;
-                if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
-                    !animating && opt.onBeforePlotLine(adj);
-                    ctx.save();
-                    ctx.globalAlpha = Math.min(Math.min(node.alpha, nodeTo.alpha), adj.alpha);
-                    that.plotLine(adj, canvas, animating);
-                    ctx.restore();
-                    !animating && opt.onAfterPlotLine(adj);
-                }
-            });
+      var T = !!aGraph.getNode(id).visited;
+      GUtil.eachNode(aGraph, function(node) {
+        GUtil.eachAdjacency(node, function(adj) {
+          var nodeTo = adj.nodeTo;
+          if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
+            !animating && opt.onBeforePlotLine(adj);
             ctx.save();
-      if(node.drawn) {
-              ctx.globalAlpha = node.alpha;
-              !animating && opt.onBeforePlotNode(node);
-              that.plotNode(node, canvas, animating);
-              !animating && opt.onAfterPlotNode(node);
-      }
-            if(!that.labelsHidden && opt.withLabels) {
-        if(node.drawn && ctx.globalAlpha >= 0.95) {
-          that.plotLabel(canvas, node, opt);
-        } else {
-          that.hideLabel(node, false);
-        }
-      }
+            ctx.globalAlpha = Math.min(Math.min(node.alpha, nodeTo.alpha), adj.alpha);
+            that.plotLine(adj, canvas, animating);
             ctx.restore();
-            node.visited = !T;
+            !animating && opt.onAfterPlotLine(adj);
+          }
         });
-    },
-
-    /*
-       Method: plotLabel
-    
-       Plots a label for a given node.
-
-       Parameters:
-
-       canvas - A <Canvas> instance.
-       node - A <Graph.Node>.
-       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
-
-    */
-    plotLabel: function(canvas, node, controller) {
-    var id = node.id, tag = this.getLabel(id);
-        if(!tag && !(tag = document.getElementById(id))) {
-            var ns = 'http://www.w3.org/2000/svg';
-            tag = document.createElementNS(ns, 'svg:text');
-            var tspan = document.createElementNS(ns, 'svg:tspan');
-            tspan.appendChild(document.createTextNode('some text node'));
-            tag.appendChild(tspan);
-
-            //tag = document.createElement('div');
-            var container = this.getLabelContainer();
-            container.appendChild(tag);
-            tag.setAttribute('id', id);
-            tag.setAttribute('class', 'node');
-            tag.setAttribute('font-size', '22');
-            tag.setAttribute('fill','red');
-            //tag.id = id;
-            //tag.className = 'node';
-            //tag.style.position = 'absolute';
-            //controller.onCreateLabel(tag, node);
-            this.labels[node.id] = tag;
+        ctx.save();
+        if(node.drawn) {
+          ctx.globalAlpha = node.alpha;
+          !animating && opt.onBeforePlotNode(node);
+          that.plotNode(node, canvas, animating);
+          !animating && opt.onAfterPlotNode(node);
         }
-        this.placeLabel(tag, node, controller);
+        if(!that.labelsHidden && opt.withLabels) {
+          if(node.drawn && ctx.globalAlpha >= 0.95) {
+            that.labels.plotLabel(canvas, node, opt);
+          } else {
+            that.labels.hideLabel(node, false);
+          }
+        }
+        ctx.restore();
+        node.visited = !T;
+      });
     },
-  
+
+
   /*
        Method: plotNode
     
@@ -507,3 +320,328 @@ Graph.Plot = {
         return true;                    
     }
 };
+
+/*
+   Object: Graph.Label
+
+   Generic interface for plotting labels.
+
+   Description:
+
+   This is a generic interface for plotting/hiding/showing labels.
+   The <Graph.Label> interface is implemented in multiple ways to provide 
+   different label types.
+
+   For example, the Graph.Label interface is implemented as Graph.Label.DOM to provide 
+   DOM label elements. Also we provide the Graph.Label.SVG interface (currently not working in IE) 
+   for providing SVG type labels. The Graph.Label.Native interface implements these methods with the 
+   native Canvas text rendering functions (currently not working in Opera).
+
+   Implemented by:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>.
+
+   Access:
+
+   The subclasses for this abstract class can be accessed by using the _labels_ property of the <Hypertree>, <RGraph>, or <ST> instances created.
+
+   See also:
+
+   <Hypertree.Plot>, <RGraph.Plot>, <ST.Plot>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+
+Graph.Label = {};
+
+/*
+   Class: Graph.Label.Native
+
+   Implements labels natively, using the Canvas text API.
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Graph.Label.Native = new Class({
+     /*
+       Method: plotLabel
+    
+       Plots a label for a given node.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+
+    */
+    plotLabel: function(canvas, node, controller) {
+        var ctx = canvas.getCtx();
+        var coord = node.pos.getc(true);
+        ctx.fillText(node.name, coord.x, coord.y);
+    }
+});
+
+/*
+   Class: Graph.Label.DOM
+
+   Abstract Class implementing some DOM label methods.
+
+   Implemented by:
+
+   <Graph.Label.HTML>, <Graph.Label.SVG>.
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Graph.Label.DOM = new Class({
+    //A flag value indicating if node labels are being displayed or not.
+    labelsHidden: false,
+    //Label container 
+    labelContainer: false,
+    //Label elements hash.
+    labels: {},
+
+    /*
+       Method: getLabelContainer
+    
+       Lazy fetcher for the label container.
+
+       Returns:
+
+       The label container DOM element.
+
+       Example:
+
+      (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        var labelContainer = rg.fx.getLabelContainer();
+        alert(labelContainer.innerHTML);
+      (end code)
+    */
+    getLabelContainer: function() {
+        return this.labelContainer? this.labelContainer 
+        : this.labelContainer = document
+          .getElementById(this.viz.config.labelContainer);
+    },
+    
+    /*
+       Method: getLabel
+      
+       Lazy fetcher for the label element.
+
+       Parameters:
+
+       id - The label id (which is also a <Graph.Node> id).
+
+       Returns:
+
+       The label element.
+
+       Example:
+
+      (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        var label = rg.fx.getLabel('someid');
+        alert(label.innerHTML);
+      (end code)
+      
+    */
+    getLabel: function(id) {
+        return (id in this.labels && this.labels[id] != null)? this.labels[id] 
+          : this.labels[id] = document.getElementById(id);
+    },
+    
+    /*
+       Method: hideLabels
+    
+       Hides all labels (by hiding the label container).
+
+       Parameters:
+
+       hide - A boolean value indicating if the label container must be hidden or not.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.hideLabels(true);
+       (end code)
+       
+    */
+    hideLabels: function (hide) {
+        var container = this.getLabelContainer();
+        if(hide) container.style.display = 'none';
+        else container.style.display = '';
+        this.labelsHidden = hide;
+    },
+    
+    /*
+       Method: clearLabels
+    
+       Clears the label container.
+
+       Useful when using a new visualization with the same canvas element/widget.
+
+       Parameters:
+
+       force - Forces deletion of all labels.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.clearLabels();
+        (end code)
+    */
+    clearLabels: function(force) {
+        for(var id in this.labels) {
+            if (force || !this.viz.graph.hasNode(id)) {
+                this.disposeLabel(id);
+                delete this.labels[id];
+            }
+        }
+    },
+    /*
+       Method: disposeLabel
+    
+       Removes a label.
+
+       Parameters:
+
+       id - A label id (which generally is also a <Graph.Node> id).
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.disposeLabel('labelid');
+       (end code)
+    */
+    disposeLabel: function(id) {
+        var elem = this.getLabel(id);
+        if(elem && elem.parentNode) {
+          elem.parentNode.removeChild(elem);
+        }  
+    },
+
+    /*
+       Method: hideLabel
+    
+       Hides the corresponding <Graph.Node> label.
+        
+       Parameters:
+
+       node - A <Graph.Node>. Can also be an array of <Graph.Nodes>.
+       flag - If *true*, nodes will be shown. Otherwise nodes will be hidden.
+
+       Example:
+       (start code js)
+        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        rg.fx.hideLabel(rg.graph.getNode('someid'), false);
+       (end code)
+    */
+    hideLabel: function(node, flag) {
+      node = $splat(node);
+      var st = flag? "" : "none", lab, that = this;
+      $each(node, function(n) {
+        var lab = that.getLabel(n.id);
+        if (lab) {
+           lab.style.display = st;
+        } 
+      });
+    }
+});
+
+/*
+   Class: Graph.Label.HTML
+
+   Implements HTML labels.
+
+   Extends:
+
+   <Graph.Label.DOM>.
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Graph.Label.HTML = new Class({
+    Implements: Graph.Label.DOM,
+    
+    /*
+       Method: plotLabel
+    
+       Plots a label for a given node.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+
+    */
+    plotLabel: function(canvas, node, controller) {
+        var id = node.id, tag = this.getLabel(id);
+        if(!tag && !(tag = document.getElementById(id))) {
+            tag = document.createElement('div');
+            var container = this.getLabelContainer();
+            tag.id = id;
+            tag.className = 'node';
+            tag.style.position = 'absolute';
+            controller.onCreateLabel(tag, node);
+            container.appendChild(tag);
+            this.labels[node.id] = tag;
+        }
+        this.placeLabel(tag, node, controller);
+    }
+});
+
+/*
+   Class: Graph.Label.SVG
+
+   Implements SVG labels.
+
+   Extends:
+
+   <Graph.Label.DOM>.
+
+   See also:
+
+   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Graph.Label.SVG = new Class({
+    Implements: Graph.Label.DOM,
+    
+    /*
+       Method: plotLabel
+    
+       Plots a label for a given node.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+
+    */
+    plotLabel: function(canvas, node, controller) {
+        var id = node.id, tag = this.getLabel(id);
+        if(!tag && !(tag = document.getElementById(id))) {
+            var ns = 'http://www.w3.org/2000/svg';
+            tag = document.createElementNS(ns, 'svg:text');
+            var tspan = document.createElementNS(ns, 'svg:tspan');
+            tag.appendChild(tspan);
+            var container = this.getLabelContainer();
+            tag.setAttribute('id', id);
+            tag.setAttribute('class', 'node');
+            container.appendChild(tag);
+            controller.onCreateLabel(tag, node);
+            this.labels[node.id] = tag;
+        }
+        this.placeLabel(tag, node, controller);
+    }
+});
+
