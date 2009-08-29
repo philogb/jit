@@ -321,13 +321,14 @@ this.Hypertree = new Class({
             } 
         }; 
     this.graph = new Graph(this.graphOptions); 
+    this.labels = new Hypertree.Label[canvas.getConfig().labels]();
     this.fx = new Hypertree.Plot(this); 
     this.op = new Hypertree.Op(this); 
-      this.json = null; 
-      this.canvas = canvas; 
+    this.json = null; 
+    this.canvas = canvas; 
  
-      this.root = null; 
-      this.busy = false; 
+    this.root = null; 
+    this.busy = false; 
     }, 
  
     /* 
@@ -706,10 +707,61 @@ Hypertree.Plot = new Class({
   sense: function(angleBegin, angleEnd) { 
      return (angleBegin < angleEnd)? ((angleBegin + Math.PI > angleEnd)? false : true) :  
          ((angleEnd + Math.PI > angleBegin)? true : false); 
-  }, 
-   
+  } 
+}); 
 
-    /* 
+/*
+  Object: Hypertree.Label
+
+  Label interface implementation for the Hypertree
+
+  See Also:
+
+  <Graph.Label>, <Hypertree.Label.HTML>, <RGraph.Label.SVG>
+
+ */ 
+Hypertree.Label = {};
+
+/*
+   Class: Hypertree.Label.Native
+
+   Implements labels natively, using the Canvas text API.
+
+   Extends:
+
+   <Graph.Label.Native>
+
+   See also:
+
+   <Hypertree.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Hypertree.Label.Native = new Class({
+  Implements: Graph.Label.Native
+});
+
+/*
+   Class: Hypertree.Label.SVG
+
+   Implements labels using SVG (currently not supported in IE).
+
+   Extends:
+
+   <Graph.Label.SVG>
+
+   See also:
+
+   <Hypertree.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Hypertree.Label.SVG = new Class({
+  Implements: Graph.Label.SVG,
+
+  initialize: function(viz) {
+    this.viz = viz;
+  },
+
+   /* 
       Method: placeLabel
 
       Overrides abstract method placeLabel in <Graph.Plot>.
@@ -720,22 +772,70 @@ Hypertree.Plot = new Class({
       node - A <Graph.Node>.
       controller - A configuration/controller object passed to the visualization.
      
-     */
-    placeLabel: function(tag, node, controller) { 
-      var pos = node.pos.getc(true), canvas = this.viz.canvas; 
-      var radius= canvas.getSize(); 
-      var scale = node._scale; 
-      var labelPos= { 
-          x: Math.round(pos.x * scale + radius.width/2), 
-          y: Math.round(pos.y * scale + radius.height/2) 
-      }; 
-      var style = tag.style; 
-      style.left = labelPos.x + 'px'; 
-      style.top  = labelPos.y + 'px'; 
-      style.display = ''; 
-      controller.onPlaceLabel(tag, node); 
-  } 
-}); 
+    */
+    placeLabel: function(tag, node, controller) {
+        var pos = node.pos.getc(true), canvas = this.viz.canvas; 
+        var radius= canvas.getSize();
+        var labelPos= {
+            x: Math.round(pos.x + radius.width/2),
+            y: Math.round(pos.y + radius.height/2)
+        };
+        tag.setAttribute('x', labelPos.x);
+        tag.setAttribute('y', labelPos.y);
+        
+        controller.onPlaceLabel(tag, node);
+  }
+});
+
+/*
+   Class: Hypertree.Label.HTML
+
+   Implements labels using plain old HTML.
+
+   Extends:
+
+   <Graph.Label.HTML>
+
+   See also:
+
+   <Hypertree.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+
+*/
+Hypertree.Label.HTML = new Class({
+  Implements: Graph.Label.HTML,
+
+  initialize: function(viz) {
+    this.viz = viz;
+  },
+   /* 
+      Method: placeLabel
+
+      Overrides abstract method placeLabel in <Graph.Plot>.
+
+      Parameters:
+
+      tag - A DOM label element.
+      node - A <Graph.Node>.
+      controller - A configuration/controller object passed to the visualization.
+     
+    */
+    placeLabel: function(tag, node, controller) {
+        var pos = node.pos.getc(true), canvas = this.viz.canvas; 
+        var radius= canvas.getSize();
+        var labelPos= {
+            x: Math.round(pos.x + radius.width/2),
+            y: Math.round(pos.y + radius.height/2)
+        };
+        
+        var style = tag.style;
+        style.left = labelPos.x + 'px';
+        style.top  = labelPos.y + 'px';
+        style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
+        
+        controller.onPlaceLabel(tag, node);
+  }
+});
+
 
 /*
   Class: Hypertree.Plot.NodeTypes
