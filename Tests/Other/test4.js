@@ -369,7 +369,7 @@ function init(){
         'injectInto': infovis,
         'width': w,
         'height': h,
-        'labels': 'Native',
+        'labels': 'SVG',
 
         //Optional: create a background canvas and plot
         //concentric circles in it.
@@ -396,7 +396,7 @@ function init(){
     //end
 
     //init RGraph
-    var rgraph = new Hypertree(canvas, {
+    var rgraph = new RGraph(canvas, {
         //Set Node and Edge colors.
         Node: {
             color: '#ccddee'
@@ -423,11 +423,6 @@ function init(){
             domElement.firstChild
               .appendChild(document
                 .createTextNode(node.name));
-            
-           
-            /*
-            domElement.innerHTML = node.name;
-            */
             domElement.onclick = function(){
                 rgraph.onClick(node.id, {
                   hideLabels: false
