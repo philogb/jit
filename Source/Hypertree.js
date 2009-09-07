@@ -294,10 +294,10 @@ this.Hypertree = new Class({
                     color: '#ccb', 
                     lineWidth: 1 
                 }, 
-                clearCanvas: true,
+            clearCanvas: true,
             fps:40, 
             duration: 1500, 
-                transition: Trans.Quart.easeInOut 
+            transition: Trans.Quart.easeInOut 
     }; 
  
       var innerController = { 
@@ -431,26 +431,29 @@ this.Hypertree = new Class({
         //Set default values for the root node 
         for(var i=0; i<propArray.length; i++)  
             root[propArray[i]] = $P(0, 0); 
+        
         root.angleSpan = { 
             begin: 0, 
             end: 2 * Math.PI 
         }; 
-    root._rel = 1; 
+        root._rel = 1; 
      
         //Estimate better edge length. 
         var edgeLength = (function() { 
-            var depth = 0; 
-            GUtil.eachNode(aGraph, function(node) { 
-                depth = (node._depth > depth)? node._depth : depth; 
-        node._scale = scale; 
-            }, "ignore"); 
-            for(var i=0.51; i<=1; i+=0.01) { 
-                var valSeries = (function(a, n) { 
-                    return (1 - Math.pow(a, n)) / (1 - a); 
-                })(i, depth + 1); 
-                if(valSeries >= 2) return i - 0.01; 
-            } 
-            return 0.5; 
+          var depth = 0; 
+          GUtil.eachNode(aGraph, function(node) { 
+            depth = (node._depth > depth)? node._depth : depth; 
+            node._scale = scale; 
+          }, "ignore"); 
+            
+          for(var i=0.51; i<=1; i+=0.01) { 
+            var valSeries = (function(a, n) { 
+              return (1 - Math.pow(a, n)) / (1 - a); 
+            })(i, depth + 1); 
+            if(valSeries >= 2) return i - 0.01; 
+          } 
+          
+          return 0.5; 
         })(); 
          
         GUtil.eachBFS(this.graph, this.root, function (elem) { 

@@ -83,28 +83,14 @@
      - _color_ Edge color. Default's '#ccb'.
      - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
 
-     *Animations*
+    *Animations*
 
-     - _duration_ Duration of the animation in milliseconds. Default's 2500.
-     - _fps_ Frames per second. Default's 40.
-     - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
-     - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
+    See <Options.Animation>.
      
     *Controller options*
 
-    You can also implement controller functions inside the configuration object. This functions are
+    See <Options.Controller>.
     
-    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
-    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
-    - _onCreateLabel(domElement, node)_ This method receives the label dom element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called on label creation. Note that a <Graph.Node> is a node from the input tree/graph you provided to the visualization. If you want to know more about what kind of JSON tree/graph format is used to feed the visualizations, you can take a look at <Loader.loadJSON>. This method proves useful when adding events to the labels used by the JIT.
-    - _onPlaceLabel(domElement, node)_ This method receives the label dom element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed on the visualization, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions.
-    - _onBeforePlotNode(node)_ This method is triggered right before plotting a given node. The _node_ parameter is the <Graph.Node> to be plotted. 
-This method is useful for changing a node style right before plotting it.
-    - _onAfterPlotNode(node)_ This method is triggered right after plotting a given node. The _node_ parameter is the <Graph.Node> plotted.
-    - _onBeforePlotLine(adj)_ This method is triggered right before plotting an edge. The _adj_ parameter is a <Graph.Adjacence> object. 
-This method is useful for adding some styles to a particular edge before being plotted.
-    - _onAfterPlotLine(adj)_ This method is triggered right after plotting an edge. The _adj_ parameter is the <Graph.Adjacence> plotted.
-
     Example:
 
     Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
@@ -175,51 +161,22 @@ This method is useful for adding some styles to a particular edge before being p
 
 this.RGraph = new Class({
   
-    Implements: [Loader, AngularWidth],
+  Implements: [Loader, Layouts.Radial],
     
   initialize: function(canvas, controller) {
+    
     var config= {
       labelContainer: canvas.id + '-label',
       interpolation: 'linear',
       levelDistance: 100,
-      withLabels: true,
-                
-      Node: {
-        overridable: false,
-        type: 'circle',
-        dim: 3,
-        color: '#ccb',
-        width: 5,
-        height: 5,   
-        lineWidth: 1
-      },
-        
-      Edge: {
-        overridable: false,
-        type: 'line',
-        color: '#ccb',
-        lineWidth: 1
-      },
-
-      fps:40,
-      duration: 2500,
-      transition: Trans.Quart.easeInOut,
-      clearCanvas: true
+      withLabels: true
     };
-
-      var innerController = {
-          onBeforeCompute: $empty,
-          onAfterCompute:  $empty,
-          onCreateLabel:   $empty,
-          onPlaceLabel:    $empty,
-          onComplete:      $empty,
-          onBeforePlotLine:$empty,
-          onAfterPlotLine: $empty,
-          onBeforePlotNode:$empty,
-          onAfterPlotNode: $empty
-      };
     
-      this.controller = this.config = $merge(config, innerController, controller);
+    this.controller = this.config = $merge(config, 
+        Options.Graph, 
+        Options.Animation, 
+        Options.Controller);
+    
       this.graphOptions = {
             'complex': false,
             'Node': {
@@ -302,7 +259,7 @@ this.RGraph = new Class({
         var GUtil = Graph.Util;
         var root = this.graph.getNode(this.root);
         var parent = this.parent;
-    var config = this.config;
+        var config = this.config;
 
         for(var i=0; i<propArray.length; i++)
             root[propArray[i]] = $P(0, 0);
