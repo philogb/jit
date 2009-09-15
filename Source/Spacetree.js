@@ -46,75 +46,30 @@
      - _levelDistance_ Distance between levels. Default's 30.
      - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
      - _align_ Whether the tree alignment is left, center or right.
-     - _indent_ Used when alignment is left or right and shows an indentation between parent and children. Default's 10.
-     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
+     - _indent_ Used when _align_ is left or right and shows an indentation between parent and children. Default's 10.
 
      *Node*
      
      Customize the visualization nodes' shape, color, and other style properties.
 
-     - _Node_
-
-     This object has as properties
-
-     - _overridable_ Determine whether or not nodes properties can be overriden by a particular node. Default's false.
-
-     If given a JSON tree or graph, a node _data_ property contains properties which are the same as defined here but prefixed with 
-     a dollar sign (i.e $), the node properties will override the global node properties.
-
-     - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "ellipse" and "circle". Default's "rectangle".
-     - _color_ Node color. Default's '#ccb'.
-     - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
-     - _height_ Node height. Used for plotting rectangular nodes. _Width_ and _height_ properties are also used as bounding box for nodes of different shapes. 
-     This means that for all shapes you'd have to make sure that the node's shape is contained in the bounding box defined by _width_ and _height_ parameters. Default's 20.
-     - _width_ Node width. Used for plotting rectangular nodes and for calculating a node's bounding box. Default's 90.
-     - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. 
-     Please notice that even if these complex shapes (square, circle) only use _dim_ for calculating it's diameter property, the complex shape must be 
-     contained in the bounding box calculated with the _width_ and _height_ parameters. Default's 15.
-     - _align_ Defines a node's alignment. Possible values are "center", "left", "right". Default's "center".
+     Inherits options from <Options.Graph.Node>.
 
      *Edge*
 
      Customize the visualization edges' shape, color, and other style properties.
 
-     - _Edge_
-
-     This object has as properties
-
-     - _overridable_ Determine whether or not edges properties can be overriden by a particular edge object. Default's false.
-
-     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), an adjacency _data_ property contains properties which are the same as defined here but prefixed with 
-     a dollar sign (i.e $), the adjacency properties will override the global edge properties.
-
-     - _type_ Edge type (shape). Possible options are "none", "line", "quadratic:begin", "quadratic:end", "bezier" and "arrow". Default's "line".
-     - _color_ Edge color. Default's '#ccb'.
-     - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
-     - _dim_ An extra parameter used by other complex shapes such as quadratic, arrow and bezier to determine the shape's diameter. 
-
+     Inherits from <Options.Graph.Edge>.
+      
      *Animations*
 
+     Inherits from <Options.Animation>, although the following default values are changed.
+     
      - _duration_ Duration of the animation in milliseconds. Default's 700.
      - _fps_ Frames per second. Default's 25.
-     - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
-     - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
      
     *Controller options*
 
-    You can also implement controller functions inside the configuration object. This functions are
-    
-    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
-    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
-    - _onCreateLabel(domElement, node)_ This method receives the label dom element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called on label creation. Note that a <Graph.Node> is a node from the input tree/graph you provided to the visualization. If you want to know more about what kind of JSON tree/graph format is used to feed the visualizations, you can take a look at <Loader.loadJSON>. This method proves useful when adding events to the labels used by the JIT.
-    - _onPlaceLabel(domElement, node)_ This method receives the label dom element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed on the visualization, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions.
-    - _onBeforePlotNode(node)_ This method is triggered right before plotting a given node. The _node_ parameter is the <Graph.Node> to be plotted. 
-This method is useful for changing a node style right before plotting it.
-    - _onAfterPlotNode(node)_ This method is triggered right after plotting a given node. The _node_ parameter is the <Graph.Node> plotted.
-    - _onBeforePlotLine(adj)_ This method is triggered right before plotting an edge. The _adj_ parameter is a <Graph.Adjacence> object. 
-This method is useful for adding some styles to a particular edge before being plotted.
-    - _onAfterPlotLine(adj)_ This method is triggered right after plotting an edge. The _adj_ parameter is the <Graph.Adjacence> plotted.
-    - _request(nodeId, level, onComplete)_ This method is used for buffering information into the visualization. When clicking on an empty node,
- the visualization will make a request for this node's subtree, specifying a given level for this subtree. Once this request is completed the _onComplete_ 
-object must be called with the given result.
+     Inherits from <Options.Controller>.
 
     Example:
 
@@ -410,20 +365,7 @@ this.ST= (function() {
     
         Implements: Loader,
         
-        initialize: function(canvas, controller) {
-            var innerController = {
-                onBeforeCompute: $empty,
-                onAfterCompute:  $empty,
-                onCreateLabel:   $empty,
-                onPlaceLabel:    $empty,
-                onComplete:      $empty,
-                onBeforePlotNode:$empty,
-                onAfterPlotNode: $empty,
-                onBeforePlotLine:$empty,
-                onAfterPlotLine: $empty,
-                request:         false
-            };
-            
+        initialize: function(canvas, controller) {            
             var config= {
                 orientation: "left",
                 labelContainer: canvas.id + '-label',
@@ -432,35 +374,20 @@ this.ST= (function() {
                 siblingOffset: 5,
                 levelDistance: 30,
                 withLabels: true,
-                clearCanvas: true,
-                align: "center",
                 indent:10,
                 multitree: false,
                 constrained: true,
+                align:"center",
                 
                 Node: {
-                    overridable: false,
-                    type: 'rectangle',
-                    color: '#ccb',
-                    lineWidth: 1,
-                    height: 20,
-                    width: 90,
-                    dim: 15,
-                    align: "center"
-                },
-                Edge: {
-                    overridable: false,
-                    type: 'line',
-                    color: '#ccc',
-                    dim: 15,
-                    lineWidth: 1
+                    type: 'rectangle'
                 },
                 duration: 700,
-                fps: 25,
-                transition: Trans.Quart.easeInOut
+                fps: 25
             };
             
-            this.controller = this.config = $merge(config, innerController, controller);
+            this.controller = this.config = $merge(Options.Animation, Options.Graph, 
+                Options.Controller, config, controller);
             this.canvas = canvas;
             this.graphOptions = {
                 'complex': true
@@ -1466,7 +1393,7 @@ ST.Geom = new Class({
        Hides levels of the tree until it properly fits in canvas.
     */  
     setRightLevelToShow: function(node, canvas) {
-        var level = this.getRightLevelToShow(node, canvas), fx = this.viz.fx;
+        var level = this.getRightLevelToShow(node, canvas), fx = this.viz.labels;
         Graph.Util.eachLevel(node, 0, this.config.levelsToShow, function(n) {
             var d = n._depth - node._depth;
             if(d > level) {

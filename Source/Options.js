@@ -139,10 +139,11 @@ Options.Graph = {};
      - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "circle", "triangle", "star". Default's "circle".
      - _color_ Node color. Default's '#ccb'.
      - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
-     - _height_ Node height. Used for plotting rectangular nodes. Default's 5.
-     - _width_ Node width. Used for plotting rectangular nodes. Default's 5.
+     - _height_ Node height. Used for plotting rectangular nodes. Default's 20.
+     - _width_ Node width. Used for plotting rectangular nodes. Default's 90.
      - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. Default's 3.
-     - _transform_ <Hypertree> only. Whether to apply the moebius transformation to the nodes or not. Default's true.
+     - _transform_ *<Hypertree> only*. Whether to apply the moebius transformation to the nodes or not. Default's true.
+     - _align_ *<ST> only*. Defines a node's alignment. Possible values are "center", "left", "right". Default's "center".
 
 */
 Options.Graph.Node = {
@@ -150,10 +151,11 @@ Options.Graph.Node = {
   type: 'circle',
   dim: 3,
   color: '#ccb',
-  width: 5,
-  height: 5,   
+  height: 20,
+  width: 90,
   lineWidth: 1,
-  transform: true
+  transform: true,
+  align: "center"
 };
 
 /*
@@ -181,11 +183,51 @@ Options.Graph.Node = {
      - _type_ Edge type (shape). Default's "line" in the <RGraph> and <ST>, but "hyperline" in the <Hypertree> visualization.
      - _color_ Edge color. Default's '#ccb'.
      - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
+     - _dim_ An extra parameter used by other complex shapes such as qudratic or bezier to determine the shape's diameter. Default's 15.
 
 */
 Options.Graph.Edge = {
   overridable: false,
   type: 'line',
   color: '#ccb',
-  lineWidth: 1
+  lineWidth: 1,
+  dim:15
 };
+
+
+/*
+  Object: Options.Tips
+  
+  Options for Tips
+  
+  Description:
+  
+  Options for Tool Tips.
+  
+  Implemented by:
+  
+  <TM>
+
+  These configuration parameters are currently used by <TM>.
+
+    _Tips_ is an object containing as properties
+
+    - _allow_ If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. Default's *false*. 
+    - _offsetX_ An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
+    - _offsetY_ An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
+    - _onShow(tooltip, node, isLeaf, domElement)_ Implement this method to change the HTML content of the tooltip when hovering a node.
+    
+    Parameters:
+      tooltip - The tooltip div element.
+      node - The corresponding JSON tree node (See also <Loader.loadJSON>).
+      isLeaf - Whether is a leaf or inner node.
+      domElement - The current hovered DOM element.
+
+*/
+Options.Tips = {
+  allow: false,
+  offsetX: 20,
+  offsetY: 20,
+  onShow: $empty
+};
+

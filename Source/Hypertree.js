@@ -242,7 +242,9 @@ this.Hypertree = new Class({
       Edge: { 
           type: 'hyperline' 
       },
-      withLabels: true
+      withLabels: true,
+      duration: 1500,
+      fps: 35
     }; 
     this.controller = this.config = $merge(Options.Graph, 
         Options.Animation, 

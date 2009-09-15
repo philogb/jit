@@ -46,7 +46,8 @@ class Build():
                            'Layouts',
                            'Animation'],
             
-            'Spacetree':   ['Core', 
+            'Spacetree':   ['Core',
+                            'Options', 
                             'Canvas', 
                             'Complex',
                             'Polar', 
@@ -57,7 +58,8 @@ class Build():
                             'Layouts', 
                             'Animation'],
                             
-            'Treemap':      ['Core']
+            'Treemap':      ['Core',
+                             'Options']
         }
         
     def build(self, args=['Spacetree', 'RGraph', 'Hypertree', 'Treemap']):

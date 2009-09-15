@@ -117,37 +117,11 @@
 
     *Tips*
 
-    _Tips_ is an object containing as properties
-
-    - _allow_ If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. Default's *false*. 
-    - _offsetX_ An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
-    - _offsetY_ An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
-    - _onShow(tooltip, node, isLeaf, domElement)_ Implement this method to change the HTML content of the tooltip when hovering a node.
-    
-    Parameters:
-      tooltip - The tooltip div element.
-      node - The corresponding JSON tree node (See also <Loader.loadJSON>).
-      isLeaf - Whether is a leaf or inner node.
-      domElement - The current hovered DOM element.
+    See <Options.Tips>.
     
     *Controller options*
 
-    You can also implement controller functions inside the configuration object. These functions are
-    
-    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
-    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
-    - _onCreateElement(content, node, isLeaf, elem1, elem2)_ This method is called on each newly created node. 
-    
-    Parameters:
-      content - The div wrapper element with _content_ className.
-      node - The corresponding JSON tree node (See also <Loader.loadJSON>).
-      isLeaf - Whether is a leaf or inner node. If the node's an inner tree node, elem1 and elem2 will become the _head_ and _body_ div elements respectively. 
-      If the node's a _leaf_, then elem1 will become the div leaf element.
-    
-    - _onDestroyElement(content, node, isLeaf, elem1, elem2)_ This method is called before collecting each node. Takes the same parameters as onCreateElement.
-    - _request(nodeId, level, onComplete)_ This method is used for buffering information into the visualization. When clicking on an empty node,
-    the visualization will make a request for this node's subtrees, specifying a given level for this subtree (defined by _levelsToShow_). Once the request is completed, the _onComplete_ 
-object should be called with the given result.
+    See <Options.Controller>.
 
     See also <TM.Squarified>, <TM.SliceAndDice> and <TM.Strip>.
 
@@ -168,15 +142,6 @@ this.TM = {
     }
   },
   
-  innerController: {
-      onBeforeCompute:  $empty,
-      onAfterCompute:   $empty,
-      onComplete:       $empty,
-      onCreateElement:  $empty,
-      onDestroyElement: $empty,
-      request:          false
-    },
-
     config: {
       orientation: "h",
       titleHeight: 13,
@@ -186,29 +151,24 @@ this.TM = {
       addLeftClickHandler: false,
       addRightClickHandler: false,
       selectPathOnHover: false,
-            
+      
+      Tips: Options.Tips,
+      
       Color: {
         allow: false,
         minValue: -100,
         maxValue: 100,
         minColorValue: [255, 0, 50],
         maxColorValue: [0, 255, 50]
-      },
-            
-      Tips: {
-        allow: false,
-        offsetX: 20,
-        offsetY: 20,
-        onShow: $empty
-      }
+      }     
     },
   
 
   initialize: function(controller) {
     this.tree = null;
     this.shownTree = null;
-    this.controller = this.config = $merge(this.config, 
-                    this.innerController, 
+    this.controller = this.config = $merge(Options.Controller,
+                    this.config,
                     controller);
     this.rootId = this.config.rootId;
     this.layout.orientation = this.config.orientation;
