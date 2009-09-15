@@ -178,7 +178,7 @@ Options.Graph.Node = {
      If given a JSON _complex_ graph (defined in <Loader.loadJSON>), an adjacency _data_ property contains properties which are the same as defined here but prefixed with 
      a dollar sign (i.e $), the adjacency properties will override the global edge properties.
 
-     - _type_ Edge type (shape). Options depend on the <ST>, <Hypertree> and <RGraph> classes. Default's "line".
+     - _type_ Edge type (shape). Default's "line" in the <RGraph> and <ST>, but "hyperline" in the <Hypertree> visualization.
      - _color_ Edge color. Default's '#ccb'.
      - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
 

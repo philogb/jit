@@ -25,7 +25,7 @@
 /* 
      Complex 
      
-     A multi-purpose Complex Class with common methods. Exetended for the Hypertree. 
+     A multi-purpose Complex Class with common methods. Extended for the Hypertree. 
  
 */ 
 /* 
@@ -124,7 +124,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
 
      Extends:
 
-     <Loader>, <AngularWidth>
+     <Loader>, <Layout.Radial>
 
      Parameters:
 
@@ -136,74 +136,44 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
      The configuration object can have the following properties (all properties are optional and have a default value)
       
      *General*
+     
      - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
+     - _radius_ The radius length of the visualization. Default's "auto" which means that the radius will be calculated to 
+     fit the canvas. You can change this value to any float value.
      
      *Node*
      
      Customize the visualization nodes' shape, color, and other style properties.
 
-     - _Node_
-
-     This object has as properties
-
-     - _overridable_ Determine whether or not nodes properties can be overriden by a particular node. Default's false.
-
-     If given a JSON tree or graph, a node _data_ property contains properties which are the same as defined here but prefixed with 
-     a dollar sign (i.e $), the node properties will override the global node properties.
-
-     - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "circle", "triangle", "star". Default's "circle".
-     - _color_ Node color. Default's '#ccb'.
-     - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
-     - _height_ Node height. Used for plotting rectangular nodes. Default's 5.
-     - _width_ Node width. Used for plotting rectangular nodes. Default's 5.
-     - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. Default's 7.
-     - _transform_ Whether to apply the moebius transformation to the nodes or not. Default's true.
+     Inherits options from <Options.Graph.Node>.
 
      *Edge*
 
      Customize the visualization edges' shape, color, and other style properties.
 
-     - _Edge_
-
-     This object has as properties
-
-     - _overridable_ Determine whether or not edges properties can be overriden by a particular edge object. Default's false.
-
-     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), an adjacency _data_ property contains properties which are the same as defined here but prefixed with 
-     a dollar sign (i.e $), the adjacency properties will override the global edge properties.
-
-     - _type_ Edge type (shape). Possible options are "none", "line" and "hyperline". Default's "hyperline".
-     - _color_ Edge color. Default's '#ccb'.
-     - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
-
+     Inherits from <Options.Graph.Edge>.
+      
      *Animations*
 
-     - _duration_ Duration of the animation in milliseconds. Default's 1500.
-     - _fps_ Frames per second. Default's 40.
-     - _transition_ One of the transitions defined in the <Animation> class. Default's Quart.easeInOut.
-     - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
-
+     Inherits from <Options.Animation>.
+     
     *Controller options*
 
-    You can also implement controller functions inside the configuration object. This functions are
-    
-    - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
-    - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
-    - _onCreateLabel(domElement, node)_ This method receives the label dom element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called on label creation. Note that a <Graph.Node> is a node from the input tree/graph you provided to the visualization. If you want to know more about what kind of JSON tree/graph format is used to feed the visualizations, you can take a look at <Loader.loadJSON>. This method proves useful when adding events to the labels used by the JIT.
-    - _onPlaceLabel(domElement, node)_ This method receives the label dom element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed on the visualization, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions.
-    - _onBeforePlotNode(node)_ This method is triggered right before plotting a given node. The _node_ parameter is the <Graph.Node> to be plotted. 
-This method is useful for changing a node style right before plotting it.
-    - _onAfterPlotNode(node)_ This method is triggered right after plotting a given node. The _node_ parameter is the <Graph.Node> plotted.
-    - _onBeforePlotLine(adj)_ This method is triggered right before plotting an edge. The _adj_ parameter is a <Graph.Adjacence> object. 
-This method is useful for adding some styles to a particular edge before being plotted.
-    - _onAfterPlotLine(adj)_ This method is triggered right after plotting an edge. The _adj_ parameter is the <Graph.Adjacence> plotted.
+     Inherits from <Options.Controller>.
+     
+    Instance Properties:
+
+    - _graph_ Access a <Graph> instance.
+    - _op_ Access a <Hypertree.Op> instance.
+    - _fx_ Access a <Hypertree.Plot> instance.
+    - _labels_ Access a <Hypertree.Label> instance.
 
     Example:
 
     Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
     all configuration properties  have the default value assigned.
 
-    I won't be instanciating a <Canvas> class here. If you want to know more about instanciating a <Canvas> class 
+    I won't be instantiating a <Canvas> class here. If you want to know more about instantiating a <Canvas> class 
     please take a look at the <Canvas> class documentation.
 
     (start code js)
@@ -230,6 +200,7 @@ This method is useful for adding some styles to a particular edge before being p
         transition: Trans.Quart.easeInOut,
         clearCanvas: true,
         withLabels: true,
+        radius: "auto",
         
         onBeforeCompute: function(node) {
           //do something onBeforeCompute
@@ -258,81 +229,107 @@ This method is useful for adding some styles to a particular edge before being p
       });
     (end code)
 
-    Instance Properties:
-
-    - _graph_ Access a <Graph> instance.
-    - _op_ Access a <Hypertree.Op> instance.
-    - _fx_ Access a <Hypertree.Plot> instance.
-    - _labels_ Access a <Hypertree.Label> instance.
 */ 
  
 this.Hypertree = new Class({ 
    
-  Implements: [Loader, AngularWidth], 
+  Implements: [Loader, Layouts.Radial], 
    
   initialize: function(canvas, controller) { 
- 
     var config = { 
-                labelContainer: canvas.id + '-label', 
-             
-                withLabels: true,
-                
-                Node: { 
-                    overridable: false, 
-                    type: 'circle', 
-                    dim: 7, 
-                    color: '#ccb', 
-                    width: 5, 
-                    height: 5,    
-                    lineWidth: 1, 
-                    transform: true 
-                }, 
-                 
-                Edge: { 
-                    overridable: false, 
-                    type: 'hyperline', 
-                    color: '#ccb', 
-                    lineWidth: 1 
-                }, 
-            clearCanvas: true,
-            fps:40, 
-            duration: 1500, 
-            transition: Trans.Quart.easeInOut 
+      labelContainer: canvas.id + '-label',
+      radius: "auto",
+      Edge: { 
+          type: 'hyperline' 
+      },
+      withLabels: true
     }; 
- 
-      var innerController = { 
-          onBeforeCompute: $empty, 
-          onAfterCompute:  $empty, 
-          onCreateLabel:   $empty, 
-          onPlaceLabel:    $empty, 
-          onComplete:      $empty, 
-          onBeforePlotLine:$empty, 
-          onAfterPlotLine: $empty, 
-          onBeforePlotNode:$empty, 
-          onAfterPlotNode: $empty 
-      }; 
-       
-      this.controller = this.config = $merge(config, innerController, controller); 
-        this.graphOptions = { 
-            'complex': false, 
-            'Node': { 
-                'selected': false, 
-                'exist': true, 
-                'drawn': true 
-            } 
-        }; 
+    this.controller = this.config = $merge(Options.Graph, 
+        Options.Animation, 
+        Options.Controller, 
+        config, controller); 
+    
+    this.graphOptions = { 
+        'complex': false, 
+        'Node': { 
+            'selected': false, 
+            'exist': true, 
+            'drawn': true 
+        } 
+    }; 
     this.graph = new Graph(this.graphOptions); 
     this.labels = new Hypertree.Label[canvas.getConfig().labels](this);
     this.fx = new Hypertree.Plot(this); 
     this.op = new Hypertree.Op(this); 
     this.json = null; 
     this.canvas = canvas; 
- 
     this.root = null; 
     this.busy = false; 
-    }, 
- 
-    /* 
+  }, 
+
+  /* 
+  
+  Method: createLevelDistanceFunc 
+
+  Returns the levelDistance function used for calculating a node distance 
+  to its origin. This function returns a function that is computed 
+  per level and not per node, such that all nodes with the same depth will have the 
+  same distance to the origin. The resulting function gets the 
+  parent node as parameter and returns a float.
+
+ */
+  createLevelDistanceFunc: function() {
+    //get max viz. length.
+    var r = this.getRadius();
+    //get max depth.
+    var depth = 0, max = Math.max;
+    Graph.Util.eachNode(this.graph, function(node) {
+        depth = max(node._depth, depth);
+    }, "ignore");
+    depth++;
+    //node distance generator
+    var genDistFunc = function(a) {
+      return function(node) {
+        node.scale = r;
+        var d = node._depth +1;
+        var acum = 0, pow = Math.pow;
+        while(d) {
+          acum += pow(a, d--);  
+        }
+        return acum;
+      };
+    };
+    //estimate better edge length.
+    for(var i=0.51; i<=1; i+=0.01) {
+      var valSeries = (1 - Math.pow(i, depth)) / (1 - i);
+      if(valSeries >= 2) {
+        return genDistFunc(i - 0.01);
+      }
+    } 
+    return genDistFunc(0.5);
+  },
+
+  /* 
+    Method: getRadius 
+    
+    Returns the current radius of the visualization. If *config.radius* is *auto* then it 
+    calculates the radius by taking the smaller size of the <Canvas> widget.
+    
+    See also:
+    
+    <Canvas.getSize>
+   
+ */ 
+ getRadius: function() { 
+    var rad = this.config.radius;
+    if(rad !== "auto") {
+      return rad;
+    }
+    var s = this.canvas.getSize();
+    return Math.min(s.width, s.height) / 2;
+ }, 
+
+ /* 
      Method: refresh 
      
      Computes nodes' positions and replots the tree.
@@ -373,10 +370,10 @@ this.Hypertree = new Class({
         var vector = this.graph.getNode(this.root).pos.getc().scale(-1); 
         Graph.Util.moebiusTransformation(this.graph, [vector], ['endPos'], 'endPos', "ignore"); 
         Graph.Util.eachNode(this.graph, function(node) { 
-            if (node.ignore) {
-                node.endPos.rho = node.pos.rho;
-                node.endPos.theta = node.pos.theta;
-            } 
+          if (node.ignore) {
+            node.endPos.rho = node.pos.rho;
+            node.endPos.theta = node.pos.theta;
+          } 
         }); 
     }, 
  
@@ -388,108 +385,6 @@ this.Hypertree = new Class({
     */ 
     plot: function() { 
         this.fx.plot(); 
-    }, 
-     
-    /* 
-     Method: compute 
-     
-     Computes nodes' positions. 
-
-     Parameters:
-
-     property - _optional_ A <Graph.Node> position property to store the new positions. Possible values are 'pos', 'endPos' or 'startPos'.
-
-
-    */ 
-    compute: function(property) { 
-        var prop = property || ['pos', 'startPos']; 
-        var node = this.graph.getNode(this.root); 
-        node._depth = 0; 
-        Graph.Util.computeLevels(this.graph, this.root, 0, "ignore"); 
-        this.computeAngularWidths(); 
-        this.computePositions(prop); 
-    }, 
-     
-    /* 
-     computePositions 
-     
-     Performs the main algorithm for computing node positions.
-
-     Parameters:
-
-     property - A <Graph.Node> position property to store the new positions. Possible values are 'pos', 'endPos' or 'startPos'.
-
-  */ 
-    computePositions: function(property) { 
-        var propArray = $splat(property); 
-        var aGraph = this.graph, GUtil = Graph.Util; 
-        var root = this.graph.getNode(this.root), that = this, config = this.config; 
-        var size = this.canvas.getSize(); 
-        var scale = Math.min(size.width, size.height)/ 2; 
- 
- 
-        //Set default values for the root node 
-        for(var i=0; i<propArray.length; i++)  
-            root[propArray[i]] = $P(0, 0); 
-        
-        root.angleSpan = { 
-            begin: 0, 
-            end: 2 * Math.PI 
-        }; 
-        root._rel = 1; 
-     
-        //Estimate better edge length. 
-        var edgeLength = (function() { 
-          var depth = 0; 
-          GUtil.eachNode(aGraph, function(node) { 
-            depth = (node._depth > depth)? node._depth : depth; 
-            node._scale = scale; 
-          }, "ignore"); 
-            
-          for(var i=0.51; i<=1; i+=0.01) { 
-            var valSeries = (function(a, n) { 
-              return (1 - Math.pow(a, n)) / (1 - a); 
-            })(i, depth + 1); 
-            if(valSeries >= 2) return i - 0.01; 
-          } 
-          
-          return 0.5; 
-        })(); 
-         
-        GUtil.eachBFS(this.graph, this.root, function (elem) { 
-            var angleSpan = elem.angleSpan.end - elem.angleSpan.begin; 
-            var angleInit = elem.angleSpan.begin; 
-            var totalAngularWidths = (function (element){ 
-                var total = 0; 
-                GUtil.eachSubnode(element, function(sib) { 
-                    total += sib._treeAngularWidth; 
-                }, "ignore"); 
-                return total; 
-            })(elem); 
- 
-            for(var i=1, rho = 0, lenAcum = edgeLength, depth = elem._depth; i<=depth+1; i++) { 
-                rho += lenAcum; 
-                lenAcum *= edgeLength; 
-            } 
-             
-            GUtil.eachSubnode(elem, function(child) { 
-                if(!child._flag) { 
-                    child._rel = child._treeAngularWidth / totalAngularWidths; 
-                    var angleProportion = child._rel * angleSpan; 
-                    var theta = angleInit + angleProportion / 2; 
- 
-                    for(var i=0; i<propArray.length; i++) 
-                        child[propArray[i]] = $P(theta, rho); 
- 
-                    child.angleSpan = { 
-                        begin: angleInit, 
-                        end: angleInit + angleProportion 
-                    }; 
-                    angleInit += angleProportion; 
-                } 
-            }, "ignore"); 
- 
-        }, "ignore"); 
     }, 
      
     /* 
@@ -532,28 +427,26 @@ this.Hypertree = new Class({
 
 
     */ 
-    move: function(pos, opt) { 
-        var versor = $C(pos.x, pos.y); 
-        if(this.busy === false && versor.norm() < 1) { 
-            var GUtil = Graph.Util;
-            this.busy = true; 
-            var root = GUtil.getClosestNodeToPos(this.graph, versor), that = this;
-            GUtil.computeLevels(this.graph, root.id, 0);
-            this.controller.onBeforeCompute(root); 
-            if (versor.norm() < 1) { 
-                opt = $merge({ onComplete: $empty }, opt || {}); 
-                this.fx.animate($merge({ 
-                    modes: ['moebius'], 
-                    hideLabels: true 
-                }, opt, { 
-                    onComplete: function(){ 
-                        that.busy = false; 
-                        opt.onComplete(); 
-                    } 
-                }), versor); 
-            } 
-        } 
-    }    
+    move: function(pos, opt) {
+      var versor = $C(pos.x, pos.y);
+      if(this.busy === false && versor.norm() < 1) {
+        var GUtil = Graph.Util;
+        this.busy = true;
+        var root = GUtil.getClosestNodeToPos(this.graph, versor), that = this;
+        GUtil.computeLevels(this.graph, root.id, 0);
+        this.controller.onBeforeCompute(root);
+        opt = $merge({ onComplete: $empty }, opt || {});
+        this.fx.animate($merge({
+          modes: ['moebius'],
+          hideLabels: true
+        }, opt, {
+            onComplete: function(){
+              that.busy = false;
+              opt.onComplete();
+            }
+        }), versor);
+      }
+    }     
 }); 
  
 /* 
@@ -635,23 +528,22 @@ Hypertree.Plot = new Class({
     hyperline: function(adj, canvas) { 
         var node = adj.nodeFrom, child = adj.nodeTo, data = adj.data; 
         var pos = node.pos.getc(), posChild = child.pos.getc(); 
+        var r = this.viz.getRadius();
         var centerOfCircle = this.computeArcThroughTwoPoints(pos, posChild); 
-        var size = canvas.getSize(); 
-        var scale = Math.min(size.width, size.height)/2; 
-        if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000 || centerOfCircle.ratio > 1000) { 
+        if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000 || centerOfCircle.ratio < 0) { 
             canvas.path('stroke', function(ctx) { 
-                ctx.moveTo(pos.x * scale, pos.y * scale); 
-                ctx.lineTo(posChild.x * scale, posChild.y * scale); 
-      }); 
-    } else { 
+                ctx.moveTo(pos.x * r, pos.y * r); 
+                ctx.lineTo(posChild.x * r, posChild.y * r); 
+            }); 
+        } else { 
           var angleBegin = Math.atan2(posChild.y - centerOfCircle.y, posChild.x - centerOfCircle.x); 
           var angleEnd   = Math.atan2(pos.y - centerOfCircle.y, pos.x - centerOfCircle.x); 
           var sense      = this.sense(angleBegin, angleEnd); 
           var context = canvas.getCtx(); 
           canvas.path('stroke', function(ctx) { 
-              ctx.arc(centerOfCircle.x*scale, centerOfCircle.y*scale, centerOfCircle.ratio*scale, angleBegin, angleEnd, sense); 
+              ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio * r, angleBegin, angleEnd, sense);
           }); 
-    } 
+        } 
     }, 
      
     /* 
@@ -665,6 +557,7 @@ Hypertree.Plot = new Class({
 
        p1 - A <Complex> instance.
        p2 - A <Complex> instance.
+       scale - The Disk's diameter.
 
        Returns:
 
@@ -674,20 +567,20 @@ Hypertree.Plot = new Class({
         var aDen = (p1.x * p2.y - p1.y * p2.x), bDen = aDen; 
         var sq1 = p1.squaredNorm(), sq2 = p2.squaredNorm(); 
         //Fall back to a straight line 
-        if (aDen == 0) return { x:0, y:0, ratio: 1001 }; 
+        if (aDen == 0) return { x:0, y:0, ratio: -1 }; 
  
         var a = (p1.y * sq2 - p2.y * sq1 + p1.y - p2.y) / aDen; 
         var b = (p2.x * sq1 - p1.x * sq2 + p2.x - p1.x) / bDen; 
-        var x = -a / 2; 
-        var y = -b / 2; 
-        var squaredRatio = (a * a + b * b) / 4 -1; 
-        //Fall back to a straight line         
-        if(squaredRatio < 0) return { x:0, y:0, ratio: 1001 }; 
+        var x = -a /2; 
+        var y = -b /2; 
+        var squaredRatio = (a * a + b * b) / 4 -1;
+        //Fall back to a straight line
+        if(squaredRatio < 0) return { x:0, y:0, ratio: -1 }; 
         var ratio = Math.sqrt(squaredRatio); 
         var out= { 
             x: x, 
             y: y, 
-            ratio: ratio, 
+            ratio: ratio > 1000? -1 : ratio, 
             a: a, 
             b: b 
         }; 
@@ -744,6 +637,10 @@ Hypertree.Label = {};
 Hypertree.Label.Native = new Class({
   Extends: Graph.Label.Native,
 
+  initialize: function(viz) {
+    this.viz = viz;
+  },
+
   /*
        Method: plotLabel
     
@@ -759,8 +656,8 @@ Hypertree.Label.Native = new Class({
     plotLabel: function(canvas, node, controller) {
         var ctx = canvas.getCtx();
         var coord = node.pos.getc(true);
-        var scale = node._scale;
-        ctx.fillText(node.name, coord.x * scale, coord.y * scale);
+        var s = this.viz.getRadius();
+        ctx.fillText(node.name, coord.x * s, coord.y * s);
     }
 });
 
@@ -799,11 +696,11 @@ Hypertree.Label.SVG = new Class({
     */
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), canvas = this.viz.canvas; 
-        var radius= canvas.getSize();
-        var scale = node._scale;
+        var radius= canvas.getSize(), r = this.viz.getRadius();
+        var round = Math.round;
         var labelPos= {
-            x: Math.round(pos.x * scale + radius.width/2),
-            y: Math.round(pos.y * scale + radius.height/2)
+            x: round(pos.x * r + radius.width/2),
+            y: round(pos.y * r + radius.height/2)
         };
         tag.setAttribute('x', labelPos.x);
         tag.setAttribute('y', labelPos.y);
@@ -845,11 +742,11 @@ Hypertree.Label.HTML = new Class({
     */
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), canvas = this.viz.canvas; 
-        var radius= canvas.getSize();
-        var scale = node._scale;
+        var radius= canvas.getSize(), r = this.viz.getRadius();
+        var round = Math.round;
         var labelPos= {
-            x: Math.round(pos.x * scale + radius.width/2),
-            y: Math.round(pos.y * scale + radius.height/2)
+            x: round(pos.x * r + radius.width/2),
+            y: round(pos.y * r + radius.height/2)
         };
         var style = tag.style;
         style.left = labelPos.x + 'px';
@@ -880,93 +777,94 @@ Hypertree.Label.HTML = new Class({
   (end code)
 
 */
-Hypertree.Plot.NodeTypes = new Class({ 
-    'none': function() {}, 
-     
-    'circle': function(node, canvas) { 
-        var nconfig = this.node, data = node.data; 
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim; 
-    var p = node.pos.getc(), pos = p.scale(node._scale); 
-    var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
-    if(prod >= nodeDim / 4) { 
-          canvas.path('fill', function(context) { 
-              context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);           
-          }); 
-    } 
-    }, 
-     
-    'square': function(node, canvas) { 
-        var nconfig = this.node, data = node.data; 
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim; 
-        var p = node.pos.getc(), pos = p.scale(node._scale); 
-        var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
-        var nodeDim2 = 2 * prod; 
-        if (prod >= nodeDim / 4) { 
-      canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2, nodeDim2); 
-    } 
-    }, 
- 
-    'rectangle': function(node, canvas) { 
-        var nconfig = this.node, data = node.data; 
-        var width = nconfig.overridable && data && data.$width || nconfig.width; 
-        var height = nconfig.overridable && data && data.$height || nconfig.height; 
-        var p = node.pos.getc(), pos = p.scale(node._scale); 
-    var prod = 1 - p.squaredNorm(); 
-        width = nconfig.transform?  width * prod : width; 
-    height = nconfig.transform?  height * prod : height; 
-    if(prod >= 0.25) { 
-            canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);       
-    } 
- 
-    }, 
-     
-    'triangle': function(node, canvas) { 
-        var nconfig = this.node, data = node.data; 
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim; 
-        var p = node.pos.getc(), pos = p.scale(node._scale); 
-        var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
-        if (prod >= nodeDim / 4) { 
-      var c1x = pos.x,  
-      c1y = pos.y - prod,  
-      c2x = c1x - prod,  
-      c2y = pos.y + prod,  
-      c3x = c1x + prod,  
-      c3y = c2y; 
-      canvas.path('fill', function(ctx){ 
-        ctx.moveTo(c1x, c1y); 
-        ctx.lineTo(c2x, c2y); 
-        ctx.lineTo(c3x, c3y); 
-      }); 
-    } 
-    }, 
-     
-    'star': function(node, canvas) { 
-        var nconfig = this.node, data = node.data; 
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim; 
-        var p = node.pos.getc(), pos = p.scale(node._scale); 
-        var prod = nconfig.transform?  nodeDim * (1 - p.squaredNorm()) : nodeDim; 
-        if (prod >= nodeDim / 4) { 
-      var ctx = canvas.getCtx(), pi5 = Math.PI / 5; 
-      ctx.save(); 
-      ctx.translate(pos.x, pos.y); 
-      ctx.beginPath(); 
-      ctx.moveTo(nodeDim, 0); 
-      for (var i = 0; i < 9; i++) { 
-        ctx.rotate(pi5); 
-        if (i % 2 == 0) { 
-          ctx.lineTo((prod / 0.525731) * 0.200811, 0); 
-        } 
-        else { 
-          ctx.lineTo(prod, 0); 
-        } 
-      } 
-      ctx.closePath(); 
-      ctx.fill(); 
-      ctx.restore(); 
-    } 
-    } 
-}); 
- 
+Hypertree.Plot.NodeTypes = new Class({
+      'none' : $empty,
+
+      'circle' : function(node, canvas) {
+        var nconfig = this.node, data = node.data;
+        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var p = node.pos.getc(), pos = p.scale(node.scale);
+        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+            : nodeDim;
+        if (prod >= nodeDim / 4) {
+          canvas.path('fill', function(context) {
+            context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);
+          });
+        }
+      },
+
+      'square' : function(node, canvas) {
+        var nconfig = this.node, data = node.data;
+        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var p = node.pos.getc(), pos = p.scale(node.scale);
+        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+            : nodeDim;
+        var nodeDim2 = 2 * prod;
+        if (prod >= nodeDim / 4) {
+          canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2,
+              nodeDim2);
+        }
+      },
+
+      'rectangle' : function(node, canvas) {
+        var nconfig = this.node, data = node.data;
+        var width = nconfig.overridable && data && data.$width || nconfig.width;
+        var height = nconfig.overridable && data && data.$height
+            || nconfig.height;
+        var p = node.pos.getc(), pos = p.scale(node.scale);
+        var prod = 1 - p.squaredNorm();
+        width = nconfig.transform ? width * prod : width;
+        height = nconfig.transform ? height * prod : height;
+        if (prod >= 0.25) {
+          canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2,
+              width, height);
+        }
+      },
+
+      'triangle' : function(node, canvas) {
+        var nconfig = this.node, data = node.data;
+        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var p = node.pos.getc(), pos = p.scale(node.scale);
+        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+            : nodeDim;
+        if (prod >= nodeDim / 4) {
+          var c1x = pos.x, c1y = pos.y - prod, c2x = c1x - prod, c2y = pos.y
+              + prod, c3x = c1x + prod, c3y = c2y;
+          canvas.path('fill', function(ctx) {
+            ctx.moveTo(c1x, c1y);
+            ctx.lineTo(c2x, c2y);
+            ctx.lineTo(c3x, c3y);
+          });
+        }
+      },
+
+      'star' : function(node, canvas) {
+        var nconfig = this.node, data = node.data;
+        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var p = node.pos.getc(), pos = p.scale(node.scale);
+        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+            : nodeDim;
+        if (prod >= nodeDim / 4) {
+          var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
+          ctx.save();
+          ctx.translate(pos.x, pos.y);
+          ctx.beginPath();
+          ctx.moveTo(nodeDim, 0);
+          for ( var i = 0; i < 9; i++) {
+            ctx.rotate(pi5);
+            if (i % 2 == 0) {
+              ctx.lineTo((prod / 0.525731) * 0.200811, 0);
+            } else {
+              ctx.lineTo(prod, 0);
+            }
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+    }); 
+
  /*
   Class: Hypertree.Plot.EdgeTypes
 
@@ -987,19 +885,18 @@ Hypertree.Plot.NodeTypes = new Class({
 
 */
 Hypertree.Plot.EdgeTypes = new Class({ 
-    'none': function() {}, 
+    'none': $empty, 
      
-    'line': function(adj, canvas) { 
-    var s = adj.nodeFrom._scale; 
+    'line': function(adj, canvas) {  
         var pos = adj.nodeFrom.pos.getc(true); 
         var posChild = adj.nodeTo.pos.getc(true); 
         canvas.path('stroke', function(context) { 
-            context.moveTo(pos.x * s, pos.y * s); 
-            context.lineTo(posChild.x * s, posChild.y * s); 
+            context.moveTo(pos.x, pos.y); 
+            context.lineTo(posChild.x, posChild.y); 
         }); 
     }, 
  
     'hyperline': function(adj, canvas) { 
-    this.hyperline(adj, canvas); 
-  } 
+      this.hyperline(adj, canvas); 
+    } 
 }); 

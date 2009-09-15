@@ -32,9 +32,10 @@ Graph.Plot = {
     
     Interpolator: {
         'moebius': function(elem, delta, vector) {
-            if(delta <= 1 || vector.norm() <= 1) {
+            if(delta <= 1) {
               var x = vector.x, y = vector.y;
-              var ans = elem.startPos.getc().moebiusTransformation(vector);
+              var ans = elem.startPos
+                .getc().moebiusTransformation(vector);
               elem.pos.setc(ans.x, ans.y);
               vector.x = x; vector.y = y;
             }           
@@ -157,7 +158,10 @@ Graph.Plot = {
       viz = this.viz,
       graph  = viz.graph,
       GUtil = Graph.Util;
-      opt = $merge(viz.controller, opt || {}); 
+      opt = $merge(viz.controller, opt || {}),
+      modes = opt.modes,
+      len = modes.length,
+      interp = this.Interpolator;
     
       if(opt.hideLabels) this.labels.hideLabels(true);
       this.animation.setOptions($merge(opt, {
@@ -165,8 +169,8 @@ Graph.Plot = {
         compute: function(delta) {
           var vector = versor? versor.scale(-delta) : null;
           GUtil.eachNode(graph, function(node) { 
-            for(var i=0; i<opt.modes.length; i++) {
-              that.Interpolator[opt.modes[i]](node, delta, vector);
+            for(var i=0; i<len; i++) {
+              interp[modes[i]](node, delta, vector);
             } 
           });
           that.plot(opt, this.$animating);

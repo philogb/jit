@@ -29,7 +29,7 @@
 
      Extends:
 
-     <Loader>, <AngularWidth>
+     <Loader>, <Layout.Radial>
 
      Parameters:
 
@@ -50,53 +50,35 @@
      
      Customize the visualization nodes' shape, color, and other style properties.
 
-     - _Node_
-
-     This object has as properties
-
-     - _overridable_ Determine whether or not nodes properties can be overriden by a particular node. Default's false.
-
-     If given a JSON tree or graph, a node _data_ property contains properties which are the same as defined here but prefixed with 
-     a dollar sign (i.e $), the node properties will override the global node properties.
-
-     - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "circle", "triangle", "star". Default's "circle".
-     - _color_ Node color. Default's '#ccb'.
-     - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
-     - _height_ Node height. Used for plotting rectangular nodes. Default's 5.
-     - _width_ Node width. Used for plotting rectangular nodes. Default's 5.
-     - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. Default's 3.
+     Inherits options from <Options.Graph.Node>.
 
      *Edge*
 
      Customize the visualization edges' shape, color, and other style properties.
 
-     - _Edge_
-
-     This object has as properties
-
-     - _overridable_ Determine whether or not edges properties can be overriden by a particular edge object. Default's false.
-
-     If given a JSON _complex_ graph (defined in <Loader.loadJSON>), an adjacency _data_ property contains properties which are the same as defined here but prefixed with 
-     a dollar sign (i.e $), the adjacency properties will override the global edge properties.
-
-     - _type_ Edge type (shape). Possible options are "none", "line" and "arrow". Default's "line".
-     - _color_ Edge color. Default's '#ccb'.
-     - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
-
+     Inherits Options from <Options.Graph.Edge>.
+      
     *Animations*
 
-    See <Options.Animation>.
+    Inherits from <Options.Animation>.
      
     *Controller options*
 
-    See <Options.Controller>.
+    Inherits from <Options.Controller>.
     
+    Instance Properties:
+
+    - _graph_ Access a <Graph> instance.
+    - _op_ Access a <RGraph.Op> instance.
+    - _fx_ Access a <RGraph.Plot> instance.
+    - _labels_ Access a <RGraph.Label> interface implementation.
+
     Example:
 
     Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
     all configuration properties  have the default value assigned.
 
-    I won't be instanciating a <Canvas> class here. If you want to know more about instanciating a <Canvas> class 
+    I won't be instantiating a <Canvas> class here. If you want to know more about instantiating a <Canvas> class 
     please take a look at the <Canvas> class documentation.
 
     (start code js)
@@ -150,13 +132,6 @@
       });
     (end code)
 
-  Instance Properties:
-
-   - _graph_ Access a <Graph> instance.
-   - _op_ Access a <RGraph.Op> instance.
-   - _fx_ Access a <RGraph.Plot> instance.
-   - _labels_ Access a <RGraph.Label> interface implementation.
-
 */
 
 this.RGraph = new Class({
@@ -172,19 +147,19 @@ this.RGraph = new Class({
       withLabels: true
     };
     
-    this.controller = this.config = $merge(config, 
-        Options.Graph, 
+    this.controller = this.config = $merge(Options.Graph, 
         Options.Animation, 
-        Options.Controller);
+        Options.Controller,
+        config, controller);
     
-      this.graphOptions = {
-            'complex': false,
-            'Node': {
-                'selected': false,
-                'exist': true,
-                'drawn': true
-            }
-        };
+    this.graphOptions = {
+        'complex': false,
+        'Node': {
+            'selected': false,
+            'exist': true,
+            'drawn': true
+        }
+    };
     this.graph = new Graph(this.graphOptions);
     this.labels = new RGraph.Label[canvas.getConfig().labels](this);
     this.fx = new RGraph.Plot(this);
@@ -195,12 +170,32 @@ this.RGraph = new Class({
     this.busy = false;
     this.parent = false;
   },
-    /* 
+   
+  /* 
+  
+    Method: createLevelDistanceFunc 
+  
+    Returns the levelDistance function used for calculating a node distance 
+    to its origin. This function returns a function that is computed 
+    per level and not per node, such that all nodes with the same depth will have the 
+    same distance to the origin. The resulting function gets the 
+    parent node as parameter and returns a float.
+
+   */
+  createLevelDistanceFunc: function() {
+    var ld = this.config.levelDistance;
+    return function(elem) {
+      return (elem._depth + 1) * ld;
+    };
+  },
+  
+  
+  /* 
      Method: refresh 
      
      Computes nodes' positions and replots the tree.
 
-    */ 
+   */ 
     refresh: function() {
         this.compute();
         this.plot();

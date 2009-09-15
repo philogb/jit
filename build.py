@@ -10,7 +10,6 @@ class Build():
         self.script = ''
         
         self.build_model = {
-            'AngularWidth': ['Graph'],
             'Animation': ['Core'],
             'Canvas': ['Core'],
             'Complex': ['Polar'],
@@ -18,29 +17,33 @@ class Build():
             'Graph': ['Core', 'Complex', 'Polar'],
             'Graph.Op': ['Core', 'Graph'],
             'Graph.Plot': ['Core', 'Graph'],
+            'Layouts': ['Graph'],
             'Loader': ['Core', 'Graph'],
+            'Options': ['Core', 'Animation'],
             'Polar': ['Complex'],
             
-            'Hypertree': ['Core', 
+            'Hypertree': ['Core',
+                          'Options', 
                           'Canvas', 
                           'Complex', 
                           'Polar', 
                           'Graph', 
                           'Graph.Op',
                           'Graph.Plot',
-                          'AngularWidth',
-                          'Loader', 
+                          'Loader',
+                          'Layouts', 
                           'Animation'],
             
             'RGraph':     ['Core', 
+                           'Options',
                            'Canvas', 
                            'Complex', 
                            'Polar', 
                            'Graph', 
                            'Graph.Op',
                            'Graph.Plot',
-                           'AngularWidth',
                            'Loader', 
+                           'Layouts',
                            'Animation'],
             
             'Spacetree':   ['Core', 
@@ -50,7 +53,8 @@ class Build():
                             'Graph', 
                             'Graph.Op',
                             'Graph.Plot',
-                            'Loader', 
+                            'Loader',
+                            'Layouts', 
                             'Animation'],
                             
             'Treemap':      ['Core']

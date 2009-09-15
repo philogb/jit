@@ -10,15 +10,15 @@
  */
 
 /*
- * Object: Layout
+ * Object: Layouts
  * 
  * Parent object for common layouts.
  *
  */
-var Layout = {};
+var Layouts = {};
 
 /*
- * Class: Layout.Radial
+ * Class: Layouts.Radial
  * 
  * Implements a Radial Layout.
  * 
@@ -27,7 +27,7 @@ var Layout = {};
  * <RGraph>, <Hypertree>
  * 
  */
-Layout.Radial = new Class({
+Layouts.Radial = new Class({
 
   /*
    * Method: compute
@@ -42,13 +42,10 @@ Layout.Radial = new Class({
    */
   compute : function(property) {
     var prop = property || [ 'pos', 'startPos', 'endPos' ];
-    var node = this.graph.getNode(this.root);
-    var ld = this.config.levelDistance;
-    var getLength = typeof ld === 'function'? ld : function(depth) { return ld * depth };
-    node._depth = 0;
     Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+    var lengthFunc = this.createLevelDistanceFunc(); 
     this.computeAngularWidths();
-    this.computePositions(prop, getLength);
+    this.computePositions(prop, lengthFunc);
   },
 
   /*
@@ -75,8 +72,8 @@ Layout.Radial = new Class({
 
     GUtil.eachBFS(this.graph, this.root, function(elem) {
       var angleSpan = elem.angleSpan.end - elem.angleSpan.begin;
-      var rho = getLength(elem._depth + 1);
       var angleInit = elem.angleSpan.begin;
+      var len = getLength(elem);
       //Calculate the sum of all angular widths
       var totalAngularWidths = 0, subnodes = [];
       GUtil.eachSubnode(elem, function(sib) {
@@ -100,7 +97,7 @@ Layout.Radial = new Class({
           var theta = angleInit + angleProportion / 2;
 
           for ( var i = 0; i < propArray.length; i++)
-            child[propArray[i]] = $P(theta, rho);
+            child[propArray[i]] = $P(theta, len);
 
           child.angleSpan = {
             begin : angleInit,
