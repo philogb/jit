@@ -26,7 +26,7 @@
 
      Extends:
 
-     <Loader>
+     <Loader>, <Layouts.Tree>
 
      Parameters:
 
@@ -39,14 +39,11 @@
       
      *General*
 
+     Inherits all properties from <Options.Tree> and also
+     
      - _levelsToShow_ Depth of the plotted tree. The plotted tree will be pruned in order to fit the specified depth if constrained=true. Default's 2.
      - _constrained_ If true, the algorithm will try to plot only the part of the tree that fits the Canvas.
-     - _subtreeOffset_ Separation offset between subtrees. Default's 8.
-     - _siblingOffset_ Separation offset between siblings. Default's 5.
      - _levelDistance_ Distance between levels. Default's 30.
-     - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
-     - _align_ Whether the tree alignment is left, center or right.
-     - _indent_ Used when _align_ is left or right and shows an indentation between parent and children. Default's 10.
 
      *Node*
      
@@ -149,175 +146,11 @@
     - _labels_ Access a <ST.Label> instance.
  */
 
-(function () {
-
-//Layout functions
-var slice = Array.prototype.slice;
-
-/*
-   Calculates the max width and height nodes for a tree level
-*/  
-function getBoundaries(graph, config, level, orn) {
-    var dim = config.Node, GUtil = Graph.Util;
-    var multitree = config.multitree;
-    if(dim.overridable) {
-        var w = -1, h = -1;
-        GUtil.eachNode(graph, function(n) {
-            if(n._depth == level && (!multitree || 
-             		('$orn' in n.data) && 
-             		n.data.$orn == orn)) {
-                var dw = n.data.$width || dim.width;
-                var dh = n.data.$height || dim.height;
-                w = (w < dw)? dw : w;
-                h = (h < dh)? dh : h;
-            }
-        });
-        return {
-            'width':  w < 0? dim.width : w,
-            'height': h < 0? dim.height : h
-        };
-    } else {
-        return dim;
-    }
-};
-
- function movetree(node, prop, val, orn) {
-   var p = (orn == "left" || orn == "right")? "y" : "x";
-   node[prop][p] += val;
- };
- 
- function moveextent(extent, val) {
-     var ans = [];
-     $each(extent, function(elem) {
-         elem = slice.call(elem);
-         elem[0] += val;
-         elem[1] += val;
-         ans.push(elem);
-     });
-     return ans;
- };
- 
- function merge(ps, qs) {
-   if(ps.length == 0) return qs;
-   if(qs.length == 0) return ps;
-   var p = ps.shift(), q = qs.shift();
-   return [[p[0], q[1]]].concat(merge(ps, qs));  
- };
- 
- function mergelist(ls, def) {
-     def = def || [];
-     if(ls.length == 0) return def; 
-     var ps = ls.pop();
-     return mergelist(ls, merge(ps, def));
- };
- 
- function fit(ext1, ext2, subtreeOffset, siblingOffset, i) {
-     if(ext1.length <= i || 
-        ext2.length <= i) return 0;
-     
-     var p = ext1[i][1], q = ext2[i][0];
-     return  Math.max(fit(ext1, ext2, subtreeOffset, siblingOffset, ++i) 
-    		 + subtreeOffset, p - q + siblingOffset);
- };
- 
- function fitlistl(es, subtreeOffset, siblingOffset) {
-   function $fitlistl(acc, es, i) {
-       if(es.length <= i) return [];
-       var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset, 0);
-       return [ans].concat($fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
-   };
-   return $fitlistl([], es, 0);
- };
- 
- function fitlistr(es, subtreeOffset, siblingOffset) {
-   function $fitlistr(acc, es, i) {
-       if(es.length <= i) return [];
-       var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset, 0);
-       return [ans].concat($fitlistr(merge(moveextent(e, ans), acc), es, ++i));
-   };
-   es = slice.call(es);
-   var ans = $fitlistr([], es.reverse(), 0);
-   return ans.reverse();
- };
- 
- function fitlist(es, subtreeOffset, siblingOffset, align) {
-    var esl = fitlistl(es, subtreeOffset, siblingOffset),
-        esr = fitlistr(es, subtreeOffset, siblingOffset);
-    
-    if(align == "left")
-    	esr = esl;
-    else if(align == "right")
-    	esl = esr;
-    
-    for(var i = 0, ans = []; i < esl.length; i++) {
-        ans[i] = (esl[i] + esr[i]) / 2;
-    }
-    return ans;
- };
- 
- function design(graph, node, prop, config, orn) {
-     var multitree = config.multitree;
-     var auxp = ['x', 'y'], auxs = ['width', 'height'];
-     var ind = +(orn == "left" || orn == "right");
-     var p = auxp[ind], notp = auxp[1 - ind];
-     
-     var cnode = config.Node;
-     var s = auxs[ind], nots = auxs[1 - ind];
-
-     var siblingOffset = config.siblingOffset;
-     var subtreeOffset = config.subtreeOffset;
-     var align = config.align;
-     
-     var GUtil = Graph.Util;
-
-     function $design(node, maxsize, acum) {
-         var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
-         var notsval = maxsize || ((cnode.overridable && node.data["$" + nots]) || cnode[nots]);
-         
-         var trees = [], extents = [], chmaxsize = false;
-         var chacum = notsval + config.levelDistance;
-         GUtil.eachSubnode(node, function(n) {
-             if(n.exist && (!multitree ||  
-             		('$orn' in n.data) && 
-             		n.data.$orn == orn)) {
-            	 
-                 if(!chmaxsize) 
-                    chmaxsize = getBoundaries(graph, config, n._depth, orn);
-                 
-                 var s = $design(n, chmaxsize[nots], acum + chacum);
-                 trees.push(s.tree);
-                 extents.push(s.extent);
-             }
-         });
-         var positions = fitlist(extents, subtreeOffset, siblingOffset, align);
-         for(var i=0, ptrees = [], pextents = []; i < trees.length; i++) {
-             movetree(trees[i], prop, positions[i], orn);
-             pextents.push(moveextent(extents[i], positions[i]));
-         }
-         var resultextent = [[-sval/2, sval/2]].concat(mergelist(pextents));
-         node[prop][p] = 0;
-
-         if (orn == "top" || orn == "left") {
-            node[prop][notp] = acum;
-         } else {
-            node[prop][notp] = -acum;
-         }
-
-         return {
-           tree: node,
-           extent: resultextent  
-         };
-     };
-     $design(node, false, 0);
- };
-
-
-
 this.ST= (function() {
-    //Define some private methods first...
-    //Nodes in path
+    // Define some private methods first...
+    // Nodes in path
     var nodesInPath = [];
-    //Nodes to contract
+    // Nodes to contract
     function getNodesToHide(node) {
       node = node || this.clickedNode;
       var Geom = this.geom, GUtil = Graph.Util;
@@ -346,7 +179,7 @@ this.ST= (function() {
 	  } 
 	  return nodeArray;       
     };
-    //Nodes to expand
+    // Nodes to expand
      function getNodesToShow(node) {
         var nodeArray= [], GUtil = Graph.Util, config = this.config;
         node = node || this.clickedNode;
@@ -363,22 +196,15 @@ this.ST= (function() {
     //Now define the actual class.    
     return new Class({
     
-        Implements: Loader,
+        Implements: [Loader, Layouts.Tree],
         
         initialize: function(canvas, controller) {            
             var config= {
-                orientation: "left",
                 labelContainer: canvas.id + '-label',
                 levelsToShow: 2,
-                subtreeOffset: 8,
-                siblingOffset: 5,
                 levelDistance: 30,
                 withLabels: true,
-                indent:10,
-                multitree: false,
-                constrained: true,
-                align:"center",
-                
+                constrained: true,                
                 Node: {
                     type: 'rectangle'
                 },
@@ -386,8 +212,11 @@ this.ST= (function() {
                 fps: 25
             };
             
-            this.controller = this.config = $merge(Options.Animation, Options.Graph, 
-                Options.Controller, config, controller);
+            this.controller = this.config = $merge(Options.Animation, 
+                Options.Tree,
+                Options.Graph, 
+                Options.Controller, 
+                config, controller);
             this.canvas = canvas;
             this.graphOptions = {
                 'complex': true
@@ -540,56 +369,6 @@ this.ST= (function() {
                 if(n.exist) n.drawn = true;
             });
             this.compute('endPos');
-        },
-    
-        /*
-         Method: compute
-        
-         Computes nodes' positions.
-
-        */  
-        compute: function (property, computeLevels) {
-            var prop = property || 'startPos';
-            var node = this.graph.getNode(this.root);
-            $extend(node, {
-                'drawn':true,
-                'exist':true,
-                'selected':true
-            });
-            if(!!computeLevels || !("_depth" in node))
-                Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
-            this.computePositions(node, prop);
-        },
-        
-        computePositions: function(node, prop) {
-        	var config = this.config;
-        	var multitree = config.multitree;
-        	var align = config.align;
-        	var indent = align !== 'center' && config.indent;
-        	var orn = config.orientation;
-        	var orns = multitree? ['top', 'right', 'bottom', 'left'] : [orn];
-        	
-        	var that = this;
-        	$each(orns, function(orn) {
-        		//calculate layout
-        		design(that.graph, node, prop, that.config, orn);
-        		var i = ['x', 'y'][+(orn == "left" || orn == "right")];
-        		//absolutize
-                (function red(node) {
-                    Graph.Util.eachSubnode(node, function(n) {
-                        if(n.exist && (!multitree || 
-                        		('$orn' in n.data) && 
-                        		n.data.$orn == orn)) {
-
-                        	n[prop][i] += node[prop][i];
-                        	if(indent) {
-                        		n[prop][i] += align == 'left'? indent : -indent; 
-                        	}
-                            red(n);
-                        }
-                    });
-                })(node);
-        	}); 
         },
         
           requestNodes: function(node, onComplete) {
@@ -1033,7 +812,7 @@ ST.Group = new Class({
                     ids.push(n.id);
                 });
                 viz.op.removeNode(ids, { 'type': 'nothing' });
-                viz.fx.clearLabels();
+                viz.labels.clearLabels();
             }
         }
         controller.onComplete();
@@ -1125,7 +904,7 @@ ST.Group = new Class({
           var root = config.multitree && !('$orn' in node.data);
           var orns = root && node.data.$orns;
           GUtil.eachSubgraph(node, function(n) { 
-              //TODO(nico): Cleanup
+            //TODO(nico): Cleanup
         	  //special check for root node subnodes when
         	  //multitree is checked.
         	  if(root && orns && orns.indexOf(n.data.$orn) > 0 
@@ -1635,7 +1414,8 @@ ST.Label.DOM = new Class({
      
     */
     placeLabel: function(tag, node, controller) {
-        var pos = node.pos.getc(true), dim = this.viz.config.Node, canvas = this.viz.canvas;
+        var pos = node.pos.getc(true), config = this.viz.config, 
+        dim = config.Node, canvas = this.viz.canvas;
         var w = dim.overridable && node.data.$width || dim.width;
         var h = dim.overridable && node.data.$height || dim.height;
         var radius = canvas.getSize();
@@ -1646,7 +1426,7 @@ ST.Label.DOM = new Class({
                 y: Math.round(pos.y - h / 2 + radius.height/2)
             };
         } else if (dim.align == "left") {
-            orn = this.config.orientation;
+            orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
                     x: Math.round(pos.x - w / 2 + radius.width/2),
@@ -1659,7 +1439,7 @@ ST.Label.DOM = new Class({
                 };
             }
         } else if(dim.align == "right") {
-            orn = this.config.orientation;
+            orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
                     x: Math.round(pos.x - w / 2 + radius.width/2),
@@ -1966,7 +1746,4 @@ ST.Plot.EdgeTypes = new Class({
         });
     }
 });
-
-    
-})();
 

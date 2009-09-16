@@ -29,7 +29,7 @@
 
      Extends:
 
-     <Loader>, <Layout.Radial>
+     <Loader>, <Layouts.Radial>
 
      Parameters:
 

@@ -81,7 +81,7 @@ Graph.Op = {
             
             case 'replot':
                 this.removeNode(n, { type: 'nothing' });
-                viz.fx.clearLabels();
+                viz.labels.clearLabels();
                 viz.refresh(true);
                 break;
             
@@ -96,7 +96,7 @@ Graph.Op = {
                     modes: ['fade:nodes'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
-                        viz.fx.clearLabels();
+                        viz.labels.clearLabels();
                         viz.reposition();
                         viz.fx.animate($merge(options, {
                             modes: ['linear']
@@ -126,7 +126,7 @@ Graph.Op = {
                 that = this;
                 viz.fx.sequence({
                     condition: function() { return n.length != 0; },
-                    step: function() { that.removeNode(n.shift(), { type: 'nothing' });  viz.fx.clearLabels(); },
+                    step: function() { that.removeNode(n.shift(), { type: 'nothing' });  viz.labels.clearLabels(); },
                     onComplete: function() { options.onComplete(); },
                     duration: Math.ceil(options.duration / n.length)
                 });
@@ -233,7 +233,7 @@ Graph.Op = {
                 that = this;
                 viz.fx.sequence({
                     condition: function() { return v.length != 0; },
-                    step: function() { that.removeEdge(v.shift(), { type: 'nothing' }); viz.fx.clearLabels(); },
+                    step: function() { that.removeEdge(v.shift(), { type: 'nothing' }); viz.labels.clearLabels(); },
                     onComplete: function() { options.onComplete(); },
                     duration: Math.ceil(options.duration / v.length)
                 });
@@ -406,7 +406,7 @@ Graph.Op = {
                 break;
             
             case 'replot':
-                viz.fx.clearLabels(true);
+                viz.labels.clearLabels(true);
                 this.morph(json, { type: 'nothing' });
                 viz.refresh(true);
                 viz.refresh(true);

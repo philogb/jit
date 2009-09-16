@@ -32,7 +32,7 @@ Graph.Plot = {
     
     Interpolator: {
         'moebius': function(elem, delta, vector) {
-            if(delta <= 1) {
+            if(vector.norm() < 1) {
               var x = vector.x, y = vector.y;
               var ans = elem.startPos
                 .getc().moebiusTransformation(vector);

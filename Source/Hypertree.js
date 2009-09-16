@@ -124,7 +124,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
 
      Extends:
 
-     <Loader>, <Layout.Radial>
+     <Loader>, <Layouts.Radial>
 
      Parameters:
 

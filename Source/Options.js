@@ -210,18 +210,17 @@ Options.Graph.Edge = {
 
   These configuration parameters are currently used by <TM>.
 
-    _Tips_ is an object containing as properties
 
-    - _allow_ If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. Default's *false*. 
-    - _offsetX_ An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
-    - _offsetY_ An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
-    - _onShow(tooltip, node, isLeaf, domElement)_ Implement this method to change the HTML content of the tooltip when hovering a node.
-    
-    Parameters:
-      tooltip - The tooltip div element.
-      node - The corresponding JSON tree node (See also <Loader.loadJSON>).
-      isLeaf - Whether is a leaf or inner node.
-      domElement - The current hovered DOM element.
+  - _allow_ If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. Default's *false*. 
+  - _offsetX_ An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
+  - _offsetY_ An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
+  - _onShow(tooltip, node, isLeaf, domElement)_ Implement this method to change the HTML content of the tooltip when hovering a node.
+  
+  Parameters:
+    tooltip - The tooltip div element.
+    node - The corresponding JSON tree node (See also <Loader.loadJSON>).
+    isLeaf - Whether is a leaf or inner node.
+    domElement - The current hovered DOM element.
 
 */
 Options.Tips = {
@@ -231,3 +230,33 @@ Options.Tips = {
   onShow: $empty
 };
 
+/*
+  Object: Options.Tree
+  
+  Options related to (classic) Tree layout algorithms.
+  
+  Description:
+  
+  Options related to classic Tree layouts.
+  
+  Implemented by:
+  
+  <ST>
+  
+  
+     - _subtreeOffset_ Separation offset between subtrees. Default's 8.
+     - _siblingOffset_ Separation offset between siblings. Default's 5.
+     - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
+     - _align_ Whether the tree alignment is left, center or right.
+     - _indent_ Used when _align_ is left or right and shows an indentation between parent and children. Default's 10.
+     - _multitree_ Used with the a node $orn data property for creating multitrees.
+
+*/
+Options.Tree = {
+    orientation: "left",
+    subtreeOffset: 8,
+    siblingOffset: 5,
+    indent:10,
+    multitree: false,
+    align:"center"
+};
