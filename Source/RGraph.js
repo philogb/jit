@@ -158,6 +158,10 @@ this.RGraph = new Class({
             'selected': false,
             'exist': true,
             'drawn': true
+        },
+        'Graph': {
+          'Node': this.config.Node,
+          'Edge': this.config.Edge
         }
     };
     this.graph = new Graph(this.graphOptions);
@@ -363,37 +367,37 @@ this.RGraph = new Class({
       
     */ 
     onClick: function(id, opt) {
-        if(this.root != id && !this.busy) {
-            this.busy = true;
-            this.root = id; 
-            that = this;
-            this.controller.onBeforeCompute(this.graph.getNode(id));
-            var obj = this.getNodeAndParentAngle(id);
-            
-      //second constraint
-      this.tagChildren(obj.parent, id);
-            this.parent = obj.parent;
-            this.compute('endPos');
-            
-            //first constraint
-            var thetaDiff = obj.theta - obj.parent.endPos.theta;
-            Graph.Util.eachNode(this.graph, function(elem) {
-                elem.endPos.set(elem.endPos.getp().add($P(thetaDiff, 0)));
-            });
+      if(this.root != id && !this.busy) {
+        this.busy = true;
+        this.root = id; 
+        that = this;
+        this.controller.onBeforeCompute(this.graph.getNode(id));
+        var obj = this.getNodeAndParentAngle(id);
+          
+        //second constraint
+        this.tagChildren(obj.parent, id);
+        this.parent = obj.parent;
+        this.compute('endPos');
+        
+        //first constraint
+        var thetaDiff = obj.theta - obj.parent.endPos.theta;
+        Graph.Util.eachNode(this.graph, function(elem) {
+            elem.endPos.set(elem.endPos.getp().add($P(thetaDiff, 0)));
+        });
 
-            var mode = this.config.interpolation;
-            opt = $merge({ onComplete: $empty }, opt || {});
+        var mode = this.config.interpolation;
+        opt = $merge({ onComplete: $empty }, opt || {});
 
-      this.fx.animate($merge({
-                hideLabels: true,
-                modes: [mode]
-            }, opt, {
-                onComplete: function() {
-                    that.busy = false;
-                    opt.onComplete();
-                }
-            }));
-        }       
+        this.fx.animate($merge({
+          hideLabels: true,
+          modes: [mode]
+        }, opt, {
+          onComplete: function() {
+              that.busy = false;
+              opt.onComplete();
+          }
+        }));
+      }       
     }
 });
 
@@ -537,8 +541,7 @@ RGraph.Label.SVG = new Class({
         };
         tag.setAttribute('x', labelPos.x);
         tag.setAttribute('y', labelPos.y);
-        
-        
+
         controller.onPlaceLabel(tag, node);
   }
 });
@@ -613,33 +616,33 @@ RGraph.Label.HTML = new Class({
 
 */
 RGraph.Plot.NodeTypes = new Class({
-    'none': function() {},
+    'none': $empty,
     
     'circle': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var pos = node.pos.getc(true);
+        var nodeDim = node.getData('dim');
         canvas.path('fill', function(context) {
             context.arc(pos.x, pos.y, nodeDim, 0, Math.PI*2, true);            
         });
     },
     
     'square': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
-    var nodeDim2 = 2 * nodeDim;
+        var pos = node.pos.getc(true);
+        var nodeDim = node.getData('dim');
+        var nodeDim2 = 2 * nodeDim;
         canvas.getCtx().fillRect(pos.x - nodeDim, pos.y - nodeDim, nodeDim2, nodeDim2);
     },
     
     'rectangle': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var width = nconfig.overridable && data && data.$width || nconfig.width;
-    var height = nconfig.overridable && data && data.$height || nconfig.height;
+        var pos = node.pos.getc(true);
+        var width = node.getData('width');
+        var height = node.getData('height');
         canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);
     },
     
     'triangle': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var pos = node.pos.getc(true);
+        var nodeDim = node.getData('dim');
         var c1x = pos.x, c1y = pos.y - nodeDim,
         c2x = c1x - nodeDim, c2y = pos.y + nodeDim,
         c3x = c1x + nodeDim, c3y = c2y;
@@ -651,8 +654,8 @@ RGraph.Plot.NodeTypes = new Class({
     },
     
     'star': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var pos = node.pos.getc(true);
+        var nodeDim = node.getData('dim');
         var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
         ctx.save();
         ctx.translate(pos.x, pos.y);
@@ -692,11 +695,11 @@ RGraph.Plot.NodeTypes = new Class({
 
 */
 RGraph.Plot.EdgeTypes = new Class({
-    'none': function() {},
+    'none': $empty,
     
     'line': function(adj, canvas) {
         var pos = adj.nodeFrom.pos.getc(true);
-    var posChild = adj.nodeTo.pos.getc(true);
+        var posChild = adj.nodeTo.pos.getc(true);
         canvas.path('stroke', function(context) {
             context.moveTo(pos.x, pos.y);
             context.lineTo(posChild.x, posChild.y);
@@ -705,10 +708,10 @@ RGraph.Plot.EdgeTypes = new Class({
     
     'arrow': function(adj, canvas) {
         var node = adj.nodeFrom, child = adj.nodeTo;
-    var data = adj.data, econfig = this.edge;
+        var data = adj.data, econfig = this.edge;
         //get edge dim
-    var cond = econfig.overridable && data;
-    var edgeDim = cond && data.$dim || 14;
+        var cond = econfig.overridable;
+        var edgeDim = adj.getData('dim');
         //get edge direction
         if(cond && data.$direction && data.$direction.length > 1) {
             var nodeHash = {};
@@ -728,10 +731,10 @@ RGraph.Plot.EdgeTypes = new Class({
             context.moveTo(posFrom.x, posFrom.y);
             context.lineTo(posTo.x, posTo.y);
         });
-    canvas.path('fill', function(context) {
+        canvas.path('fill', function(context) {
             context.moveTo(v1.x, v1.y);
             context.lineTo(v2.x, v2.y);
             context.lineTo(posTo.x, posTo.y);
         });
-  }
+    }
 });

@@ -219,7 +219,11 @@ this.ST= (function() {
                 config, controller);
             this.canvas = canvas;
             this.graphOptions = {
-                'complex': true
+                'complex': true,
+                'Graph': {
+                  'Node': this.config.Node,
+                  'Edge': this.config.Edge
+                }
             };
             this.graph = new Graph(this.graphOptions);
             this.labels = new ST.Label[canvas.getConfig().labels](this);
@@ -1015,7 +1019,7 @@ ST.Geom = new Class({
        Works like a CSS property, either _top-right-bottom-left_ or _top|bottom - left|right_.
      */
     dispatch: function() {
-    	//TODO(nico) should store Array.prototype.slice.call somewhere.
+    	  //TODO(nico) should store Array.prototype.slice.call somewhere.
         var args = Array.prototype.slice.call(arguments);
         var s = args.shift(), len = args.length;
         var val = function(a) { return typeof a == 'function'? a() : a; };

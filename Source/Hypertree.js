@@ -88,7 +88,8 @@ Graph.Util.getClosestNodeToPos = function(graph, pos, prop, flags) {
     return d1 * d1 + d2 * d2;
   };
   this.eachNode(graph, function(elem) { 
-    node = (node == null || distance(elem[prop].getc(true), pos) < distance(node[prop].getc(true), pos))? elem : node; 
+    node = (node == null || distance(elem[prop].getc(true), pos) < 
+        distance(node[prop].getc(true), pos))? elem : node; 
   }, flags); 
   return node; 
 }; 
@@ -257,7 +258,11 @@ this.Hypertree = new Class({
             'selected': false, 
             'exist': true, 
             'drawn': true 
-        } 
+        },
+        'Graph': {
+          'Node': this.config.Node,
+          'Edge': this.config.Edge
+        }
     }; 
     this.graph = new Graph(this.graphOptions); 
     this.labels = new Hypertree.Label[canvas.getConfig().labels](this);
@@ -784,7 +789,7 @@ Hypertree.Plot.NodeTypes = new Class({
 
       'circle' : function(node, canvas) {
         var nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var nodeDim = node.getData('dim');
         var p = node.pos.getc(), pos = p.scale(node.scale);
         var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
             : nodeDim;
@@ -796,8 +801,8 @@ Hypertree.Plot.NodeTypes = new Class({
       },
 
       'square' : function(node, canvas) {
-        var nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var nconfig = this.node;
+        var nodeDim = node.getData('dim');
         var p = node.pos.getc(), pos = p.scale(node.scale);
         var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
             : nodeDim;
@@ -809,10 +814,9 @@ Hypertree.Plot.NodeTypes = new Class({
       },
 
       'rectangle' : function(node, canvas) {
-        var nconfig = this.node, data = node.data;
-        var width = nconfig.overridable && data && data.$width || nconfig.width;
-        var height = nconfig.overridable && data && data.$height
-            || nconfig.height;
+        var nconfig = this.node;
+        var width = node.getData('width');
+        var height = node.getData('height');
         var p = node.pos.getc(), pos = p.scale(node.scale);
         var prod = 1 - p.squaredNorm();
         width = nconfig.transform ? width * prod : width;
@@ -824,8 +828,8 @@ Hypertree.Plot.NodeTypes = new Class({
       },
 
       'triangle' : function(node, canvas) {
-        var nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var nconfig = this.node;
+        var nodeDim = node.getData('dim');
         var p = node.pos.getc(), pos = p.scale(node.scale);
         var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
             : nodeDim;
@@ -841,8 +845,8 @@ Hypertree.Plot.NodeTypes = new Class({
       },
 
       'star' : function(node, canvas) {
-        var nconfig = this.node, data = node.data;
-        var nodeDim = nconfig.overridable && data && data.$dim || nconfig.dim;
+        var nconfig = this.node;
+        var nodeDim = node.getData('dim');
         var p = node.pos.getc(), pos = p.scale(node.scale);
         var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
             : nodeDim;

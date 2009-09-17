@@ -456,7 +456,7 @@ function init(){
         Edge: {
             type: 'none',
             overridable: true,
-            dim: 4,
+            dim: 14,
             width: 3,
             color: '#772266'
         },

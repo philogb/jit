@@ -51,7 +51,11 @@ this.Graph = new Class({
  initialize: function(opt) {
     var innerOptions = {
     'complex': false,
-    'Node': {}
+    'Node': {},
+    'Graph': {
+      'Node': {},
+      'Edge': {}
+    }
   };
     this.opt = $merge(innerOptions, opt || {});
     this.nodes= {};
@@ -97,8 +101,9 @@ this.Graph = new Class({
 */  
   getAdjacence: function (id, id2) {
     var adjs = [];
-    if(this.hasNode(id)     && this.hasNode(id2) 
-    && this.nodes[id].adjacentTo({ 'id':id2 }) && this.nodes[id2].adjacentTo({ 'id':id })) {
+    if(this.hasNode(id) && this.hasNode(id2) 
+    && this.nodes[id].adjacentTo({ 'id':id2 }) 
+    && this.nodes[id2].adjacentTo({ 'id':id })) {
         adjs.push(this.nodes[id].getAdjacency(id2));
         adjs.push(this.nodes[id2].getAdjacency(id));
         return adjs;
@@ -126,10 +131,11 @@ this.Graph = new Class({
   addNode: function(obj) {
     if(!this.nodes[obj.id]) {
         this.nodes[obj.id] = new Graph.Node($extend({
-      'id': obj.id,
-      'name': obj.name,
-      'data': obj.data
-    }, this.opt.Node), this.opt.complex);
+        'id': obj.id,
+        'name': obj.name,
+        'data': obj.data
+      }, $extend(this.opt.Node, this.opt.Graph)), 
+      this.opt.complex);
     }
     return this.nodes[obj.id];
   },
@@ -265,6 +271,8 @@ Graph.Node = new Class({
       'id': '',
       'name': '',
       'data': {},
+      'startData': {},
+      'endData': {},
       'adjacencies': {},
 
       'selected': false,
@@ -279,6 +287,9 @@ Graph.Node = new Class({
       'alpha': 1,
       'startAlpha': 1,
       'endAlpha': 1,
+      
+      'Node': {},
+      'Edge': {},
       
       'pos': (complex && $C(0, 0)) || $P(0, 0),
       'startPos': (complex && $C(0, 0)) || $P(0, 0),
@@ -337,7 +348,7 @@ Graph.Node = new Class({
           data - Some custom hash information.
     */  
     addAdjacency: function(node, data) {
-        var adj = new Graph.Adjacence(this, node, data);
+        var adj = new Graph.Adjacence(this, node, data, this.Edge);
         return this.adjacencies[node.id] = adj;
     },
     
@@ -352,7 +363,48 @@ Graph.Node = new Class({
     */  
     removeAdjacency: function(id) {
         delete this.adjacencies[id];
-    }
+    },
+    /*
+    Method: getData
+ 
+    Returns the specified data value property. This is useful for querying special/reserved 
+    <Graph.Node> data properties (i.e dollar prefixed properties).
+
+    Parameters:
+ 
+       prop - The name of the property. The dollar sign is not necessary. For example _getData('width')_ will query 
+       _data.$width_
+       type - The type of the data property queried. Default's "current".
+       force - Whether to obtain the true value of the property (equivalent to _data.$prop_) or to check for _node.overridable=true_ first. 
+       For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
+ 
+    Returns:
+ 
+      The value of the dollar prefixed property or the global Node property value if _overridable=false_
+
+    Example:
+    (start code js)
+     node.getData('width'); //will return node.data.$width if Node.overridable=true;
+    (end code)
+     */
+   getData: function(prop, type, force) {
+      type = type || 'current';
+      var data;
+      if(type === 'current') {
+        data = this.data;
+      } else if(type === 'start') {
+        data = this.startData;
+      } else if(type === 'end') {
+        data = this.endData;
+      }
+      if(force) {
+        return data['$' + prop];
+      }
+      var n = this.Node, dollar = '$' + prop;
+      if(!n.overridable || !(dollar in data)) return n[prop];
+      return data[dollar];
+   }
+    
 });
 
 /*
@@ -384,14 +436,62 @@ Graph.Node = new Class({
       startAlpha - Opacity begin value. Used for interpolation.
       endAlpha - Opacity end value. Used for interpolation.
 */
-Graph.Adjacence = function(nodeFrom, nodeTo, data) {
+Graph.Adjacence = new Class({
+  
+  initialize: function(nodeFrom, nodeTo, data, edge) {
     this.nodeFrom = nodeFrom;
     this.nodeTo = nodeTo;
     this.data = data || {};
+    this.startData = {};
+    this.endData = {};
     this.alpha = 1;
     this.startAlpha = 1;
     this.endAlpha = 1;
-};
+    this.Edge = edge;
+  },
+  
+  /*
+  Method: getData
+
+  Returns the specified data value property. This is useful for querying special/reserved 
+  <Graph.Adjacence> data properties (i.e dollar prefixed properties).
+
+  Parameters:
+
+     prop - The name of the property. The dollar sign is not necessary. For example _getData('width')_ will query 
+     _data.$width_
+     type - The type of the queried data property. Default's "current".
+     force - Whether to obtain the true value of the property (equivalent to _data.$prop_) or to check for _node.overridable=true_ first. 
+     For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
+
+  Returns:
+
+    The value of the dollar prefixed property or the global Node property value if _overridable=false_
+
+  Example:
+  (start code js)
+   adj.getData('width'); //will return adj.data.$width if Node.overridable=true;
+  (end code)
+   */
+ getData: function(prop, type, force) {
+    type = type || 'current';
+    var data;
+    if(type === 'current') {
+      data = this.data;
+    } else if(type == 'start') {
+      data = this.startData;
+    } else if(type == 'end') {
+      data = this.endData;
+    }
+    if(force) {
+      return data['$' + prop];
+    }
+    var n = this.Edge, dollar = '$' + prop;
+    if(!n.overridable || !(dollar in data)) return n[prop];
+    return data[dollar];
+ }
+  
+});
 
 /*
    Object: Graph.Util
