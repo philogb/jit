@@ -115,12 +115,8 @@ Layouts.Radial = new Class({
    * Sets nodes angular widths.
    */
   setAngularWidthForNodes : function() {
-    var config = this.config.Node;
-    var overridable = config.overridable;
-    var dim = config.dim;
-
     Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
-      var diamValue = (overridable && elem.data && elem.data.$aw) || dim;
+      var diamValue = elem.getData('aw');
       elem._angularWidth = diamValue / i;
     }, "ignore");
   },
@@ -192,8 +188,8 @@ Layouts.Tree = (function() {
       GUtil.eachNode(graph, function(n) {
         if (n._depth == level
             && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
-          var dw = n.data.$width || dim.width;
-          var dh = n.data.$height || dim.height;
+          var dw = n.getData('width');
+          var dh = n.getData('height');
           w = (w < dw) ? dw : w;
           h = (h < dh) ? dh : h;
         }
@@ -313,9 +309,9 @@ Layouts.Tree = (function() {
     var GUtil = Graph.Util;
 
     function $design(node, maxsize, acum) {
-      var sval = (cnode.overridable && node.data["$" + s]) || cnode[s];
+      var sval = node.getData(s);
       var notsval = maxsize
-          || ((cnode.overridable && node.data["$" + nots]) || cnode[nots]);
+          || (node.getData(nots));
 
       var trees = [], extents = [], chmaxsize = false;
       var chacum = notsval + config.levelDistance;
@@ -357,7 +353,7 @@ Layouts.Tree = (function() {
   }
   ;
 
-  return new Class( {
+  return new Class({
     /*
     Method: compute
     

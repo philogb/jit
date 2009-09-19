@@ -445,11 +445,13 @@ function init(){
     var rgraph = new RGraph(canvas, {
         //Set Edge and Node colors.
         Node: {
-            color: '#ccddee'
+            color: '#ccddee',
+            overridable:true
         },
 
         Edge: {
-            color: '#772277'
+            color: '#772277',
+            overridable:true
         },
         //Add the node's name into the label
         //This method is called only once, on label creation.

@@ -442,6 +442,12 @@ function init(){
     rgraph = new RGraph(canvas, {
         interpolation: "linear",
         levelDistance: 100,
+        Node: {
+          overridable: true
+        },
+        Edge: {
+          overridable: true
+        },
         
         onBeforeCompute: function(node){
             Log.write("centering " + node.name + "...");

@@ -324,6 +324,15 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': False 
         },
+        {
+            'Title': 'loadJSON multiple times',
+            'Description': 
+            """
+            Testing if loading different JSON tree/graph structures affects how the SpaceTree is displayed.
+            """,
+            'Extras': ['excanvas.js', 'generators.js'],
+            'Example': False 
+        }
    ],
     
     'Treemap': [

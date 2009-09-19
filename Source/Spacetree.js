@@ -1217,7 +1217,7 @@ ST.Geom = new Class({
 
    (start code js)
     var st = new ST(canvas, config);
-    st.fx.placeLabel //or can also call any other <ST.Plot> method
+    st.fx.animate //or can also call any other <ST.Plot> method
    (end code)
 
 
@@ -1264,25 +1264,24 @@ ST.Plot = new Class({
         ctx = canvas.getCtx();
         var root = config.multitree && !('$orn' in node.data);
         var orns = root && node.data.$orns;
+        var nodeAlpha = node.getData('alpha');
         Graph.Util.eachSubnode(node, function(elem) {
             //multitree root node check
         	if((!root || orns.indexOf(elem.data.$orn) > 0)
         			&& elem.exist && elem.drawn) {
 	            var adj = node.getAdjacency(elem.id);
 	            !animating && opt.onBeforePlotLine(adj);
-	            ctx.globalAlpha = Math.min(node.alpha, elem.alpha);
+	            ctx.globalAlpha = Math.min(nodeAlpha, elem.getData('alpha'));
 	            that.plotLine(adj, canvas, animating);
 	            !animating && opt.onAfterPlotLine(adj);
 	            that.plotTree(elem, plotLabel, opt, animating);
         	}
         });
-
         if(node.drawn) {
-            ctx.globalAlpha = node.alpha;
             !animating && opt.onBeforePlotNode(node);
             this.plotNode(node, canvas, animating);
             !animating && opt.onAfterPlotNode(node);
-            if(plotLabel && ctx.globalAlpha >= 0.95) 
+            if(plotLabel && nodeAlpha >= 0.95) 
                 this.labels.plotLabel(canvas, node, opt);
             else 
                 this.labels.hideLabel(node, false);

@@ -266,9 +266,6 @@ this.Graph = new Class({
       data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
       selected - Whether the node is selected or not. Used by <ST> for selecting nodes that are between the root node and the selected node.
       angleSpan - For radial layouts such as the ones performed by the <Hypertree> and the <RGraph>. Contains _begin_ and _end_ properties containing angle values describing the angle span for this subtree.
-      alpha - Current opacity value.
-      startAlpha - Opacity begin value. Used for interpolation.
-      endAlpha - Opacity end value. Used for interpolation.
       pos - Current position. Can be a <Complex> or <Polar> instance.
       startPos - Starting position. Used for interpolation.
       endPos - Ending position. Used for interpolation.
@@ -293,10 +290,6 @@ Graph.Node = new Class({
         'end' : 0
       },
 
-      'alpha': 1,
-      'startAlpha': 1,
-      'endAlpha': 1,
-      
       'pos': (complex && $C(0, 0)) || $P(0, 0),
       'startPos': (complex && $C(0, 0)) || $P(0, 0),
       'endPos': (complex && $C(0, 0)) || $P(0, 0)
@@ -398,11 +391,11 @@ Graph.Node = new Class({
    getData: function(prop, type, force) {
       type = type || 'current';
       var data;
-      if(type === 'current') {
+      if(type == 'current') {
         data = this.data;
-      } else if(type === 'start') {
+      } else if(type == 'start') {
         data = this.startData;
-      } else if(type === 'end') {
+      } else if(type == 'end') {
         data = this.endData;
       }
       if(force) {
@@ -434,11 +427,11 @@ Graph.Node = new Class({
    setData: function(prop, value, type) {
       type = type || 'current';
       var data;
-      if(type === 'current') {
+      if(type == 'current') {
         data = this.data;
-      } else if(type === 'start') {
+      } else if(type == 'start') {
         data = this.startData;
-      } else if(type === 'end') {
+      } else if(type == 'end') {
         data = this.endData;
       }
       data['$' + prop] = value;
@@ -470,9 +463,6 @@ Graph.Node = new Class({
       nodeFrom - A <Graph.Node> connected by this edge.
       nodeTo - Another  <Graph.Node> connected by this edge.
       data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
-      alpha - Current opacity value.
-      startAlpha - Opacity begin value. Used for interpolation.
-      endAlpha - Opacity end value. Used for interpolation.
 */
 Graph.Adjacence = new Class({
   
@@ -482,9 +472,6 @@ Graph.Adjacence = new Class({
     this.data = data || {};
     this.startData = {};
     this.endData = {};
-    this.alpha = 1;
-    this.startAlpha = 1;
-    this.endAlpha = 1;
     this.Edge = edge;
   },
   
@@ -514,7 +501,7 @@ Graph.Adjacence = new Class({
  getData: function(prop, type, force) {
     type = type || 'current';
     var data;
-    if(type === 'current') {
+    if(type == 'current') {
       data = this.data;
     } else if(type == 'start') {
       data = this.startData;
@@ -549,11 +536,11 @@ Graph.Adjacence = new Class({
    setData: function(prop, value, type) {
      type = type || 'current';
      var data;
-     if(type === 'current') {
+     if(type == 'current') {
        data = this.data;
-     } else if(type === 'start') {
+     } else if(type == 'start') {
        data = this.startData;
-     } else if(type === 'end') {
+     } else if(type == 'end') {
        data = this.endData;
      }
      data['$' + prop] = value;
@@ -679,7 +666,7 @@ Graph.Util = {
             elem._flag = false;
             elem._depth = -1;
         }, flags);
-    var root = graph.getNode(id);
+        var root = graph.getNode(id);
         root._depth = startDepth;
         var queue = [root];
         while(queue.length != 0) {

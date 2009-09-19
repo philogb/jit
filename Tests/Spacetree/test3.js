@@ -1,6 +1,7 @@
 function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    Feeder.p.color = false;
     var json = Feeder.makeTree();
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
@@ -15,7 +16,12 @@ function init(){
     });
     //Create a new ST instance
     st = new ST(canvas, {
-    
+        Node: {
+          overridable:true
+        },
+        Edge: {
+          overridable:true
+        },
         onBeforeCompute: function(node){
             Log.write("loading " + node.name);
         },

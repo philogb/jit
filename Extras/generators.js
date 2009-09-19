@@ -7,8 +7,10 @@ var Feeder = {
 		levelStart: 0,
 		levelEnd: 3,
 		maxChildrenPerNode: 5,
-        minChildrenPerNode: 1,
-		counter: 0
+    minChildrenPerNode: 1,
+		counter: 0,
+		color: true,
+		dim: true
 	},
 	
 	makeTree: function (p) {
@@ -20,22 +22,24 @@ var Feeder = {
 										   p.levelStart,
 										   p.levelEnd, 
 										   p.maxChildrenPerNode,
-                                           p.minChildrenPerNode);
+                       p.minChildrenPerNode,
+                       p.color,
+                       p.dim);
 	},
 	
-	makeTreeWithParameters: function(idPrefix, levelStart, levelEnd, maxChildrenPerNode, minChildrenPerNode) {
+	makeTreeWithParameters: function(idPrefix, levelStart, levelEnd, maxChildrenPerNode, minChildrenPerNode, color, dim) {
 		if(levelStart == levelEnd) return null;
 		this.counter++;
 		var numb = Math.floor(Math.random() * 10) + 1;
 		var numb2 = Math.floor(Math.random() * 200 - 100);
+		var data = {};
+		data.$area = numb;
+		if(dim) data.$dim = numb;
+		if(color) data.$color = color;
 		var ans= {
 			id:   idPrefix + levelStart + this.counter,
 			name: levelStart + "." + this.counter,
-			data: {
-                "$area": numb,
-                "$color": numb2,
-                "$dim": numb
-            }, 
+			data: data, 
 			children: []
 		};
 		var childCount= Math.floor(Math.random() * maxChildrenPerNode) + minChildrenPerNode;

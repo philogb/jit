@@ -139,11 +139,13 @@ Options.Graph = {};
      - _type_ Node type (shape). Possible options are "none", "square", "rectangle", "circle", "triangle", "star". Default's "circle".
      - _color_ Node color. Default's '#ccb'.
      - _lineWidth_ Line width. If nodes aren't drawn with strokes then this property won't be of any use. Default's 1.
+     - _alpha_ The Node's alpha value. Default's 1 (for full opacity).
      - _height_ Node height. Used for plotting rectangular nodes. Default's 20.
      - _width_ Node width. Used for plotting rectangular nodes. Default's 90.
      - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. Default's 3.
      - _transform_ *<Hypertree> only*. Whether to apply the moebius transformation to the nodes or not. Default's true.
      - _align_ *<ST> only*. Defines a node's alignment. Possible values are "center", "left", "right". Default's "center".
+     - _aw_ Used for calculating node and subtrees angular widths. It's used only in <Layouts.Radial>.
 
 */
 Options.Graph.Node = {
@@ -155,7 +157,9 @@ Options.Graph.Node = {
   width: 90,
   lineWidth: 1,
   transform: true,
-  align: "center"
+  align: "center",
+  alpha: 1,
+  aw:1
 };
 
 /*
@@ -183,6 +187,7 @@ Options.Graph.Node = {
      - _type_ Edge type (shape). Default's "line" in the <RGraph> and <ST>, but "hyperline" in the <Hypertree> visualization.
      - _color_ Edge color. Default's '#ccb'.
      - _lineWidth_ Line width. If edges aren't drawn with strokes then this property won't be of any use. Default's 1.
+     - _alpha_ The Edge's alpha value. Default's 1 (for full opacity).
      - _dim_ An extra parameter used by other complex shapes such as qudratic or bezier to determine the shape's diameter. Default's 15.
 
 */
@@ -191,7 +196,8 @@ Options.Graph.Edge = {
   type: 'line',
   color: '#ccb',
   lineWidth: 1,
-  dim:15
+  dim:15,
+  alpha: 1
 };
 
 

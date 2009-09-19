@@ -499,7 +499,7 @@ Hypertree.Op = new Class({
 
    (start code js)
     var ht = new Hypertree(canvas, config);
-    ht.fx.placeLabel //or can also call any other <Hypertree.Plot> method
+    ht.fx.animate //or can also call any other <Hypertree.Plot> method
    (end code)
 
 */ 
@@ -891,10 +891,11 @@ Hypertree.Plot.EdgeTypes = new Class({
      
     'line': function(adj, canvas) {  
         var pos = adj.nodeFrom.pos.getc(true); 
-        var posChild = adj.nodeTo.pos.getc(true); 
+        var posChild = adj.nodeTo.pos.getc(true);
+        var scale = adj.nodeFrom.scale;
         canvas.path('stroke', function(context) { 
-            context.moveTo(pos.x, pos.y); 
-            context.lineTo(posChild.x, posChild.y); 
+            context.moveTo(pos.x * scale, pos.y * scale); 
+            context.lineTo(posChild.x * scale, posChild.y * scale); 
         }); 
     }, 
  

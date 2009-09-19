@@ -31,7 +31,24 @@
 Graph.Plot = {
     
     Interpolator: {
-        'moebius': function(elem, delta, vector) {
+        
+        //Mapping property to parser
+        'map': {
+          'color': 'color',
+          'width': 'number',
+          'height': 'number',
+          'lineWidth': 'number',
+          'dim': 'number',
+          'alpha': 'number'
+        },
+  
+        //Number interpolator
+        'compute': function(from, to, delta) {
+          return from + (to - from) * delta;
+        },
+        
+        //Position interpolators
+        'moebius': function(elem, props, delta, vector) {
             if(vector.norm() < 1) {
               var x = vector.x, y = vector.y;
               var ans = elem.startPos
@@ -41,30 +58,55 @@ Graph.Plot = {
             }           
         },
 
-        'linear': function(elem, delta) {
+        'linear': function(elem, props, delta) {
             var from = elem.startPos.getc(true);
             var to = elem.endPos.getc(true);
-            elem.pos.setc((to.x - from.x) * delta + from.x, (to.y - from.y) * delta + from.y);
+            elem.pos.setc(this.compute(from.x, to.x, delta), 
+                          this.compute(from.y, to.y, delta));
         },
 
-        'fade:nodes': function(elem, delta) {
-            if(delta <= 1 && (elem.endAlpha != elem.alpha)) {
-                var from = elem.startAlpha;
-                var to   = elem.endAlpha;
-                elem.alpha = from + (to - from) * delta;
+        'polar': function(elem, props, delta) {
+          var from = elem.startPos.getp(true);
+          var to = elem.endPos.getp();
+          var ans = to.interpolate(from, delta);
+          elem.pos.setp(ans.theta, ans.rho);
+        },
+        
+        
+        //Graph's Node/Edge interpolators
+        'number': function(elem, prop, delta) {
+          var from = elem.getData(prop, 'start');
+          var to = elem.getData(prop, 'end');
+          elem.setData(prop, this.compute(from, to, delta));
+        },
+
+        'color': function(elem, prop, delta) {
+          var from = $hexToRgb(elem.getData(prop, 'start'));
+          var to = $hexToRgb(elem.getData(prop, 'end'));
+          var comp = this.compute;
+          elem.setData(prop, $rgbToHex([comp(from[0], to[0], delta),
+                                        comp(from[1], to[1], delta),
+                                        comp(from[2], to[2], delta)]));
+        },
+        
+        'node-property': function(elem, props, delta) {
+            var map = this.map;
+            if(props) {
+              var len = props.length;
+              for(var i=0; i<len; i++) {
+                var pi = props[i];
+                this[map[pi]](elem, pi, delta);
+              }
+            } else {
+              for(var pi in map) {
+                this[map[pi]](elem, pi, delta);
+              }
             }
         },
         
-        'fade:vertex': function(elem, delta) {
+        'edge-property': function(elem, props, delta) {
             var adjs = elem.adjacencies;
-            for(var id in adjs) this['fade:nodes'](adjs[id], delta);
-        },
-        
-        'polar': function(elem, delta) {
-            var from = elem.startPos.getp(true);
-            var to = elem.endPos.getp();
-            var ans = to.interpolate(from, delta);
-            elem.pos.setp(ans.theta, ans.rho);
+            for(var id in adjs) this['node-property'](adjs[id], props, delta);
         }
     },
     
@@ -104,20 +146,20 @@ Graph.Plot = {
     sequence: function(options) {
         var that = this;
         options = $merge({
-            condition: $lambda(false),
-            step: $empty,
-            onComplete: $empty,
-            duration: 200
+          condition: $lambda(false),
+          step: $empty,
+          onComplete: $empty,
+          duration: 200
         }, options || {});
 
         var interval = setInterval(function() {
-            if(options.condition()) {
-                options.step();
-            } else {
-                clearInterval(interval);
-                options.onComplete();
-            }
-            that.viz.refresh(true);
+          if(options.condition()) {
+            options.step();
+          } else {
+            clearInterval(interval);
+            options.onComplete();
+          }
+          that.viz.refresh(true);
         }, options.duration);
     },
     
@@ -154,24 +196,30 @@ Graph.Plot = {
        
     */
     animate: function(opt, versor) {
+      opt = $merge(this.viz.controller, opt || {});
       var that = this,
       viz = this.viz,
       graph  = viz.graph,
-      GUtil = Graph.Util;
-      opt = $merge(viz.controller, opt || {}),
+      GUtil = Graph.Util,
       modes = opt.modes,
       len = modes.length,
       interp = this.Interpolator;
-    
+      
+      //parse modes
+      var m = {};
+      for(var i=0; i < len; i++) {
+        var elems = modes[i].split(':');
+        m[elems.shift()] = elems;
+      }
       if(opt.hideLabels) this.labels.hideLabels(true);
       this.animation.setOptions($merge(opt, {
         $animating: false,
         compute: function(delta) {
           var vector = versor? versor.scale(-delta) : null;
           GUtil.eachNode(graph, function(node) { 
-            for(var i=0; i<len; i++) {
-              interp[modes[i]](node, delta, vector);
-            } 
+            for(var p in m) {
+              interp[p](node, m[p], delta, vector);
+            }
           });
           that.plot(opt, this.$animating);
           this.$animating = true;
@@ -179,7 +227,21 @@ Graph.Plot = {
         complete: function() {
           GUtil.eachNode(graph, function(node) { 
             node.startPos.set(node.pos);
-            node.startAlpha = node.alpha;
+            //restore 
+            if('node-property' in m) {
+              var prop = m['node-property'];
+              for(var i=0, l=prop.length; i < l; i++) {
+                node.setData(prop[i], node.getData(prop[i]), 'start');
+              }
+            }
+            if('edge-property' in m) {
+              var prop = m['edge-property'];
+              GUtil.eachAdjacency(node, function(adj) {
+                for(var i=0, l=prop.length; i < l; i++) {
+                  adj.setData(prop[i], adj.getData(prop[i]), 'start');
+                }
+              });
+            }
           });
           if(opt.hideLabels) that.labels.hideLabels(false);
           that.plot(opt);
@@ -213,18 +275,22 @@ Graph.Plot = {
       id = viz.root, 
       that = this, 
       ctx = canvas.getCtx(), 
+      min = Math.min,
       GUtil = Graph.Util;
       opt = opt || this.viz.controller;
       opt.clearCanvas && canvas.clear();
         
       var T = !!aGraph.getNode(id).visited;
       GUtil.eachNode(aGraph, function(node) {
+        var nodeAlpha = node.getData('alpha');
         GUtil.eachAdjacency(node, function(adj) {
           var nodeTo = adj.nodeTo;
           if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
             !animating && opt.onBeforePlotLine(adj);
             ctx.save();
-            ctx.globalAlpha = Math.min(Math.min(node.alpha, nodeTo.alpha), adj.alpha);
+            ctx.globalAlpha = min(min(nodeAlpha, 
+                nodeTo.getData('alpha')), 
+                adj.getData('alpha'));
             that.plotLine(adj, canvas, animating);
             ctx.restore();
             !animating && opt.onAfterPlotLine(adj);
@@ -232,13 +298,12 @@ Graph.Plot = {
         });
         ctx.save();
         if(node.drawn) {
-          ctx.globalAlpha = node.alpha;
           !animating && opt.onBeforePlotNode(node);
           that.plotNode(node, canvas, animating);
           !animating && opt.onAfterPlotNode(node);
         }
         if(!that.labelsHidden && opt.withLabels) {
-          if(node.drawn && ctx.globalAlpha >= 0.95) {
+          if(node.drawn && nodeAlpha >= 0.95) {
             that.labels.plotLabel(canvas, node, opt);
           } else {
             that.labels.hideLabel(node, false);
@@ -262,17 +327,17 @@ Graph.Plot = {
 
     */
     plotNode: function(node, canvas, animating) {
-        var nconfig = this.node, data = node.data;
-        var cond = nconfig.overridable && data;
-        var width = cond && data.$lineWidth || nconfig.lineWidth;
-        var color = cond && data.$color || nconfig.color;
+        var width = node.getData('lineWidth');
+        var color = node.getData('color');
+        var alpha = node.getData('alpha');
         var ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
         ctx.fillStyle = color;
         ctx.strokeStyle = color; 
+        ctx.globalAlpha = alpha;
 
-        var f = node.data && node.data.$type || nconfig.type;
+        var f = node.getData('type');
         this.nodeTypes[f].call(this, node, canvas, animating);
     },
     
@@ -288,17 +353,15 @@ Graph.Plot = {
 
     */
     plotLine: function(adj, canvas, animating) {
-        var econfig = this.edge, data = adj.data;
-        var cond = econfig.overridable && data;
-        var width = cond && data.$lineWidth || econfig.lineWidth;
-        var color = cond && data.$color || econfig.color;
+        var width = adj.getData('lineWidth');
+        var color = adj.getData('color');
         var ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
         ctx.fillStyle = color;
         ctx.strokeStyle = color; 
 
-        var f = adj.data && adj.data.$type || econfig.type;
+        var f = adj.getData('type');
         this.edgeTypes[f].call(this, adj, canvas, animating);
     }    
   

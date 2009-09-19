@@ -429,12 +429,14 @@ function init(){
         //Change node and Edge styles and colors.
         Node: {
             dim: 9,
-            color: "#f00"
+            color: "#f00",
+            overridable: true
         },
         
         Edge: {
             lineWidth: 2,
-            color: "#088"
+            color: "#088",
+            overridable: true
         },
     
         onBeforeCompute: function(node){

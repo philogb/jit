@@ -30,7 +30,7 @@ Graph.Op = {
     options: {
         type: 'nothing',
         duration: 2000,
-    hideLabels: true,
+        hideLabels: true,
         fps:30
     },
   
@@ -90,10 +90,10 @@ Graph.Op = {
                 //set alpha to 0 for nodes to remove.
                 for(i=0; i<n.length; i++) {
                     nodeObj = viz.graph.getNode(n[i]);
-                    nodeObj.endAlpha = 0;
+                    nodeObj.setData('alpha', 0, 'end');
                 }
                 viz.fx.animate($merge(options, {
-                    modes: ['fade:nodes'],
+                    modes: ['node-property:alpha'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
                         viz.labels.clearLabels();
@@ -110,12 +110,12 @@ Graph.Op = {
                 //set alpha to 0 for nodes to remove. Tag them for being ignored on computing positions.
                 for(i=0; i<n.length; i++) {
                     nodeObj = viz.graph.getNode(n[i]);
-                    nodeObj.endAlpha = 0;
+                    nodeObj.setData('alpha', 0, 'end');
                     nodeObj.ignore = true;
                 }
                 viz.reposition();
                 viz.fx.animate($merge(options, {
-                    modes: ['fade:nodes', 'linear'],
+                    modes: ['node-property:alpha', 'linear'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
                     }
@@ -192,12 +192,12 @@ Graph.Op = {
                 for(i=0; i<v.length; i++) {
                     adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
                     if(adjs) {
-                        adjs[0].endAlpha = 0;
-                        adjs[1].endAlpha = 0;
+                        adjs[0].setData('alpha', 0,'end');
+                        adjs[1].setData('alpha', 0,'end');
                     }
                 }
                 viz.fx.animate($merge(options, {
-                    modes: ['fade:vertex'],
+                    modes: ['edge-property:alpha'],
                     onComplete: function() {
                         that.removeEdge(v, { type: 'nothing' });
                         viz.reposition();
@@ -214,15 +214,15 @@ Graph.Op = {
                 for(i=0; i<v.length; i++) {
                     adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
                     if(adjs) {
-                        adjs[0].endAlpha = 0;
+                        adjs[0].setData('alpha',0 ,'end');
                         adjs[0].ignore = true;
-                        adjs[1].endAlpha = 0;
+                        adjs[1].setData('alpha',0 ,'end');
                         adjs[1].ignore = true;
                     }
                 }
                 viz.reposition();
                 viz.fx.animate($merge(options, {
-                    modes: ['fade:vertex', 'linear'],
+                    modes: ['edge-property:alpha', 'linear'],
                     onComplete: function() {
                         that.removeEdge(v, { type: 'nothing' });
                     }
@@ -312,7 +312,7 @@ Graph.Op = {
 
                 //set alpha to 0 for nodes to add.
                 var fadeEdges = this.preprocessSum(graph);
-                var modes = !fadeEdges? ['fade:nodes'] : ['fade:nodes', 'fade:vertex'];
+                var modes = !fadeEdges? ['node-property:alpha'] : ['node-property:alpha', 'edge-property:alpha'];
                 viz.reposition();
                 if(options.type != 'fade:con') {
                     viz.fx.animate($merge(options, {
@@ -421,7 +421,10 @@ Graph.Op = {
                 //preprocessing for nodes to delete.
                 GUtil.eachNode(viz.graph, function(elem) {
                     if(!graph.hasNode(elem.id)) {
-                        elem.alpha = 1; elem.startAlpha = 1; elem.endAlpha = 0; elem.ignore = true;
+                      elem.setData('alpha', 1);
+                      elem.setData('alpha', 1, 'start');
+                      elem.setData('alpha', 0, 'end');
+                      elem.ignore = true;
                     }
                 }); 
                 GUtil.eachNode(viz.graph, function(elem) {
@@ -433,12 +436,17 @@ Graph.Op = {
                         if(!nodeFrom.adjacentTo(nodeTo)) {
                             var adjs = viz.graph.getAdjacence(nodeFrom.id, nodeTo.id);
                             fadeEdges = true;
-                            adjs[0].alpha = 1; adjs[0].startAlpha = 1; adjs[0].endAlpha = 0; adjs[0].ignore = true;
-                            adjs[1].alpha = 1; adjs[1].startAlpha = 1; adjs[1].endAlpha = 0; adjs[1].ignore = true;
+                            adjs[0].setData('alpha', 1);
+                            adjs[0].setData('alpha', 1, 'start');
+                            adjs[0].setData('alpha', 0, 'end');
+
+                            adjs[1].setData('alpha', 1);
+                            adjs[1].setData('alpha', 1, 'start');
+                            adjs[1].setData('alpha', 0, 'end');
                         }
                     });
                 }); 
-                var modes = !fadeEdges? ['fade:nodes'] : ['fade:nodes', 'fade:vertex'];
+                var modes = !fadeEdges? ['node-property:alpha'] : ['node-property:alpha', 'edge-property:alpha'];
                 viz.reposition();
                 GUtil.eachNode(viz.graph, function(elem) {
                     if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
@@ -467,12 +475,14 @@ Graph.Op = {
     
     preprocessSum: function(graph) {
         var viz = this.viz;
-    var GUtil = Graph.Util;
+        var GUtil = Graph.Util;
         GUtil.eachNode(graph, function(elem) {
             if(!viz.graph.hasNode(elem.id)) {
                 viz.graph.addNode(elem);
                 var n = viz.graph.getNode(elem.id);
-                n.alpha = 0; n.startAlpha = 0; n.endAlpha = 1;
+                n.setData('alpha', 0);
+                n.setData('alpha', 0, 'start');
+                n.setData('alpha', 1, 'end');
             }
         }); 
         var fadeEdges = false;
@@ -485,8 +495,13 @@ Graph.Op = {
                     if(nodeFrom.startAlpha == nodeFrom.endAlpha 
                     && nodeTo.startAlpha == nodeTo.endAlpha) {
                         fadeEdges = true;
-                        adjs[0].alpha = 0; adjs[0].startAlpha = 0; adjs[0].endAlpha = 1;
-                        adjs[1].alpha = 0; adjs[1].startAlpha = 0; adjs[1].endAlpha = 1;
+                        adjs[0].setData('alpha', 0);
+                        adjs[0].setData('alpha', 0, 'start');
+                        adjs[0].setData('alpha', 1, 'end');
+
+                        adjs[1].setData('alpha', 0);
+                        adjs[1].setData('alpha', 0, 'start');
+                        adjs[1].setData('alpha', 1, 'end');
                     } 
                 }
             });

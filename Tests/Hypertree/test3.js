@@ -421,8 +421,13 @@ function init(){
     var nodesCache = {};
     var N = null;
     
-    ht = new Hypertree(canvas, {
-    
+    ht = new Hypertree(canvas, {    
+        Node: {
+          overridable:true
+        },
+        Edge: {
+          overridable:true
+        },
         onBeforeCompute: function(node){
             Log.write("centering");
             N = null;
