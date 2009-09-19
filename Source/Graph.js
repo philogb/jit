@@ -48,15 +48,13 @@
 
 this.Graph = new Class({
 
- initialize: function(opt) {
+ initialize: function(opt, Node, Edge) {
     var innerOptions = {
     'complex': false,
-    'Node': {},
-    'Graph': {
-      'Node': {},
-      'Edge': {}
-    }
-  };
+    'Node': {}
+    };
+    this.Node = Node;
+    this.Edge = Edge;
     this.opt = $merge(innerOptions, opt || {});
     this.nodes= {};
  },
@@ -129,13 +127,15 @@ this.Graph = new Class({
 
   */  
   addNode: function(obj) {
-    if(!this.nodes[obj.id]) {
-        this.nodes[obj.id] = new Graph.Node($extend({
+    if(!this.nodes[obj.id]) {  
+      this.nodes[obj.id] = new Graph.Node($extend({
         'id': obj.id,
         'name': obj.name,
         'data': obj.data
-      }, $extend(this.opt.Node, this.opt.Graph)), 
-      this.opt.complex);
+      }, this.opt.Node), 
+      this.opt.complex, 
+      this.Node, 
+      this.Edge);
     }
     return this.nodes[obj.id];
   },
@@ -213,7 +213,7 @@ this.Graph = new Class({
     if(this.hasNode(id2)) this.nodes[id2].removeAdjacency(id1);
   },
 
-    /*
+   /*
      Method: hasNode
     
      Returns a Boolean instance indicating if the node belongs to the <Graph> or not.
@@ -225,10 +225,19 @@ this.Graph = new Class({
      Returns:
       
      A Boolean instance indicating if the node belongs to the graph or not.
-    */  
+   */  
   hasNode: function(id) {
     return id in this.nodes;
-  }
+  },
+  
+  /*
+    Method: empty
+
+    Empties the Graph
+
+  */
+  empty: function() { this.nodes = {}; }
+
 });
 
 /*
@@ -266,7 +275,7 @@ this.Graph = new Class({
 */
 Graph.Node = new Class({
     
-    initialize: function(opt, complex) {
+    initialize: function(opt, complex, Node, Edge) {
     var innerOptions = {
       'id': '',
       'name': '',
@@ -288,16 +297,15 @@ Graph.Node = new Class({
       'startAlpha': 1,
       'endAlpha': 1,
       
-      'Node': {},
-      'Edge': {},
-      
       'pos': (complex && $C(0, 0)) || $P(0, 0),
       'startPos': (complex && $C(0, 0)) || $P(0, 0),
       'endPos': (complex && $C(0, 0)) || $P(0, 0)
     };
     
     $extend(this, $extend(innerOptions, opt));
-  },
+    this.Node = Node;
+    this.Edge = Edge;
+},
 
     /*
        Method: adjacentTo
@@ -403,8 +411,38 @@ Graph.Node = new Class({
       var n = this.Node, dollar = '$' + prop;
       if(!n.overridable || !(dollar in data)) return n[prop];
       return data[dollar];
-   }
+   },
     
+    /*
+    Method: setData
+ 
+    Sets the current data property with some specific value. 
+    This method is only useful for (dollar prefixed) reserved properties.
+    
+    Parameters:
+ 
+       prop - The name of the property. The dollar sign is not necessary. For example _setData('width')_ will set 
+       _data.$width_.
+       value - The value to store.
+       type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
+ 
+    Example:
+    (start code js)
+     node.setData('width', 30);
+    (end code)
+     */
+   setData: function(prop, value, type) {
+      type = type || 'current';
+      var data;
+      if(type === 'current') {
+        data = this.data;
+      } else if(type === 'start') {
+        data = this.startData;
+      } else if(type === 'end') {
+        data = this.endData;
+      }
+      data['$' + prop] = value;
+   }
 });
 
 /*
@@ -470,7 +508,7 @@ Graph.Adjacence = new Class({
 
   Example:
   (start code js)
-   adj.getData('width'); //will return adj.data.$width if Node.overridable=true;
+   adj.getData('lineWidth'); //will return adj.data.$lineWidth if Node.overridable=true;
   (end code)
    */
  getData: function(prop, type, force) {
@@ -489,8 +527,37 @@ Graph.Adjacence = new Class({
     var n = this.Edge, dollar = '$' + prop;
     if(!n.overridable || !(dollar in data)) return n[prop];
     return data[dollar];
- }
+ },
+ /*
+   Method: setData
   
+   Sets the current data property with some specific value. 
+   This method is only useful for (dollar prefixed) reserved properties.
+   
+   Parameters:
+  
+      prop - The name of the property. The dollar sign is not necessary. For example _setData('width', value)_ will set 
+      _data.$width_ with _value_.
+      value - The value to store.
+      type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
+  
+   Example:
+   (start code js)
+    adj.setData('lineWidth', 30);
+   (end code)
+    */
+   setData: function(prop, value, type) {
+     type = type || 'current';
+     var data;
+     if(type === 'current') {
+       data = this.data;
+     } else if(type === 'start') {
+       data = this.startData;
+     } else if(type === 'end') {
+       data = this.endData;
+     }
+     data['$' + prop] = value;
+  }  
 });
 
 /*
@@ -845,13 +912,13 @@ Graph.Util = {
  },
 
  /*
-       Method: clean
-    
-       Cleans flags from nodes (by setting the _flag_ property to false).
+     Method: clean
+  
+     Cleans flags from nodes (by setting the _flag_ property to false).
 
-       Parameters:
-       graph - A <Graph> instance.
-    */
-    clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); }
+     Parameters:
+     graph - A <Graph> instance.
+  */
+  clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); },
 };
 

@@ -220,22 +220,17 @@ this.ST= (function() {
                 Options.Graph, 
                 Options.Controller, 
                 config, controller);
-            this.canvas = canvas;
-            this.graphOptions = {
-                'complex': true,
-                'Graph': {
-                  'Node': this.config.Node,
-                  'Edge': this.config.Edge
-                }
-            };
-            this.graph = new Graph(this.graphOptions);
+                this.canvas = canvas;
+                this.graphOptions = {
+                    'complex': true
+                };
+            this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
             this.labels = new ST.Label[canvas.getConfig().labels](this);
             this.fx = new ST.Plot(this);
             this.op = new ST.Op(this);
             this.group = new ST.Group(this);
             this.geom = new ST.Geom(this);
             this.clickedNode=  null;
-            
         },
     
         /*
@@ -1536,7 +1531,6 @@ ST.Plot.NodeTypes = new Class({
     'circle': function(node, canvas) {
         var pos = node.pos.getc(true);
         var dim  = node.getData('dim');
-        console.log(dim);
         var algnPos = this.getAlignedPos(pos, dim * 2, dim * 2);
         canvas.path('fill', function(context) {
             context.arc(algnPos.x + dim, algnPos.y + dim, dim, 0, Math.PI * 2, true);            

@@ -158,13 +158,9 @@ this.RGraph = new Class({
             'selected': false,
             'exist': true,
             'drawn': true
-        },
-        'Graph': {
-          'Node': this.config.Node,
-          'Edge': this.config.Edge
         }
     };
-    this.graph = new Graph(this.graphOptions);
+    this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
     this.labels = new RGraph.Label[canvas.getConfig().labels](this);
     this.fx = new RGraph.Plot(this);
     this.op = new RGraph.Op(this);

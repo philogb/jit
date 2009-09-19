@@ -28,7 +28,7 @@
 var Loader = {
      construct: function(json) {
         var isGraph = ($type(json) == 'array');
-        var ans = new Graph(this.graphOptions);
+        var ans = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
         if(!isGraph) 
             //make tree
             (function (ans, json) {
@@ -175,13 +175,17 @@ var Loader = {
 
     */
     loadJSON: function(json, i) {
-    this.json = json;
-    this.graph = this.construct(json);
-    if($type(json) != 'array'){
-      this.root = json.id;
-    } else {
-      this.root = json[i? i : 0].id;
+      this.json = json;
+      //if they're canvas labels erase them.
+      if(this.labels && this.labels.clearLabels) {
+        this.labels.clearLabels(true);
+      }
+      this.graph = this.construct(json);
+      if($type(json) != 'array'){
+        this.root = json.id;
+      } else {
+        this.root = json[i? i : 0].id;
+      }
     }
-  }
 };
 
