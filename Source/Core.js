@@ -129,6 +129,18 @@ function $rgbToHex(srcArray, array){
     return (array) ? hex : '#' + hex.join('');
 };
 
+function $hexToRgb(hex) {
+  var hex = hex.match(/^#?(\w{1,2})(\w{1,2})(\w{1,2})$/);
+  var array = hex.slice(1); 
+  if (array.length != 3) return null;
+  var rgb = [];
+  $each(array, function(value){
+    if (value.length == 1) value += value;
+    rgb.push(parseInt(value, 16));
+  });
+  return rgb;
+};
+
 function $destroy(elem) {
    $clean(elem);
    if(elem.parentNode) elem.parentNode.removeChild(elem);

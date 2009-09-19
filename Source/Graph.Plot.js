@@ -84,9 +84,11 @@ Graph.Plot = {
           var from = $hexToRgb(elem.getData(prop, 'start'));
           var to = $hexToRgb(elem.getData(prop, 'end'));
           var comp = this.compute;
-          elem.setData(prop, $rgbToHex([comp(from[0], to[0], delta),
-                                        comp(from[1], to[1], delta),
-                                        comp(from[2], to[2], delta)]));
+          var val = $rgbToHex([parseInt(comp(from[0], to[0], delta)),
+                                parseInt(comp(from[1], to[1], delta)),
+                                parseInt(comp(from[2], to[2], delta))]);
+          
+          elem.setData(prop, val);
         },
         
         'node-property': function(elem, props, delta) {
