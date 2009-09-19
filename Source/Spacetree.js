@@ -153,6 +153,9 @@ this.ST= (function() {
     // Nodes to contract
     function getNodesToHide(node) {
       node = node || this.clickedNode;
+      if(!this.config.constrained) {
+        return [];
+      }
       var Geom = this.geom, GUtil = Graph.Util;
       var graph = this.graph;
       var canvas = this.canvas;
@@ -1040,13 +1043,13 @@ ST.Geom = new Class({
        Returns label height or with, depending on the tree current orientation.
     */  
     getSize: function(n, invert) {
-        var node = this.node, data = n.data, config = this.config;
-        var cond = node.overridable, siblingOffset = config.siblingOffset;
-        var s = (this.config.multitree 
-        		&& ('$orn' in n.data) 
-        		&& n.data.$orn) || this.config.orientation;
-        var w = (cond && data.$width || node.width) + siblingOffset;
-        var h = (cond && data.$height || node.height) + siblingOffset;
+        var data = n.data, config = this.config;
+        var siblingOffset = config.siblingOffset;
+        var s = (config.multitree 
+        		&& ('$orn' in data) 
+        		&& data.$orn) || config.orientation;
+        var w = n.getData('width') + siblingOffset;
+        var h = n.getData('height') + siblingOffset;
         if(!invert)
             return this.dispatch(s, h, w);
         else
@@ -1088,9 +1091,8 @@ ST.Geom = new Class({
           }; 
         };
         var dim = this.node;
-        var cond = this.node.overridable, data = node.data;
-        var w = cond && data.$width || dim.width;
-        var h = cond && data.$height || dim.height;
+        var w = node.getData('width');
+        var h = node.getData('height');
 
         if(type == 'begin') {
             if(dim.align == "center") {
@@ -1124,9 +1126,8 @@ ST.Geom = new Class({
     */  
     getScaledTreePosition: function(node, scale) {
         var dim = this.node;
-        var cond = this.node.overridable, data = node.data;
-        var w = (cond && data.$width || dim.width);
-        var h = (cond && data.$height || dim.height);
+        var w = node.getData('width');
+        var h = node.getData('height');
         var s = (this.config.multitree 
         		&& ('$orn' in node.data) 
         		&& node.data.$orn) || this.config.orientation;
@@ -1420,8 +1421,8 @@ ST.Label.DOM = new Class({
     placeLabel: function(tag, node, controller) {
         var pos = node.pos.getc(true), config = this.viz.config, 
         dim = config.Node, canvas = this.viz.canvas;
-        var w = dim.overridable && node.data.$width || dim.width;
-        var h = dim.overridable && node.data.$height || dim.height;
+        var w = node.getData('width');
+        var h = node.getData('height');
         var radius = canvas.getSize();
         var labelPos, orn;
         if(dim.align == "center") {
@@ -1533,9 +1534,9 @@ ST.Plot.NodeTypes = new Class({
     'none': function() {},
     
     'circle': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var cond = nconfig.overridable && data;
-        var dim  = cond && data.$dim || nconfig.dim;
+        var pos = node.pos.getc(true);
+        var dim  = node.getData('dim');
+        console.log(dim);
         var algnPos = this.getAlignedPos(pos, dim * 2, dim * 2);
         canvas.path('fill', function(context) {
             context.arc(algnPos.x + dim, algnPos.y + dim, dim, 0, Math.PI * 2, true);            
@@ -1543,18 +1544,16 @@ ST.Plot.NodeTypes = new Class({
     },
 
     'square': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var cond = nconfig.overridable && data;
-        var dim  = cond && data.$dim || nconfig.dim;
+        var pos = node.pos.getc(true);
+        var dim  = node.getData('dim');
         var algnPos = this.getAlignedPos(pos, dim, dim);
         canvas.getCtx().fillRect(algnPos.x, algnPos.y, dim, dim);
     },
 
     'ellipse': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var cond = nconfig.overridable && data;
-        var width  = (cond && data.$width || nconfig.width) / 2;
-        var height = (cond && data.$height || nconfig.height) / 2;
+        var pos = node.pos.getc(true);
+        var width  = node.getData('width') / 2;
+        var height = node.getData('height') / 2;
         var algnPos = this.getAlignedPos(pos, width * 2, height * 2);
         var ctx = canvas.getCtx();
         ctx.save();
@@ -1566,10 +1565,9 @@ ST.Plot.NodeTypes = new Class({
     },
 
     'rectangle': function(node, canvas) {
-        var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-        var cond = nconfig.overridable && data;
-        var width  = cond && data.$width || nconfig.width;
-        var height = cond && data.$height || nconfig.height;
+        var pos = node.pos.getc(true);
+        var width  = node.getData('width');
+        var height = node.getData('height');
         var algnPos = this.getAlignedPos(pos, width, height);
         canvas.getCtx().fillRect(algnPos.x, algnPos.y, width, height);
     }
@@ -1614,8 +1612,7 @@ ST.Plot.EdgeTypes = new Class({
     	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
         var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
         var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        var cond = econfig.overridable && data;
-        var dim = cond && data.$dim || econfig.dim;
+        var dim = adj.getData('dim');
         switch(orn) {
             case "left":
                 canvas.path('stroke', function(ctx){
@@ -1650,8 +1647,7 @@ ST.Plot.EdgeTypes = new Class({
     	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
         var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
         var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        var cond = econfig.overridable && data;
-        var dim = cond && data.$dim || econfig.dim;
+        var dim = adj.getData('dim');
         switch(orn) {
             case "left":
                 canvas.path('stroke', function(ctx){
@@ -1686,8 +1682,7 @@ ST.Plot.EdgeTypes = new Class({
     	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
         var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
         var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        var cond = econfig.overridable && data;
-        var dim = cond && data.$dim || econfig.dim;
+        var dim = adj.getData('dim');
         switch(orn) {
             case "left":
                 canvas.path('stroke', function(ctx) {
@@ -1719,35 +1714,35 @@ ST.Plot.EdgeTypes = new Class({
     'arrow': function(adj, canvas) {
     	var orn = this.getOrientation(adj);
     	var node = adj.nodeFrom, child = adj.nodeTo;
-        var data = adj.data, econfig = this.edge;
-        //get edge dim
-        var cond = econfig.overridable && data;
-        var edgeDim = cond && data.$dim || econfig.dim;
-        //get edge direction
-        if(cond && data.$direction && data.$direction.length > 1) {
-            var nodeHash = {};
-            nodeHash[node.id] = node;
-            nodeHash[child.id] = child;
-            var sense = data.$direction;
-            node = nodeHash[sense[0]];
-            child = nodeHash[sense[1]];
-        }
-        var posFrom = this.viz.geom.getEdge(node, 'begin', orn);
-        var posTo =  this.viz.geom.getEdge(child, 'end', orn);
-        var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
-        vect.$scale(edgeDim / vect.norm());
-        var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
-        var normal = new Complex(-vect.y / 2, vect.x / 2);
-        var v1 = intermediatePoint.add(normal), v2 = intermediatePoint.$add(normal.$scale(-1));
-        canvas.path('stroke', function(context) {
-            context.moveTo(posFrom.x, posFrom.y);
-            context.lineTo(posTo.x, posTo.y);
-        });
-        canvas.path('fill', function(context) {
-            context.moveTo(v1.x, v1.y);
-            context.lineTo(v2.x, v2.y);
-            context.lineTo(posTo.x, posTo.y);
-        });
+      var data = adj.data, econfig = this.edge;
+      //get edge dim
+      var cond = econfig.overridable;
+      var edgeDim = adj.getData('dim');
+      //get edge direction
+      if(cond && data.$direction && data.$direction.length > 1) {
+          var nodeHash = {};
+          nodeHash[node.id] = node;
+          nodeHash[child.id] = child;
+          var sense = data.$direction;
+          node = nodeHash[sense[0]];
+          child = nodeHash[sense[1]];
+      }
+      var posFrom = this.viz.geom.getEdge(node, 'begin', orn);
+      var posTo =  this.viz.geom.getEdge(child, 'end', orn);
+      var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
+      vect.$scale(edgeDim / vect.norm());
+      var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
+      var normal = new Complex(-vect.y / 2, vect.x / 2);
+      var v1 = intermediatePoint.add(normal), v2 = intermediatePoint.$add(normal.$scale(-1));
+      canvas.path('stroke', function(context) {
+          context.moveTo(posFrom.x, posFrom.y);
+          context.lineTo(posTo.x, posTo.y);
+      });
+      canvas.path('fill', function(context) {
+          context.moveTo(v1.x, v1.y);
+          context.lineTo(v2.x, v2.y);
+          context.lineTo(posTo.x, posTo.y);
+      });
     }
 });
 
