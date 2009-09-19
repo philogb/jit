@@ -186,6 +186,64 @@ var Loader = {
       } else {
         this.root = json[i? i : 0].id;
       }
+    },
+    
+    /*
+      Method: toJSON
+   
+      Returns a JSON tree/graph structure from the current graph state for this visualization. 
+      See <Loader.loadJSON> for the graph formats available.
+      
+      See also:
+      
+      <Loader.loadJSON>
+      
+      Parameters:
+      
+      type - _(string)_ The type of the JSON structure to be returned. Possible options are "tree" or "graph". Default's "tree".
+    */    
+    toJSON: function(type) {
+      type = type || "tree";
+      if(type == 'tree') {
+        var ans = {};
+        var rootNode = this.graph.getNode(this.root);
+        var ans = (function recTree(node) {
+          var ans = {};
+          ans.id = node.id;
+          ans.name = node.name;
+          ans.data = node.data;
+          var ch =[];
+          Graph.Util.eachSubnode(node, function(n) {
+            ch.push(recTree(n));
+          });
+          ans.children = ch;
+          return ans;
+        })(rootNode);
+        return ans;
+      } else {
+        var ans = [], GUtil = Graph.Util;
+        var T = !!this.graph.getNode(this.root).visited;
+        GUtil.eachNode(this.graph, function(node) {
+          var ansNode = {};
+          ansNode.id = node.id;
+          ansNode.name = node.name;
+          ansNode.data = node.data;
+          var adjs = [];
+          GUtil.eachAdjacency(node, function(adj) {
+            var nodeTo = adj.nodeTo;
+            if(!!nodeTo.visited === T) {
+              var ansAdj = {};
+              ansAdj.nodeTo = nodeTo.id;
+              ansAdj.data = adj.data;
+              adjs.push(ansAdj);
+            }
+          });
+          ansNode.adjacencies = adjs;
+          ans.push(ansNode);
+          node.visited = !T;
+        });
+        return ans;
+      }
     }
 };
 

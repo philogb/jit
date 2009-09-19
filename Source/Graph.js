@@ -804,13 +804,13 @@ Graph.Util = {
        (end code)
     */
     anySubnode: function(node, cond, flags) {
-        var flag = false;
-    cond = cond || $lambda(true);
-    var c = $type(cond) == 'string'? function(n) { return n[cond]; } : cond;
-    this.eachSubnode(node, function(elem) {
-      if(c(elem)) flag = true;
-    }, flags);
-    return flag;
+      var flag = false;
+      cond = cond || $lambda(true);
+      var c = $type(cond) == 'string'? function(n) { return n[cond]; } : cond;
+      this.eachSubnode(node, function(elem) {
+        if(c(elem)) flag = true;
+      }, flags);
+      return flag;
     },
   
     /*
