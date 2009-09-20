@@ -458,8 +458,8 @@ Graph.Node = new Class({
         return data['$' + prop];
       }
       var n = this.Node, dollar = '$' + prop;
-      if(!n.overridable || !(dollar in data)) return n[prop];
-      return data[dollar];
+      if(!n.overridable) return n[prop];
+      return data[dollar] || this.data[dollar] || n[prop];
    },
     
     /*
@@ -568,8 +568,8 @@ Graph.Adjacence = new Class({
       return data['$' + prop];
     }
     var n = this.Edge, dollar = '$' + prop;
-    if(!n.overridable || !(dollar in data)) return n[prop];
-    return data[dollar];
+    if(!n.overridable) return n[prop];
+    return data[dollar] || this.data[dollar] || n[prop];
  },
  /*
    Method: setData
