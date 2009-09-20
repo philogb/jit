@@ -49,12 +49,13 @@ Graph.Plot = {
         
         //Position interpolators
         'moebius': function(elem, props, delta, vector) {
-            if(vector.norm() < 1) {
-              var x = vector.x, y = vector.y;
+          var v = vector.scale(-delta);  
+          if(v.norm() < 1) {
+              var x = v.x, y = v.y;
               var ans = elem.startPos
-                .getc().moebiusTransformation(vector);
+                .getc().moebiusTransformation(v);
               elem.pos.setc(ans.x, ans.y);
-              vector.x = x; vector.y = y;
+              v.x = x; v.y = y;
             }           
         },
 
@@ -166,6 +167,48 @@ Graph.Plot = {
     },
     
     /*
+      Method: prepare
+ 
+      Prepare graph position and other attribute values before performing an Animation. 
+      This method is used internally by the Toolkit.
+      
+      See also:
+       
+       <Animation>, <Graph.Plot.animate>
+
+    */
+    prepare: function(modes) {
+      var GUtil = Graph.Util, graph = this.viz.graph;
+
+      //parse modes
+      var m = {};
+      for(var i=0, len=modes.length; i < len; i++) {
+        var elems = modes[i].split(':');
+        m[elems.shift()] = elems;
+      }
+      
+      GUtil.eachNode(graph, function(node) { 
+        node.startPos.set(node.pos);
+        if('node-property' in m) {
+          var prop = m['node-property'];
+          for(var i=0, l=prop.length; i < l; i++) {
+            node.setData(prop[i], node.getData(prop[i]), 'start');
+          }
+        }
+        if('edge-property' in m) {
+          var prop = m['edge-property'];
+          GUtil.eachAdjacency(node, function(adj) {
+            for(var i=0, l=prop.length; i < l; i++) {
+              adj.setData(prop[i], adj.getData(prop[i]), 'start');
+            }
+          });
+        }
+      });
+      
+      return m;
+    },
+    
+    /*
        Method: animate
     
        Animates a <Graph> by interpolating some <Graph.Nodes> properties.
@@ -174,11 +217,17 @@ Graph.Plot = {
 
        opt - Animation options. This object contains as properties
 
-       - _modes_ (required) An Array of animation types. Possible values are "linear", "polar", "moebius", "fade:nodes" and "fade:vertex".
+       - _modes_ (required) An Array of animation types. Possible values are "linear", "polar", "moebius", "node-property" and "edge-property".
 
-       "linear", "polar" and "moebius" animation options will interpolate <Graph.Nodes> "startPos" and "endPos" properties, storing the result in "pos".
+       "linear", "polar" and "moebius" animation options will interpolate <Graph.Nodes> "startPos" and "endPos" properties, storing the result in "pos". 
+       This means interpolating either cartesian coordinates, either polar coordinates or interpolation via a moebius transformation <http://en.wikipedia.org/wiki/Moebius_transformation> 
        
-       "fade:nodes" and "fade:vertex" animation options will interpolate <Graph.Nodes> and/or <Graph.Adjacence> "startAlpha" and "endAlpha" properties, storing the result in "alpha".
+       "node-property" interpolates nodes' properties like alpha, color, dim, width, height. For this to work <Options.Graph.Node.overridable> must be *true*. 
+       Also, this mode is used with the specific node property you want to change. So for example if you'd wanted to change the nodes color and alpha you should write "node-property:alpha:color". 
+       To know more about node specific properties check <Options.Node>.
+       
+        "edge-property" works just like "node-property". To know more about edge properties check <Options.Graph.Edge>
+      
 
        - _duration_ Duration (in milliseconds) of the Animation.
        - _fps_ Frames per second.
@@ -203,48 +252,25 @@ Graph.Plot = {
       viz = this.viz,
       graph  = viz.graph,
       GUtil = Graph.Util,
-      modes = opt.modes,
-      len = modes.length,
       interp = this.Interpolator;
       
-      //parse modes
-      var m = {};
-      for(var i=0; i < len; i++) {
-        var elems = modes[i].split(':');
-        m[elems.shift()] = elems;
-      }
+      //prepare graph values
+      var m = this.prepare(opt.modes);
+      
+      //animate
       if(opt.hideLabels) this.labels.hideLabels(true);
       this.animation.setOptions($merge(opt, {
         $animating: false,
         compute: function(delta) {
-          var vector = versor? versor.scale(-delta) : null;
           GUtil.eachNode(graph, function(node) { 
             for(var p in m) {
-              interp[p](node, m[p], delta, vector);
+              interp[p](node, m[p], delta, versor);
             }
           });
           that.plot(opt, this.$animating);
           this.$animating = true;
         },
         complete: function() {
-          GUtil.eachNode(graph, function(node) { 
-            node.startPos.set(node.pos);
-            //restore 
-            if('node-property' in m) {
-              var prop = m['node-property'];
-              for(var i=0, l=prop.length; i < l; i++) {
-                node.setData(prop[i], node.getData(prop[i]), 'start');
-              }
-            }
-            if('edge-property' in m) {
-              var prop = m['edge-property'];
-              GUtil.eachAdjacency(node, function(adj) {
-                for(var i=0, l=prop.length; i < l; i++) {
-                  adj.setData(prop[i], adj.getData(prop[i]), 'start');
-                }
-              });
-            }
-          });
           if(opt.hideLabels) that.labels.hideLabels(false);
           that.plot(opt);
           opt.onComplete();
