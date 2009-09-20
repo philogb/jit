@@ -365,6 +365,62 @@ Graph.Node = new Class({
     removeAdjacency: function(id) {
         delete this.adjacencies[id];
     },
+
+    /*
+      Method: getPos
+   
+      Returns the position of the node. Possible values are <Complex> or <Polar> instances.
+  
+      Parameters:
+   
+         type - Possible values are "start", "end" or "current". Default's "current".
+   
+      Returns:
+   
+        A <Complex> or <Polar> instance.
+  
+      Example:
+      (start code js)
+       node.getPos('end');
+      (end code)
+   */
+   getPos: function(type) {
+       type = type || "current";
+       if(type == "current") {
+         return this.pos;
+       } else if(type == "end") {
+         return this.endPos;
+       } else if(type == "start") {
+         return this.startPos;
+       }
+   },
+   /*
+     Method: setPos
+  
+     Sets the node's position.
+  
+     Parameters:
+  
+        value - A <Complex> or <Polar> instance.
+        type - Possible values are "start", "end" or "current". Default's "current".
+  
+     Example:
+     (start code js)
+      node.setPos(new Complex(0, 0), 'end');
+     (end code)
+  */
+  setPos: function(value, type) {
+      type = type || "current";
+      var pos;
+      if(type == "current") {
+        pos = this.pos;
+      } else if(type == "end") {
+        pos = this.endPos;
+      } else if(type == "start") {
+        pos = this.startPos;
+      }
+      pos.set(value);
+  },
     /*
     Method: getData
  

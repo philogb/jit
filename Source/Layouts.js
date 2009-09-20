@@ -41,10 +41,10 @@ Layouts.Radial = new Class({
    * 
    */
   compute : function(property) {
-    var prop = property || [ 'pos', 'startPos', 'endPos' ];
+    var prop = $splat(property || [ 'current', 'start', 'end' ]);
     Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
     var lengthFunc = this.createLevelDistanceFunc(); 
-    this.computeAngularWidths();
+    this.computeAngularWidths(prop);
     this.computePositions(prop, lengthFunc);
   },
 
@@ -54,15 +54,14 @@ Layouts.Radial = new Class({
    * Performs the main algorithm for computing node positions.
    */
   computePositions : function(property, getLength) {
-    var propArray = $splat(property);
-    var aGraph = this.graph;
+    var propArray = property;
     var GUtil = Graph.Util;
     var root = this.graph.getNode(this.root);
     var parent = this.parent;
     var config = this.config;
 
     for ( var i = 0; i < propArray.length; i++)
-      root[propArray[i]] = $P(0, 0);
+      root.setPos($P(0, 0),  propArray[i]);
 
     root.angleSpan = {
       begin : 0,
@@ -97,7 +96,7 @@ Layouts.Radial = new Class({
           var theta = angleInit + angleProportion / 2;
 
           for ( var i = 0; i < propArray.length; i++)
-            child[propArray[i]] = $P(theta, len);
+            child.setPos($P(theta, len), propArray[i]);
 
           child.angleSpan = {
             begin : angleInit,
@@ -114,9 +113,9 @@ Layouts.Radial = new Class({
    * 
    * Sets nodes angular widths.
    */
-  setAngularWidthForNodes : function() {
+  setAngularWidthForNodes : function(prop) {
     Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
-      var diamValue = elem.getData('aw');
+      var diamValue = elem.getData('aw', prop[0]);
       elem._angularWidth = diamValue / i;
     }, "ignore");
   },
@@ -152,8 +151,8 @@ Layouts.Radial = new Class({
    * 
    * Computes nodes and subtrees angular widths.
    */
-  computeAngularWidths : function() {
-    this.setAngularWidthForNodes();
+  computeAngularWidths : function(prop) {
+    this.setAngularWidthForNodes(prop);
     this.setSubtreesAngularWidth();
   }
 
@@ -180,7 +179,7 @@ Layouts.Tree = (function() {
   /*
      Calculates the max width and height nodes for a tree level
   */  
-  function getBoundaries(graph, config, level, orn) {
+  function getBoundaries(graph, config, level, orn, prop) {
     var dim = config.Node, GUtil = Graph.Util;
     var multitree = config.multitree;
     if (dim.overridable) {
@@ -188,8 +187,8 @@ Layouts.Tree = (function() {
       GUtil.eachNode(graph, function(n) {
         if (n._depth == level
             && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
-          var dw = n.getData('width');
-          var dh = n.getData('height');
+          var dw = n.getData('width', prop);
+          var dh = n.getData('height', prop);
           w = (w < dw) ? dw : w;
           h = (h < dh) ? dh : h;
         }
@@ -206,7 +205,7 @@ Layouts.Tree = (function() {
 
   function movetree(node, prop, val, orn) {
     var p = (orn == "left" || orn == "right") ? "y" : "x";
-    node[prop][p] += val;
+    node.getPos(prop)[p] += val;
   }
   ;
 
@@ -309,9 +308,9 @@ Layouts.Tree = (function() {
     var GUtil = Graph.Util;
 
     function $design(node, maxsize, acum) {
-      var sval = node.getData(s);
+      var sval = node.getData(s, prop);
       var notsval = maxsize
-          || (node.getData(nots));
+          || (node.getData(nots, prop));
 
       var trees = [], extents = [], chmaxsize = false;
       var chacum = notsval + config.levelDistance;
@@ -321,7 +320,7 @@ Layouts.Tree = (function() {
                 && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
 
               if (!chmaxsize)
-                chmaxsize = getBoundaries(graph, config, n._depth, orn);
+                chmaxsize = getBoundaries(graph, config, n._depth, orn, prop);
 
               var s = $design(n, chmaxsize[nots], acum + chacum);
               trees.push(s.tree);
@@ -335,12 +334,12 @@ Layouts.Tree = (function() {
       }
       var resultextent = [ [ -sval / 2, sval / 2 ] ]
           .concat(mergelist(pextents));
-      node[prop][p] = 0;
+      node.getPos(prop)[p] = 0;
 
       if (orn == "top" || orn == "left") {
-        node[prop][notp] = acum;
+        node.getPos(prop)[notp] = acum;
       } else {
-        node[prop][notp] = -acum;
+        node.getPos(prop)[notp] = -acum;
       }
 
       return {
@@ -361,7 +360,7 @@ Layouts.Tree = (function() {
 
      */
     compute : function(property, computeLevels) {
-      var prop = property || 'startPos';
+      var prop = property || 'start';
       var node = this.graph.getNode(this.root);
       $extend(node, {
         'drawn' : true,
@@ -385,7 +384,7 @@ Layouts.Tree = (function() {
       var that = this;
       $each(orns, function(orn) {
         //calculate layout
-          design(that.graph, node, prop, that.config, orn);
+          design(that.graph, node, prop, that.config, orn, prop);
           var i = [ 'x', 'y' ][+(orn == "left" || orn == "right")];
           //absolutize
           (function red(node) {
@@ -393,9 +392,9 @@ Layouts.Tree = (function() {
               if (n.exist
                   && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
 
-                n[prop][i] += node[prop][i];
+                n.getPos(prop)[i] += node.getPos(prop)[i];
                 if (indent) {
-                  n[prop][i] += align == 'left' ? indent : -indent;
+                  n.getPos(prop)[i] += align == 'left' ? indent : -indent;
                 }
                 red(n);
               }

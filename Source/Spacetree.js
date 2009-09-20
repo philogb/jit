@@ -270,7 +270,7 @@ this.ST= (function() {
               this.contract({
                   onComplete: function() {
                       Geom.switchOrientation(pos);
-                      that.compute('endPos', false);
+                      that.compute('end', false);
                       Plot.busy = false;
                       if(method == 'animate') {
                     	  that.onClick(that.clickedNode.id, onComplete);  
@@ -370,7 +370,7 @@ this.ST= (function() {
             Graph.Util.eachNode(this.graph, function(n) {
                 if(n.exist) n.drawn = true;
             });
-            this.compute('endPos');
+            this.compute('end');
         },
         
           requestNodes: function(node, onComplete) {
@@ -401,7 +401,7 @@ this.ST= (function() {
           },
       
          move: function(node, onComplete) {
-            this.compute('endPos', false);
+            this.compute('end', false);
             var move = onComplete.Move, offset = {
                 'x': move.offsetX,
                 'y': move.offsetY 
@@ -599,7 +599,7 @@ this.ST= (function() {
                 onComplete: function(){
                     group.hide(group.prepare(getNodesToHide.call(that)), complete);
                     geom.setRightLevelToShow(node, canvas);
-                    that.compute("pos");
+                    that.compute("current");
                     Graph.Util.eachNode(that.graph, function(n) { 
                         var pos = n.pos.getc(true);
                         n.startPos.setc(pos.x, pos.y);

@@ -212,7 +212,7 @@ this.RGraph = new Class({
      
     */
     reposition: function() {
-        this.compute('endPos');
+        this.compute('end');
     },
 
 
@@ -224,83 +224,6 @@ this.RGraph = new Class({
     plot: function() {
         this.fx.plot();
     },
-    /* 
-     Method: compute 
-     
-     Computes nodes' positions. 
-
-     Parameters:
-
-     property - _optional_ A <Graph.Node> position property to store the new positions. Possible values are 'pos', 'endPos' or 'startPos'.
-
-    */ 
-    compute: function(property) {
-        var prop = property || ['pos', 'startPos', 'endPos'];
-        var node = this.graph.getNode(this.root);
-        node._depth = 0;
-        Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
-        this.computeAngularWidths();
-        this.computePositions(prop);
-    },
-    
-    /*
-     computePositions
-    
-     Performs the main algorithm for computing node positions.
-    */
-    computePositions: function(property) {
-        var propArray = $splat(property);
-        var aGraph = this.graph;
-        var GUtil = Graph.Util;
-        var root = this.graph.getNode(this.root);
-        var parent = this.parent;
-        var config = this.config;
-
-        for(var i=0; i<propArray.length; i++)
-            root[propArray[i]] = $P(0, 0);
-        
-        root.angleSpan = {
-            begin: 0,
-            end: 2 * Math.PI
-        };
-        root._rel = 1;
-        
-        GUtil.eachBFS(this.graph, this.root, function (elem) {
-            var angleSpan = elem.angleSpan.end - elem.angleSpan.begin;
-            var rho = (elem._depth + 1) * config.levelDistance;
-            var angleInit = elem.angleSpan.begin;
-            
-      var totalAngularWidths = 0, subnodes = [];
-            GUtil.eachSubnode(elem, function(sib) {
-                totalAngularWidths += sib._treeAngularWidth;
-        subnodes.push(sib);
-            }, "ignore");
-            
-            if(parent && parent.id == elem.id && subnodes.length > 0 && subnodes[0].dist) {
-                subnodes.sort(function(a, b) {
-                    return  (a.dist >= b.dist) - (a.dist <= b.dist);
-                });
-            }
-            for(var k=0; k < subnodes.length; k++) {
-                var child = subnodes[k];
-                if(!child._flag) {
-                    child._rel = child._treeAngularWidth / totalAngularWidths;
-                    var angleProportion = child._rel * angleSpan;
-                    var theta = angleInit + angleProportion / 2;
-
-                    for(var i=0; i<propArray.length; i++)
-                        child[propArray[i]] = $P(theta, rho);
-
-                    child.angleSpan = {
-                        begin: angleInit,
-                        end: angleInit + angleProportion
-                    };
-                    angleInit += angleProportion;
-                }
-            }
-        }, "ignore");
-    },
-
     /*
      getNodeAndParentAngle
     
@@ -373,7 +296,7 @@ this.RGraph = new Class({
         //second constraint
         this.tagChildren(obj.parent, id);
         this.parent = obj.parent;
-        this.compute('endPos');
+        this.compute('end');
         
         //first constraint
         var thetaDiff = obj.theta - obj.parent.endPos.theta;

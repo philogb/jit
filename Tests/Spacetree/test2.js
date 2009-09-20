@@ -48,7 +48,7 @@ function init(){
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new Complex(-200, 0), "startPos");
+    st.geom.translate(new Complex(-200, 0), "pos");
     //Emulate a click on the root node.
     //    Tree.Plot.plot(st.tree, st.canvas);
     st.onClick(st.root);

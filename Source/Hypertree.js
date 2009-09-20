@@ -369,7 +369,7 @@ this.Hypertree = new Class({
       
     */ 
     reposition: function() { 
-        this.compute('endPos'); 
+        this.compute('end'); 
         var vector = this.graph.getNode(this.root).pos.getc().scale(-1); 
         Graph.Util.moebiusTransformation(this.graph, [vector], ['endPos'], 'endPos', "ignore"); 
         Graph.Util.eachNode(this.graph, function(node) { 
