@@ -159,6 +159,102 @@ Layouts.Radial = new Class({
 });
 
 /*
+ * Class: Layouts.ForceDirected
+ * 
+ * Implements a Force Directed Layout.
+ * 
+ * Implemented By:
+ * 
+ * <ForceDirected>
+ * 
+ * Credits:
+ * 
+ * Marcus Cobden <http://marcuscobden.co.uk>
+ * 
+ */
+Layouts.ForceDirected = new Class({
+
+  /*
+   * Method: compute
+   * 
+   * Computes nodes' positions.
+   * 
+   * Parameters:
+   * 
+   * property - _optional_ A <Graph.Node> position property to store the new
+   * positions. Possible values are 'pos', 'endPos' or 'startPos'.
+   * 
+   */
+  compute : function(property) {
+    var prop = $splat(property || [ 'current', 'start', 'end' ]);
+    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+    var lengthFunc = this.createLevelDistanceFunc(); 
+    this.computeAngularWidths(prop);
+    this.computePositions(prop, lengthFunc);
+  },
+
+  /*
+   * computePositions
+   * 
+   * Performs the main algorithm for computing node positions.
+   */
+  computePositions : function(property, getLength) {
+    var propArray = property;
+    var GUtil = Graph.Util;
+    var root = this.graph.getNode(this.root);
+    var parent = this.parent;
+    var config = this.config;
+
+    for ( var i = 0; i < propArray.length; i++)
+      root.setPos($P(0, 0),  propArray[i]);
+
+    root.angleSpan = {
+      begin : 0,
+      end : 2 * Math.PI
+    };
+    root._rel = 1;
+
+    GUtil.eachBFS(this.graph, this.root, function(elem) {
+      var angleSpan = elem.angleSpan.end - elem.angleSpan.begin;
+      var angleInit = elem.angleSpan.begin;
+      var len = getLength(elem);
+      //Calculate the sum of all angular widths
+      var totalAngularWidths = 0, subnodes = [];
+      GUtil.eachSubnode(elem, function(sib) {
+        totalAngularWidths += sib._treeAngularWidth;
+        subnodes.push(sib);
+      }, "ignore");
+      //Maintain children order
+      //Second constraint for <http://bailando.sims.berkeley.edu/papers/infovis01.htm>
+      if (parent && parent.id == elem.id && subnodes.length > 0
+          && subnodes[0].dist) {
+        subnodes.sort(function(a, b) {
+          return (a.dist >= b.dist) - (a.dist <= b.dist);
+        });
+      }
+      //Calculate nodes' positions.
+      for (var k = 0; k < subnodes.length; k++) {
+        var child = subnodes[k];
+        if (!child._flag) {
+          child._rel = child._treeAngularWidth / totalAngularWidths;
+          var angleProportion = child._rel * angleSpan;
+          var theta = angleInit + angleProportion / 2;
+
+          for ( var i = 0; i < propArray.length; i++)
+            child.setPos($P(theta, len), propArray[i]);
+
+          child.angleSpan = {
+            begin : angleInit,
+            end : angleInit + angleProportion
+          };
+          angleInit += angleProportion;
+        }
+      }
+    }, "ignore");
+  }
+});
+
+/*
  * Class: Layouts.Tree
  * 
  * Implements a Tree Layout.
