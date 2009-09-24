@@ -174,83 +174,67 @@ Layouts.Radial = new Class({
  */
 Layouts.ForceDirected = new Class({
 
-  /*
-   * Method: compute
-   * 
-   * Computes nodes' positions.
-   * 
-   * Parameters:
-   * 
-   * property - _optional_ A <Graph.Node> position property to store the new
-   * positions. Possible values are 'pos', 'endPos' or 'startPos'.
-   * 
-   */
-  compute : function(property) {
-    var prop = $splat(property || [ 'current', 'start', 'end' ]);
-    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
-    var lengthFunc = this.createLevelDistanceFunc(); 
-    this.computeAngularWidths(prop);
-    this.computePositions(prop, lengthFunc);
+  compute: function(property) {
+    var prop = $splat(property || ['current', 'start', 'end']);
+    this.computePositions(prop);
   },
-
-  /*
-   * computePositions
-   * 
-   * Performs the main algorithm for computing node positions.
-   */
-  computePositions : function(property, getLength) {
-    var propArray = property;
-    var GUtil = Graph.Util;
-    var root = this.graph.getNode(this.root);
-    var parent = this.parent;
-    var config = this.config;
-
-    for ( var i = 0; i < propArray.length; i++)
-      root.setPos($P(0, 0),  propArray[i]);
-
-    root.angleSpan = {
-      begin : 0,
-      end : 2 * Math.PI
-    };
-    root._rel = 1;
-
-    GUtil.eachBFS(this.graph, this.root, function(elem) {
-      var angleSpan = elem.angleSpan.end - elem.angleSpan.begin;
-      var angleInit = elem.angleSpan.begin;
-      var len = getLength(elem);
-      //Calculate the sum of all angular widths
-      var totalAngularWidths = 0, subnodes = [];
-      GUtil.eachSubnode(elem, function(sib) {
-        totalAngularWidths += sib._treeAngularWidth;
-        subnodes.push(sib);
-      }, "ignore");
-      //Maintain children order
-      //Second constraint for <http://bailando.sims.berkeley.edu/papers/infovis01.htm>
-      if (parent && parent.id == elem.id && subnodes.length > 0
-          && subnodes[0].dist) {
-        subnodes.sort(function(a, b) {
-          return (a.dist >= b.dist) - (a.dist <= b.dist);
-        });
-      }
-      //Calculate nodes' positions.
-      for (var k = 0; k < subnodes.length; k++) {
-        var child = subnodes[k];
-        if (!child._flag) {
-          child._rel = child._treeAngularWidth / totalAngularWidths;
-          var angleProportion = child._rel * angleSpan;
-          var theta = angleInit + angleProportion / 2;
-
-          for ( var i = 0; i < propArray.length; i++)
-            child.setPos($P(theta, len), propArray[i]);
-
-          child.angleSpan = {
-            begin : angleInit,
-            end : angleInit + angleProportion
-          };
-          angleInit += angleProportion;
+  
+  computePositions: function(property) {
+  
+  },
+  
+  computePositionStep: function(property, opt) {
+    var graph = this.graph, GUtil = Graph.Util;
+    var min = Math.min, max = Math.max;
+    //calculate repulsive forces
+    GUtil.eachNode(graph, function(v) {
+      //initialize disp
+      v.disp = {};
+      $each(property, function(p) {
+        v.disp[p] = 0;
+      });
+      GUtil.eachNode(graph, function(u) {
+        if(u.id != v.id) {
+          $each(property, function(p) {
+            var vp = v.getPos(p), up = u.getPos(p);
+            var dpos = $C(vp.x - up.x, vp.y - up.y);
+            var norm = dpos.norm() || 1;
+            v.disp[p].$add(dpos.$scale(opt.nodef(norm) / norm)); 
+          });
         }
-      }
-    }, "ignore");
+      });
+    });
+    //calculate attractive forces
+    var T = !!graph.getNode(this.root).visited;
+    GUtil.eachNode(graph, function(node) {
+      GUtil.eachAdjacency(node, function(adj) {
+        var nodeTo = adj.nodeTo;
+        if(!!nodeTo.visited === T) {
+          $each(property, function(p) {
+            var vp = nodeTo.getPos(p), up = node.getPos(p);
+            var dpos = $C(vp.x - up.x, vp.y - up.y);
+            var norm = dpos.norm() || 1;
+            node.disp[p].$add(dpos.$scale(opt.edgef(norm) / norm));
+            nodeTo.disp[p].$add(dpos.$scale(-1));
+          });
+        }
+      });
+      node.visited = !T;
+    });
+    //arrange positions to fit the canvas
+    var t = opt.t, w2 = opt.width / 2, h2 = opt.height / 2;
+    GUtil.eachNode(graph, function(u) {
+      $each(property, function(p) {
+        var disp = u.disp[p];
+        var norm = disp.norm() || 1;
+        var dispNorm = disp.scale(1 / norm);
+        var p = u.getPos(p);
+        p.$add($C(min(dispNorm.x, t.x) * dispNorm.x, 
+            min(dispNorm.y, t.y) * dispNorm.y));
+        p.x = min(w2, max(-w2, p.x));
+        p.y = min(h2, max(-h2, p.y));
+      });
+    });
   }
 });
 
