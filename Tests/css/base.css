@@ -104,3 +104,15 @@ a {
     margin:auto;
     overflow:hidden;
 }
+
+/*TOOLTIPS*/
+.tip {
+    color: #fff;
+    width: 139px;
+    background-color: black;
+    opacity:0.9;
+    filter:alpha(opacity=90);
+    font-size:10px;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+    padding:7px;
+}

@@ -136,7 +136,7 @@
 
 this.RGraph = new Class({
   
-  Implements: [Loader, Layouts.Radial],
+  Implements: [Loader, Tips, Layouts.Radial],
     
   initialize: function(canvas, controller) {
     
@@ -144,7 +144,8 @@ this.RGraph = new Class({
       labelContainer: canvas.id + '-label',
       interpolation: 'linear',
       levelDistance: 100,
-      withLabels: true
+      withLabels: true,
+      Tips: Options.Tips
     };
     
     this.controller = this.config = $merge(Options.Graph, 
@@ -169,6 +170,8 @@ this.RGraph = new Class({
     this.root = null;
     this.busy = false;
     this.parent = false;
+    //add tips
+    this.initializeTips();
   },
    
   /* 

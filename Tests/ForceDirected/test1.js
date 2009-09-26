@@ -338,7 +338,8 @@ function init(){
         //color, width and dimensions.
         Node: {
             dim: 4,
-            color: "#f00"
+            color: "#f00",
+            overridable: true
         },
         
         Edge: {
@@ -346,7 +347,38 @@ function init(){
             color:'#23A4FF'
         },
         
-        iterations:150,
+        //Allow tips
+        Tips: {
+          allow: true,
+          //add positioning offsets
+          offsetX: 20,
+          offsetY: 20,
+          //implement the onShow method to
+          //add content to the tooltip when a node
+          //is hovered
+          onShow: function(tip, node, domElement) {
+              tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>" + 
+                "<div class=\"tip-text\">" + this.makeHTMLFromData(node) + "</div>"; 
+          },  
+
+          //Aux method: Build the tooltip inner html by using the data property
+          makeHTMLFromData: function(node){
+              var count = 0;
+              Graph.Util.eachAdjacency(node, function() { count++; });
+              return "connections" + ': ' + count + '<br />';
+          }
+        },
+        
+        nodeStylesSelected: {
+          'color': '#ffc',
+          'dim': 7
+        },
+        
+        nodeStylesOnHover: {
+          'dim': 6
+        },
+
+        iterations:100,
         levelDistance:50,
         transition: Trans.Elastic.easeOut,
         
@@ -372,8 +404,12 @@ function init(){
             style.color = "#ddd";
 
             var left = parseInt(style.left);
+            //var top = parseInt(style.top);
             var w = domElement.offsetWidth;
+            //var h= domElement.offsetHeight;
             style.left = (left - w / 2) + 'px';
+            //style.top = (top - h / 2) + 'px';
+            
         },
         
         onAfterCompute: function(){

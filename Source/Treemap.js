@@ -24,9 +24,13 @@
  */
 
 /*
-   Object: TM
+   Class: TM
 
-  Abstract Treemap object.
+  Abstract Treemap class.
+  
+    Implements:
+    
+    <Tips>
 
    Implemented By:
     
@@ -127,7 +131,9 @@
 
 
 */
-this.TM = {
+this.TM = new Class({
+  Implements:Tips,
+  
 
   layout: {
     orientation: "h",
@@ -172,31 +178,20 @@ this.TM = {
                     controller);
     this.rootId = this.config.rootId;
     this.layout.orientation = this.config.orientation;
-        //add tooltip
-        if(this.config.Tips.allow && document.body) {
-            var tip = document.getElementById('_tooltip') || document.createElement('div');
-            tip.id = '_tooltip';
-            tip.className = 'tip';
-            var style = tip.style;
-            style.position = 'absolute';
-            style.display = 'none';
-            style.zIndex = 13000;
-            document.body.appendChild(tip);
-            this.tip = tip;
-        }
-        
-        //purge
-        var that = this;
-        var fn = function() {
-            that.empty();
-            if(window.CollectGarbage) window.CollectGarbage();
-            delete fn;
-        };
-        if(window.addEventListener) {
-            window.addEventListener('unload', fn, false);
-        } else {
-            window.attachEvent('onunload', fn);
-        }
+    //add tips
+    this.initializeTips();
+    //purge
+    var that = this;
+    var fn = function() {
+        that.empty();
+        if(window.CollectGarbage) window.CollectGarbage();
+        delete fn;
+    };
+    if(window.addEventListener) {
+        window.addEventListener('unload', fn, false);
+    } else {
+        window.attachEvent('onunload', fn);
+    }
   },
 
     /*
@@ -208,19 +203,19 @@ this.TM = {
       
         f - A function that takes as parameters the same as the onCreateElement and onDestroyElement methods described in <TM>.
     */
-    each: function(f) {
-        (function rec(elem) {
-          if(!elem) return;
-          var ch = elem.childNodes, len = ch.length;
-          if(len > 0) {
-              f.apply(this, [elem, len === 1, ch[0], ch[1]]);
+    each: function(f) {  
+    (function rec(elem) {
+        if(!elem) return;
+        var ch = elem.childNodes, len = ch.length;
+        if(len > 0) {
+            f.apply(this, [elem, len === 1, ch[0], ch[1]]);
+        }
+        if (len > 1) {
+          for(var chi = ch[1].childNodes, i=0; i<chi.length; i++) {
+              rec(chi[i]);
           }
-          if (len > 1) {
-            for(var chi = ch[1].childNodes, i=0; i<chi.length; i++) {
-                rec(chi[i]);
-            }
-          }  
-        })($get(this.rootId).firstChild);
+        }  
+      })($get(this.rootId).firstChild);
     },
 
   /*
@@ -684,7 +679,7 @@ this.TM = {
          };
          toggleInPath(previous, true);
          toggleInPath(tree, false);                
-  },
+    },
 
     
     /*
@@ -697,7 +692,7 @@ this.TM = {
     */
     initializeElements: function() {
       var cont = this.controller, that = this;
-      var ff = $lambda(false), tipsAllow = cont.Tips.allow;
+      var ff = $lambda(false);
       this.each(function(content, isLeaf, elem1, elem2) {
           var tree = TreeUtil.getSubtree(that.tree, content.id);
           cont.onCreateElement(content, tree, isLeaf, elem1, elem2);
@@ -725,7 +720,7 @@ this.TM = {
           }
           
           //add path selection on hovering nodes
-          if(cont.selectPathOnHover || tipsAllow) {
+          if(cont.selectPathOnHover) {
             $addEvent(elem1, 'mouseover', function(e){
                 if(cont.selectPathOnHover) {
                     if (isLeaf) {
@@ -738,8 +733,6 @@ this.TM = {
                     if (content.id) 
                         that.resetPath(tree);
                 }
-                if(tipsAllow)
-                    cont.Tips.onShow(that.tip, tree, isLeaf, elem1);
             });
             
             $addEvent(elem1, 'mouseout', function(e){
@@ -753,43 +746,11 @@ this.TM = {
                     }
                     that.resetPath();
                 }
-                if(tipsAllow)
-                    that.tip.style.display = 'none';
             });
-
-            if(tipsAllow) {
-                //Add mousemove event handler
-                $addEvent(elem1, 'mousemove', function(e, win){
-                    var tip = that.tip;
-                    //get mouse position
-                    win = win  || window;
-                    e = e || win.event;
-                    var doc = win.document;
-                    doc = doc.html || doc.body;
-                    var page = {
-                        x: e.pageX || e.clientX + doc.scrollLeft,
-                        y: e.pageY || e.clientY + doc.scrollTop
-                    };
-                    tip.style.display = '';
-                    //get window dimensions
-                    win = {
-                        'height': document.body.clientHeight,
-                        'width': document.body.clientWidth
-                    };
-                    //get tooltip dimensions
-                    var obj = {
-                      'width': tip.offsetWidth,
-                      'height': tip.offsetHeight  
-                    };
-                    //set tooltip position
-                    var style = tip.style, x = cont.Tips.offsetX, y = cont.Tips.offsetY;
-                    style.top = ((page.y + y + obj.height > win.height)?  
-                        (page.y - obj.height - y) : page.y + y) + 'px';
-                    style.left = ((page.x + obj.width + x > win.width)? 
-                        (page.x - obj.width - x) : page.x + x) + 'px';
-                });
-            }
           }
+          
+          //attach tips
+          that.attachTip(tree, elem1);
       });
     },
 
@@ -834,7 +795,7 @@ this.TM = {
     this.loadJSON(TreeUtil.getSubtree(this.tree, id));
   }
   
-};
+});
 
 /*
    Class: TM.SliceAndDice
@@ -851,7 +812,7 @@ this.TM = {
     leaves colors.
 
     Extends:
-    <TM>
+    <TM>, <Tips>
 
     Parameters:
 
@@ -865,14 +826,14 @@ this.TM = {
   (start code js)
 
   var tm = new TM.SliceAndDice({
-      orientation: "h",
+    orientation: "h",
     titleHeight: 13,
     rootId: 'infovis',
     offset:4,
     levelsToShow: 3,
-        addLeftClickHandler: false,
-        addRightClickHandler: false,
-        selectPathOnHover: false,
+    addLeftClickHandler: false,
+    addRightClickHandler: false,
+    selectPathOnHover: false,
             
     Color: {
       allow: false,
@@ -880,36 +841,36 @@ this.TM = {
       maxValue: 100,
       minColorValue: [255, 0, 50],
       maxColorValue: [0, 255, 50]
-          },
-          
-          Tips: {
-            allow: false,
-            offsetX; 20,
-            offsetY: 20,
-            onShow: function(tooltip, node, isLeaf, domElement) {}
-          },
-            
-          onBeforeCompute:  function(node) {
-            //Some stuff on before compute...
-          },
-          onAfterCompute:   function() {
-            //Some stuff on after compute...
-          },
-          onCreateElement:  function(content, node, isLeaf, head, body) {
-            //Some stuff onCreateElement
-          },
-          onDestroyElement: function(content, node, isLeaf, head, body) {
-            //Some stuff onDestroyElement
-          },
-        request:          false
-    });
+    },
+    
+    Tips: {
+      allow: false,
+      offsetX; 20,
+      offsetY: 20,
+      onShow: function(tooltip, node, domElement) {}
+    },
+      
+    onBeforeCompute:  function(node) {
+      //Some stuff on before compute...
+    },
+    onAfterCompute:   function() {
+      //Some stuff on after compute...
+    },
+    onCreateElement:  function(content, node, isLeaf, head, body) {
+      //Some stuff onCreateElement
+    },
+    onDestroyElement: function(content, node, isLeaf, head, body) {
+      //Some stuff onDestroyElement
+    },
+    request:          false
+  });
   tm.loadJSON(json);
 
   (end code)
 
 */
 TM.SliceAndDice = new Class({
-  Implements: TM,
+  Implements: [TM],
   /*
      Method: loadJSON
   
@@ -1184,7 +1145,7 @@ TM.Area = new Class({
     leaves colors.
 
     Extends:
-    <TM> and <TM.Area>
+    <TM>, <TM.Area>
 
     Parameters:
 
@@ -1218,25 +1179,25 @@ TM.Area = new Class({
       allow: false,
       offsetX: 20,
       offsetY: 20,
-      onShow: function(tooltip, node, isLeaf, domElement) {}
+      onShow: function(tooltip, node, domElement) {}
     },
   
-      onBeforeCompute:  function(node) {
-        //Some stuff on before compute...
-      },
-      onAfterCompute:   function() {
-        //Some stuff on after compute...
-      },
-      onCreateElement:  function(content, node, isLeaf, head, body) {
-        //Some stuff onCreateElement
-      },
-      onDestroyElement: function(content, node, isLeaf, head, body) {
-        //Some stuff onDestroyElement
-      },
-      request:          false
-    });
-  
-  	tm.loadJSON(json);
+    onBeforeCompute:  function(node) {
+      //Some stuff on before compute...
+    },
+    onAfterCompute:   function() {
+      //Some stuff on after compute...
+    },
+    onCreateElement:  function(content, node, isLeaf, head, body) {
+      //Some stuff onCreateElement
+    },
+    onDestroyElement: function(content, node, isLeaf, head, body) {
+      //Some stuff onDestroyElement
+    },
+    request:          false
+  });
+
+	tm.loadJSON(json);
 
   (end code)
 
@@ -1411,7 +1372,7 @@ TM.Squarified = new Class({
     leaves colors.
 
     Extends:
-    <TM> and <TM.Area>
+    <TM>, <TM.Area>
 
     Parameters:
     
@@ -1426,13 +1387,13 @@ TM.Squarified = new Class({
 
   var tm = new TM.Strip({
     titleHeight: 13,
-      orientation: "h",
+    orientation: "h",
     rootId: 'infovis',
     offset:4,
     levelsToShow: 3,
-        addLeftClickHandler: false,
-        addRightClickHandler: false,
-        selectPathOnHover: false,
+    addLeftClickHandler: false,
+    addRightClickHandler: false,
+    selectPathOnHover: false,
             
     Color: {
       allow: false,
@@ -1440,29 +1401,30 @@ TM.Squarified = new Class({
       maxValue: 100,
       minColorValue: [255, 0, 50],
       maxColorValue: [0, 255, 50]
-          },
-          
-          Tips: {
-            allow: false,
-            offsetX: 20,
-            offsetY: 20,
-            onShow: function(tooltip, node, isLeaf, domElement) {}
-          },
+    },
+    
+    Tips: {
+      allow: false,
+      offsetX: 20,
+      offsetY: 20,
+      onShow: function(tooltip, node, domElement) {}
+    },
+
+    onBeforeCompute:  function(node) {
+      //Some stuff on before compute...
+    },
+    onAfterCompute:   function() {
+      //Some stuff on after compute...
+    },
+    onCreateElement:  function(content, node, isLeaf, head, body) {
+      //Some stuff onCreateElement
+    },
+    onDestroyElement: function(content, node, isLeaf, head, body) {
+      //Some stuff onDestroyElement
+    },
+    request:          false
+  });
   
-          onBeforeCompute:  function(node) {
-            //Some stuff on before compute...
-          },
-          onAfterCompute:   function() {
-            //Some stuff on after compute...
-          },
-          onCreateElement:  function(content, node, isLeaf, head, body) {
-            //Some stuff onCreateElement
-          },
-          onDestroyElement: function(content, node, isLeaf, head, body) {
-            //Some stuff onDestroyElement
-          },
-        request:          false
-    });
   tm.loadJSON(json);
 
   (end code)

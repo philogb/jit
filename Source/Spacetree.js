@@ -26,7 +26,7 @@
 
      Extends:
 
-     <Loader>, <Layouts.Tree>
+     <Loader>, <Layouts.Tree>, <Tips>
 
      Parameters:
 
@@ -199,7 +199,7 @@ this.ST= (function() {
     //Now define the actual class.    
     return new Class({
     
-        Implements: [Loader, Layouts.Tree],
+        Implements: [Loader, Layouts.Tree, Tips],
         
         initialize: function(canvas, controller) {            
             var config= {
@@ -212,7 +212,8 @@ this.ST= (function() {
                     type: 'rectangle'
                 },
                 duration: 700,
-                fps: 25
+                fps: 25,
+                Tips: Options.Tips
             };
             
             this.controller = this.config = $merge(Options.Animation, 
@@ -220,10 +221,10 @@ this.ST= (function() {
                 Options.Graph, 
                 Options.Controller, 
                 config, controller);
-                this.canvas = canvas;
-                this.graphOptions = {
-                    'complex': true
-                };
+            this.canvas = canvas;
+            this.graphOptions = {
+                'complex': true
+            };
             this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
             this.labels = new ST.Label[canvas.getConfig().labels](this);
             this.fx = new ST.Plot(this);
@@ -231,6 +232,8 @@ this.ST= (function() {
             this.group = new ST.Group(this);
             this.geom = new ST.Geom(this);
             this.clickedNode=  null;
+            //add tips
+            this.initializeTips();    
         },
     
         /*

@@ -278,114 +278,114 @@ Graph.Plot = {
       })).start();
     },
     
-  /*
-    Method: nodeFx
- 
-    Apply animation to node properties like color, width, height, dim, etc.
-
-    Parameters:
-
-    options - Animation options. This object contains as properties
-    
-    - _elements_ The Elements to be transformed. This is an object that has a properties
-    
-    (start code js)
-    'elements': {
-      //can also be an array of ids
-      'id': 'id-of-node-to-transform',
-      //properties to be modified. All properties are optional.
-      'properties': {
-        'color': '#ccc', //some color
-        'width': 10, //some width
-        'height': 10, //some height
-        'dim': 20, //some dim
-        'lineWidth': 10 //some line width
-      } 
-    }
-    (end code)
-    
-    - _reposition_ Whether to recalculate positions and add a motion animation. 
-    This might be used when changing _width_ or _height_ properties in a <Layouts.Tree> like layout. Default's *false*.
-    
-    - _onComplete_ A method that is called when the animation completes.
-    
-    ...and all other <Graph.Plot.animate> options like _duration_, _fps_, _transition_, etc.
-
-    Example:
-    (start code js)
-     var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-     rg.fx.nodeFx({
+    /*
+      Method: nodeFx
+   
+      Apply animation to node properties like color, width, height, dim, etc.
+  
+      Parameters:
+  
+      options - Animation options. This object contains as properties
+      
+      - _elements_ The Elements to be transformed. This is an object that has a properties
+      
+      (start code js)
+      'elements': {
+        //can also be an array of ids
+        'id': 'id-of-node-to-transform',
+        //properties to be modified. All properties are optional.
+        'properties': {
+          'color': '#ccc', //some color
+          'width': 10, //some width
+          'height': 10, //some height
+          'dim': 20, //some dim
+          'lineWidth': 10 //some line width
+        } 
+      }
+      (end code)
+      
+      - _reposition_ Whether to recalculate positions and add a motion animation. 
+      This might be used when changing _width_ or _height_ properties in a <Layouts.Tree> like layout. Default's *false*.
+      
+      - _onComplete_ A method that is called when the animation completes.
+      
+      ...and all other <Graph.Plot.animate> options like _duration_, _fps_, _transition_, etc.
+  
+      Example:
+      (start code js)
+       var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+       rg.fx.nodeFx({
+         'elements': {
+           'id':'mynodeid',
+           'properties': {
+             'color':'#ccf'
+           },
+           'transition': Trans.Quart.easeOut
+         }
+       });
+      (end code)    
+   */
+   nodeFx: function(opt) {
+     var viz = this.viz,
+     graph  = viz.graph,
+     GUtil = Graph.Util,
+     options = $merge(this.viz.config, {
        'elements': {
-         'id':'mynodeid',
-         'properties': {
-           'color':'#ccf'
-         },
-         'transition': Trans.Quart.easeOut
-       }
+         'id': false,
+         'properties': {}
+       },
+       'reposition': false
      });
-    (end code)    
- */
- nodeFx: function(opt) {
-   var viz = this.viz,
-   graph  = viz.graph,
-   GUtil = Graph.Util,
-   options = $merge(this.viz.config, {
-     'elements': {
-       'id': false,
-       'properties': {}
-     },
-     'reposition': false
-   });
-   opt = $merge(options, opt || {}, {
-     onBeforeCompute: $empty,
-     onAfterCompute: $empty
-   });
-   //check if an animation is running and exit
-   //if it's not a nodefx one.
-   var anim = this.animation;
-   if(anim.timer) {
-     if(anim.opt.type 
-         && anim.opt.type == 'nodefx') {
-       anim.stopTimer();
-     } else {
-       return;
+     opt = $merge(options, opt || {}, {
+       onBeforeCompute: $empty,
+       onAfterCompute: $empty
+     });
+     //check if an animation is running and exit
+     //if it's not a nodefx one.
+     var anim = this.animation;
+     if(anim.timer) {
+       if(anim.opt.type 
+           && anim.opt.type == 'nodefx') {
+         anim.stopTimer();
+       } else {
+         return;
+       }
      }
-   }
-   var props = opt.elements.properties;
-   //set end values for nodes
-   if(!opt.elements.id) {
-     GUtil.eachNode(graph, function(n) {
-       for(var prop in props) {
-         n.setData(prop, props[prop], 'end');
-       }
-     });
-   } else {
-     var ids = $splat(opt.elements.id);
-     $each(ids, function(id) {
-       var n = graph.getNode(id);
-       if(n) {
+     var props = opt.elements.properties;
+     //set end values for nodes
+     if(!opt.elements.id) {
+       GUtil.eachNode(graph, function(n) {
          for(var prop in props) {
            n.setData(prop, props[prop], 'end');
          }
-       }
-     });
-   }
-   //get keys
-   var propnames = [];
-   for(var prop in props) propnames.push(prop);
-   //add node properties modes
-   var modes = ['node-property:' + propnames.join(':')];
-   //set new node positions
-   if(opt.reposition) {
-     modes.push('linear');
-     viz.compute('end');
-   }
-   //animate
-   this.animate($merge(opt, {
-     modes: modes,
-     type:'nodefx'
-   }));
- },
+       });
+     } else {
+       var ids = $splat(opt.elements.id);
+       $each(ids, function(id) {
+         var n = graph.getNode(id);
+         if(n) {
+           for(var prop in props) {
+             n.setData(prop, props[prop], 'end');
+           }
+         }
+       });
+     }
+     //get keys
+     var propnames = [];
+     for(var prop in props) propnames.push(prop);
+     //add node properties modes
+     var modes = ['node-property:' + propnames.join(':')];
+     //set new node positions
+     if(opt.reposition) {
+       modes.push('linear');
+       viz.compute('end');
+     }
+     //animate
+     this.animate($merge(opt, {
+       modes: modes,
+       type:'nodefx'
+     }));
+   },
 
     
     /*
@@ -799,6 +799,18 @@ Graph.Label.HTML = new Class({
             controller.onCreateLabel(tag, node);
             container.appendChild(tag);
             this.labels[node.id] = tag;
+
+            //extras
+            var viz = this.viz, config = viz.config;
+            if(config.Tips) {
+              viz.attachTip(node, tag);
+            }
+            if(config.nodeStylesOnHover) {
+              viz.attachNodeStylesOnHover(node, tag);
+            }
+            if(config.nodeStylesSelected) {
+              viz.attachNodeStylesSelected(node, tag);
+            }
         }
         this.placeLabel(tag, node, controller);
     }
@@ -846,6 +858,18 @@ Graph.Label.SVG = new Class({
             container.appendChild(tag);
             controller.onCreateLabel(tag, node);
             this.labels[node.id] = tag;
+
+            //extras
+            var viz = this.viz, config = viz.config;
+            if(config.Tips) {
+              viz.attachTip(node, tag);
+            }
+            if(config.nodeStylesOnHover) {
+              viz.attachNodeStylesOnHover(node, tag);
+            }
+            if(config.nodeStylesSelected) {
+              viz.attachNodeStylesSelected(node, tag);
+            }
         }
         this.placeLabel(tag, node, controller);
     }

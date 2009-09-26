@@ -337,20 +337,6 @@ tests_model = {
     
     'Treemap': [
         {
-            'Title': 'Test Squarified, SliceAndDice, and Strip Treemap with static 50 artist feed.',
-            'Description': 
-            """
-            Test Squarified, SliceAndDice, and Strip Treemap with static 50 artist dataset.<br>
-            Clicking on a Node should set the Node as root. <br>
-            Right clicking should set the current root's parent as root.<br> 
-            Hovering the Treemap nodes should pop-up a tooltip. <br>
-            Treemap nodes should have colors by default. <br>
-            Hovering a node should change the style of all parents nodes, forming a path. <br>
-            You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).
-            """,
-            'Extras': []
-        },
-        {
             'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
             'Description': 
             """
@@ -422,6 +408,19 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example':True
         },
+        {
+            'Title': 'Graph Operations',
+            'Description': 
+            """
+            You can do the following operations with a ForceDirected viz:<br /><br />
+            1.- Removing subtrees or nodes<br /><br />
+            2.- Removing edges<br /><br />
+            3.- Adding another graph, also called sum<br /><br />
+            4.- Morphing (or transforming) the graph into another one<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        } 
     ],
     
     'Other': [

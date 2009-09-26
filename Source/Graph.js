@@ -459,7 +459,7 @@ Graph.Node = new Class({
       }
       var n = this.Node, dollar = '$' + prop;
       if(!n.overridable) return n[prop];
-      return data[dollar] || this.data[dollar] || n[prop];
+      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : n[prop]);
    },
     
     /*
@@ -569,7 +569,7 @@ Graph.Adjacence = new Class({
     }
     var n = this.Edge, dollar = '$' + prop;
     if(!n.overridable) return n[prop];
-    return data[dollar] || this.data[dollar] || n[prop];
+    return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : n[prop]);
  },
  /*
    Method: setData

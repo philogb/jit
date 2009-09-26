@@ -22,7 +22,7 @@
 
      Extends:
 
-     <Loader>, <Layouts.ForceDirected>
+     <Loader>, <Tips>, <NodeStyles>, <Layouts.ForceDirected>
 
      Parameters:
 
@@ -129,7 +129,7 @@
 
 this.ForceDirected = new Class({
   
-  Implements: [Loader, Layouts.ForceDirected],
+  Implements: [Loader, Tips, NodeStyles, Layouts.ForceDirected],
     
   initialize: function(canvas, controller) {
     
@@ -137,11 +137,13 @@ this.ForceDirected = new Class({
       labelContainer: canvas.id + '-label',
       withLabels: true,
       iterations: 50,
-      levelDistance: 50
+      levelDistance: 50,
+      Tips: Options.Tips
     };
     
     this.controller = this.config = $merge(Options.Graph, 
-        Options.Animation, 
+        Options.Animation,
+        Options.NodeStyles,
         Options.Controller,
         config, controller);
     
@@ -160,6 +162,8 @@ this.ForceDirected = new Class({
     this.json = null;
     this.canvas = canvas;
     this.busy = false;
+    //add tips
+    this.initializeTips();    
   },
   
    /* 
@@ -280,7 +284,7 @@ this.ForceDirected = new Class({
    /*
       Method: animate
      
-      Calculates positions and animates the graph.
+      Animates the graph to the end positions specified.
    */
    animate: function(opt) {
        this.fx.animate($merge({
@@ -480,7 +484,7 @@ ForceDirected.Label.HTML = new Class({
         style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
         
         controller.onPlaceLabel(tag, node);
-  }
+    }
 });
 
 

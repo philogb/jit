@@ -125,7 +125,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
 
      Extends:
 
-     <Loader>, <Layouts.Radial>
+     <Loader>, <Layouts.Radial>, <Tips>
 
      Parameters:
 
@@ -234,7 +234,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
  
 this.Hypertree = new Class({ 
    
-  Implements: [Loader, Layouts.Radial], 
+  Implements: [Loader, Tips, Layouts.Radial], 
    
   initialize: function(canvas, controller) { 
     var config = { 
@@ -245,7 +245,8 @@ this.Hypertree = new Class({
       },
       withLabels: true,
       duration: 1500,
-      fps: 35
+      fps: 35,
+      Tips: Options.Tips
     }; 
     this.controller = this.config = $merge(Options.Graph, 
         Options.Animation, 
@@ -268,6 +269,8 @@ this.Hypertree = new Class({
     this.canvas = canvas; 
     this.root = null; 
     this.busy = false; 
+    //add tips
+    this.initializeTips();    
   }, 
 
   /* 

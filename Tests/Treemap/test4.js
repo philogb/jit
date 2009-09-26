@@ -662,10 +662,15 @@ function init(){
     infovis.style.height = h + 'px';
     
     //init tm
-    var tm = new TM.Squarified({
+    //You can also do TM.SliceAndDice and TM.Squarified
+    var tm = new TM.Strip({ 
         //Where to inject the treemap.
         rootId: 'infovis',
-
+        
+        titleHeight: 0,
+        orientation: "h",
+        offset: 0,
+                
         //Add click handlers for
         //zooming the Treemap in and out
         addLeftClickHandler: true,
@@ -675,7 +680,7 @@ function init(){
         //between the root node and the hovered node. This
         //is done by adding the 'in-path' CSS class to each node.
         selectPathOnHover: true,
-                
+        
         Color: {
             //Allow coloring
             allow: true,
@@ -717,7 +722,27 @@ function init(){
           }
         },
 
-        //Remove all element events before destroying it.
+        //This method is invoked when a DOM element is created.
+        //Its useful to set DOM event handlers here or manipulate
+        //the DOM Treemap nodes.
+        onCreateElement: function(content, tree, isLeaf, leaf){
+            //Add background image
+            if(isLeaf) {
+                var style = leaf.style, 
+                width = parseInt(style.width) - 2, 
+                height = parseInt(style.height) - 2;
+                
+                leaf.innerHTML = tree.name + 
+                "<img src=\"/Tests/css/gradient.png\" " +
+                " style=\"position:absolute;top:0;left:0;width:" + 
+                width + "px;height:" + height + "px;\" />";
+                
+                style.width = width + "px";
+                style.height = height + "px";
+            }
+        },
+
+        //Remove all events for the element before destroying it.
         onDestroyElement: function(content, tree, isLeaf, leaf){
             if(leaf.clearAttributes) leaf.clearAttributes();
         }

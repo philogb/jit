@@ -35,7 +35,7 @@ var Feeder = {
 		var data = {};
 		data.$area = numb;
 		if(dim) data.$dim = numb;
-		if(color) data.$color = color;
+		if(color) data.$color = numb2;
 		var ans= {
 			id:   idPrefix + levelStart + this.counter,
 			name: levelStart + "." + this.counter,
@@ -45,7 +45,7 @@ var Feeder = {
 		var childCount= Math.floor(Math.random() * maxChildrenPerNode) + minChildrenPerNode;
 		levelStart++;
 		for(var i=0; i<childCount; i++) {
-			var ch= this.makeTreeWithParameters(idPrefix, levelStart, levelEnd, maxChildrenPerNode, minChildrenPerNode);
+			var ch= this.makeTreeWithParameters(idPrefix, levelStart, levelEnd, maxChildrenPerNode, minChildrenPerNode, color, dim);
 			if(ch != null) ans.children[i]=ch;
 		}
 		return ans;
@@ -55,7 +55,7 @@ var Feeder = {
    		if(tree.children.length == 0) {
    			if(!notRec) 	return tree.data.$area;
    			tree.data.$area = 1;
-            tree.data.$dim = 1;
+        tree.data.$dim = 1;
    			return 1;
    		}
    		var accum= 0;
@@ -70,7 +70,7 @@ var Feeder = {
 	   		}
    		}
    		tree.data.$area = accum;
-        tree.data.$dim = accum;
+      tree.data.$dim = accum;
    		return accum;
    },
  

@@ -14,6 +14,7 @@ class Build():
             'Canvas': ['Core'],
             'Complex': ['Polar'],
             'Core': [],
+            'Extras': ['Core', 'Animation'],
             'Graph': ['Core', 'Complex', 'Polar'],
             'Graph.Op': ['Core', 'Graph'],
             'Graph.Plot': ['Core', 'Graph'],
@@ -23,7 +24,8 @@ class Build():
             'Polar': ['Complex'],
             
             'Hypertree': ['Core',
-                          'Options', 
+                          'Options',
+                          'Extras', 
                           'Canvas', 
                           'Complex', 
                           'Polar', 
@@ -36,6 +38,7 @@ class Build():
             
             'RGraph':     ['Core', 
                            'Options',
+                           'Extras',
                            'Canvas', 
                            'Complex', 
                            'Polar', 
@@ -48,6 +51,7 @@ class Build():
             
             'ForceDirected':['Core', 
                            'Options',
+                           'Extras',
                            'Canvas', 
                            'Complex', 
                            'Polar', 
@@ -60,6 +64,7 @@ class Build():
 
             'Spacetree':   ['Core',
                             'Options', 
+                            'Extras',
                             'Canvas', 
                             'Complex',
                             'Polar', 
@@ -71,7 +76,8 @@ class Build():
                             'Animation'],
                             
             'Treemap':      ['Core',
-                             'Options']
+                             'Options',
+                             'Extras']
         }
         
     def build(self, args=['Spacetree', 'RGraph', 'ForceDirected', 'Hypertree', 'Treemap']):
