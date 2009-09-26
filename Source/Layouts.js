@@ -174,32 +174,88 @@ Layouts.Radial = new Class({
  */
 Layouts.ForceDirected = new Class({
 
-  compute: function(property) {
-    var prop = $splat(property || ['current', 'start', 'end']);
-    this.computePositions(prop);
+  getOptions: function(random) {
+    var s = this.canvas.getSize();
+    var w = s.width, h = s.height;
+    //count nodes
+    var count = 0;
+    Graph.Util.eachNode(this.graph, function(n) { 
+      count++;
+    });
+    var k2 = w * h / count, k = Math.sqrt(k2);
+    var l = this.config.levelDistance;
+    
+    return {
+      width: w,
+      height: h,
+      tstart: w * 0.1,
+      nodef: function(x) { return k2 / (x || 1); },
+      edgef: function(x) { return /* x * x / k; */ k * (x - l); }
+    };
   },
   
-  computePositions: function(property) {
+  compute: function(property, incremental) {
+    var prop = $splat(property || ['current', 'start', 'end']);
+    var opt = this.getOptions();
+    Graph.Util.eachNode(this.graph, function(n) {
+      $each(prop, function(p) {
+        var pos = n.getPos(p);
+        if(pos.equals(Complex.KER)) {
+          pos.x = opt.width/5 * (Math.random() - 0.5);
+          pos.y = opt.height/5 * (Math.random() - 0.5);
+        }
+        //initialize disp vector
+        n.disp = {};
+        $each(prop, function(p) {
+          n.disp[p] = $C(0, 0);
+        });
+      });
+    });
+    this.computePositions(prop, opt, incremental);
+  },
   
+  computePositions: function(property, opt, incremental) {
+    var times = this.config.iterations, i = 0, that = this;
+    if(incremental) {
+      (function iter() {
+        for(var total=incremental.iter, j=0; j<total; j++) {
+          opt.t = opt.tstart * (1 - i++/(times -1));
+          that.computePositionStep(property, opt);
+          if(i >= times) {
+            incremental.onComplete();
+            return;
+          }
+        }
+        incremental.onStep(Math.round(i / (times -1) * 100));
+        setTimeout(iter, 1);
+      })();
+    } else {
+      for(; i < times; i++) {
+        opt.t = opt.tstart * (1 - i/(times -1));
+        this.computePositionStep(property, opt);
+      }
+    }
   },
   
   computePositionStep: function(property, opt) {
     var graph = this.graph, GUtil = Graph.Util;
     var min = Math.min, max = Math.max;
+    var dpos = $C(0, 0);
     //calculate repulsive forces
     GUtil.eachNode(graph, function(v) {
       //initialize disp
-      v.disp = {};
       $each(property, function(p) {
-        v.disp[p] = 0;
+        v.disp[p].x = 0; v.disp[p].y = 0;
       });
       GUtil.eachNode(graph, function(u) {
         if(u.id != v.id) {
           $each(property, function(p) {
             var vp = v.getPos(p), up = u.getPos(p);
-            var dpos = $C(vp.x - up.x, vp.y - up.y);
+            dpos.x = vp.x - up.x;
+            dpos.y = vp.y - up.y;
             var norm = dpos.norm() || 1;
-            v.disp[p].$add(dpos.$scale(opt.nodef(norm) / norm)); 
+            v.disp[p].$add(dpos
+                .$scale(opt.nodef(norm) / norm));
           });
         }
       });
@@ -211,10 +267,11 @@ Layouts.ForceDirected = new Class({
         var nodeTo = adj.nodeTo;
         if(!!nodeTo.visited === T) {
           $each(property, function(p) {
-            var vp = nodeTo.getPos(p), up = node.getPos(p);
-            var dpos = $C(vp.x - up.x, vp.y - up.y);
+            var vp = node.getPos(p), up = nodeTo.getPos(p);
+            dpos.x = vp.x - up.x;
+            dpos.y = vp.y - up.y;
             var norm = dpos.norm() || 1;
-            node.disp[p].$add(dpos.$scale(opt.edgef(norm) / norm));
+            node.disp[p].$add(dpos.$scale(-opt.edgef(norm) / norm));
             nodeTo.disp[p].$add(dpos.$scale(-1));
           });
         }
@@ -227,10 +284,9 @@ Layouts.ForceDirected = new Class({
       $each(property, function(p) {
         var disp = u.disp[p];
         var norm = disp.norm() || 1;
-        var dispNorm = disp.scale(1 / norm);
         var p = u.getPos(p);
-        p.$add($C(min(dispNorm.x, t.x) * dispNorm.x, 
-            min(dispNorm.y, t.y) * dispNorm.y));
+        p.$add($C(disp.x * min(Math.abs(disp.x), t) / norm, 
+            disp.y * min(Math.abs(disp.y), t) / norm));
         p.x = min(w2, max(-w2, p.x));
         p.y = min(h2, max(-h2, p.y));
       });

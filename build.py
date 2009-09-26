@@ -46,6 +46,18 @@ class Build():
                            'Layouts',
                            'Animation'],
             
+            'ForceDirected':['Core', 
+                           'Options',
+                           'Canvas', 
+                           'Complex', 
+                           'Polar', 
+                           'Graph', 
+                           'Graph.Op',
+                           'Graph.Plot',
+                           'Loader', 
+                           'Layouts',
+                           'Animation'],
+
             'Spacetree':   ['Core',
                             'Options', 
                             'Canvas', 
@@ -62,7 +74,7 @@ class Build():
                              'Options']
         }
         
-    def build(self, args=['Spacetree', 'RGraph', 'Hypertree', 'Treemap']):
+    def build(self, args=['Spacetree', 'RGraph', 'ForceDirected', 'Hypertree', 'Treemap']):
         self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model])
         self.script = '(function () { \n\n' + self.script + '\n\n })();'
         return self.script

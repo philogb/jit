@@ -266,7 +266,7 @@ Graph.Plot = {
               interp[p](node, m[p], delta, versor);
             }
           });
-          that.plot(opt, this.$animating);
+          that.plot(opt, this.$animating, delta);
           this.$animating = true;
         },
         complete: function() {

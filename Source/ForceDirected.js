@@ -135,9 +135,9 @@ this.ForceDirected = new Class({
     
     var config= {
       labelContainer: canvas.id + '-label',
-      naturalLength: 75,
-      restoringForce: 2,
-      withLabels: true
+      withLabels: true,
+      iterations: 50,
+      levelDistance: 50
     };
     
     this.controller = this.config = $merge(Options.Graph, 
@@ -146,7 +146,7 @@ this.ForceDirected = new Class({
         config, controller);
     
     this.graphOptions = {
-        'complex': false,
+        'complex': true,
         'Node': {
             'selected': false,
             'exist': true,
@@ -162,7 +162,7 @@ this.ForceDirected = new Class({
     this.busy = false;
   },
   
-  /* 
+   /* 
      Method: refresh 
      
      Computes nodes' positions and replots the tree.
@@ -187,8 +187,88 @@ this.ForceDirected = new Class({
         this.compute('end');
     },
 
-
     /*
+    Method: computeIncremental
+   
+    Perform the <Layout.ForceDirected.compute> method incrementally.
+    
+    Description:
+    
+    ForceDirected algorithms can perform many computations and lead to JavaScript taking too much time to complete. 
+    This method splits the algorithm into "small parts" allowing the user to track the evolution of the algorithm and 
+    avoiding browser messages such as "This script is taking too long to complete".
+    
+    Parameters:
+    
+    opt - An Options object containing as properties
+    
+    _iter_ - Split the algorithm into pieces of _iter_ iterations. For example, if the _iterations_ configuration property 
+    of your <ForceDirected> class is 100, then you could set _iter_ to 20 to split the main algorithm into 5 smaller pieces. 
+    Default's 20. 
+    
+    _property_ - Possible values are 'end', 'start', 'current'. You can also set an array of these properties. if you'd like to 
+    keep the current node positions but to perform these computations for final animation positions then you can just choose 'end'. 
+    Default's 'end'.
+    
+    _onStep_ - A callback function called when each "small part" of the algorithm completed. This function gets as first formal 
+    parameter a percentage value.
+    
+    _onComplete_ - A callback function called when the algorithm completed.
+    
+    Example:
+    
+    In this example I calculate the end positions and then animate the graph to those positions
+    
+    (start code js)
+    var fd = new ForceDirected(...);
+    fd.computeIncremental({
+      iter: 20,
+      property: 'end',
+      onStep: function(perc) {
+        Log.write("loading " + perc + "%");
+      },
+      onComplete: function() {
+        Log.write("done");
+        fd.animate();
+      }
+    });
+    (end code)
+    
+    In this example I calculate all positions and (re)plot the graph
+    
+    (start code js)
+    var fd = new ForceDirected(...);
+    fd.computeIncremental({
+      iter: 20,
+      property: ['end', 'start', 'current'],
+      onStep: function(perc) {
+        Log.write("loading " + perc + "%");
+      },
+      onComplete: function() {
+        Log.write("done");
+        fd.plot();
+      }
+    });
+    (end code)
+    
+    See also:
+
+    <Layouts.ForceDirected.compute>
+    
+   */
+   computeIncremental: function(opt) {
+      opt = $merge({
+        iter: 20,
+        property: 'end',
+        onStep: $empty,
+        onComplete: $empty
+      }, opt || {}); 
+
+      this.config.onBeforeCompute(this.graph.getNode(this.root));
+      this.compute(opt.property, opt);
+   },
+
+   /*
      Method: plot
     
      Plots the ForceDirected
@@ -196,49 +276,17 @@ this.ForceDirected = new Class({
     plot: function() {
         this.fx.plot();
     },
-    
-     /* 
-     Method: animate
+
+   /*
+      Method: animate
      
-      Animates the graph.
-     
-     Parameters:
-
-     opt - _optional_ An object containing some extra properties like
-
-     - _hideLabels_ Hide labels when performing the animation. Default's *true*.
-
-     Example:
-
-     (start code js)
-       fd.animate({
-        hideLabels: false,
-        onComplete: function() {
-          alert("done!");
-        }
-       });
-      (end code)
-      
-    */ 
-    animate: function(opt) {
-      if(!this.busy) {
-        this.busy = true;
-        that = this;
-        this.controller.onBeforeCompute();
-        this.compute('end');
-        opt = $merge({ onComplete: $empty }, opt || {});
-        this.fx.animate($merge({
-          hideLabels: true,
-          modes: ["linear"]
-        }, opt, {
-          onComplete: function() {
-              that.busy = false;
-              that.controller.onAfterCompute();
-              opt.onComplete();
-          }
-        }));
-      }       
-    }
+      Calculates positions and animates the graph.
+   */
+   animate: function(opt) {
+       this.fx.animate($merge({
+         modes: ['linear']
+       }, opt || {}));
+   }
 });
 
 /*
@@ -257,8 +305,8 @@ this.ForceDirected = new Class({
    Example:
 
    (start code js)
-    var rgraph = new ForceDirected(canvas, config);
-    rgraph.op.morph //or can also call any other <Graph.Op> method
+    var fd = new ForceDirected(canvas, config);
+    fd.op.morph //or can also call any other <Graph.Op> method
    (end code)
    
 */
@@ -287,8 +335,8 @@ ForceDirected.Op = new Class({
    Example:
 
    (start code js)
-    var rgraph = new ForceDirected(canvas, config);
-    rgraph.fx.placeLabel //or can also call any other <ForceDirected.Plot> method
+    var fd = new ForceDirected(canvas, config);
+    fd.fx.plot //or can also call any other <ForceDirected.Plot> method
    (end code)
 
 */
@@ -296,16 +344,16 @@ ForceDirected.Plot = new Class({
   
   Implements: Graph.Plot,
   
-    initialize: function(viz) {
-      this.viz = viz;
-      this.config = viz.config;
-      this.node = viz.config.Node;
-      this.edge = viz.config.Edge;
-      this.animation = new Animation;
-      this.nodeTypes = new ForceDirected.Plot.NodeTypes;
-      this.edgeTypes = new ForceDirected.Plot.EdgeTypes;
-      this.labels = viz.labels;
-    }
+  initialize: function(viz) {
+    this.viz = viz;
+    this.config = viz.config;
+    this.node = viz.config.Node;
+    this.edge = viz.config.Edge;
+    this.animation = new Animation;
+    this.nodeTypes = new ForceDirected.Plot.NodeTypes;
+    this.edgeTypes = new ForceDirected.Plot.EdgeTypes;
+    this.labels = viz.labels;
+  }
 });
 
 

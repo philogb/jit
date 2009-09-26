@@ -398,6 +398,31 @@ tests_model = {
             'Example':True        
         }
    ],
+   
+    'ForceDirected': [
+        {
+            'Title': 'Tree Animation',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            The centered node's children are displayed in a relations list in the right column.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        },
+        {
+            'Title': 'Weighted Graph Animation',
+            'Description': 
+            """
+            A static JSON graph structure is used for this animation.<br /><br />
+            For each JSON node/edge the properties prefixed with the dollar sign ($) set the type of node/edge to be plotted, its style and its dimensions.<br /><br />
+            Line weights are added programmatically, <em>onBeforePlotLine</em>.<br /><br />
+            An <b>Elastic</b> transition is used instead of the linear transition for the animation.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        },
+    ],
     
     'Other': [
         {

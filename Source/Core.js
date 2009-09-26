@@ -81,7 +81,7 @@ var $type = function(elem) {
 $type.s = Object.prototype.toString;
 
 function $each(iterable, fn){
-    var type = $type(iterable);
+  var type = $type(iterable);
   if(type == 'object') {
     for (var key in iterable) fn(iterable[key], key);
   } else {
