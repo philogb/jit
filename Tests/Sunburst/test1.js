@@ -316,82 +316,61 @@ function init(){
                 "children": []
             }]
         }],
-        "data": []
+        "data": {
+          '$type': 'none'
+        }
     };
     //end
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
+    var colors = ['#33a', '#55b', '#77c', '#99d', '#aae', '#bf0', '#cf5', '#dfa', '#faccff', '#ffccff', '#CCC', '#C37'];
     
     //init canvas
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
-        'height': h
+        'height': h,
+        'labels':'Native'
     });
     //end
     var style = document.getElementById('mycanvas').style;
     style.marginLeft = style.marginTop = "25px";
-    //init Hypertree
-    var fd = new ForceDirected(canvas, {
+    //init Sunburst
+    var sb = new Sunburst(canvas, {
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
-            dim: 4,
+            dim: 9,
+            type:'gradient-multipie',
             color: "#f00",
             overridable: true
         },
         
         Edge: {
             lineWidth: 2,
-            color:'#23A4FF'
+            color: "#088"
         },
         
-        //Allow tips
-        Tips: {
-          allow: true,
-          //add positioning offsets
-          offsetX: 20,
-          offsetY: 20,
-          //implement the onShow method to
-          //add content to the tooltip when a node
-          //is hovered
-          onShow: function(tip, node, domElement) {
-              tip.innerHTML = "<div class=\"tip-title\"><b>" + node.name + "</b></div>" + 
-                "<div class=\"tip-text\">" + this.makeHTMLFromData(node) + "</div>"; 
-          },  
-
-          //Aux method: Build the tooltip inner html by using the data property
-          makeHTMLFromData: function(node){
-              var count = 0;
-              Graph.Util.eachAdjacency(node, function() { count++; });
-              return "connections" + ': ' + count + '<br />';
-          }
-        },
-        
-        nodeStylesSelected: {
-          'color': '#ffc',
-          'dim': 7
-        },
-        
-        nodeStylesOnHover: {
-          'dim': 6
-        },
-
-        iterations:100,
-        levelDistance:55,
-        transition: Trans.Elastic.easeOut,
+        levelDistance: 90,
         
         onBeforeCompute: function(node){
             Log.write("centering");
         },
+        
+        onBeforePlotNode: function(node) {
+          var len = 0;
+          Graph.Util.eachSubnode(node, function() { len++; });
+          node.data.$color = colors[len];
+        },
+        
         //Attach event handlers and add text to the
         //labels. This method is only triggered on label
         //creation
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             addEvent(domElement, 'click', function () {
-                //ht.onClick(node.id);
+                sb.onClick(node.id);
             });
         },
         //Change node styles when labels are placed
@@ -400,16 +379,21 @@ function init(){
             var style = domElement.style;
             style.display = '';
             style.cursor = 'pointer';
-            style.fontSize = "0.8em";
-            style.color = "#ddd";
+            if (node._depth <= 1) {
+                style.fontSize = "0.8em";
+                style.color = "#ddd";
+
+            } else if(node._depth == 2){
+                style.fontSize = "0.7em";
+                style.color = "#555";
+
+            } else {
+                style.display = 'none';
+            }
 
             var left = parseInt(style.left);
-            //var top = parseInt(style.top);
             var w = domElement.offsetWidth;
-            //var h= domElement.offsetHeight;
             style.left = (left - w / 2) + 'px';
-            //style.top = (top - h / 2) + 'px';
-            
         },
         
         onAfterCompute: function(){
@@ -418,7 +402,7 @@ function init(){
             //Build the right column relations list.
             //This is done by collecting the information (stored in the data property) 
             //for all the nodes adjacent to the centered node.
-            var node = fd.graph.getNode(fd.root);
+            var node = Graph.Util.getClosestNodeToOrigin(sb.graph, "pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
             Graph.Util.eachAdjacency(node, function(adj){
@@ -434,18 +418,9 @@ function init(){
     });
     
     //load JSON data.
-    fd.loadJSON(json);
-    //compute positions incrementally and animate.
-    fd.computeIncremental({
-      iter: 20,
-      property: 'end',
-      onStep: function(perc) {
-        Log.write(perc + '% loaded...');
-      },
-      onComplete: function() {
-        Log.write('done');
-       fd.animate(); 
-      }
-    });
+    sb.loadJSON(json);
+    //compute positions and plot.
+    sb.refresh();
     //end
+//    sb.controller.onAfterCompute();
 }

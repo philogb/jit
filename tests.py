@@ -482,5 +482,18 @@ tests_model = {
             'Example': False 
             
         }
+  ],
+  'Sunburst': [
+        {
+            'Title': 'Tree Animation',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            The centered node's children are displayed in a relations list in the right column.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        }
   ]
+
 }   

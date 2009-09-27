@@ -436,8 +436,13 @@ function init(){
         },
         
         iterations: 100,
-        levelDistance: 50,
+        levelDistance: 70,
         transition: Trans.Quart.easeOut,
+        
+        nodeStylesOnHover: {
+          'color': '#faa',
+          'dim': 7
+        },
         
         //Add the node's name into the label
         //This method is called only once, on label creation.

@@ -49,6 +49,19 @@ class Build():
                            'Layouts',
                            'Animation'],
             
+            'Sunburst':     ['Core', 
+                           'Options',
+                           'Extras',
+                           'Canvas', 
+                           'Complex', 
+                           'Polar', 
+                           'Graph', 
+                           'Graph.Op',
+                           'Graph.Plot',
+                           'Loader', 
+                           'Layouts',
+                           'Animation'],
+            
             'ForceDirected':['Core', 
                            'Options',
                            'Extras',
@@ -80,7 +93,7 @@ class Build():
                              'Extras']
         }
         
-    def build(self, args=['Spacetree', 'RGraph', 'ForceDirected', 'Hypertree', 'Treemap']):
+    def build(self, args=['Spacetree', 'RGraph', 'ForceDirected', 'Hypertree', 'Treemap', 'Sunburst']):
         self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model])
         self.script = '(function () { \n\n' + self.script + '\n\n })();'
         return self.script

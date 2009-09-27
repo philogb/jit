@@ -345,8 +345,7 @@ function init() {
     var canvas3 = new Canvas('mycanvas3', {
         'injectInto': 'infovis3',
         'width': w,
-        'height': h/2,
-        'backgroundColor': '#1a1a1a'
+        'height': h/2
     });
     //end
 

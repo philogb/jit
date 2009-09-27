@@ -789,7 +789,7 @@ Graph.Util = {
     */
     eachLevel: function(node, levelBegin, levelEnd, action, flags) {
         var d = node._depth, filter = this.filter(flags), that = this;
-    levelEnd = levelEnd === false? Number.MAX_VALUE -d : levelEnd;
+        levelEnd = levelEnd === false? Number.MAX_VALUE -d : levelEnd;
         (function loopLevel(node, levelBegin, levelEnd) {
             var d = node._depth;
             if(d >= levelBegin && d <= levelEnd && filter(node)) action(node, d);
@@ -894,7 +894,7 @@ Graph.Util = {
             levelEnd = Number.MAX_VALUE - node._depth;
         }
         this.eachLevel(node, levelStart, levelEnd, function(n) {
-      ans.push(n);
+        ans.push(n);
     }, flags);
         return ans;
     },
