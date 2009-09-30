@@ -176,6 +176,45 @@ function $get(id) {
   return document.getElementById(id);  
 };
 
+function $getPos(elem) {
+  if(elem.getBoundingClientRect) {
+    var bound = elem.getBoundingClientRect(), html = elem.ownerDocument.documentElement;
+    return {
+      x: bound.left + html.scrollLeft - html.clientLeft,
+      y: bound.top +  html.scrollTop  - html.clientTop
+    };
+  }
+  
+  var offset = getOffsets(elem);
+  var scroll = getScrolls(elem);
+  
+  return {x: offset.x - scroll.x, y: offset.y - scroll.y};
+  
+  function getOffsets(elem) {
+    var position = { x: 0, y: 0 };
+    while (elem && !isBody(elem)){
+      position.x += elem.offsetLeft;
+      position.y += elem.offsetTop;
+      elem = elem.offsetParent;
+    }
+    return position;
+  }
+  
+  function getScrolls(elem){
+    var position = {x: 0, y: 0};
+    while (elem && !isBody(elem)){
+      position.x += elem.scrollLeft;
+      position.y += elem.scrollTop;
+      elem = elem.parentNode;
+    }
+    return position;
+  }
+
+  function isBody(element){
+    return (/^(?:body|html)$/i).test(element.tagName);
+  }
+};
+
 var Class = function(properties){
   properties = properties || {};
   var klass = function(){
@@ -275,6 +314,21 @@ Class.prototype.implement = function(){
         Class.inherit(proto, properties);
     });
     return this;
+};
+
+var Event = {
+  getPos: function(e, win) {
+    //get mouse position
+    win = win  || window;
+    e = e || win.event;
+    var doc = win.document;
+    doc = doc.html || doc.body;
+    var page = {
+        x: e.pageX || e.clientX + doc.scrollLeft,
+        y: e.pageY || e.clientY + doc.scrollTop
+    };
+    return page;
+  }
 };
 
 /*

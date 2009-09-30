@@ -336,10 +336,11 @@ Sunburst.Label.Native = new Class({
   },
   
   plotLabel: function(canvas, node, controller) {
+    var indent = 5;
     var ctx = canvas.getCtx();
-    var ld = controller.levelDistance;
+    var ld = controller.levelDistance - indent;
     var clone = node.pos.clone();
-    clone.rho += 5;
+    clone.rho += indent;
     var p = clone.getp(true);
     var ct = clone.getc(true);
     var x = ct.x, y = ct.y;
@@ -406,6 +407,28 @@ Sunburst.Label.SVG = new Class({
         };
         tag.setAttribute('x', labelPos.x);
         tag.setAttribute('y', labelPos.y);
+
+        var bb = tag.getBBox();
+        if(bb) {
+          //center the label
+          var x = tag.getAttribute('x');
+          var y = tag.getAttribute('y');
+          //get polar coordinates
+          var p = node.pos.getp(true);
+          //get angle in degrees
+          var pi = Math.PI;
+          var cond = (p.theta > pi/2 && p.theta < 3* pi /2);
+          if(cond) {
+            tag.setAttribute('x', x - bb.width );
+            tag.setAttribute('y', y - bb.height );
+          } else if(node.id == rgraph.root) {
+            tag.setAttribute('x', x - bb.width/2); 
+          }
+          
+          var thetap =  cond? p.theta + pi : p.theta;
+            tag.setAttribute('transform', 'rotate('
+            + thetap * 360 / (2 * pi) + ' ' + x + ' ' + y + ')');
+        }
 
         controller.onPlaceLabel(tag, node);
   }

@@ -288,6 +288,7 @@ Options.Tree = {
 */
 
 Options.NodeStyles = {
+  
   nodeStylesOnHover: false,
   nodeStylesSelected: false
 };

@@ -5,7 +5,7 @@
  *
  * Used By:
  *
- * <ST>, <Hypertree>, <RGraph>
+ * <ST>, <Hypertree>, <RGraph>, <Icicle>, <Sunburst>, <ForceDirected>
  */
 /*
  Class: Canvas
@@ -266,6 +266,8 @@ this.Canvas = (function(){
         //create methods
         return {
             'id': id,
+            
+            'pos': null,
             /*
              Method: getCtx
              
@@ -407,7 +409,27 @@ this.Canvas = (function(){
                 };
             },
             
-            path: function(type, action){
+            /*
+            Method: getPos
+            
+            Returns canvas position vector.
+            
+            Returns:
+            
+            An object with _x_ and _y_ properties.
+            Example:
+            (start code js)
+            canvas.getPos(); //returns { x: 900, y: 500 }
+            (end code)
+            */
+           getPos: function(force){
+              if(force || !this.pos) {
+                return this.pos = $getPos(this.getElement());
+              }
+              return this.pos;
+           },
+
+           path: function(type, action){
                 ctx.beginPath();
                 action(ctx);
                 ctx[type]();
@@ -422,31 +444,6 @@ this.Canvas = (function(){
             clear: function(){
                 var size = this.getSize();
                 ctx.clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
-            },
-            
-            /*
-             Method: clearReactangle
-             
-             Same as <Canvas.clear> but only clears a section of the canvas.
-             
-             Parameters:
-             
-             top - An integer specifying the top of the rectangle.
-             right -  An integer specifying the right of the rectangle.
-             bottom - An integer specifying the bottom of the rectangle.
-             left - An integer specifying the left of the rectangle.
-             */
-            clearRectangle: function(top, right, bottom, left){
-                //if using excanvas
-                if (!hasCanvas()) {
-                    var f0 = ctx.fillStyle;
-                    ctx.fillStyle = opt.backgroundColor;
-                    ctx.fillRect(left, top, Math.abs(right - left), Math.abs(bottom - top));
-                    ctx.fillStyle = f0;
-                }
-                else {
-                    ctx.clearRect(left, top, Math.abs(right - left), Math.abs(bottom - top));
-                }
             }
         };
     };
