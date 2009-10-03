@@ -136,7 +136,7 @@
 
 this.Sunburst = new Class({
   
-  Implements: [Loader, Tips, NodeStyles, Layouts.Radial],
+  Implements: [Loader, Extras, Layouts.Radial],
     
   initialize: function(canvas, controller) {
     
@@ -151,7 +151,8 @@ this.Sunburst = new Class({
       Edge: {
         'type': 'none'
       },
-      Tips: Options.Tips
+      Tips: Options.Tips,
+      NodeStyles: Options.NodeStyles
     };
     
     this.controller = this.config = $merge(Options.Graph, 
@@ -175,8 +176,8 @@ this.Sunburst = new Class({
     this.canvas = canvas;
     this.root = null;
     this.busy = false;
-    //add tips
-    this.initializeTips();
+    //initialize extras
+    this.initializeExtras();
   },
    
   /* 
@@ -225,13 +226,80 @@ this.Sunburst = new Class({
 
 
     /*
-     Method: plot
+    Method: rotate
+   
+    Rotates the graph so that the selected node is horizontal on the right.
+
+    Parameters:
     
-     Plots the Sunburst
-    */
-    plot: function() {
+    node - A <Graph.Node>.
+    method - _(string)_ Whether to perform an animation or just replot the graph. Possible values are "replot" or "animate".
+    opt - _(object)_ Configuration options merged with this visualization configuration options.
+    
+    See also:
+
+    <Sunburst.rotateAngle>
+    
+   */
+   rotate: function(node, method, opt) {
+      var theta = node.getPos().getp(true).theta;
+      if(theta < Math.PI) 
+        this.rotateAngle(-theta, method, opt);
+      else
+        this.rotateAngle(theta, method, opt);
+   },
+
+   /*
+   Method: rotateAngle
+  
+   Rotates the graph with an angle theta.
+   
+    Parameters:
+    
+    node - A <Graph.Node>.
+    method - _(string)_ Whether to perform an animation or just replot the graph. Possible values are "replot" or "animate".
+    opt - _(object)_ Configuration options merged with this visualization configuration options.
+    
+    See also:
+
+    <Sunburst.rotate>
+   
+  */
+  rotateAngle: function(theta, method, opt) {
+      opt = $merge(this.config, opt || {}, {
+        modes: ['linear']
+      });      
+      var prop = method === "animate"? 'end' : 'current';
+      Graph.Util.eachNode(this.graph, function(n) {
+        var p = n.getPos(prop);
+        p.theta += theta;
+        n.angleSpan.begin += theta;
+        n.angleSpan.end += theta;
+        if(p.theta < 0) {
+          p.theta += Math.PI * 2;
+        }
+        if(n.angleSpan.begin < 0) {
+          n.angleSpan.begin += Math.PI * 2;
+        }
+        if(n.angleSpan.end < 0) {
+          n.angleSpan.end += Math.PI * 2;
+        }
+      });
+      if(method === "animate") {
+        this.fx.animate(opt);
+      } else {
         this.fx.plot();
-    }
+      }
+  },
+
+  /*
+   Method: plot
+  
+   Plots the Sunburst
+  */
+  plot: function() {
+      this.fx.plot();
+  }
 });
 
 /*
@@ -399,7 +467,9 @@ Sunburst.Label.SVG = new Class({
      
     */
     placeLabel: function(tag, node, controller) {
-        var pos = node.pos.getc(true), canvas = this.viz.canvas; 
+        var pos = node.pos.getc(true), 
+        viz = this.viz,
+        canvas = this.viz.canvas; 
         var radius= canvas.getSize();
         var labelPos= {
             x: Math.round(pos.x + radius.width/2),
@@ -421,7 +491,7 @@ Sunburst.Label.SVG = new Class({
           if(cond) {
             tag.setAttribute('x', x - bb.width );
             tag.setAttribute('y', y - bb.height );
-          } else if(node.id == rgraph.root) {
+          } else if(node.id == viz.root) {
             tag.setAttribute('x', x - bb.width/2); 
           }
           
@@ -496,78 +566,117 @@ Sunburst.Label.HTML = new Class({
 
   (start code js)
     Sunburst.Plot.NodeTypes.implement({
-      'newnodetypename': function(node, canvas) {
-        //Render my node here.
+      'newnodetypename': {
+        'plot': function(node, canvas) {
+          //render my node here
+        },
+        'contains': function(node, pos) {
+          //Optional
+          //return if the position is in the node definition
+          //return false otherwise.
+        }
       }
     });
   (end code)
 
 */
 Sunburst.Plot.NodeTypes = new Class({
-  'none': $empty,
-  //This node type is used for plotting the upper-left pie chart
-  'pie': function(node, canvas) {
-    var span = node.angleSpan, begin = span.begin, end = span.end;
-    var polarNode = node.pos.getp(true);
-    var polar = new Polar(polarNode.rho, begin);
-    var p1coord = polar.getc(true);
-    polar.theta = end;
-    var p2coord = polar.getc(true);
+  'none': {
+    'plot': $empty,
+    'contains': $lambda(false)
+  },
 
-    var ctx = canvas.getCtx();
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(p1coord.x, p1coord.y);
-    ctx.moveTo(0, 0);
-    ctx.lineTo(p2coord.x, p2coord.y);
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, polarNode.rho, begin, end, false);
-    ctx.fill();
-  },
+  'pie': {
+    'plot': function(node, canvas) {
+      var span = node.angleSpan, begin = span.begin, end = span.end;
+      var polarNode = node.pos.getp(true);
+      var polar = new Polar(polarNode.rho, begin);
+      var p1coord = polar.getc(true);
+      polar.theta = end;
+      var p2coord = polar.getc(true);
+  
+      var ctx = canvas.getCtx();
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(p1coord.x, p1coord.y);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(p2coord.x, p2coord.y);
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, polarNode.rho, begin, end, false);
+      ctx.fill();
+    },
+    'contains': function(node, pos) {
+      var span = node.angleSpan, begin = span.begin, end = span.end;
+      var atan = Math.atan2(pos.y, pos.x);
+      if(atan < 0) atan += Math.PI * 2;
+      if(begin > end) {
+        return (atan > begin && atan <= Math.PI * 2) || atan < end;
+      } else {
+        return atan > begin && atan < end;
+      }
+    }
+   },
   //This node type is used for plotting the upper-right pie chart
-  'multipie': function(node, canvas) {
-    var ldist = this.config.levelDistance;
-    var span = node.angleSpan, begin = span.begin, end = span.end;
-    var polarNode = node.pos.getp(true);
-    
-    var polar = new Polar(polarNode.rho, begin);
-    var p1coord = polar.getc(true);
-    
-    polar.theta = end;
-    var p2coord = polar.getc(true);
-    
-    polar.rho += ldist;
-    var p3coord = polar.getc(true);
-    
-    polar.theta = begin;
-    var p4coord = polar.getc(true);
-    
-    
-    var ctx = canvas.getCtx();
-    ctx.beginPath();
-    ctx.moveTo(p1coord.x, p1coord.y);
-    ctx.lineTo(p4coord.x, p4coord.y);
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, polarNode.rho, begin, end, false);
+  'multipie': {
+     'plot': function(node, canvas) {
+        var ldist = this.config.levelDistance;
+        var span = node.angleSpan, begin = span.begin, end = span.end;
+        var polarNode = node.pos.getp(true);
+        
+        var polar = new Polar(polarNode.rho, begin);
+        var p1coord = polar.getc(true);
+        
+        polar.theta = end;
+        var p2coord = polar.getc(true);
+        
+        polar.rho += ldist;
+        var p3coord = polar.getc(true);
+        
+        polar.theta = begin;
+        var p4coord = polar.getc(true);
+        
+        var ctx = canvas.getCtx();
+        ctx.beginPath();
+        ctx.moveTo(p1coord.x, p1coord.y);
+        ctx.lineTo(p4coord.x, p4coord.y);
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, polarNode.rho, begin, end, false);
+      
+        ctx.moveTo(p2coord.x, p2coord.y);
+        ctx.lineTo(p3coord.x, p3coord.y);
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
+        
+        ctx.fill();
+      },
+      'contains': function(node, pos) {
+        if(this.nodeTypes['pie'].contains.call(this, node, pos)) {
+          var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
+          var ld = this.config.levelDistance, d = node._depth;
+          return (rho >= ld * d) && (rho <= ld * (d + 1));
+        }
+        return false;
+      }
+   },
   
-    ctx.moveTo(p2coord.x, p2coord.y);
-    ctx.lineTo(p3coord.x, p3coord.y);
-    ctx.moveTo(0, 0);
-    ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
-    
-    ctx.fill();
-  },
-  
-  'gradient-multipie': function(node, canvas) {
-    var ctx = canvas.getCtx();
-    var radialGradient = ctx.createRadialGradient(0, 0, node.getPos().rho, 
-        0, 0, node.getPos().rho + this.config.levelDistance);
-    radialGradient.addColorStop(0, '#111');
-    radialGradient.addColorStop(1, node.getData('color'));
-    radialGradient.addColorStop(0.7, node.getData('color'));
-    ctx.fillStyle = radialGradient;
-    this.nodeTypes['multipie'].call(this, node, canvas);
-  }
+  'gradient-multipie': {
+     'plot': function(node, canvas) {
+       var ctx = canvas.getCtx();
+       var radialGradient = ctx.createRadialGradient(0, 0, node.getPos().rho, 
+           0, 0, node.getPos().rho + this.config.levelDistance);
+       
+       var colorArray = $hexToRgb(node.getData('color')), ans = [];
+       $each(colorArray, function(i) { ans.push(parseInt(i * 0.5, 10)); });
+       var endColor = $rgbToHex(ans);
+       radialGradient.addColorStop(0, endColor);
+       radialGradient.addColorStop(1, node.getData('color'));
+       ctx.fillStyle = radialGradient;
+       this.nodeTypes['multipie'].plot.call(this, node, canvas);
+     },
+     'contains': function(node, pos) {
+       return this.nodeTypes['multipie'].contains.call(this, node, pos);
+     }
+   }
 });
 
 /*

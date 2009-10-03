@@ -475,7 +475,7 @@ Graph.Plot = {
         ctx.globalAlpha = alpha;
 
         var f = node.getData('type');
-        this.nodeTypes[f].call(this, node, canvas, animating);
+        this.nodeTypes[f].plot.call(this, node, canvas, animating);
     },
     
     /*
@@ -736,6 +736,33 @@ Graph.Label.DOM = new Class({
         } 
       });
     },
+    
+    /*
+      Method: attachExtras
+   
+      Called only when a label is created to attach <Extras> like <Tips> or <NodeStyles> to labels
+      
+      Parameters:
+  
+      node - A <Graph.Node>.
+      tag - A DOM element.
+      
+   */
+    attachExtras: function(node, tag) {
+      var viz = this.viz, config = viz.config;
+      var tips = config.Tips, nodeStyles = config.NodeStyles;
+      if(tips && tips.allow && tips.attachToDOM) {
+        viz.tips.attach(node, tag);
+      }
+      if(nodeStyles && nodeStyles.attachToDOM) {
+        if(nodeStyles.stylesHover) {
+          viz.nodeStyles.attachOnHover(node, tag);
+        }
+        if(nodeStyles.stylesClick) {
+          viz.nodeStyles.attachOnClick(node, tag);
+        }
+      }
+    },
   /*
        Method: fitsInCanvas
     
@@ -791,26 +818,15 @@ Graph.Label.HTML = new Class({
     plotLabel: function(canvas, node, controller) {
         var id = node.id, tag = this.getLabel(id);
         if(!tag && !(tag = document.getElementById(id))) {
-            tag = document.createElement('div');
-            var container = this.getLabelContainer();
-            tag.id = id;
-            tag.className = 'node';
-            tag.style.position = 'absolute';
-            controller.onCreateLabel(tag, node);
-            container.appendChild(tag);
-            this.labels[node.id] = tag;
-
-            //extras
-            var viz = this.viz, config = viz.config;
-            if(config.Tips) {
-              viz.attachTip(node, tag);
-            }
-            if(config.nodeStylesOnHover) {
-              viz.attachNodeStylesOnHover(node, tag);
-            }
-            if(config.nodeStylesSelected) {
-              viz.attachNodeStylesSelected(node, tag);
-            }
+          tag = document.createElement('div');
+          var container = this.getLabelContainer();
+          tag.id = id;
+          tag.className = 'node';
+          tag.style.position = 'absolute';
+          controller.onCreateLabel(tag, node);
+          container.appendChild(tag);
+          this.labels[node.id] = tag;
+          this.attachExtras(node, tag);
         }
         this.placeLabel(tag, node, controller);
     }
@@ -846,32 +862,21 @@ Graph.Label.SVG = new Class({
 
     */
     plotLabel: function(canvas, node, controller) {
-        var id = node.id, tag = this.getLabel(id);
-        if(!tag && !(tag = document.getElementById(id))) {
-            var ns = 'http://www.w3.org/2000/svg';
-            tag = document.createElementNS(ns, 'svg:text');
-            var tspan = document.createElementNS(ns, 'svg:tspan');
-            tag.appendChild(tspan);
-            var container = this.getLabelContainer();
-            tag.setAttribute('id', id);
-            tag.setAttribute('class', 'node');
-            container.appendChild(tag);
-            controller.onCreateLabel(tag, node);
-            this.labels[node.id] = tag;
-
-            //extras
-            var viz = this.viz, config = viz.config;
-            if(config.Tips) {
-              viz.attachTip(node, tag);
-            }
-            if(config.nodeStylesOnHover) {
-              viz.attachNodeStylesOnHover(node, tag);
-            }
-            if(config.nodeStylesSelected) {
-              viz.attachNodeStylesSelected(node, tag);
-            }
-        }
-        this.placeLabel(tag, node, controller);
+      var id = node.id, tag = this.getLabel(id);
+      if(!tag && !(tag = document.getElementById(id))) {
+        var ns = 'http://www.w3.org/2000/svg';
+        tag = document.createElementNS(ns, 'svg:text');
+        var tspan = document.createElementNS(ns, 'svg:tspan');
+        tag.appendChild(tspan);
+        var container = this.getLabelContainer();
+        tag.setAttribute('id', id);
+        tag.setAttribute('class', 'node');
+        container.appendChild(tag);
+        controller.onCreateLabel(tag, node);
+        this.labels[node.id] = tag;
+        this.attachExtras(node, tag);
+      }
+      this.placeLabel(tag, node, controller);
     }
 });
 

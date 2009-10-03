@@ -9,6 +9,34 @@
  *
  */
 
+/* 
+ * Provides the initialization function for <NodeStyles> and <Tips> implemented 
+ * by all main visualizations.
+ *
+ */
+var Extras = {
+  initializeExtras: function() {
+    this.tips = new Tips(this);
+    this.nodeStyles = new NodeStyles(this);
+    
+    var tips = this.config.Tips, ns = this.config.NodeStyles;
+    if(tips.allow && tips.attachToCanvas || ns.attachToCanvas) {
+      this.mouseEventsManager = new MouseEventsManager(this);
+      tips.allow && tips.attachToCanvas && this.mouseEventsManager.register(this.tips);
+      ns.attachToCanvas && this.mouseEventsManager.register(this.nodeStyles);
+    }
+  }   
+};
+
+/*
+ * Manager for mouse events (clicking and mouse moving).
+ * 
+ * This class is used for registering objects implementing onClick
+ * and onMousemove methods. These methods are called when clicking or
+ * moving the mouse around  the Canvas.
+ * For now, <Tips> and <NodeStyles> are classes implementing these methods.
+ * 
+ */
 var MouseEventsManager = new Class({
   initialize: function(viz) {
     this.viz = viz;
@@ -26,12 +54,12 @@ var MouseEventsManager = new Class({
       time: $time()
     };
     
-    this.mintime = 350;    
+    this.mintime = 5;    
     this.attachEvents();
   },
   
   attachEvents: function() {
-    var htmlCanvas = this.canvas.canvas, that = this;
+    var htmlCanvas = this.canvas.getElement(), that = this;
     $addEvent(htmlCanvas, 'click', function(e, win) {
       that.handleEvent(that.click, 'onClick', e, win);
     });
@@ -47,36 +75,43 @@ var MouseEventsManager = new Class({
   handleEvent: function(obj, method, e, win) {
     if($time() - obj.time <= this.mintime) return;
     obj.time = $time();
+    var fx = this.viz.fx;
+    var g = this.viz.graph;
     var pos = Event.getPos(e, win);
     var p = this.canvas.getPos();
     var s = this.canvas.getSize();
     var newpos = {
-        x: pos.x - p.x + s.width /2,
-        y: - (pos.y - p.y + s.height /2)
+        x: pos.x - p.x - s.width /2,
+        y: pos.y - p.y - s.height /2
     };
     var positions = this.nodeTypes;
     var opt = {
         'position': pos  
     };
 
-    if(obj.node && positions[obj.node.getData('type')]
-                             .contains(obj.node, newpos)) {
-      for(var i=0, l=this.registeredObjects.length; i<l; i++) {
-        this.registeredObjects[i][method](obj.node, opt);
-      }
-      return;
-    }
-
-    var g = this.viz.graph;
-    for(var id in g.nodes) {
-      var n = g.nodes[id];
-      if(positions[n.getData('type')].contains(n, newpos)) {
-        obj.node = n;
+    if(obj.node) {
+      var n = g.getNode(obj.node);
+      if(n && positions[n.getData('type')]
+                        .contains.call(fx, n, newpos)) {
         for(var i=0, l=this.registeredObjects.length; i<l; i++) {
           this.registeredObjects[i][method](n, opt);
         }
         return;
       }
+    }
+    for(var id in g.nodes) {
+      var n = g.nodes[id];
+      if(positions[n.getData('type')]
+                   .contains.call(fx, n, newpos)) {
+        obj.node = id;
+        for(var i=0, l=this.registeredObjects.length; i<l; i++) {
+          this.registeredObjects[i][method](n, opt);
+        }
+        return;
+      }
+    }
+    for(var i=0, l=this.registeredObjects.length; i<l; i++) {
+      this.registeredObjects[i][method](false, opt);
     }
   }
 });
@@ -84,7 +119,7 @@ var MouseEventsManager = new Class({
 /*
    Class: Tips
     
-   A class containing tip related functions. This class is not accessible by the user.
+   A class containing tip related functions. This class is used internally.
    
    Used by:
    
@@ -114,7 +149,7 @@ var Tips = new Class({
     }
   },
   
-  attachTip: function(node, elem) {
+  attach: function(node, elem) {
     if(this.config.Tips.allow) {
       var that = this, cont = this.controller;
       $addEvent(elem, 'mouseover', function(e){
@@ -161,17 +196,17 @@ var Tips = new Class({
     };
     //set tooltip position
     var x = cont.Tips.offsetX, y = cont.Tips.offsetY;
-    style.top = ((page.y + y + obj.height > win.height)?  
-        (page.y - obj.height - y) : page.y + y) + 'px';
-    style.left = ((page.x + obj.width + x > win.width)? 
-        (page.x - obj.width - x) : page.x + x) + 'px';
+    style.top = ((pos.y + y + obj.height > win.height)?  
+        (pos.y - obj.height - y) : pos.y + y) + 'px';
+    style.left = ((pos.x + obj.width + x > win.width)? 
+        (pos.x - obj.width - x) : pos.x + x) + 'px';
   }  
 });
 
 /*
   Class: NodeStyles
    
-  Change node styles when clicking or hovering a node. This class is not accessible by the user.
+  Change node styles when clicking or hovering a node. This class is used internally.
   
   Used by:
   
@@ -184,14 +219,16 @@ var Tips = new Class({
 var NodeStyles = new Class({
   initialize: function(viz) {
     this.viz = viz;
-    this.nodeStylesOnHover = viz.config.nodeStylesOnHover;
-    this.nodeStylesOnClick = viz.config.nodeStylesOnClick;
+    this.fx = viz.fx;
+    this.nStyles = viz.config.NodeStyles;
+    this.nodeStylesOnHover = this.nStyles.stylesHover;
+    this.nodeStylesOnClick = this.nStyles.stylesClick;    
   },
   
   getRestoredStylesOnHover: function(node) {
     var restoredStyles = {}, nStyles = this.nodeStylesOnHover;
     for(var prop in nStyles) {
-      restoredStyles[prop] = node.getData(prop, 'start');
+      restoredStyles[prop] = node.styles['$' + prop];
     }
     return restoredStyles;
   },
@@ -199,7 +236,7 @@ var NodeStyles = new Class({
   getRestoredStylesOnClick: function(node) {
     var restoredStyles = {}, nStyles = this.nodeStylesOnClick;
     for(var prop in nStyles) {
-      restoredStyles[prop] = node.getData(prop, 'start');
+      restoredStyles[prop] = node.styles['$' + prop];
     }
     return restoredStyles;
   },
@@ -217,15 +254,20 @@ var NodeStyles = new Class({
   },
   
   toggleStylesOn: function(type, node, set) {
+    var viz = this.viz;
     if(set) {
       var that = this;
+      if(!node.styles) {
+        node.styles = $merge(node.data, {});
+      }
       viz.fx.nodeFx({
         'elements': {
           'id': node.id,
           'properties': that['nodeStylesOn' + type]
          },
          transition: Trans.Quart.easeOut,
-         duration:700
+         duration:300,
+         fps:30
       });
     } else {
       var restoredStyles = this['getRestoredStylesOn' + type](node);
@@ -235,17 +277,21 @@ var NodeStyles = new Class({
           'properties': restoredStyles
          },
          transition: Trans.Quart.easeOut,
-         duration:700
+         duration:300,
+         fps:30
       });
     }
   },
 
-  attachNodeStylesOnHover: function(node, elem) {
+  attachOnHover: function(node, elem) {
     var that = this, viz = this.viz;
-    var nStyles = viz.config.nodeStylesOnHover;
+    var nStyles = viz.config.NodeStyles.stylesHover;
     if(nStyles) {
       $addEvent(elem, 'mouseover', function() {
-        !node.selected && that.toggleStylesOnHover(node, true);
+        if(!node.selected) {
+          that.nStyles.onHover(node);
+          that.toggleStylesOnHover(node, true);
+        }
       });
       
       $addEvent(elem, 'mouseout', function() {
@@ -254,15 +300,12 @@ var NodeStyles = new Class({
     }
   },
 
-  attachNodeStylesOnClick: function(node, elem) {
+  attachOnClick: function(node, elem) {
     var viz = this.viz, that = this;
-    var nStyles = viz.config.nodeStylesOnClick;
+    var nStyles = viz.config.NodeStyles.stylesClick;
     if(nStyles) {
       $addEvent(elem, 'click', function() {
-        that.toggleStylesOnClick(node, !node.selected);
-        if(node.selected) 
-          delete node.selected 
-        else node.selected = true;
+        that.onClick(node);
       });
     }
   },
@@ -270,6 +313,7 @@ var NodeStyles = new Class({
   onClick: function(node, opt) {
     if(!node) return;
     var nStyles = this.nodeStylesOnClick;
+    if(!nStyles) return;
     //if the node is selected then unselect it
     if(node.selected) {
       this.toggleStylesOnClick(node, false);
@@ -279,12 +323,13 @@ var NodeStyles = new Class({
       Graph.Util.eachNode(this.viz.graph, function(n) {
         if(n.selected) {
           for(var s in nStyles) {
-            n.setData(s, n.getData(s, 'start'), 'end');
+            n.setData(s, n.styles['$' + s], 'end');
           }
           delete n.selected;
         }
       });
       //select clicked node
+      this.nStyles.onClick(node);
       this.toggleStylesOnClick(node, true);
       node.selected = true;
     }
@@ -292,9 +337,12 @@ var NodeStyles = new Class({
   
   onMousemove: function(node, opt) {
     var GUtil = Graph.Util, that = this;
-    if(!node) {
+    var nStyles = this.nodeStylesOnHover;
+    if(!nStyles) return;
+    
+    if(!node || node.selected) {
       GUtil.eachNode(this.viz.graph, function(n) {
-        if(n.hovered) {
+        if(n.hovered && !n.selected) {
           that.toggleStylesOnHover(n, false);
           delete n.hovered;
         }
@@ -303,17 +351,30 @@ var NodeStyles = new Class({
     }
     //if the node is hovered then exit
     if(node.hovered) return;
+
+    //check if an animation is running and exit
+    //if it's a nodefx one.
+    var anim = this.fx.animation;
+    if(anim.timer) {
+      if(anim.opt.type 
+          && anim.opt.type == 'nodefx') {
+        anim.stopTimer();
+      } else {
+        return;
+      }
+    }
+
     //unselect all hovered nodes...
-    var nStyles = this.nodeStylesOnHover;
-    Graph.Util.eachNode(this.viz.graph, function(n) {
-      if(n.hovered) {
+    GUtil.eachNode(this.viz.graph, function(n) {
+      if(n.hovered && !n.selected) {
         for(var s in nStyles) {
-          n.setData(s, n.getData(s, 'start'), 'end');
+          n.setData(s, n.styles['$' + s], 'end');
         }
         delete n.hovered;
       }
     });
     //select hovered node
+    this.nStyles.onHover(node);
     this.toggleStylesOnHover(node, true);
     node.hovered = true;
   }

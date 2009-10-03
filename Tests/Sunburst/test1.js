@@ -327,17 +327,19 @@ function init(){
     
     //init canvas
     //Create a new canvas instance.
+    //Select label type ('HTML', 'SVG' or Canvas 'Native').
+    var labels = 'SVG';
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
         'height': h,
-        'labels':'Native'
+        'labels':labels
     });
     //end
     var style = document.getElementById('mycanvas').style;
     style.marginLeft = style.marginTop = "25px";
     //init Sunburst
-    var sb = new Sunburst(canvas, {
+    sb = new Sunburst(canvas, {
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -352,30 +354,75 @@ function init(){
             color: "#088"
         },
         
-        levelDistance: 90,
-        
-        onBeforeCompute: function(node){
-            Log.write("centering");
+        Tips: {
+          allow: true,
+          attachToDOM: false,
+          attachToCanvas: true,
+          onShow: function(tip, node, elem) {
+            tip.innerHTML = node.name;
+          }
         },
         
+        NodeStyles: {
+          attachToDOM: false,
+          attachToCanvas: true,
+          stylesHover: {
+            'color': '#d33'
+          },
+          stylesClick: {
+            'color': '#3dd'
+          },
+          onClick: function(node) {
+            //Build the right column relations list.
+            //This is done by collecting the information (stored in the data property) 
+            //for all the nodes adjacent to the centered node.
+            var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
+            html += "<ul>";
+            Graph.Util.eachAdjacency(node, function(adj){
+                var child = adj.nodeTo;
+                if (child.data) {
+                    var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
+                    html += "<li>" + child.name + " " + "<div class=\"relation\">(relation: " + rel + ")</div></li>";
+                }
+            });
+            html += "</ul>";
+            document.getElementById('inner-details').innerHTML = html;
+          }
+        },
+        
+        levelDistance: 90,
+        
         onBeforePlotNode: function(node) {
-          var len = 0;
-          Graph.Util.eachSubnode(node, function() { len++; });
-          node.data.$color = colors[len];
+          if(!('$color' in node.data)) {
+            var len = 0;
+            Graph.Util.eachSubnode(node, function() { len++; });
+            node.data.$color = colors[len];
+          }
         },
         
         //Attach event handlers and add text to the
         //labels. This method is only triggered on label
         //creation
         onCreateLabel: function(domElement, node){
+          if(labels === 'HTML') {
             domElement.innerHTML = node.name;
-            addEvent(domElement, 'click', function () {
-                sb.onClick(node.id);
-            });
+          } else if (labels === 'SVG') {
+            domElement.firstChild
+            .appendChild(document
+              .createTextNode(node.name));
+          } 
         },
         //Change node styles when labels are placed
         //or moved.
         onPlaceLabel: function(domElement, node){
+          if(labels === 'SVG') {
+            var fch = domElement.firstChild;
+            var style = fch.style;
+            style.display = '';
+            style.cursor = 'pointer';
+            style.fontSize = "0.8em";
+            fch.setAttribute('fill', "#fff");
+          } else if(labels === 'HTML') {
             var style = domElement.style;
             style.display = '';
             style.cursor = 'pointer';
@@ -394,26 +441,7 @@ function init(){
             var left = parseInt(style.left);
             var w = domElement.offsetWidth;
             style.left = (left - w / 2) + 'px';
-        },
-        
-        onAfterCompute: function(){
-            Log.write("done");
-            
-            //Build the right column relations list.
-            //This is done by collecting the information (stored in the data property) 
-            //for all the nodes adjacent to the centered node.
-            var node = Graph.Util.getClosestNodeToOrigin(sb.graph, "pos");
-            var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
-            html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
-                var child = adj.nodeTo;
-                if (child.data) {
-                    var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
-                    html += "<li>" + child.name + " " + "<div class=\"relation\">(relation: " + rel + ")</div></li>";
-                }
-            });
-            html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+          }
         }
     });
     
@@ -422,5 +450,5 @@ function init(){
     //compute positions and plot.
     sb.refresh();
     //end
-//    sb.controller.onAfterCompute();
+    sb.config.NodeStyles.onClick(sb.graph.getNode(sb.root));
 }

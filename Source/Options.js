@@ -231,6 +231,8 @@ Options.Graph.Edge = {
 */
 Options.Tips = {
   allow: false,
+  attachToDOM: true,
+  attachToCanvas: false,
   offsetX: 20,
   offsetY: 20,
   onShow: $empty
@@ -288,7 +290,10 @@ Options.Tree = {
 */
 
 Options.NodeStyles = {
-  
-  nodeStylesOnHover: false,
-  nodeStylesSelected: false
+  attachToDOM: true,
+  attachToCanvas: false,
+  stylesHover: false,
+  stylesClick: false,
+  onHover: $empty,
+  onClick: $empty
 };
