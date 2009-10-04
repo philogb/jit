@@ -328,7 +328,7 @@ function init(){
     //init canvas
     //Create a new canvas instance.
     //Select label type ('HTML', 'SVG' or Canvas 'Native').
-    var labels = 'SVG';
+    var labels = 'Native';
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
         'width': w,
@@ -387,6 +387,13 @@ function init(){
             });
             html += "</ul>";
             document.getElementById('inner-details').innerHTML = html;
+            //hide tip
+            sb.tips.tip.style.display = 'none';
+            //rotate
+            sb.rotate(node, 'animate', {
+              'duration': 1500,
+              'transition': Trans.Quart.easeInOut
+            });
           }
         },
         

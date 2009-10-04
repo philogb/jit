@@ -244,12 +244,16 @@ var NodeStyles = new Class({
   toggleStylesOnHover: function(node, set) {
     if(this.nodeStylesOnHover) {
       this.toggleStylesOn('Hover', node, set);
+    } else {
+      set && this.nStyles.onHover(node);
     }
   },
 
   toggleStylesOnClick: function(node, set) {
     if(this.nodeStylesOnClick) {
       this.toggleStylesOn('Click', node, set);
+    } else {
+      set && this.nStyles.onClick(node);
     }
   },
   
@@ -260,6 +264,7 @@ var NodeStyles = new Class({
       if(!node.styles) {
         node.styles = $merge(node.data, {});
       }
+      var nStyles = this.nStyles;
       viz.fx.nodeFx({
         'elements': {
           'id': node.id,
@@ -267,7 +272,10 @@ var NodeStyles = new Class({
          },
          transition: Trans.Quart.easeOut,
          duration:300,
-         fps:30
+         fps:30,
+         onComplete: function() {
+           nStyles['on' + type](node);
+         }
       });
     } else {
       var restoredStyles = this['getRestoredStylesOn' + type](node);
@@ -289,7 +297,6 @@ var NodeStyles = new Class({
     if(nStyles) {
       $addEvent(elem, 'mouseover', function() {
         if(!node.selected) {
-          that.nStyles.onHover(node);
           that.toggleStylesOnHover(node, true);
         }
       });
@@ -329,7 +336,6 @@ var NodeStyles = new Class({
         }
       });
       //select clicked node
-      this.nStyles.onClick(node);
       this.toggleStylesOnClick(node, true);
       node.selected = true;
     }

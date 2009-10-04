@@ -67,7 +67,7 @@ Layouts.Radial = new Class({
       begin : 0,
       end : 2 * Math.PI
     };
-    root._rel = 1;
+    root.span = Math.PI * 2;
 
     GUtil.eachBFS(this.graph, this.root, function(elem) {
       var angleSpan = elem.angleSpan.end - elem.angleSpan.begin;
@@ -87,12 +87,12 @@ Layouts.Radial = new Class({
           return (a.dist >= b.dist) - (a.dist <= b.dist);
         });
       }
-      //Calculate nodes' positions.
+      //Calculate nodes positions.
       for (var k = 0; k < subnodes.length; k++) {
         var child = subnodes[k];
         if (!child._flag) {
-          child._rel = child._treeAngularWidth / totalAngularWidths;
-          var angleProportion = child._rel * angleSpan;
+          child.span = child._treeAngularWidth / totalAngularWidths * angleSpan;
+          var angleProportion = child.span;
           var theta = angleInit + angleProportion / 2;
 
           for ( var i = 0; i < propArray.length; i++)

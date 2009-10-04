@@ -243,10 +243,7 @@ this.Sunburst = new Class({
    */
    rotate: function(node, method, opt) {
       var theta = node.getPos().getp(true).theta;
-      if(theta < Math.PI) 
-        this.rotateAngle(-theta, method, opt);
-      else
-        this.rotateAngle(theta, method, opt);
+      this.rotateAngle(-theta, method, opt);
    },
 
    /*
@@ -267,22 +264,14 @@ this.Sunburst = new Class({
   */
   rotateAngle: function(theta, method, opt) {
       opt = $merge(this.config, opt || {}, {
-        modes: ['linear']
+        modes: ['polar']
       });      
       var prop = method === "animate"? 'end' : 'current';
       Graph.Util.eachNode(this.graph, function(n) {
         var p = n.getPos(prop);
         p.theta += theta;
-        n.angleSpan.begin += theta;
-        n.angleSpan.end += theta;
         if(p.theta < 0) {
           p.theta += Math.PI * 2;
-        }
-        if(n.angleSpan.begin < 0) {
-          n.angleSpan.begin += Math.PI * 2;
-        }
-        if(n.angleSpan.end < 0) {
-          n.angleSpan.end += Math.PI * 2;
         }
       });
       if(method === "animate") {
@@ -404,24 +393,29 @@ Sunburst.Label.Native = new Class({
   },
   
   plotLabel: function(canvas, node, controller) {
-    var indent = 5;
     var ctx = canvas.getCtx();
-    var ld = controller.levelDistance - indent;
-    var clone = node.pos.clone();
-    clone.rho += indent;
-    var p = clone.getp(true);
-    var ct = clone.getc(true);
-    var x = ct.x, y = ct.y;
     var measure = ctx.measureText(node.name);
-    //get angle in degrees
-    var pi = Math.PI;
-    var cond = (p.theta > pi/2 && p.theta < 3 * pi /2);
-    var thetap =  cond? p.theta + pi : p.theta;
-    if(cond) {      
-      x -= Math.abs(Math.cos(p.theta) * measure.width);
-      y += Math.sin(p.theta) * measure.width;      
-    } else if(node.id == this.viz.root) {
-      x -= measure.width / 2; 
+    if(node.id == this.viz.root) {
+      var x = -measure.width/2, y = 0, thetap = 0;
+      var ld = 0;
+    } else {
+      var indent = 5;
+      var ld = controller.levelDistance - indent;
+      var clone = node.pos.clone();
+      clone.rho += indent;
+      var p = clone.getp(true);
+      var ct = clone.getc(true);
+      var x = ct.x, y = ct.y;
+      //get angle in degrees
+      var pi = Math.PI;
+      var cond = (p.theta > pi/2 && p.theta < 3 * pi /2);
+      var thetap =  cond? p.theta + pi : p.theta;
+      if(cond) {      
+        x -= Math.abs(Math.cos(p.theta) * measure.width);
+        y += Math.sin(p.theta) * measure.width;      
+      } else if(node.id == this.viz.root) {
+        x -= measure.width / 2; 
+      }
     }
     ctx.save();
     ctx.fillStyle = '#fff';
@@ -429,8 +423,7 @@ Sunburst.Label.Native = new Class({
     ctx.rotate(thetap);
     ctx.fillText(node.name, 0, 0, ld);
     ctx.restore();
-  },
-
+  }
 });
 
 /*
@@ -588,7 +581,8 @@ Sunburst.Plot.NodeTypes = new Class({
 
   'pie': {
     'plot': function(node, canvas) {
-      var span = node.angleSpan, begin = span.begin, end = span.end;
+      var span = node.span/2, theta = node.pos.theta;
+      var begin = theta - span, end = theta + span;
       var polarNode = node.pos.getp(true);
       var polar = new Polar(polarNode.rho, begin);
       var p1coord = polar.getc(true);
@@ -606,7 +600,9 @@ Sunburst.Plot.NodeTypes = new Class({
       ctx.fill();
     },
     'contains': function(node, pos) {
-      var span = node.angleSpan, begin = span.begin, end = span.end;
+      var span = node.span/2, theta = node.pos.theta;
+      var begin = theta - span, end = theta + span;
+      if(begin < 0) begin += Math.PI * 2;
       var atan = Math.atan2(pos.y, pos.x);
       if(atan < 0) atan += Math.PI * 2;
       if(begin > end) {
@@ -616,11 +612,11 @@ Sunburst.Plot.NodeTypes = new Class({
       }
     }
    },
-  //This node type is used for plotting the upper-right pie chart
   'multipie': {
      'plot': function(node, canvas) {
         var ldist = this.config.levelDistance;
-        var span = node.angleSpan, begin = span.begin, end = span.end;
+        var span = node.span/2, theta = node.pos.theta;
+        var begin = theta - span, end = theta + span;
         var polarNode = node.pos.getp(true);
         
         var polar = new Polar(polarNode.rho, begin);
