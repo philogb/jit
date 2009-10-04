@@ -458,8 +458,8 @@ Graph.Node = new Class({
         return data['$' + prop];
       }
       var n = this.Node, dollar = '$' + prop;
-      if(!n.overridable) return n[prop];
-      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : n[prop]);
+      if(!n.overridable) return n[prop] || 0;
+      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : (n[prop] || 0));
    },
     
     /*

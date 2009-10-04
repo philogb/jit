@@ -245,7 +245,7 @@ var NodeStyles = new Class({
     if(this.nodeStylesOnHover) {
       this.toggleStylesOn('Hover', node, set);
     } else {
-      set && this.nStyles.onHover(node);
+      this.nStyles.onHover(node, set);
     }
   },
 
@@ -253,18 +253,18 @@ var NodeStyles = new Class({
     if(this.nodeStylesOnClick) {
       this.toggleStylesOn('Click', node, set);
     } else {
-      set && this.nStyles.onClick(node);
+      this.nStyles.onClick(node, set);
     }
   },
   
   toggleStylesOn: function(type, node, set) {
     var viz = this.viz;
+    var nStyles = this.nStyles;
     if(set) {
       var that = this;
       if(!node.styles) {
         node.styles = $merge(node.data, {});
       }
-      var nStyles = this.nStyles;
       viz.fx.nodeFx({
         'elements': {
           'id': node.id,
@@ -274,7 +274,7 @@ var NodeStyles = new Class({
          duration:300,
          fps:30,
          onComplete: function() {
-           nStyles['on' + type](node);
+           nStyles['on' + type](node, set);
          }
       });
     } else {
@@ -286,7 +286,10 @@ var NodeStyles = new Class({
          },
          transition: Trans.Quart.easeOut,
          duration:300,
-         fps:30
+         fps:30,
+         onComplete: function() {
+           nStyles['on' + type](node, set);
+         }
       });
     }
   },
@@ -294,33 +297,32 @@ var NodeStyles = new Class({
   attachOnHover: function(node, elem) {
     var that = this, viz = this.viz;
     var nStyles = viz.config.NodeStyles.stylesHover;
-    if(nStyles) {
-      $addEvent(elem, 'mouseover', function() {
-        if(!node.selected) {
-          that.toggleStylesOnHover(node, true);
-        }
-      });
-      
-      $addEvent(elem, 'mouseout', function() {
-        !node.selected && that.toggleStylesOnHover(node, false);
-      });
-    }
+    $addEvent(elem, 'mouseover', function() {
+      if(!node.selected) {
+        that.toggleStylesOnHover(node, true);
+      }
+    });
+    
+    $addEvent(elem, 'mouseout', function() {
+      !node.selected && that.toggleStylesOnHover(node, false);
+    });
   },
 
   attachOnClick: function(node, elem) {
     var viz = this.viz, that = this;
     var nStyles = viz.config.NodeStyles.stylesClick;
-    if(nStyles) {
-      $addEvent(elem, 'click', function() {
-        that.onClick(node);
-      });
-    }
+    $addEvent(elem, 'click', function() {
+      that.onClick(node);
+    });
   },
   
   onClick: function(node, opt) {
     if(!node) return;
     var nStyles = this.nodeStylesOnClick;
-    if(!nStyles) return;
+    if(!nStyles) {
+      this.nStyles.onClick(node);
+      return;
+    }
     //if the node is selected then unselect it
     if(node.selected) {
       this.toggleStylesOnClick(node, false);
@@ -344,7 +346,10 @@ var NodeStyles = new Class({
   onMousemove: function(node, opt) {
     var GUtil = Graph.Util, that = this;
     var nStyles = this.nodeStylesOnHover;
-    if(!nStyles) return;
+    if(!nStyles) {
+      this.nStyles.onHover(node);
+      return;
+    }
     
     if(!node || node.selected) {
       GUtil.eachNode(this.viz.graph, function(n) {
@@ -380,7 +385,6 @@ var NodeStyles = new Class({
       }
     });
     //select hovered node
-    this.nStyles.onHover(node);
     this.toggleStylesOnHover(node, true);
     node.hovered = true;
   }

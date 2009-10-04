@@ -472,7 +472,110 @@ Graph.Op = {
             default: this.doError();
         }
     },
+
     
+  /*
+    Method: contract
+ 
+    Contracts the subtree to the given node. The given node will have a _collapsed=true_ property.
+    
+    Parameters:
+ 
+       node - A <Graph.Node>.
+       opt - An object containing options like
+       
+       _type_ - Whether to 'replot' or 'animate' the contraction.
+       
+       There are also a number of Animation options. For more information see <Options.Animation>.
+
+   Example:
+   (start code js)
+     var rg = new RGraph(canvas, config); //could be ST, Hypertree, Sunburst also.
+     rg.op.contract(node, {
+       type: 'animate',
+       duration: 1000,
+       hideLabels: true,
+       transition: Trans.Quart.easeOut
+     });
+   (end code)
+ 
+   */
+    contract: function(node, opt) {
+      var GUtil = Graph.Util;
+      if(node.collapsed || !GUtil.anySubnode(node, $lambda(true))) return;
+      opt = $merge(this.options, this.viz.config, opt || {}, {
+        'modes': ['node-property:alpha:span', 'linear']
+      });
+      node.collapsed = true;
+      (function subn(n) {
+        GUtil.eachSubnode(n, function(ch) {
+          ch.ignore = true;
+          ch.setData('alpha', 0, opt.type == 'animate'? 'end' : 'current');
+          subn(ch);
+        });
+      })(node);
+      if(opt.type == 'animate') {
+        this.viz.compute('end');
+        (function subn(n) {
+          GUtil.eachSubnode(n, function(ch) {
+            ch.setPos(node.getPos('end'), 'end');
+            subn(ch);
+          });
+        })(node);
+        this.viz.fx.animate(opt);
+      } else if(opt.type == 'replot'){
+        this.viz.refresh();
+      }
+    },
+    
+    /*
+    Method: expand
+ 
+    Expands the previously contracted subtree. The given node must have the _collapsed=true_ property.
+    
+    Parameters:
+ 
+       node - A <Graph.Node>.
+       opt - An object containing options like
+       
+       _type_ - Whether to 'replot' or 'animate'.
+       
+       There are also a number of Animation options. For more information see <Options.Animation>.
+
+   Example:
+   (start code js)
+     var rg = new RGraph(canvas, config); //could be ST, Hypertree, Sunburst also.
+     rg.op.expand(node, {
+       type: 'animate',
+       duration: 1000,
+       hideLabels: true,
+       transition: Trans.Quart.easeOut
+     });
+   (end code)
+ 
+   */
+    expand: function(node, opt) {
+      if(!('collapsed' in node)) return;
+      opt = $merge(this.options, this.viz.config, opt || {}, {
+        'modes': ['node-property:alpha:span', 'linear']
+      });
+      var GUtil = Graph.Util;
+      delete node.collapsed;
+      (function subn(n) {
+        GUtil.eachSubnode(n, function(ch) {
+          delete ch.ignore;
+          ch.setData('alpha', 1, opt.type == 'animate'? 'end' : 'current');
+          subn(ch);
+        });
+      })(node);
+      if(opt.type == 'animate') {
+        this.viz.compute('end');
+        this.viz.fx.animate(opt);
+      } else if(opt.type == 'replot'){
+        this.viz.refresh();
+      }
+    },
+
     preprocessSum: function(graph) {
         var viz = this.viz;
         var GUtil = Graph.Util;

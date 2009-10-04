@@ -355,7 +355,7 @@ function init(){
         },
         
         Tips: {
-          allow: true,
+          allow: false,
           attachToDOM: false,
           attachToCanvas: true,
           onShow: function(tip, node, elem) {
@@ -369,9 +369,9 @@ function init(){
           stylesHover: {
             'color': '#d33'
           },
-          stylesClick: {
-            'color': '#3dd'
-          },
+//          stylesClick: {
+//            'color': '#3dd'
+//          },
           onClick: function(node) {
             //Build the right column relations list.
             //This is done by collecting the information (stored in the data property) 
@@ -387,13 +387,28 @@ function init(){
             });
             html += "</ul>";
             document.getElementById('inner-details').innerHTML = html;
+            if(node.collapsed) {
+              sb.op.expand(node, {
+                'type': 'animate',
+                'duration': 1000,
+                'transition': Trans.Back.easeOut
+              });
+            } else {
+              sb.op.contract(node, {
+                'type': 'animate',
+                'duration': 1000,
+                'transition': Trans.Quart.easeInOut
+              });
+            }
+            
             //hide tip
-            sb.tips.tip.style.display = 'none';
+            //sb.tips.tip.style.display = 'none';
+            
             //rotate
-            sb.rotate(node, 'animate', {
-              'duration': 1500,
-              'transition': Trans.Quart.easeInOut
-            });
+//            sb.rotate(node, 'animate', {
+//              'duration': 1500,
+//              'transition': Trans.Quart.easeInOut
+//            });
           }
         },
         
@@ -457,5 +472,5 @@ function init(){
     //compute positions and plot.
     sb.refresh();
     //end
-    sb.config.NodeStyles.onClick(sb.graph.getNode(sb.root));
+   // sb.config.NodeStyles.onClick(sb.graph.getNode(sb.root));
 }

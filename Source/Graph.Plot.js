@@ -39,7 +39,8 @@ Graph.Plot = {
           'lineWidth': 'number',
           'dim': 'number',
           'alpha': 'number',
-          'aw':'number'
+          'aw':'number',
+          'span':'number'
         },
   
         //Number interpolator
@@ -565,7 +566,8 @@ Graph.Label.Native = new Class({
         ctx.fillText(node.name, coord.x, coord.y);
     },
 
-    hideLabel: $empty
+    hideLabel: $empty,
+    hideLabels: $empty
 });
 
 /*

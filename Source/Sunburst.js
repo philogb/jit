@@ -581,7 +581,7 @@ Sunburst.Plot.NodeTypes = new Class({
 
   'pie': {
     'plot': function(node, canvas) {
-      var span = node.span/2, theta = node.pos.theta;
+      var span = node.getData('span')/2, theta = node.pos.theta;
       var begin = theta - span, end = theta + span;
       var polarNode = node.pos.getp(true);
       var polar = new Polar(polarNode.rho, begin);
@@ -600,7 +600,7 @@ Sunburst.Plot.NodeTypes = new Class({
       ctx.fill();
     },
     'contains': function(node, pos) {
-      var span = node.span/2, theta = node.pos.theta;
+      var span = node.getData('span')/2, theta = node.pos.theta;
       var begin = theta - span, end = theta + span;
       if(begin < 0) begin += Math.PI * 2;
       var atan = Math.atan2(pos.y, pos.x);
@@ -615,7 +615,7 @@ Sunburst.Plot.NodeTypes = new Class({
   'multipie': {
      'plot': function(node, canvas) {
         var ldist = this.config.levelDistance;
-        var span = node.span/2, theta = node.pos.theta;
+        var span = node.getData('span')/2, theta = node.pos.theta;
         var begin = theta - span, end = theta + span;
         var polarNode = node.pos.getp(true);
         
@@ -642,9 +642,18 @@ Sunburst.Plot.NodeTypes = new Class({
         ctx.lineTo(p3coord.x, p3coord.y);
         ctx.moveTo(0, 0);
         ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
-        
         ctx.fill();
-      },
+
+        if(node.collapsed) {
+          ctx.save();
+          ctx.lineWidth = 2;
+          ctx.moveTo(0, 0);
+          ctx.beginPath();
+          ctx.arc(0, 0, polarNode.rho + ldist + 5, end - 0.01, begin + 0.01, true);
+          ctx.stroke();
+          ctx.restore();
+        }
+     },
       'contains': function(node, pos) {
         if(this.nodeTypes['pie'].contains.call(this, node, pos)) {
           var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
