@@ -136,7 +136,7 @@
 
 this.RGraph = new Class({
   
-  Implements: [Loader, Tips, Layouts.Radial],
+  Implements: [Loader, Extras, Layouts.Radial],
     
   initialize: function(canvas, controller) {
     
@@ -145,7 +145,8 @@ this.RGraph = new Class({
       interpolation: 'linear',
       levelDistance: 100,
       withLabels: true,
-      Tips: Options.Tips
+      Tips: Options.Tips,
+      NodeStyles: Options.NodeStyles
     };
     
     this.controller = this.config = $merge(Options.Graph, 
@@ -170,8 +171,8 @@ this.RGraph = new Class({
     this.root = null;
     this.busy = false;
     this.parent = false;
-    //add tips
-    this.initializeTips();
+    //initialize extras
+    this.initializeExtras();
   },
    
   /* 
@@ -538,63 +539,81 @@ RGraph.Label.HTML = new Class({
 
 */
 RGraph.Plot.NodeTypes = new Class({
-    'none': $empty,
+  'none': {
+    'plot': $empty,
+    'contains': $lambda(false)
+  },
     
-    'circle': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var nodeDim = node.getData('dim');
-        canvas.path('fill', function(context) {
-            context.arc(pos.x, pos.y, nodeDim, 0, Math.PI*2, true);            
-        });
+  'circle': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var nodeDim = node.getData('dim');
+      canvas.path('fill', function(context) {
+          context.arc(pos.x, pos.y, nodeDim, 0, Math.PI*2, true);            
+      });
     },
-    
-    'square': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var nodeDim = node.getData('dim');
-        var nodeDim2 = 2 * nodeDim;
-        canvas.getCtx().fillRect(pos.x - nodeDim, pos.y - nodeDim, nodeDim2, nodeDim2);
+    'contains': $lambda(false)
+  },
+  
+  'square': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var nodeDim = node.getData('dim');
+      var nodeDim2 = 2 * nodeDim;
+      canvas.getCtx().fillRect(pos.x - nodeDim, pos.y - nodeDim, nodeDim2, nodeDim2);
     },
-    
-    'rectangle': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var width = node.getData('width');
-        var height = node.getData('height');
-        canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);
+    'contains': $lambda(false)
+  },
+  
+  'rectangle': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var width = node.getData('width');
+      var height = node.getData('height');
+      canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2, width, height);
     },
-    
-    'triangle': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var nodeDim = node.getData('dim');
-        var c1x = pos.x, c1y = pos.y - nodeDim,
-        c2x = c1x - nodeDim, c2y = pos.y + nodeDim,
-        c3x = c1x + nodeDim, c3y = c2y;
-        canvas.path('fill', function(ctx) {
-            ctx.moveTo(c1x, c1y);
-            ctx.lineTo(c2x, c2y);
-            ctx.lineTo(c3x, c3y);
-        });
+    'contains': $lambda(false)
+  },
+  
+  'triangle': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var nodeDim = node.getData('dim');
+      var c1x = pos.x, c1y = pos.y - nodeDim,
+      c2x = c1x - nodeDim, c2y = pos.y + nodeDim,
+      c3x = c1x + nodeDim, c3y = c2y;
+      canvas.path('fill', function(ctx) {
+        ctx.moveTo(c1x, c1y);
+        ctx.lineTo(c2x, c2y);
+        ctx.lineTo(c3x, c3y);
+      });
     },
-    
-    'star': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var nodeDim = node.getData('dim');
-        var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
-        ctx.save();
-        ctx.translate(pos.x, pos.y);
-        ctx.beginPath();
-        ctx.moveTo(nodeDim, 0);
-        for (var i=0; i<9; i++){
-          ctx.rotate(pi5);
-          if(i % 2 == 0) {
-            ctx.lineTo((nodeDim / 0.525731) * 0.200811, 0);
-          } else {
-            ctx.lineTo(nodeDim, 0);
-          }
+    'contains': $lambda(false)
+  },
+  
+  'star': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var nodeDim = node.getData('dim');
+      var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
+      ctx.save();
+      ctx.translate(pos.x, pos.y);
+      ctx.beginPath();
+      ctx.moveTo(nodeDim, 0);
+      for (var i=0; i<9; i++){
+        ctx.rotate(pi5);
+        if(i % 2 == 0) {
+          ctx.lineTo((nodeDim / 0.525731) * 0.200811, 0);
+        } else {
+          ctx.lineTo(nodeDim, 0);
         }
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-    }
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    },
+    'contains': $lambda(false)
+  }
 });
 
 /*

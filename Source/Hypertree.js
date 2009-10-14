@@ -234,7 +234,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
  
 this.Hypertree = new Class({ 
    
-  Implements: [Loader, Tips, Layouts.Radial], 
+  Implements: [Loader, Extras, Layouts.Radial], 
    
   initialize: function(canvas, controller) { 
     var config = { 
@@ -246,7 +246,8 @@ this.Hypertree = new Class({
       withLabels: true,
       duration: 1500,
       fps: 35,
-      Tips: Options.Tips
+      Tips: Options.Tips,
+      NodeStyles: Options.NodeStyles
     }; 
     this.controller = this.config = $merge(Options.Graph, 
         Options.Animation, 
@@ -269,8 +270,8 @@ this.Hypertree = new Class({
     this.canvas = canvas; 
     this.root = null; 
     this.busy = false; 
-    //add tips
-    this.initializeTips();    
+    //initialize extras
+    this.initializeExtras();
   }, 
 
   /* 
@@ -784,91 +785,109 @@ Hypertree.Label.HTML = new Class({
 
 */
 Hypertree.Plot.NodeTypes = new Class({
-      'none' : $empty,
+  'none': {
+    'plot': $empty,
+    'contains': $lambda(false)
+  },
 
-      'circle' : function(node, canvas) {
-        var nconfig = this.node, data = node.data;
-        var nodeDim = node.getData('dim');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        if (prod >= nodeDim / 4) {
-          canvas.path('fill', function(context) {
-            context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);
-          });
-        }
-      },
-
-      'square' : function(node, canvas) {
-        var nconfig = this.node;
-        var nodeDim = node.getData('dim');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        var nodeDim2 = 2 * prod;
-        if (prod >= nodeDim / 4) {
-          canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2,
-              nodeDim2);
-        }
-      },
-
-      'rectangle' : function(node, canvas) {
-        var nconfig = this.node;
-        var width = node.getData('width');
-        var height = node.getData('height');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = 1 - p.squaredNorm();
-        width = nconfig.transform ? width * prod : width;
-        height = nconfig.transform ? height * prod : height;
-        if (prod >= 0.25) {
-          canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2,
-              width, height);
-        }
-      },
-
-      'triangle' : function(node, canvas) {
-        var nconfig = this.node;
-        var nodeDim = node.getData('dim');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        if (prod >= nodeDim / 4) {
-          var c1x = pos.x, c1y = pos.y - prod, c2x = c1x - prod, c2y = pos.y
-              + prod, c3x = c1x + prod, c3y = c2y;
-          canvas.path('fill', function(ctx) {
-            ctx.moveTo(c1x, c1y);
-            ctx.lineTo(c2x, c2y);
-            ctx.lineTo(c3x, c3y);
-          });
-        }
-      },
-
-      'star' : function(node, canvas) {
-        var nconfig = this.node;
-        var nodeDim = node.getData('dim');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        if (prod >= nodeDim / 4) {
-          var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
-          ctx.save();
-          ctx.translate(pos.x, pos.y);
-          ctx.beginPath();
-          ctx.moveTo(nodeDim, 0);
-          for ( var i = 0; i < 9; i++) {
-            ctx.rotate(pi5);
-            if (i % 2 == 0) {
-              ctx.lineTo((prod / 0.525731) * 0.200811, 0);
-            } else {
-              ctx.lineTo(prod, 0);
-            }
-          }
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
-        }
+  'circle' : {
+    'plot': function(node, canvas) {
+      var nconfig = this.node, data = node.data;
+      var nodeDim = node.getData('dim');
+      var p = node.pos.getc(), pos = p.scale(node.scale);
+      var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+          : nodeDim;
+      if (prod >= nodeDim / 4) {
+        canvas.path('fill', function(context) {
+          context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);
+        });
       }
-    }); 
+    },
+    'contains': $lambda(false)
+  },
+
+  'square' : {
+    'plot': function(node, canvas) {
+      var nconfig = this.node;
+      var nodeDim = node.getData('dim');
+      var p = node.pos.getc(), pos = p.scale(node.scale);
+      var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+          : nodeDim;
+      var nodeDim2 = 2 * prod;
+      if (prod >= nodeDim / 4) {
+        canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2,
+            nodeDim2);
+      }
+    },
+    'contains': $lambda(false)
+  },
+
+  'rectangle' : {
+    'plot': function(node, canvas) {
+      var nconfig = this.node;
+      var width = node.getData('width');
+      var height = node.getData('height');
+      var p = node.pos.getc(), pos = p.scale(node.scale);
+      var prod = 1 - p.squaredNorm();
+      width = nconfig.transform ? width * prod : width;
+      height = nconfig.transform ? height * prod : height;
+      if (prod >= 0.25) {
+        canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2,
+            width, height);
+      }
+    },
+    'contains': $lambda(false)
+  },
+
+  'triangle' : {
+    'plot': function(node, canvas) {
+      var nconfig = this.node;
+      var nodeDim = node.getData('dim');
+      var p = node.pos.getc(), pos = p.scale(node.scale);
+      var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+          : nodeDim;
+      if (prod >= nodeDim / 4) {
+        var c1x = pos.x, c1y = pos.y - prod, c2x = c1x - prod, c2y = pos.y
+            + prod, c3x = c1x + prod, c3y = c2y;
+        canvas.path('fill', function(ctx) {
+          ctx.moveTo(c1x, c1y);
+          ctx.lineTo(c2x, c2y);
+          ctx.lineTo(c3x, c3y);
+        });
+      }
+    },
+    'contains': $lambda(false)
+  },
+
+  'star' : {
+    'plot': function(node, canvas) {
+      var nconfig = this.node;
+      var nodeDim = node.getData('dim');
+      var p = node.pos.getc(), pos = p.scale(node.scale);
+      var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
+          : nodeDim;
+      if (prod >= nodeDim / 4) {
+        var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
+        ctx.save();
+        ctx.translate(pos.x, pos.y);
+        ctx.beginPath();
+        ctx.moveTo(nodeDim, 0);
+        for ( var i = 0; i < 9; i++) {
+          ctx.rotate(pi5);
+          if (i % 2 == 0) {
+            ctx.lineTo((prod / 0.525731) * 0.200811, 0);
+          } else {
+            ctx.lineTo(prod, 0);
+          }
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    },
+    'contains': $lambda(false)
+  }
+}); 
 
  /*
   Class: Hypertree.Plot.EdgeTypes

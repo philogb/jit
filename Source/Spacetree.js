@@ -199,7 +199,7 @@ this.ST= (function() {
     //Now define the actual class.    
     return new Class({
     
-        Implements: [Loader, Layouts.Tree, Tips],
+        Implements: [Loader, Extras, Layouts.Tree],
         
         initialize: function(canvas, controller) {            
             var config= {
@@ -213,7 +213,8 @@ this.ST= (function() {
                 },
                 duration: 700,
                 fps: 25,
-                Tips: Options.Tips
+                Tips: Options.Tips,
+                NodeStyles: Options.NodeStyles
             };
             
             this.controller = this.config = $merge(Options.Animation, 
@@ -232,8 +233,8 @@ this.ST= (function() {
             this.group = new ST.Group(this);
             this.geom = new ST.Geom(this);
             this.clickedNode=  null;
-            //add tips
-            this.initializeTips();    
+            //initialize extras
+            this.initializeExtras();
         },
     
         /*
@@ -1528,45 +1529,60 @@ ST.Label.HTML = new Class({
 
 */
 ST.Plot.NodeTypes = new Class({
-    'none': function() {},
+  'none': {
+    'plot': $empty,
+    'contains': $lambda(false)
+  },
     
-    'circle': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var dim  = node.getData('dim');
-        var algnPos = this.getAlignedPos(pos, dim * 2, dim * 2);
-        canvas.path('fill', function(context) {
-            context.arc(algnPos.x + dim, algnPos.y + dim, dim, 0, Math.PI * 2, true);            
-        });
+  'circle': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var dim  = node.getData('dim');
+      var algnPos = this.getAlignedPos(pos, dim * 2, dim * 2);
+      canvas.path('fill', function(context) {
+          context.arc(algnPos.x + dim, algnPos.y + dim, dim, 0, Math.PI * 2, true);            
+      });
     },
+    'contains': $lambda(false)
+  },
 
-    'square': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var dim  = node.getData('dim');
-        var algnPos = this.getAlignedPos(pos, dim, dim);
-        canvas.getCtx().fillRect(algnPos.x, algnPos.y, dim, dim);
+  'square': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var dim  = node.getData('dim');
+      var algnPos = this.getAlignedPos(pos, dim, dim);
+      canvas.getCtx().fillRect(algnPos.x, algnPos.y, dim, dim);
     },
+    'contains': $lambda(false)
+  },
 
-    'ellipse': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var width  = node.getData('width') / 2;
-        var height = node.getData('height') / 2;
-        var algnPos = this.getAlignedPos(pos, width * 2, height * 2);
-        var ctx = canvas.getCtx();
-        ctx.save();
-        ctx.scale(width / height, height / width);
-        canvas.path('fill', function(context) {
-            context.arc((algnPos.x + width) * (height / width), (algnPos.y + height) * (width / height), height, 0, Math.PI * 2, true);            
-        });
-        ctx.restore();
+  'ellipse': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var width  = node.getData('width') / 2;
+      var height = node.getData('height') / 2;
+      var algnPos = this.getAlignedPos(pos, width * 2, height * 2);
+      var ctx = canvas.getCtx();
+      ctx.save();
+      ctx.scale(width / height, height / width);
+      canvas.path('fill', function(context) {
+          context.arc((algnPos.x + width) * (height / width), 
+              (algnPos.y + height) * (width / height), height, 0, Math.PI * 2, true);            
+      });
+      ctx.restore();
     },
-
-    'rectangle': function(node, canvas) {
-        var pos = node.pos.getc(true);
-        var width  = node.getData('width');
-        var height = node.getData('height');
-        var algnPos = this.getAlignedPos(pos, width, height);
-        canvas.getCtx().fillRect(algnPos.x, algnPos.y, width, height);
-    }
+    'contains': $lambda(false)
+  },
+  'rectangle': {
+    'plot': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var width  = node.getData('width');
+      var height = node.getData('height');
+      var algnPos = this.getAlignedPos(pos, width, height);
+      canvas.getCtx().fillRect(algnPos.x, algnPos.y, width, height);
+    },
+    'contains': $lambda(false)
+  }
 });
 
 /*
