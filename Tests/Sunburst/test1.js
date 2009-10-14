@@ -339,7 +339,7 @@ function init(){
     var style = document.getElementById('mycanvas').style;
     style.marginLeft = style.marginTop = "25px";
     //init Sunburst
-    sb = new Sunburst(canvas, {
+    var sb = new Sunburst(canvas, {
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -355,7 +355,7 @@ function init(){
         },
         
         Tips: {
-          allow: false,
+          allow: true,
           attachToDOM: false,
           attachToCanvas: true,
           onShow: function(tip, node, elem) {
@@ -369,9 +369,9 @@ function init(){
           stylesHover: {
             'color': '#d33'
           },
-//          stylesClick: {
-//            'color': '#3dd'
-//          },
+          stylesClick: {
+            'color': '#3dd'
+          },
           onClick: function(node) {
             //Build the right column relations list.
             //This is done by collecting the information (stored in the data property) 
@@ -387,28 +387,29 @@ function init(){
             });
             html += "</ul>";
             document.getElementById('inner-details').innerHTML = html;
+            //hide tip
+            sb.tips.tip.style.display = 'none';
+            
+            //rotate
+            sb.rotate(node, 'animate', {
+              'duration': 1500,
+              'transition': Trans.Quart.easeInOut
+            });
+          },
+          onRightClick: function(node) {
             if(node.collapsed) {
               sb.op.expand(node, {
                 'type': 'animate',
-                'duration': 1000,
+                'duration': 700,
                 'transition': Trans.Back.easeOut
               });
             } else {
               sb.op.contract(node, {
                 'type': 'animate',
-                'duration': 1000,
+                'duration': 4000,
                 'transition': Trans.Quart.easeInOut
               });
             }
-            
-            //hide tip
-            //sb.tips.tip.style.display = 'none';
-            
-            //rotate
-//            sb.rotate(node, 'animate', {
-//              'duration': 1500,
-//              'transition': Trans.Quart.easeInOut
-//            });
           }
         },
         

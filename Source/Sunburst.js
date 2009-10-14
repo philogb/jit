@@ -175,6 +175,7 @@ this.Sunburst = new Class({
     this.json = null;
     this.canvas = canvas;
     this.root = null;
+    this.rotated = null;
     this.busy = false;
     //initialize extras
     this.initializeExtras();
@@ -242,7 +243,8 @@ this.Sunburst = new Class({
     
    */
    rotate: function(node, method, opt) {
-      var theta = node.getPos().getp(true).theta;
+      var theta = node.getPos(opt.property || 'current').getp(true).theta;
+      this.rotated = node;
       this.rotateAngle(-theta, method, opt);
    },
 
@@ -266,7 +268,7 @@ this.Sunburst = new Class({
       opt = $merge(this.config, opt || {}, {
         modes: ['polar']
       });      
-      var prop = method === "animate"? 'end' : 'current';
+      var prop = opt.property || (method === "animate"? 'end' : 'current');
       Graph.Util.eachNode(this.graph, function(n) {
         var p = n.getPos(prop);
         p.theta += theta;
@@ -276,7 +278,7 @@ this.Sunburst = new Class({
       });
       if(method === "animate") {
         this.fx.animate(opt);
-      } else {
+      } else if (method === "replot"){
         this.fx.plot();
       }
   },

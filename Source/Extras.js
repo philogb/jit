@@ -49,19 +49,36 @@ var MouseEventsManager = new Class({
       time: $time()
     };
     
+    this.rightClick = {
+        node: null,
+        time: $time()
+    };
+
     this.mousemove = {
       node: null,
       time: $time()
     };
     
-    this.mintime = 5;    
+    this.mintime = 10;    
     this.attachEvents();
   },
   
   attachEvents: function() {
     var htmlCanvas = this.canvas.getElement(), that = this;
-    $addEvent(htmlCanvas, 'click', function(e, win) {
-      that.handleEvent(that.click, 'onClick', e, win);
+    htmlCanvas.oncontextmenu = $lambda(false);
+    $addEvent(htmlCanvas, 'mouseup', function(e, win) {
+      var rightClick = (e.which == 3 || e.button == 2);
+      if (rightClick) {
+        that.handleEvent(that.rightClick, 'onRightClick', e, win);
+      } else {
+        that.handleEvent(that.click, 'onClick', e, win);
+      } 
+          
+      //prevent default 
+      if (e.preventDefault) 
+          e.preventDefault();
+      else 
+          e.returnValue = false;
     });
     $addEvent(htmlCanvas, 'mousemove', function(e, win) {
       that.handleEvent(that.mousemove, 'onMousemove', e, win);
@@ -167,6 +184,7 @@ var Tips = new Class({
   },
 
   onClick: $empty,
+  onRightClick: $empty,
   
   onMousemove: function(node, opt) {
     if(!node) {
@@ -222,19 +240,12 @@ var NodeStyles = new Class({
     this.fx = viz.fx;
     this.nStyles = viz.config.NodeStyles;
     this.nodeStylesOnHover = this.nStyles.stylesHover;
-    this.nodeStylesOnClick = this.nStyles.stylesClick;    
+    this.nodeStylesOnClick = this.nStyles.stylesClick;
+    this.nodeStylesOnRightClick = this.nStyles.stylesRightClick;
   },
   
-  getRestoredStylesOnHover: function(node) {
-    var restoredStyles = {}, nStyles = this.nodeStylesOnHover;
-    for(var prop in nStyles) {
-      restoredStyles[prop] = node.styles['$' + prop];
-    }
-    return restoredStyles;
-  },
-  
-  getRestoredStylesOnClick: function(node) {
-    var restoredStyles = {}, nStyles = this.nodeStylesOnClick;
+  getRestoredStyles: function(node, type) {
+    var restoredStyles = {}, nStyles = this['nodeStylesOn' + type];
     for(var prop in nStyles) {
       restoredStyles[prop] = node.styles['$' + prop];
     }
@@ -257,6 +268,14 @@ var NodeStyles = new Class({
     }
   },
   
+  toggleStylesOnRightClick: function(node, set) {
+    if(this.nodeStylesOnRightClick) {
+      this.toggleStylesOn('RightClick', node, set);
+    } else {
+      this.nStyles.onRightClick(node, set);
+    }
+  },
+
   toggleStylesOn: function(type, node, set) {
     var viz = this.viz;
     var nStyles = this.nStyles;
@@ -278,7 +297,7 @@ var NodeStyles = new Class({
          }
       });
     } else {
-      var restoredStyles = this['getRestoredStylesOn' + type](node);
+      var restoredStyles = this.getRestoredStyles(node, type);
       viz.fx.nodeFx({
         'elements': {
           'id': node.id,
@@ -343,11 +362,38 @@ var NodeStyles = new Class({
     }
   },
   
+  onRightClick: function(node, opt) {
+    if(!node) return;
+    var nStyles = this.nodeStylesOnRightClick;
+    if(!nStyles) {
+      this.nStyles.onRightClick(node);
+      return;
+    }
+    //if the node is selected then unselect it
+    if(node.rightClickSelected) {
+      this.toggleStylesOnRightClick(node, false);
+      delete node.rightClickSelected;
+    } else {
+      //unselect all selected nodes...
+      Graph.Util.eachNode(this.viz.graph, function(n) {
+        if(n.rightClickSelected) {
+          for(var s in nStyles) {
+            n.setData(s, n.styles['$' + s], 'end');
+          }
+          delete n.rightClickSelected;
+        }
+      });
+      //select clicked node
+      this.toggleStylesOnRightClick(node, true);
+      node.rightClickSelected = true;
+    }
+  },
+  
   onMousemove: function(node, opt) {
     var GUtil = Graph.Util, that = this;
     var nStyles = this.nodeStylesOnHover;
     if(!nStyles) {
-      this.nStyles.onHover(node);
+//      this.nStyles.onHover(node);
       return;
     }
     

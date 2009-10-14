@@ -294,6 +294,8 @@ Options.NodeStyles = {
   attachToCanvas: false,
   stylesHover: false,
   stylesClick: false,
+  stylesRightClick:false,
   onHover: $empty,
-  onClick: $empty
+  onClick: $empty,
+  onRightClick: $empty
 };

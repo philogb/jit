@@ -502,8 +502,9 @@ Graph.Op = {
    */
     contract: function(node, opt) {
       var GUtil = Graph.Util;
+      var viz = this.viz;
       if(node.collapsed || !GUtil.anySubnode(node, $lambda(true))) return;
-      opt = $merge(this.options, this.viz.config, opt || {}, {
+      opt = $merge(this.options, viz.config, opt || {}, {
         'modes': ['node-property:alpha:span', 'linear']
       });
       node.collapsed = true;
@@ -515,16 +516,21 @@ Graph.Op = {
         });
       })(node);
       if(opt.type == 'animate') {
-        this.viz.compute('end');
+        viz.compute('end');
+        if(viz.rotated) {
+          viz.rotate(viz.rotated, 'none', {
+            'property':'end'
+          });
+        }
         (function subn(n) {
           GUtil.eachSubnode(n, function(ch) {
             ch.setPos(node.getPos('end'), 'end');
             subn(ch);
           });
         })(node);
-        this.viz.fx.animate(opt);
+        viz.fx.animate(opt);
       } else if(opt.type == 'replot'){
-        this.viz.refresh();
+        viz.refresh();
       }
     },
     
@@ -556,10 +562,11 @@ Graph.Op = {
    */
     expand: function(node, opt) {
       if(!('collapsed' in node)) return;
-      opt = $merge(this.options, this.viz.config, opt || {}, {
+      var GUtil = Graph.Util;
+      var viz = this.viz;
+      opt = $merge(this.options, viz.config, opt || {}, {
         'modes': ['node-property:alpha:span', 'linear']
       });
-      var GUtil = Graph.Util;
       delete node.collapsed;
       (function subn(n) {
         GUtil.eachSubnode(n, function(ch) {
@@ -569,10 +576,15 @@ Graph.Op = {
         });
       })(node);
       if(opt.type == 'animate') {
-        this.viz.compute('end');
-        this.viz.fx.animate(opt);
+        viz.compute('end');
+        if(viz.rotated) {
+          viz.rotate(viz.rotated, 'none', {
+            'property':'end'
+          });
+        }
+        viz.fx.animate(opt);
       } else if(opt.type == 'replot'){
-        this.viz.refresh();
+        viz.refresh();
       }
     },
 
