@@ -16,14 +16,23 @@
  */
 var Extras = {
   initializeExtras: function() {
-    this.tips = new Tips(this);
-    this.nodeStyles = new NodeStyles(this);
-    
-    var tips = this.config.Tips, ns = this.config.NodeStyles;
-    if(tips.allow && tips.attachToCanvas || ns.attachToCanvas) {
+    var tips = this.config.Tips;
+    var ns = this.config.NodeStyles;
+    if(tips && tips.allow && tips.attachToCanvas 
+        || ns && ns.attachToCanvas) {
       this.mouseEventsManager = new MouseEventsManager(this);
-      tips.allow && tips.attachToCanvas && this.mouseEventsManager.register(this.tips);
-      ns.attachToCanvas && this.mouseEventsManager.register(this.nodeStyles);
+    }
+    if(tips) {
+      this.tips = new Tips(this);
+      if(tips.allow && tips.attachToCanvas) {
+        this.mouseEventsManager.register(this.tips);
+      }
+    }
+    if(ns) {
+      this.nodeStyles = new NodeStyles(this);
+      if(ns.attachToCanvas) {
+        this.mouseEventsManager.register(this.nodeStyles);
+      }
     }
   }   
 };

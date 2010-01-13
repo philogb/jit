@@ -131,8 +131,8 @@
 
 
 */
-this.TM = new Class({
-  Implements:Tips,
+this.TM = $extend({
+  Implements: Extras,
   
 
   layout: {
@@ -148,26 +148,26 @@ this.TM = new Class({
     }
   },
   
-    config: {
-      orientation: "h",
-      titleHeight: 13,
-      rootId: 'infovis',
-      offset:4,
-      levelsToShow: 3,
-      addLeftClickHandler: false,
-      addRightClickHandler: false,
-      selectPathOnHover: false,
-      
-      Tips: Options.Tips,
-      
-      Color: {
-        allow: false,
-        minValue: -100,
-        maxValue: 100,
-        minColorValue: [255, 0, 50],
-        maxColorValue: [0, 255, 50]
-      }     
-    },
+  config: {
+    orientation: "h",
+    titleHeight: 13,
+    rootId: 'infovis',
+    offset:4,
+    levelsToShow: 3,
+    addLeftClickHandler: false,
+    addRightClickHandler: false,
+    selectPathOnHover: false,
+    
+    Tips: Options.Tips,
+    
+    Color: {
+      allow: false,
+      minValue: -100,
+      maxValue: 100,
+      minColorValue: [255, 0, 50],
+      maxColorValue: [0, 255, 50]
+    }     
+  },
   
 
   initialize: function(controller) {
@@ -179,7 +179,7 @@ this.TM = new Class({
     this.rootId = this.config.rootId;
     this.layout.orientation = this.config.orientation;
     //add tips
-    this.initializeTips();
+    this.initializeExtras();
     //purge
     var that = this;
     var fn = function() {
@@ -750,7 +750,7 @@ this.TM = new Class({
           }
           
           //attach tips
-          that.attachTip(tree, elem1);
+         that.tips.attach(tree, elem1);
       });
     },
 
@@ -795,7 +795,7 @@ this.TM = new Class({
     this.loadJSON(TreeUtil.getSubtree(this.tree, id));
   }
   
-});
+}, Extras);
 
 /*
    Class: TM.SliceAndDice
@@ -968,7 +968,7 @@ TM.SliceAndDice = new Class({
 
     <TM.Squarified>, <TM.Strip>
 */
-TM.Area = new Class({
+TM.Area = {
 
   /*
      Method: loadJSON
@@ -1125,7 +1125,7 @@ TM.Area = new Class({
     ch[0].coord = coord;
   }
   
-});
+};
 
 
 
