@@ -34,23 +34,28 @@ function init(){
     //Implement a node rendering function called 'nodeline' that plots a straight line
     //when contracting or expanding a subtree.
     ST.Plot.NodeTypes.implement({
-        'nodeline': function(node, canvas, animating) {
-            if(animating === 'expand' || animating === 'contract') {
-                var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
-                var width  = nconfig.width, height = nconfig.height;
-                var algnPos = this.getAlignedPos(pos, width, height);
-                var ctx = canvas.getCtx(), ort = this.config.orientation;
-                ctx.beginPath();
-                if(ort == 'left' || ort == 'right') {
-                    ctx.moveTo(algnPos.x, algnPos.y + height / 2);
-                    ctx.lineTo(algnPos.x + width, algnPos.y + height / 2);
-                } else {
-                    ctx.moveTo(algnPos.x + width / 2, algnPos.y);
-                    ctx.lineTo(algnPos.x + width / 2, algnPos.y + height);
-                }
-                ctx.stroke();
-            } 
+        'nodeline': {
+          'plot': function(node, canvas, animating) {
+                if(animating === 'expand' || animating === 'contract') {
+                  var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
+                  var width  = nconfig.width, height = nconfig.height;
+                  var algnPos = this.getAlignedPos(pos, width, height);
+                  var ctx = canvas.getCtx(), ort = this.config.orientation;
+                  ctx.beginPath();
+                  if(ort == 'left' || ort == 'right') {
+                      ctx.moveTo(algnPos.x, algnPos.y + height / 2);
+                      ctx.lineTo(algnPos.x + width, algnPos.y + height / 2);
+                  } else {
+                      ctx.moveTo(algnPos.x + width / 2, algnPos.y);
+                      ctx.lineTo(algnPos.x + width / 2, algnPos.y + height);
+                  }
+                  ctx.stroke();
+              } 
+          },
+          
+          'contains': function() { return false; }
         }
+          
     });
 
     //init st
