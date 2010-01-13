@@ -1,0 +1,8 @@
+* implement the "contains" NodeTypes method in all vizs.
+* Fix the Treemap in order to work with the new Tips
+* test and fix the onClick, onRightClick onMousemove methods in Extras for all visualizations.
+* add width:'auto' and height:'auto' in SpaceTree.
+
+* Implement the Icicle visualization
+* Change the Treemap layout methods to render in Canvas instead of HTML.
+* Implement mouse transformations.
