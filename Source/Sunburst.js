@@ -578,7 +578,19 @@ Sunburst.Label.HTML = new Class({
 Sunburst.Plot.NodeTypes = new Class({
   'none': {
     'render': $empty,
-    'contains': $lambda(false)
+    'contains': $lambda(false),
+    'anglecontains': function(node, pos) {
+      var span = node.getData('span')/2, theta = node.pos.theta;
+      var begin = theta - span, end = theta + span;
+      if(begin < 0) begin += Math.PI * 2;
+      var atan = Math.atan2(pos.y, pos.x);
+      if(atan < 0) atan += Math.PI * 2;
+      if(begin > end) {
+        return (atan > begin && atan <= Math.PI * 2) || atan < end;
+      } else {
+        return atan > begin && atan < end;
+      }
+    }
   },
 
   'pie': {
@@ -602,18 +614,14 @@ Sunburst.Plot.NodeTypes = new Class({
       ctx.fill();
     },
     'contains': function(node, pos) {
-      var span = node.getData('span')/2, theta = node.pos.theta;
-      var begin = theta - span, end = theta + span;
-      if(begin < 0) begin += Math.PI * 2;
-      var atan = Math.atan2(pos.y, pos.x);
-      if(atan < 0) atan += Math.PI * 2;
-      if(begin > end) {
-        return (atan > begin && atan <= Math.PI * 2) || atan < end;
-      } else {
-        return atan > begin && atan < end;
+      if(this.nodeTypes['none'].anglecontains.call(this, node, pos)) {
+        var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
+        var ld = this.config.levelDistance, d = node._depth;
+        return (rho <= ld * d);
       }
+      return false;
     }
-   },
+  },
   'multipie': {
      'render': function(node, canvas) {
         var ldist = this.config.levelDistance;
@@ -657,7 +665,7 @@ Sunburst.Plot.NodeTypes = new Class({
         }
      },
       'contains': function(node, pos) {
-        if(this.nodeTypes['pie'].contains.call(this, node, pos)) {
+        if(this.nodeTypes['none'].anglecontains.call(this, node, pos)) {
           var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
           var ld = this.config.levelDistance, d = node._depth;
           return (rho >= ld * d) && (rho <= ld * (d + 1));
@@ -682,6 +690,25 @@ Sunburst.Plot.NodeTypes = new Class({
      },
      'contains': function(node, pos) {
        return this.nodeTypes['multipie'].contains.call(this, node, pos);
+     }
+   },
+     
+   'gradient-pie': {
+     'render': function(node, canvas) {
+       var ctx = canvas.getCtx();
+       var radialGradient = ctx.createRadialGradient(0, 0, 0, 
+           0, 0, node.getPos().rho);
+       
+       var colorArray = $hexToRgb(node.getData('color')), ans = [];
+       $each(colorArray, function(i) { ans.push(parseInt(i * 0.5, 10)); });
+       var endColor = $rgbToHex(ans);
+       radialGradient.addColorStop(1, endColor);
+       radialGradient.addColorStop(0, node.getData('color'));
+       ctx.fillStyle = radialGradient;
+       this.nodeTypes['pie'].render.call(this, node, canvas);
+     },
+     'contains': function(node, pos) {
+       return this.nodeTypes['pie'].contains.call(this, node, pos);
      }
    }
 });

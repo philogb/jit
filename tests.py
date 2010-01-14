@@ -489,7 +489,18 @@ tests_model = {
             'Description': 
             """
             A static JSON Tree structure is used as input for this animation.<br /><br />
-            The centered node's children are displayed in a relations list in the right column.
+            The centered node's children are displayed in a relations list in the right column.<br /><br />
+            Left clicking will rotate the sunburst leaving the clicked node horizontal. The node will also change its color.<br /><br />.
+            Right clicking will collapse/expand nodes.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        },
+        {
+            'Title': 'Tree Animation',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this animation that represents a pie chart.<br />
             """,
             'Extras': ['excanvas.js'],
             'Example':True

@@ -159,7 +159,8 @@ Options.Graph.Node = {
   transform: true,
   align: "center",
   alpha: 1,
-  aw:1
+  aw:1,
+  span:1
 };
 
 /*
