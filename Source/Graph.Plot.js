@@ -39,7 +39,7 @@ Graph.Plot = {
           'lineWidth': 'number',
           'dim': 'number',
           'alpha': 'number',
-          'aw':'number',
+          'angularWidth':'number',
           'span':'number'
         },
   

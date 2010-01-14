@@ -11,7 +11,7 @@ function init() {
             'id':'pie1',
             'name': 'pie1',
             'data': {
-                '$aw': 20,
+                '$angularWidth': 20,
                 '$color': '#f55'
             },
             'children': []
@@ -20,7 +20,7 @@ function init() {
             'id':'pie2',
             'name': 'pie2',
             'data': {
-                '$aw': 40,
+                '$angularWidth': 40,
                 '$color': '#f77'
             },
             'children': []
@@ -29,7 +29,7 @@ function init() {
             'id':'pie3',
             'name': 'pie3',
             'data': {
-                '$aw': 10,
+                '$angularWidth': 10,
                 '$color': '#f99'
             },
             'children': []
@@ -38,7 +38,7 @@ function init() {
             'id':'pie4',
             'name': 'pie4',
             'data': {
-                '$aw': 30,
+                '$angularWidth': 30,
                 '$color': '#fbb'
             },
             'children': []
@@ -57,7 +57,7 @@ function init() {
             'id':'pie10',
             'name': 'pie1',
             'data': {
-                '$aw': 20,
+                '$angularWidth': 20,
                 '$color': '#f55'
             },
             'children': [
@@ -65,7 +65,7 @@ function init() {
                     'id':'pie100',
                     'name': 'pc1',
                     'data': {
-                        '$aw': 20,
+                        '$angularWidth': 20,
                         '$color': '#55f'
                     },
                     'children': []
@@ -75,7 +75,7 @@ function init() {
                     'id':'pie101',
                     'name': 'pc2',
                     'data': {
-                        '$aw': 70,
+                        '$angularWidth': 70,
                         '$color': '#66f'
                     },
                     'children': []
@@ -85,7 +85,7 @@ function init() {
                     'id':'pie102',
                     'name': 'pc3',
                     'data': {
-                        '$aw': 10,
+                        '$angularWidth': 10,
                         '$color': '#77f'
                     },
                     'children': []
@@ -97,7 +97,7 @@ function init() {
             'id':'pie20',
             'name': 'pie2',
             'data': {
-                '$aw': 40,
+                '$angularWidth': 40,
                 '$color': '#f77'
             },
             'children': [
@@ -105,7 +105,7 @@ function init() {
                     'id':'pie200',
                     'name': 'pc1',
                     'data': {
-                        '$aw': 40,
+                        '$angularWidth': 40,
                         '$color': '#88f'
                     },
                     'children': []
@@ -115,7 +115,7 @@ function init() {
                     'id':'pie201',
                     'name': 'pc2',
                     'data': {
-                        '$aw': 60,
+                        '$angularWidth': 60,
                         '$color': '#99f'
                     },
                     'children': []
@@ -127,7 +127,7 @@ function init() {
             'id':'pie30',
             'name': 'pie3',
             'data': {
-                '$aw': 10,
+                '$angularWidth': 10,
                 '$color': '#f99'
             },
             'children': [
@@ -135,7 +135,7 @@ function init() {
                     'id':'pie300',
                     'name': 'pc1',
                     'data': {
-                        '$aw': 100,
+                        '$angularWidth': 100,
                         '$color': '#aaf'
                     },
                     'children': []
@@ -432,8 +432,8 @@ function init() {
         //Add styles to node labels on label creation
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
-            if(node.data.$aw) 
-                domElement.innerHTML += " " + node.data.$aw + "%";
+            if(node.data.$angularWidth) 
+                domElement.innerHTML += " " + node.data.$angularWidth + "%";
             var style = domElement.style;
             style.fontSize = "0.8em";
             style.color = "#fff";
@@ -471,8 +471,8 @@ function init() {
         onCreateLabel: function(domElement, node){
             if(node.id == rgraph2.root) return;
             domElement.innerHTML = node.name;
-            if(node.data.$aw) {
-                domElement.innerHTML += " " + node.data.$aw + "%";
+            if(node.data.$angularWidth) {
+                domElement.innerHTML += " " + node.data.$angularWidth + "%";
             }
             var style = domElement.style;
             style.fontSize = "0.8em";

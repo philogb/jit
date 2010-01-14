@@ -145,7 +145,7 @@ Options.Graph = {};
      - _dim_ An extra parameter used by other complex shapes such as square and circle to determine the shape's diameter. Default's 3.
      - _transform_ *<Hypertree> only*. Whether to apply the moebius transformation to the nodes or not. Default's true.
      - _align_ *<ST> only*. Defines a node's alignment. Possible values are "center", "left", "right". Default's "center".
-     - _aw_ Used for calculating node and subtrees angular widths. It's used only in <Layouts.Radial>.
+     - _angularWidth_ Used for calculating node and subtrees angular widths. It's used only in <Layouts.Radial>.
 
 */
 Options.Graph.Node = {
@@ -159,7 +159,7 @@ Options.Graph.Node = {
   transform: true,
   align: "center",
   alpha: 1,
-  aw:1,
+  angularWidth:1,
   span:1
 };
 

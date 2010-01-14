@@ -117,7 +117,7 @@ Layouts.Radial = new Class({
    */
   setAngularWidthForNodes : function(prop) {
     Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
-      var diamValue = elem.getData('aw', prop[0]);
+      var diamValue = elem.getData('angularWidth', prop[0]);
       elem._angularWidth = diamValue / i;
     }, "ignore");
   },
