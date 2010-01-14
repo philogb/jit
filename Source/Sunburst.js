@@ -577,12 +577,12 @@ Sunburst.Label.HTML = new Class({
 */
 Sunburst.Plot.NodeTypes = new Class({
   'none': {
-    'plot': $empty,
+    'render': $empty,
     'contains': $lambda(false)
   },
 
   'pie': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var span = node.getData('span')/2, theta = node.pos.theta;
       var begin = theta - span, end = theta + span;
       var polarNode = node.pos.getp(true);
@@ -615,7 +615,7 @@ Sunburst.Plot.NodeTypes = new Class({
     }
    },
   'multipie': {
-     'plot': function(node, canvas) {
+     'render': function(node, canvas) {
         var ldist = this.config.levelDistance;
         var span = node.getData('span')/2, theta = node.pos.theta;
         var begin = theta - span, end = theta + span;
@@ -667,7 +667,7 @@ Sunburst.Plot.NodeTypes = new Class({
    },
   
   'gradient-multipie': {
-     'plot': function(node, canvas) {
+     'render': function(node, canvas) {
        var ctx = canvas.getCtx();
        var radialGradient = ctx.createRadialGradient(0, 0, node.getPos().rho, 
            0, 0, node.getPos().rho + this.config.levelDistance);
@@ -678,7 +678,7 @@ Sunburst.Plot.NodeTypes = new Class({
        radialGradient.addColorStop(0, endColor);
        radialGradient.addColorStop(1, node.getData('color'));
        ctx.fillStyle = radialGradient;
-       this.nodeTypes['multipie'].plot.call(this, node, canvas);
+       this.nodeTypes['multipie'].render.call(this, node, canvas);
      },
      'contains': function(node, pos) {
        return this.nodeTypes['multipie'].contains.call(this, node, pos);

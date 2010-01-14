@@ -540,12 +540,12 @@ RGraph.Label.HTML = new Class({
 */
 RGraph.Plot.NodeTypes = new Class({
   'none': {
-    'plot': $empty,
+    'render': $empty,
     'contains': $lambda(false)
   },
     
   'circle': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var nodeDim = node.getData('dim');
       canvas.path('fill', function(context) {
@@ -556,7 +556,7 @@ RGraph.Plot.NodeTypes = new Class({
   },
   
   'square': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var nodeDim = node.getData('dim');
       var nodeDim2 = 2 * nodeDim;
@@ -566,7 +566,7 @@ RGraph.Plot.NodeTypes = new Class({
   },
   
   'rectangle': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var width = node.getData('width');
       var height = node.getData('height');
@@ -576,7 +576,7 @@ RGraph.Plot.NodeTypes = new Class({
   },
   
   'triangle': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var nodeDim = node.getData('dim');
       var c1x = pos.x, c1y = pos.y - nodeDim,
@@ -592,7 +592,7 @@ RGraph.Plot.NodeTypes = new Class({
   },
   
   'star': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var nodeDim = node.getData('dim');
       var ctx = canvas.getCtx(), pi5 = Math.PI / 5;

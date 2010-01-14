@@ -35,7 +35,7 @@ function init(){
     //when contracting or expanding a subtree.
     ST.Plot.NodeTypes.implement({
         'nodeline': {
-          'plot': function(node, canvas, animating) {
+          'render': function(node, canvas, animating) {
                 if(animating === 'expand' || animating === 'contract') {
                   var pos = node.pos.getc(true), nconfig = this.node, data = node.data;
                   var width  = nconfig.width, height = nconfig.height;
@@ -51,9 +51,7 @@ function init(){
                   }
                   ctx.stroke();
               } 
-          },
-          
-          'contains': function() { return false; }
+          }
         }
           
     });

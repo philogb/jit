@@ -117,8 +117,8 @@ var MouseEventsManager = new Class({
 
     if(obj.node) {
       var n = g.getNode(obj.node);
-      if(n && positions[n.getData('type')]
-                        .contains.call(fx, n, newpos)) {
+      var elem = n && positions[n.getData('type')];
+      if(elem && elem.contains && elem.contains.call(fx, n, newpos)) {
         for(var i=0, l=this.registeredObjects.length; i<l; i++) {
           this.registeredObjects[i][method](n, opt);
         }
@@ -127,8 +127,8 @@ var MouseEventsManager = new Class({
     }
     for(var id in g.nodes) {
       var n = g.nodes[id];
-      if(positions[n.getData('type')]
-                   .contains.call(fx, n, newpos)) {
+      var elem = n && positions[n.getData('type')];
+      if(elem && elem.contains && elem.contains.call(fx, n, newpos)) {
         obj.node = id;
         for(var i=0, l=this.registeredObjects.length; i<l; i++) {
           this.registeredObjects[i][method](n, opt);

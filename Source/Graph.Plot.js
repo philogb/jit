@@ -476,7 +476,7 @@ Graph.Plot = {
         ctx.globalAlpha = alpha;
 
         var f = node.getData('type');
-        this.nodeTypes[f].plot.call(this, node, canvas, animating);
+        this.nodeTypes[f].render.call(this, node, canvas, animating);
     },
     
     /*

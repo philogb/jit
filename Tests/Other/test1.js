@@ -355,7 +355,7 @@ function init() {
     RGraph.Plot.NodeTypes.implement({
         //This node type is used for plotting the upper-left pie chart
         'nodepie': {
-          'plot': function(node, canvas) {
+          'render': function(node, canvas) {
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
             var polar = new Polar(polarNode.rho, begin);
@@ -372,12 +372,11 @@ function init() {
             ctx.moveTo(0, 0);
             ctx.arc(0, 0, polarNode.rho, begin, end, false);
             ctx.fill();
-          },
-          'contains': function() { return false; }
+          }
         },
         //This node type is used for plotting the upper-right pie chart
         'shortnodepie': {
-          'plot': function(node, canvas) {
+          'render': function(node, canvas) {
             var ldist = this.config.levelDistance;
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
@@ -408,8 +407,7 @@ function init() {
             ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
             
             ctx.fill();
-          },
-          'contains': function() { return false; }
+          }
         }
     });
     //end

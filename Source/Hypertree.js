@@ -786,12 +786,12 @@ Hypertree.Label.HTML = new Class({
 */
 Hypertree.Plot.NodeTypes = new Class({
   'none': {
-    'plot': $empty,
+    'render': $empty,
     'contains': $lambda(false)
   },
 
   'circle' : {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var nconfig = this.node, data = node.data;
       var nodeDim = node.getData('dim');
       var p = node.pos.getc(), pos = p.scale(node.scale);
@@ -807,7 +807,7 @@ Hypertree.Plot.NodeTypes = new Class({
   },
 
   'square' : {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var nconfig = this.node;
       var nodeDim = node.getData('dim');
       var p = node.pos.getc(), pos = p.scale(node.scale);
@@ -823,7 +823,7 @@ Hypertree.Plot.NodeTypes = new Class({
   },
 
   'rectangle' : {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var nconfig = this.node;
       var width = node.getData('width');
       var height = node.getData('height');
@@ -840,7 +840,7 @@ Hypertree.Plot.NodeTypes = new Class({
   },
 
   'triangle' : {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var nconfig = this.node;
       var nodeDim = node.getData('dim');
       var p = node.pos.getc(), pos = p.scale(node.scale);
@@ -860,7 +860,7 @@ Hypertree.Plot.NodeTypes = new Class({
   },
 
   'star' : {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var nconfig = this.node;
       var nodeDim = node.getData('dim');
       var p = node.pos.getc(), pos = p.scale(node.scale);

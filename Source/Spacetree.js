@@ -1530,12 +1530,12 @@ ST.Label.HTML = new Class({
 */
 ST.Plot.NodeTypes = new Class({
   'none': {
-    'plot': $empty,
+    'render': $empty,
     'contains': $lambda(false)
   },
     
   'circle': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var dim  = node.getData('dim');
       var algnPos = this.getAlignedPos(pos, dim * 2, dim * 2);
@@ -1547,7 +1547,7 @@ ST.Plot.NodeTypes = new Class({
   },
 
   'square': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var dim  = node.getData('dim');
       var algnPos = this.getAlignedPos(pos, dim, dim);
@@ -1557,7 +1557,7 @@ ST.Plot.NodeTypes = new Class({
   },
 
   'ellipse': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var width  = node.getData('width') / 2;
       var height = node.getData('height') / 2;
@@ -1574,7 +1574,7 @@ ST.Plot.NodeTypes = new Class({
     'contains': $lambda(false)
   },
   'rectangle': {
-    'plot': function(node, canvas) {
+    'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var width  = node.getData('width');
       var height = node.getData('height');

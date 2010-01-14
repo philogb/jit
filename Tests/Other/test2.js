@@ -186,7 +186,7 @@ function init() {
     RGraph.Plot.NodeTypes.implement({
         //This node type is used for plotting pie-chart slices as nodes
         'nodepie': {
-          'plot': function(node, canvas) {
+          'render': function(node, canvas) {
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
             var polar = new Polar(polarNode.rho, begin);
@@ -203,20 +203,18 @@ function init() {
             ctx.moveTo(0, 0);
             ctx.arc(0, 0, polarNode.rho, begin, end, false);
             ctx.fill();
-          },
-          'contains': function() { return false; }
+          }
         },
         //Create a new node type that renders an entire RGraph visualization
         //as node
         'piechart': {
-          'plot': function(node, canvas, animating) {
+          'render': function(node, canvas, animating) {
             var ctx = canvas.getCtx(), pos = node.pos.getc(true);
             ctx.save();
             ctx.translate(pos.x, pos.y);
             pie.plot();
             ctx.restore();
-          },
-          'contains': function() { return false; }
+          }
          }
     });
     //end
