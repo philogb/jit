@@ -130,15 +130,25 @@ function $rgbToHex(srcArray, array){
 };
 
 function $hexToRgb(hex) {
-  var hex = hex.match(/^#?(\w{1,2})(\w{1,2})(\w{1,2})$/);
-  var array = hex.slice(1); 
-  if (array.length != 3) return null;
-  var rgb = [];
-  $each(array, function(value){
-    if (value.length == 1) value += value;
-    rgb.push(parseInt(value, 16));
-  });
-  return rgb;
+  if(hex.length != 7) {
+    hex = hex.match(/^#?(\w{1,2})(\w{1,2})(\w{1,2})$/);
+    hex.shift();
+    if (hex.length != 3) return null;
+    var rgb = [];
+    for(var i=0; i<3; i++) {
+      var value = hex[i];
+      if (value.length == 1) value += value;
+      rgb.push(parseInt(value, 16));
+    }
+    return rgb;
+  } else {
+    hex = parseInt(hex.slice(1), 16);
+    return [
+      hex >> 16,
+      hex >> 8 & 0xff,
+      hex & 0xff
+    ];
+  }
 };
 
 function $destroy(elem) {

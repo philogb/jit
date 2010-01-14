@@ -348,12 +348,7 @@ function init(){
             color: "#f00",
             overridable: true
         },
-        
-        Edge: {
-            lineWidth: 2,
-            color: "#088"
-        },
-        
+
         Tips: {
           allow: true,
           attachToDOM: false,
@@ -367,10 +362,10 @@ function init(){
           attachToDOM: false,
           attachToCanvas: true,
           stylesHover: {
-            'color': '#d33'
+            'color': '#dd3333'
           },
           stylesClick: {
-            'color': '#3dd'
+            'color': '#33dddd'
           },
           onClick: function(node) {
             //Build the right column relations list.
@@ -406,7 +401,7 @@ function init(){
             } else {
               sb.op.contract(node, {
                 'type': 'animate',
-                'duration': 4000,
+                'duration': 700,
                 'transition': Trans.Quart.easeInOut
               });
             }
