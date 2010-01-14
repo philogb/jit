@@ -60,9 +60,10 @@ Layouts.Radial = new Class({
     var parent = this.parent;
     var config = this.config;
 
-    for ( var i = 0; i < propArray.length; i++) {
-      root.setPos($P(0, 0),  propArray[i]);
-      root.setData('span', Math.PI * 2, propArray[i]);
+    for ( var i=0, l=propArray.length; i < l; i++) {
+      var pi = propArray[i];
+      root.setPos($P(0, 0), pi);
+      root.setData('span', Math.PI * 2, pi);
     }
 
     root.angleSpan = {
@@ -75,9 +76,14 @@ Layouts.Radial = new Class({
       var angleInit = elem.angleSpan.begin;
       var len = getLength(elem);
       //Calculate the sum of all angular widths
-      var totalAngularWidths = 0, subnodes = [];
+      var totalAngularWidths = 0, subnodes = [], maxDim = {};
       GUtil.eachSubnode(elem, function(sib) {
         totalAngularWidths += sib._treeAngularWidth;
+        //get max dim
+        for ( var i=0, l=propArray.length; i < l; i++) {
+          var pi = propArray[i], dim = sib.getData('dim', pi);
+          maxDim[pi] = !!maxDim[pi]? (dim > maxDim[pi]? dim : maxDim[pi]) : dim;
+        }
         subnodes.push(sib);
       }, "ignore");
       //Maintain children order
@@ -89,15 +95,17 @@ Layouts.Radial = new Class({
         });
       }
       //Calculate nodes positions.
-      for (var k = 0; k < subnodes.length; k++) {
+      for (var k = 0, ls=subnodes.length; k < ls; k++) {
         var child = subnodes[k];
         if (!child._flag) {
           var angleProportion = child._treeAngularWidth / totalAngularWidths * angleSpan;
           var theta = angleInit + angleProportion / 2;
 
-          for ( var i = 0; i < propArray.length; i++) {
-            child.setPos($P(theta, len), propArray[i]);
-            child.setData('span', angleProportion, propArray[i]);
+          for ( var i=0, l=propArray.length; i < l; i++) {
+            var pi = propArray[i];
+            child.setPos($P(theta, len), pi);
+            child.setData('span', angleProportion, pi);
+            child.setData('dim-quotient', child.getData('dim', pi) / maxDim[pi], pi);
           }
 
           child.angleSpan = {

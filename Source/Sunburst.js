@@ -610,7 +610,7 @@ Sunburst.Plot.NodeTypes = new Class({
       ctx.moveTo(0, 0);
       ctx.lineTo(p2coord.x, p2coord.y);
       ctx.moveTo(0, 0);
-      ctx.arc(0, 0, polarNode.rho, begin, end, false);
+      ctx.arc(0, 0, polarNode.rho * node.getData('dim-quotient'), begin, end, false);
       ctx.fill();
     },
     'contains': function(node, pos) {

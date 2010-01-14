@@ -1,8 +1,17 @@
-* implement the "contains" NodeTypes method in all vizs.
-* Fix the Treemap in order to work with the new Tips
-* test and fix the onClick, onRightClick onMousemove methods in Extras for all visualizations.
-* add width:'auto' and height:'auto' in SpaceTree.
+All:
+* Implement the "contains" NodeTypes method in all vizs.
+* Test and fix the onClick, onRightClick onMousemove methods in Extras for all visualizations.
+* Add width:'auto' and height:'auto' in all vis. Also add width:'auto:3' where 3 is a node padding value.
 
+Sunburst
+* Check labels positioning when adding rose-like nodes in the pie sunburst visualization.
+* Check for connected sunbursts (sunburst with lines/arrows and hyperlines as edges).
+
+Icicle
 * Implement the Icicle visualization
+
+Treemap
 * Change the Treemap layout methods to render in Canvas instead of HTML.
-* Implement mouse transformations.
+
+Canvas
+* Implement mouse transformations (panning and zooming).
