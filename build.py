@@ -19,6 +19,9 @@ class Build():
             'Graph.Op': ['Core', 'Graph'],
             'Graph.Plot': ['Core', 'Graph'],
             'Layouts': ['Graph'],
+            'Layouts.Tree': ['Layouts'],
+            'Layouts.Radial': ['Layouts'],
+            'Layouts.ForceDirected': ['Layouts'],
             'Loader': ['Core', 'Graph'],
             'Options': ['Core', 'Animation'],
             'Polar': ['Complex'],
@@ -33,7 +36,7 @@ class Build():
                           'Graph.Op',
                           'Graph.Plot',
                           'Loader',
-                          'Layouts', 
+                          'Layouts.Radial', 
                           'Animation'],
             
             'RGraph':     ['Core', 
@@ -46,7 +49,7 @@ class Build():
                            'Graph.Op',
                            'Graph.Plot',
                            'Loader', 
-                           'Layouts',
+                           'Layouts.Radial',
                            'Animation'],
             
             'Sunburst':     ['Core', 
@@ -59,7 +62,7 @@ class Build():
                            'Graph.Op',
                            'Graph.Plot',
                            'Loader', 
-                           'Layouts',
+                           'Layouts.Radial',
                            'Animation'],
             
             'ForceDirected':['Core', 
@@ -72,7 +75,7 @@ class Build():
                            'Graph.Op',
                            'Graph.Plot',
                            'Loader', 
-                           'Layouts',
+                           'Layouts.ForceDirected',
                            'Animation'],
 
             'Spacetree':   ['Core',
@@ -85,7 +88,7 @@ class Build():
                             'Graph.Op',
                             'Graph.Plot',
                             'Loader',
-                            'Layouts', 
+                            'Layouts.Tree', 
                             'Animation'],
                             
             'Treemap':      ['Core',
