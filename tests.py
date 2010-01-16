@@ -485,7 +485,7 @@ tests_model = {
   ],
   'Sunburst': [
         {
-            'Title': 'Tree Animation',
+            'Title': 'Animation and Expand/Collapse',
             'Description': 
             """
             A static JSON Tree structure is used as input for this animation.<br /><br />
@@ -497,13 +497,23 @@ tests_model = {
             'Example':True
         },
         {
-            'Title': 'Tree Animation',
+            'Title': 'Rose Diagrams',
             'Description': 
             """
-            A static JSON Tree structure is used as input for this animation that represents a pie chart.<br />
+            A static JSON Tree structure is used as input for this animation that represents a rose pie chart.<br /><br />
+            Hovering nodes should add a tooltip and change the node's color.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
+        },
+        {
+            'Title': 'Connected Sunburst',
+            'Description': 
+            """
+            A static JSON Graph structure is used as input for this animation that represents a connected sunburst.<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':False
         }
   ]
 

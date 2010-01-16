@@ -293,6 +293,12 @@ var NodeStyles = new Class({
       if(!node.styles) {
         node.styles = $merge(node.data, {});
       }
+      for(var s in this['nodeStylesOn' + type]) {
+        var $s = '$' + s;
+        if(!($s in node.styles)) {
+            node.styles[$s] = node.getData(s); 
+        }
+      }
       viz.fx.nodeFx({
         'elements': {
           'id': node.id,
