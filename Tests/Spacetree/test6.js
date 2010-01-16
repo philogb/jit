@@ -2,6 +2,18 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var json = Feeder.makeTree();
+    TreeUtil.each(json, function(n) {
+      var num = Math.random() * 10 + 1;
+      for(var i=0, text="text "; i<num; i++) {
+        text+= "text ";
+      }
+      delete n.data.$color;
+      delete n.data.$width;
+      delete n.data.$height;
+      delete n.data.$dim;
+      
+      n.name += " " + text;
+    });
     //Create a new canvas instance.
     var canvas = new Canvas('mycanvas', {
         'injectInto': 'infovis',
@@ -18,12 +30,19 @@ function init(){
     
         Node: {
             'type': 'none',
-            align: 'center'
+            align: 'center',
+            overridable:true,
+            width:80,
+            autoWidth:true,
+            labelPadding: 15,
+            color:'#555'
         },
         
         Edge: {
             'type': 'none'
         },
+        
+        transition: Trans.linear,
         
         onBeforeCompute: function(node){
             Log.write("loading " + node.name);
@@ -36,6 +55,8 @@ function init(){
         onCreateLabel: function(label, node){
             label.id = node.id;
             label.style.cursor = 'pointer';
+            label.style.width = '80px';
+            label.style.padding = '15px';
             label.innerHTML = node.name;
             label.onclick = function() {
               st.onClick(node.id);  
@@ -59,24 +80,24 @@ function init(){
     }, {
         type: 'circle',
         dim: 25,
-        width: 50,
+        width: 80,
         height: 50,
         color: '#555'
     }, {
         type: 'square',
         dim: 50,
-        width: 50,
+        width: 80,
         height: 50,
         color: '#555'
     }, {
         type: 'rectangle',
-        width: 57,
+        width: 80,
         height: 30,
         color: '#555'
     }, {
         type: 'ellipse',
         dim: 7,
-        width: 70,
+        width: 80,
         height: 50,
         color: '#555'
     }];

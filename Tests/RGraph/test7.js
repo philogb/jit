@@ -446,10 +446,17 @@ function init(){
         duration: 2000,
         transition: Trans.linear,
         fps: 30,
+        levelDistance:180,
         
         Node: {
             type: 'none',
-            dim: 7
+            dim: 7,
+            width:80,
+            overridable:true,
+            color: '#555',
+            autoHeight:true,
+            autoWidth:true,
+            labelPadding:0
         
         },
         
@@ -489,13 +496,17 @@ function init(){
         // That will center your label (do the math man). 
         onPlaceLabel: function(domElement, node){
             domElement.innerHTML = '';
+            domElement.style.padding = '13px';
             if (node._depth <= 1) {
                 domElement.innerHTML = node.name;
                 var left = parseInt(domElement.style.left);
+                var top = parseInt(domElement.style.top);
                 domElement.style.width = '';
                 domElement.style.height = '';
                 var w = domElement.offsetWidth;
                 domElement.style.left = (left - w / 2) + 'px';
+                var h = domElement.offsetHeight;
+                domElement.style.top = (top - h / 2) + 'px';
                 domElement.style.backgroundColor = '';
                 
             }
@@ -529,23 +540,32 @@ function init(){
     //define custom options.
     var nodeOptions = [{
         type: 'none',
-        dim: 7
+        dim: 7,
+        labelPadding:0
     }, {
         type: 'circle',
-        dim: 7
+        dim: 7,
+        labelPadding:0
     }, {
         type: 'square',
-        dim: 7
+        dim: 7,
+        labelPadding:0
     }, {
         type: 'rectangle',
         width: 7,
-        height: 5
+        height: 5,
+        labelPadding:0
     }, {
         type: 'triangle',
-        dim: 7
+        dim: 7,
+        labelPadding:0
+    }, {
+        type: 'ellipse',
+        labelPadding:13
     }, {
         type: 'star',
-        dim: 15
+        dim: 15,
+        labelPadding:0
     }];
     
     var edgeOptions = ['none', 'line', 'arrow'];
@@ -562,14 +582,14 @@ function init(){
         for (var prop in nodeOpt) {
             rgraph.config.Node[prop] = nodeOpt[prop];
         }
-        rgraph.plot();
+        rgraph.refresh();
       
     };
     
     edgeTypes.onchange = function(){
         var edgeOpt = edgeOptions[edgeTypes.selectedIndex];
         rgraph.config.Edge.type = edgeOpt;
-        rgraph.plot();
+        rgraph.refresh();
         
     };
     

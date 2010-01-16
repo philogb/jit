@@ -37,6 +37,7 @@ Layouts.ForceDirected = new Class({
   compute: function(property, incremental) {
     var prop = $splat(property || ['current', 'start', 'end']);
     var opt = this.getOptions();
+    NodeDim.compute(this.graph, prop, this.config);
     Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
     Graph.Util.eachNode(this.graph, function(n) {
       $each(prop, function(p) {

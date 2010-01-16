@@ -547,7 +547,7 @@ RGraph.Plot.NodeTypes = new Class({
   'circle': {
     'render': function(node, canvas) {
       var pos = node.pos.getc(true);
-      var nodeDim = node.getData('dim');
+      var nodeDim = node.getData('dim')/2;
       canvas.path('fill', function(context) {
           context.arc(pos.x, pos.y, nodeDim, 0, Math.PI*2, true);            
       });
@@ -555,6 +555,23 @@ RGraph.Plot.NodeTypes = new Class({
     'contains': $lambda(false)
   },
   
+  'ellipse': {
+    'render': function(node, canvas) {
+      var pos = node.pos.getc(true);
+      var width  = node.getData('width') / 2;
+      var height = node.getData('height') / 2;
+      var ctx = canvas.getCtx();
+      ctx.save();
+      ctx.scale(width / height, height / width);
+      canvas.path('fill', function(context) {
+          context.arc(pos.x * (height / width), 
+              pos.y * (width / height), height, 0, Math.PI * 2, true);            
+      });
+      ctx.restore();
+    },
+    'contains': $lambda(false)
+  },
+
   'square': {
     'render': function(node, canvas) {
       var pos = node.pos.getc(true);

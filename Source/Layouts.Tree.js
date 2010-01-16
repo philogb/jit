@@ -41,13 +41,13 @@ Layouts.Tree = (function() {
       return dim;
     }
   }
-  ;
+
 
   function movetree(node, prop, val, orn) {
     var p = (orn == "left" || orn == "right") ? "y" : "x";
     node.getPos(prop)[p] += val;
   }
-  ;
+
 
   function moveextent(extent, val) {
     var ans = [];
@@ -59,7 +59,7 @@ Layouts.Tree = (function() {
     });
     return ans;
   }
-  ;
+
 
   function merge(ps, qs) {
     if (ps.length == 0)
@@ -69,7 +69,7 @@ Layouts.Tree = (function() {
     var p = ps.shift(), q = qs.shift();
     return [ [ p[0], q[1] ] ].concat(merge(ps, qs));
   }
-  ;
+
 
   function mergelist(ls, def) {
     def = def || [];
@@ -78,7 +78,7 @@ Layouts.Tree = (function() {
     var ps = ls.pop();
     return mergelist(ls, merge(ps, def));
   }
-  ;
+
 
   function fit(ext1, ext2, subtreeOffset, siblingOffset, i) {
     if (ext1.length <= i || ext2.length <= i)
@@ -88,7 +88,7 @@ Layouts.Tree = (function() {
     return Math.max(fit(ext1, ext2, subtreeOffset, siblingOffset, ++i)
         + subtreeOffset, p - q + siblingOffset);
   }
-  ;
+
 
   function fitlistl(es, subtreeOffset, siblingOffset) {
     function $fitlistl(acc, es, i) {
@@ -100,7 +100,7 @@ Layouts.Tree = (function() {
     ;
     return $fitlistl( [], es, 0);
   }
-  ;
+
 
   function fitlistr(es, subtreeOffset, siblingOffset) {
     function $fitlistr(acc, es, i) {
@@ -114,7 +114,7 @@ Layouts.Tree = (function() {
     var ans = $fitlistr( [], es.reverse(), 0);
     return ans.reverse();
   }
-  ;
+
 
   function fitlist(es, subtreeOffset, siblingOffset, align) {
     var esl = fitlistl(es, subtreeOffset, siblingOffset), esr = fitlistr(es,
@@ -130,7 +130,7 @@ Layouts.Tree = (function() {
     }
     return ans;
   }
-  ;
+
 
   function design(graph, node, prop, config, orn) {
     var multitree = config.multitree;
@@ -187,10 +187,10 @@ Layouts.Tree = (function() {
         extent : resultextent
       };
     }
-    ;
+
     $design(node, false, 0);
   }
-  ;
+
 
   return new Class({
     /*
@@ -207,6 +207,7 @@ Layouts.Tree = (function() {
         'exist' : true,
         'selected' : true
       });
+      NodeDim.compute(this.graph, prop, this.config);
       if (!!computeLevels || !("_depth" in node)) {
         Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
       }

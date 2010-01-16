@@ -23,6 +23,7 @@ Layouts.Radial = new Class({
    */
   compute : function(property) {
     var prop = $splat(property || [ 'current', 'start', 'end' ]);
+    NodeDim.compute(this.graph, prop, this.config);
     Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
     var lengthFunc = this.createLevelDistanceFunc(); 
     this.computeAngularWidths(prop);

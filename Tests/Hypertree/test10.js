@@ -339,8 +339,13 @@ function init(){
             width: 30,
             height: 15,
             dim: 15,
-            transform: true,
-            color: '#f00'
+            transform: false,
+            color: '#f00',
+            
+            overridable:true,
+            autoWidth: true,
+            autoHeight: true,
+            labelPadding:0
         },
         
         Edge: {
@@ -366,6 +371,10 @@ function init(){
             var intX = parseInt(tag.style.left);
             intX -= width / 2;
             tag.style.left = intX + 'px';
+            var height = tag.offsetHeight;
+            var intY = parseInt(tag.style.top);
+            intY -= height / 2;
+            tag.style.top = intY + 'px';
         },
         
         onAfterCompute: function(){
@@ -406,28 +415,31 @@ function init(){
     var nodeOptions = [{
         type: 'none',
         dim: 7,
-        color: '#bbd'
+        labelPadding:0
     }, {
         type: 'circle',
         dim: 7,
-        color: '#bbd'
+        labelPadding:0
     }, {
         type: 'square',
         dim: 7,
-        color: '#bbd'
+        labelPadding:0
     }, {
         type: 'rectangle',
         width: 7,
         height: 5,
-        color: '#bbd'
+        labelPadding:0
     }, {
         type: 'triangle',
         dim: 7,
-        color: '#bbd'
+        labelPadding:0
+    }, {
+      type: 'ellipse',
+      labelPadding:13
     }, {
         type: 'star',
         dim: 15,
-        color: '#bbd'
+        labelPadding:0
     }];
     
     var edgeOptions = ['none', 'line', 'hyperline'];
@@ -444,14 +456,14 @@ function init(){
         for (var prop in nodeOpt) {
             ht.config.Node[prop] = nodeOpt[prop];
         }
-        ht.plot();
+        ht.refresh();
         ht.controller.onAfterCompute();
     });
     
     addEvent(edgeTypes, 'change', function(){
         var edgeOpt = edgeOptions[edgeTypes.selectedIndex];
         ht.config.Edge.type = edgeOpt;
-        ht.plot();
+        ht.refresh();
         ht.controller.onAfterCompute();
     });
     

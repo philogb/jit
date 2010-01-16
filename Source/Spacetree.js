@@ -1538,9 +1538,9 @@ ST.Plot.NodeTypes = new Class({
     'render': function(node, canvas) {
       var pos = node.pos.getc(true);
       var dim  = node.getData('dim');
-      var algnPos = this.getAlignedPos(pos, dim * 2, dim * 2);
+      var algnPos = this.getAlignedPos(pos, dim, dim);
       canvas.path('fill', function(context) {
-          context.arc(algnPos.x + dim, algnPos.y + dim, dim, 0, Math.PI * 2, true);            
+          context.arc(algnPos.x + dim/2, algnPos.y + dim/2, dim/2, 0, Math.PI * 2, true);            
       });
     },
     'contains': $lambda(false)
@@ -1573,6 +1573,7 @@ ST.Plot.NodeTypes = new Class({
     },
     'contains': $lambda(false)
   },
+
   'rectangle': {
     'render': function(node, canvas) {
       var pos = node.pos.getc(true);
