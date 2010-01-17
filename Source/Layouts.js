@@ -27,9 +27,8 @@ var NodeDim = {
     var label = this.label, style = label.style;
     Graph.Util.eachNode(graph, function(n) {
       var autoWidth  = n.getData('autoWidth'),
-          autoHeight = n.getData('autoHeight'),
-          autoDim = n.getData('autoDim');
-      if(autoWidth || autoHeight || autoDim) {
+          autoHeight = n.getData('autoHeight');
+      if(autoWidth || autoHeight) {
         //delete dimensions since these are
         //going to be overridden now.
         delete n.data.$width;
