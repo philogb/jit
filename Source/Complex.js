@@ -81,9 +81,9 @@ Complex.prototype = {
     
     */
     set: function(c) {
-        c = c.getc(true);
-        this.x = c.x; 
-    this.y = c.y;
+      c = c.getc(true);
+      this.x = c.x; 
+      this.y = c.y;
     },
 
     /*

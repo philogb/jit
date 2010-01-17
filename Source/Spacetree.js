@@ -1245,7 +1245,7 @@ ST.Plot = new Class({
        Plots a subtree from the spacetree.
     */
     plotSubtree: function(node, opt, scale, animating) {
-        var viz = this.viz, canvas = viz.canvas;
+        var viz = this.viz, canvas = viz.canvas, config = viz.config;
         scale = Math.min(Math.max(0.001, scale), 1);
         if(scale >= 0) {
             node.drawn = false;     
@@ -1254,46 +1254,17 @@ ST.Plot = new Class({
             ctx.translate(diff.x, diff.y);
             ctx.scale(scale, scale);
         }
-        this.plotTree(node, !scale, opt, animating);
+        this.plotTree(node, $merge(opt, {
+          'withLabels': true,
+          'hideLabels': !!scale,
+          'plotSubtree': function(n, ch) {
+            var root = config.multitree && !('$orn' in node.data);
+            var orns = root && node.getData('orns');
+            return !root || orns.indexOf(elem.getData('orn')) > -1;
+          }
+        }), animating);
         if(scale >= 0) node.drawn = true;
-    },
-    /*
-       Plots a Subtree.
-    */
-    plotTree: function(node, plotLabel, opt, animating) {
-        var that = this, 
-        viz = this.viz, 
-        canvas = viz.canvas,
-        config = this.config,
-        ctx = canvas.getCtx();
-        var root = config.multitree && !('$orn' in node.data);
-        var orns = root && node.data.$orns;
-        var nodeAlpha = node.getData('alpha');
-        Graph.Util.eachSubnode(node, function(elem) {
-            //multitree root node check
-        	if((!root || orns.indexOf(elem.data.$orn) > 0)
-        			&& elem.exist && elem.drawn) {
-	            var adj = node.getAdjacency(elem.id);
-	            !animating && opt.onBeforePlotLine(adj);
-	            ctx.globalAlpha = Math.min(nodeAlpha, elem.getData('alpha'));
-	            that.plotLine(adj, canvas, animating);
-	            !animating && opt.onAfterPlotLine(adj);
-	            that.plotTree(elem, plotLabel, opt, animating);
-        	}
-        });
-        if(node.drawn) {
-            !animating && opt.onBeforePlotNode(node);
-            this.plotNode(node, canvas, animating);
-            !animating && opt.onAfterPlotNode(node);
-            if(plotLabel && nodeAlpha >= 0.95) 
-                this.labels.plotLabel(canvas, node, opt);
-            else 
-                this.labels.hideLabel(node, false);
-        } else {
-            this.labels.hideLabel(node, true);
-        }
-    },
-    
+    },   
    
     getAlignedPos: function(pos, width, height) {
         var nconfig = this.node;

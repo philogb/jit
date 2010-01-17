@@ -894,8 +894,8 @@ Graph.Util = {
             levelEnd = Number.MAX_VALUE - node._depth;
         }
         this.eachLevel(node, levelStart, levelEnd, function(n) {
-        ans.push(n);
-    }, flags);
+            ans.push(n);
+        }, flags);
         return ans;
     },
   

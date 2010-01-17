@@ -452,6 +452,38 @@ Graph.Plot = {
       });
     },
 
+  /*
+      Plots a Subtree.
+   */
+   plotTree: function(node, opt, animating) {
+       var that = this, 
+       viz = this.viz, 
+       canvas = viz.canvas,
+       config = this.config,
+       ctx = canvas.getCtx();
+       var nodeAlpha = node.getData('alpha');
+       Graph.Util.eachSubnode(node, function(elem) {
+         if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
+             var adj = node.getAdjacency(elem.id);
+             !animating && opt.onBeforePlotLine(adj);
+             ctx.globalAlpha = Math.min(nodeAlpha, elem.getData('alpha'));
+             that.plotLine(adj, canvas, animating);
+             !animating && opt.onAfterPlotLine(adj);
+             that.plotTree(elem, opt, animating);
+         }
+       });
+       if(node.drawn) {
+           !animating && opt.onBeforePlotNode(node);
+           this.plotNode(node, canvas, animating);
+           !animating && opt.onAfterPlotNode(node);
+           if(!opt.hideLabels && opt.withLabels && nodeAlpha >= 0.95) 
+               this.labels.plotLabel(canvas, node, opt);
+           else 
+               this.labels.hideLabel(node, false);
+       } else {
+           this.labels.hideLabel(node, true);
+       }
+   },
 
   /*
        Method: plotNode
@@ -465,18 +497,20 @@ Graph.Plot = {
 
     */
     plotNode: function(node, canvas, animating) {
-        var width = node.getData('lineWidth');
-        var color = node.getData('color');
-        var alpha = node.getData('alpha');
-        var ctx = canvas.getCtx();
-        
-        ctx.lineWidth = width;
-        ctx.fillStyle = color;
-        ctx.strokeStyle = color; 
-        ctx.globalAlpha = alpha;
-
         var f = node.getData('type');
-        this.nodeTypes[f].render.call(this, node, canvas, animating);
+        if(f != 'none') {
+          var width = node.getData('lineWidth');
+          var color = node.getData('color');
+          var alpha = node.getData('alpha');
+          var ctx = canvas.getCtx();
+          
+          ctx.lineWidth = width;
+          ctx.fillStyle = color;
+          ctx.strokeStyle = color; 
+          ctx.globalAlpha = alpha;
+
+          this.nodeTypes[f].render.call(this, node, canvas, animating);
+        }
     },
     
     /*
@@ -491,6 +525,8 @@ Graph.Plot = {
 
     */
     plotLine: function(adj, canvas, animating) {
+      var f = adj.getData('type');
+      if(f != 'none') {
         var width = adj.getData('lineWidth');
         var color = adj.getData('color');
         var ctx = canvas.getCtx();
@@ -499,8 +535,8 @@ Graph.Plot = {
         ctx.fillStyle = color;
         ctx.strokeStyle = color; 
 
-        var f = adj.getData('type');
         this.edgeTypes[f].call(this, adj, canvas, animating);
+      }
     }    
   
 };
