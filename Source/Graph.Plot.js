@@ -426,8 +426,8 @@ Graph.Plot = {
           if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
             !animating && opt.onBeforePlotLine(adj);
             ctx.save();
-            ctx.globalAlpha = min(min(nodeAlpha, 
-                nodeTo.getData('alpha')), 
+            ctx.globalAlpha = min(nodeAlpha, 
+                nodeTo.getData('alpha'), 
                 adj.getData('alpha'));
             that.plotLine(adj, canvas, animating);
             ctx.restore();
