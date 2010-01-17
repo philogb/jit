@@ -819,7 +819,7 @@ Graph.Util = {
        (end code)
     */
     eachSubgraph: function(node, action, flags) {
-    this.eachLevel(node, 0, false, action, flags);
+      this.eachLevel(node, 0, false, action, flags);
     },
 
     /*
