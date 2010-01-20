@@ -19,7 +19,18 @@
  * Parent object for common Options.
  *
  */
-var Options = {};
+var Options = function() {
+  var args = Array.prototype.slice.call(arguments);
+  for(var i=0, l=args.length, ans={}; i<l; i++) {
+    var opt = Options[args[i]];
+    if(opt.$extend) {
+      $extend(ans, opt);
+    } else {
+      ans[args[i]] = opt;  
+    }
+  }
+  return ans;
+};
 
 /*
   Object: Options.Controller
@@ -65,7 +76,9 @@ var Options = {};
     object should be called with the given result.
  
  */
-Options.Controller = {  
+Options.Controller = {
+  $extend: true,
+  
   onBeforeCompute: $empty,
   onAfterCompute:  $empty,
   onCreateLabel:   $empty,
@@ -81,7 +94,7 @@ Options.Controller = {
 };
 
 /*
-  Object: Options.Animation
+  Object: Options.Fx
 
   Provides animation configuration options.
 
@@ -99,7 +112,9 @@ Options.Controller = {
      - _clearCanvas_ Whether to clear canvas on each animation frame or not. Default's true.
 
 */
-Options.Animation = {
+Options.Fx = {
+  $extend: true, //TODO(nico): switch to false.
+  
   fps:40,
   duration: 2500,
   transition: Trans.Quart.easeInOut,
@@ -107,15 +122,9 @@ Options.Animation = {
 };
 
 
-/*
-  Object: Options.Graph
-
-  Provides Graph Options for <Canvas> based visualizations.
-*/
-Options.Graph = {};
 
 /*
-  Object: Options.Graph.Node
+  Object: Options.Node
 
   Provides Node options for <Canvas> based visualizations.
 
@@ -148,7 +157,9 @@ Options.Graph = {};
      - _angularWidth_ Used for calculating node and subtrees angular widths. It's used only in <Layouts.Radial>.
 
 */
-Options.Graph.Node = {
+Options.Node = {
+  $extend: false,
+  
   overridable: false,
   type: 'circle',
   dim: 3,
@@ -167,7 +178,7 @@ Options.Graph.Node = {
 };
 
 /*
-  Object: Options.Graph.Edge
+  Object: Options.Edge
 
   Provides Edge options for <Canvas> based visualizations.
 
@@ -195,7 +206,9 @@ Options.Graph.Node = {
      - _dim_ An extra parameter used by other complex shapes such as qudratic or bezier to determine the shape's diameter. Default's 15.
 
 */
-Options.Graph.Edge = {
+Options.Edge = {
+  $extend: false,
+  
   overridable: false,
   type: 'line',
   color: '#ccb',
@@ -234,7 +247,9 @@ Options.Graph.Edge = {
 
 */
 Options.Tips = {
-  allow: false,
+  $extend: false,
+  
+  allow: false, //TODO(nico) change allow for enable
   attachToDOM: true,
   attachToCanvas: false,
   offsetX: 20,
@@ -265,6 +280,8 @@ Options.Tips = {
 
 */
 Options.Tree = {
+    $extend: true,
+    
     orientation: "left",
     subtreeOffset: 8,
     siblingOffset: 5,
@@ -294,6 +311,8 @@ Options.Tree = {
 */
 
 Options.NodeStyles = {
+  $extend: false,
+  
   attachToDOM: true,
   attachToCanvas: false,
   stylesHover: false,
@@ -302,4 +321,43 @@ Options.NodeStyles = {
   onHover: $empty,
   onClick: $empty,
   onRightClick: $empty
+};
+
+
+/*
+  Object: Options.Canvas
+  
+  Canvas Options.
+  
+  Description:
+  
+  Sets Canvas options as with, height, the element to be injected to, etc.
+  
+  Implemented by:
+  
+  
+  Parameters:
+  
+*/
+
+Options.Canvas = {
+    $extend: false,
+    
+    'injectInto': 'id',
+    
+    'width': 200,
+    'height': 200,
+
+    //deprecated
+    'backgroundColor': '#333333',
+    
+    'styles': {
+        'fillStyle': '#000000',
+        'strokeStyle': '#000000'
+    },
+
+    'labels': 'HTML', //can also be 'SVG' or 'Native'
+    
+    'backgroundCanvas': false
+    
 };
