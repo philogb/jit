@@ -138,21 +138,17 @@ this.RGraph = new Class({
   
   Implements: [Loader, Extras, Layouts.Radial],
     
-  initialize: function(canvas, controller) {
-    
+  initialize: function(id, controller) {
     var config= {
-      labelContainer: canvas.id + '-label',
+      labelContainer: id + '-label',
       interpolation: 'linear',
       levelDistance: 100,
-      withLabels: true,
-      Tips: Options.Tips,
-      NodeStyles: Options.NodeStyles
+      withLabels: true
     };
     
-    this.controller = this.config = $merge(Options.Graph, 
-        Options.Animation, 
-        Options.Controller,
-        config, controller);
+    this.controller = this.config = 
+      $merge(Options("Canvas", "Node", "Edge", "Fx", "Controller", 
+          "Tips", "NodeStyles"), config, controller);
     
     this.graphOptions = {
         'complex': false,
@@ -163,11 +159,11 @@ this.RGraph = new Class({
         }
     };
     this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
-    this.labels = new RGraph.Label[canvas.getConfig().labels](this);
+    this.labels = new RGraph.Label[this.config.Canvas.labels](this);
     this.fx = new RGraph.Plot(this);
     this.op = new RGraph.Op(this);
     this.json = null;
-    this.canvas = canvas;
+    this.canvas = new Canvas(id, this.config.Canvas);
     this.root = null;
     this.busy = false;
     this.parent = false;

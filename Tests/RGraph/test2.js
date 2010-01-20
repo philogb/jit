@@ -408,41 +408,40 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ccddee',
-            'strokeStyle': '#772277'
-        },
-        
-        'backgroundCanvas': {
-            'styles': {
-                'fillStyle': '#ddd',
-                'strokeStyle': '#ddd'
-            },
-            
-            'impl': {
-                'init': function(){
-                },
-                'plot': function(canvas, ctx){
-                    var times = 6, d = 100;
-                    var pi2 = Math.PI * 2;
-                    for (var i = 1; i <= times; i++) {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, i * d, 0, pi2, true);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-                }
-            }
-        }
-    });
-
-    rgraph = new RGraph(canvas, {
+    rgraph = new RGraph("rgraphid", {
         interpolation: "linear",
-        levelDistance: 100,
+        levelDistance: 100,      
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h,
+          'styles': {
+              'fillStyle': '#ccddee',
+              'strokeStyle': '#772277'
+          },
+          
+          'backgroundCanvas': {
+              'styles': {
+                  'fillStyle': '#ddd',
+                  'strokeStyle': '#ddd'
+              },
+              
+              'impl': {
+                  'init': function(){
+                  },
+                  'plot': function(canvas, ctx){
+                      var times = 6, d = 100;
+                      var pi2 = Math.PI * 2;
+                      for (var i = 1; i <= times; i++) {
+                          ctx.beginPath();
+                          ctx.arc(0, 0, i * d, 0, pi2, true);
+                          ctx.stroke();
+                          ctx.closePath();
+                      }
+                  }
+              }
+          }
+        },
         Node: {
           overridable: true
         },

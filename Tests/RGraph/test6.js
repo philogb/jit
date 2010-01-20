@@ -218,36 +218,34 @@ function init(){
         }]
     }];
     //end
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        //Optional: Add a background canvas
-        //that draws some concentric circles.
-        'backgroundCanvas': {
-            'styles': {
-                'strokeStyle': '#444'
-            },
-            'impl': {
-                'init': function(){},
-                'plot': function(canvas, ctx){
-                    var times = 6, d = 200;
-                    var pi2 = Math.PI * 2;
-                    for (var i = 1; i <= times; i++) {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, i * d, 0, pi2, true);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-                }
-            }
-        }
-    });
-    //end
     //init RGraph
-    var rgraph = new RGraph(canvas, {
+    var rgraph = new RGraph("rgraphid", {
+        //Set Canvas options
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h,
+          //Optional: Add a background canvas
+          //that draws some concentric circles.
+          'backgroundCanvas': {
+              'styles': {
+                  'strokeStyle': '#444'
+              },
+              'impl': {
+                  'init': function(){},
+                  'plot': function(canvas, ctx){
+                      var times = 6, d = 200;
+                      var pi2 = Math.PI * 2;
+                      for (var i = 1; i <= times; i++) {
+                          ctx.beginPath();
+                          ctx.arc(0, 0, i * d, 0, pi2, true);
+                          ctx.stroke();
+                          ctx.closePath();
+                      }
+                  }
+              }
+          }
+        },
         //Nodes and Edges parameters
         //can be overriden if defined in 
         //the JSON input data.
