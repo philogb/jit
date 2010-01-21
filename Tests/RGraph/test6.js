@@ -219,7 +219,7 @@ function init(){
     }];
     //end
     //init RGraph
-    var rgraph = new RGraph("rgraphid", {
+    var rgraph = new RGraph({
         //Set Canvas options
         Canvas: {
           'injectInto': 'infovis',

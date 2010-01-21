@@ -218,16 +218,13 @@ function init(){
         }]
     }];
     //end
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
-    //end
     //init ForceDirected
-    var fd = new ForceDirected(canvas, {
+    var fd = new ForceDirected({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         //Nodes and Edges parameters
         //can be overriden if defined in 
         //the JSON input data.

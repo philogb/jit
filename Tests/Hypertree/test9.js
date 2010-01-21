@@ -11,18 +11,12 @@ function init(){
     Feeder.setWeights(json, true);
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ddd',
-            'strokeStyle': '#ddd'
-        }
-    });
-    ht = new Hypertree(canvas, {
-    
+    ht = new Hypertree({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         Node: {
             transform: false,
             overridable: true

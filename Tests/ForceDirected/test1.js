@@ -322,18 +322,15 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
     
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
-    //end
     var style = document.getElementById('mycanvas').style;
     style.marginLeft = style.marginTop = "25px";
     //init Hypertree
-    var fd = new ForceDirected(canvas, {
+    var fd = new ForceDirected({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {

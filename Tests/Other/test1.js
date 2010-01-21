@@ -328,27 +328,6 @@ function init() {
     style.position = 'absolute';
     infovis.appendChild(container);
     
-    //init canvas
-    //Create new canvas instances.
-    var canvas1 = new Canvas('mycanvas1', {
-        'injectInto': 'infovis1',
-        'width': w/2,
-        'height': h/2
-    });
-
-    var canvas2 = new Canvas('mycanvas2', {
-        'injectInto': 'infovis2',
-        'width': w/2,
-        'height': h/2
-    });
-
-    var canvas3 = new Canvas('mycanvas3', {
-        'injectInto': 'infovis3',
-        'width': w,
-        'height': h/2
-    });
-    //end
-
     //init nodetypes
     //Here we implement custom node rendering types for the RGraph
     //Using this feature requires some javascript and canvas experience.
@@ -415,7 +394,12 @@ function init() {
     //init rgraph
     //This RGraph is used to plot the upper-left pie chart.
     //It has custom *pie-chart-nodes*.
-    var rgraph = new RGraph(canvas1, {
+    var rgraph = new RGraph({
+        Canvas: {
+          'injectInto': 'infovis1',
+          'width': w/2,
+          'height': h/2
+        },
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden
@@ -453,7 +437,12 @@ function init() {
     //init rgraph2
     //This RGraph instance is used for plotting the upper-right
     //pie chart.
-    var rgraph2 = new RGraph(canvas2, {
+    var rgraph2 = new RGraph({
+        Canvas: {
+          'injectInto': 'infovis2',
+          'width': w/2,
+          'height': h/2
+        },
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden
@@ -493,7 +482,12 @@ function init() {
     //init st
     //This Spacetree nodes' heights are overriden individually
     //so that it serves as a bar chart.
-    var st = new ST(canvas3, {
+    var st = new ST({
+        Canvas: {
+          'injectInto': 'infovis3',
+          'width': w,
+          'height': h/2
+        },
         //set orientarion
         orientation:'bottom',
         //set duration for the animation

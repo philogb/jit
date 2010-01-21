@@ -263,7 +263,16 @@ Class.Mutators = {
     Implements: function(self, klasses){
         $each($splat(klasses), function(klass){
             Class.prototying = klass;
-            $extend(self, ($type(klass) == 'function') ? new klass : klass);
+            //Hope it doesn't break anything:
+            //if the properties defined already exist in the original object
+            //do not override them with the implemented object.
+            //$extend(self, ($type(klass) == 'function') ? new klass : klass);
+            var instance = (typeof klass == 'function')? new klass : klass;
+            for(var prop in instance) {
+              if(!(prop in self)) {
+                self[prop] = instance[prop];
+              }
+            }
             delete Class.prototyping;
         });
         return self;

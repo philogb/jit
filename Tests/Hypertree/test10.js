@@ -319,21 +319,14 @@ function init(){
     };
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ddd',
-            'strokeStyle': '#ddd'
-        }
-    });
     var nodesCache = {};
-    var ht = new Hypertree(canvas, {
-    
+    var ht = new Hypertree({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         transition: Trans.linear,
-        
         Node: {
             type: 'none',
             width: 30,

@@ -14,26 +14,19 @@ function init(){
       
       n.name += " " + text;
     });
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'backgroundColor': '#222',
-        'styles': {
-            'fillStyle': '#ccb',
-            'strokeStyle': '#ccb'
-        }
-    });
     //Create a new ST instance
-    st = new ST(canvas, {
-    
+    st = new ST({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         Node: {
             'type': 'none',
             align: 'center',
             overridable:true,
             width:80,
-            autoWidth:true,
+            autoHeight:true,
             labelPadding: 15,
             color:'#555'
         },

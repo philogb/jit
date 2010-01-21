@@ -149,16 +149,6 @@ function init() {
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'backgroundColor': '#1a1a1a'
-    });
-    //end
-
     //init nodetypes
     //Here we implement custom node rendering types for the RGraph
     //Using this feature requires some javascript and canvas experience.
@@ -215,7 +205,12 @@ function init() {
     //end
     
     //init pie
-    var pie = new RGraph(canvas, {
+    var pie = new RGraph({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h,
+        },
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden

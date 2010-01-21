@@ -9,19 +9,13 @@ function init(){
         minChildrenPerNode: 0,
         counter: 0
     });
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'backgroundColor': '#222',
-        'styles': {
-            'fillStyle': '#ccb',
-            'strokeStyle': '#ccb'
-        }
-    });
     //Create a new ST instance
-    st = new ST(canvas, {
+    st = new ST({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         orientation: "left", 
         levelDistance: 50,
         Node: {

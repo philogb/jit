@@ -736,19 +736,15 @@ function init(){
     var subtree = json.children.pop();
     //end
     var removing = false;
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
-    //end
-    
     //init st
     //Create a new ST instance
-    var st = new ST(canvas, {
-    	//add styles/shapes/colors
+    var st = new ST({
+    	  Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
+        //add styles/shapes/colors
         //to nodes and edges
         
         //set overridable=true if you want

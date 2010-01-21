@@ -754,20 +754,16 @@ function init(){
     //end
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
-    //end
-    
     //init st
     //Create a new ST instance
-    st = new ST(canvas, {
-    	//multitree
-    	multitree: true,
+    st = new ST({
+    	  Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
+        //multitree
+    	  multitree: true,
         //set duration for the animation
         duration: 800,
         //set animation transition type

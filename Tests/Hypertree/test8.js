@@ -10,17 +10,12 @@ function init(){
     var json = Feeder.makeTree(p);
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ddd',
-            'strokeStyle': '#343'
-        }
-    });
-    ht = new Hypertree(canvas, {
+    ht = new Hypertree({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         onBeforeCompute: function(node){
             Log.write("centering");
         },

@@ -201,33 +201,32 @@ this.ST= (function() {
     
         Implements: [Loader, Extras, Layouts.Tree],
         
-        initialize: function(canvas, controller) {            
+        initialize: function(controller) {            
             var config= {
-                labelContainer: canvas.id + '-label',
                 levelsToShow: 2,
                 levelDistance: 30,
                 withLabels: true,
                 constrained: true,                
                 Node: {
-                    type: 'rectangle'
+                  type: 'rectangle'
                 },
                 duration: 700,
-                fps: 25,
-                Tips: Options.Tips,
-                NodeStyles: Options.NodeStyles
+                fps: 25
             };
             
-            this.controller = this.config = $merge(Options.Animation, 
-                Options.Tree,
-                Options.Graph, 
-                Options.Controller, 
+            this.controller = this.config = $merge(
+                Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", "Tips", "NodeStyles"),
                 config, controller);
-            this.canvas = canvas;
+
+            var canvasConfig = this.config.Canvas;
+            this.config.labelContainer = canvasConfig.injectInto + '-label';
+            this.canvas = new Canvas(canvasConfig);
+            
             this.graphOptions = {
                 'complex': true
             };
             this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
-            this.labels = new ST.Label[canvas.getConfig().labels](this);
+            this.labels = new ST.Label[canvasConfig.labels](this);
             this.fx = new ST.Plot(this);
             this.op = new ST.Op(this);
             this.group = new ST.Group(this);

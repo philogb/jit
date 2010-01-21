@@ -407,7 +407,7 @@ function init(){
         }],
         "data": []
     };
-    rgraph = new RGraph("rgraphid", {
+    rgraph = new RGraph({
         interpolation: "linear",
         levelDistance: 100,
         Canvas: {

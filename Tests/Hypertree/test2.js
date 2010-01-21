@@ -7,37 +7,29 @@ function init(){
     }];
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'styles': {
-            'fillStyle': '#ddd',
-            'strokeStyle': '#ddd'
-        },
-        
-        'backgroundCanvas': {
-            'styles': {
-                'fillStyle': '#ccc',
-                'strokeStyle': '#ccc'
-            },
-            
-            'impl': {
-                'init': function(){
-                },
-                'plot': function(canvas, ctx){
-                    ctx.beginPath();
-                    ctx.arc(0, 0, ((w < h) ? w : h) / 2, 0, Math.PI * 2, true);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            }
-        }
-    });
     var nodesCache = {};
-    ht = new Hypertree(canvas, {
-    
+    ht = new Hypertree({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h,
+          'backgroundCanvas': {
+              'styles': {
+                  'fillStyle': '#ccc',
+                  'strokeStyle': '#ccc'
+              },
+              'impl': {
+                  'init': function(){
+                  },
+                  'plot': function(canvas, ctx){
+                      ctx.beginPath();
+                      ctx.arc(0, 0, ((w < h) ? w : h) / 2, 0, Math.PI * 2, true);
+                      ctx.stroke();
+                      ctx.closePath();
+                  }
+              }
+          }
+        },
         onBeforeCompute: function(node){
             Log.write("centering");
         },

@@ -3,24 +3,16 @@ function init(){
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     Feeder.p.color = false;
     var json = Feeder.makeTree();
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'backgroundColor': '#222',
-        'styles': {
-            'fillStyle': '#ccb',
-            'strokeStyle': '#ccb'
-        }
-    });
     //Create a new ST instance
-    st = new ST(canvas, {
-    
+    st = new ST({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         Node: {
           overridable: true
         },
-        
         Edge: {
           overridable: true
         },

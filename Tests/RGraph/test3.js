@@ -407,7 +407,7 @@ function init(){
     };
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    rgraph = new RGraph("rgraphid", {
+    rgraph = new RGraph({
         interpolation: "linear",
         levelDistance: 100,
         Canvas: {

@@ -10,6 +10,63 @@
  */
 Layouts.TM = {};
 
+Layouts.TM.SliceAndDice = {
+  compute: function(prop) {
+    this.controller.onBeforeCompute(json);
+    var size = this.canvas.getSize(),
+        config = this.config,
+        width = size.width,
+        height = size.height;
+    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+    //set root position and dimensions
+    var root = this.graph.getNode(this.root);
+    root.getPos(prop).setc(0, 0);
+    root.setData('width', width, prop);
+    root.setData('height', height + config.titleHeight + config.offset, prop);
+    this.computePositions(root, root, this.layout.orientation, prop);
+    this.controller.onAfterCompute(root);
+  },
+  
+  computePositions: function(par, ch, orientation, prop) {
+    var config = this.config, 
+        offst = config.offset,
+        width  = par.getData('width', prop) - offst,
+        height = par.getData('height', prop) - offst - config.titleHeight,
+        fact = par.getData('area', prop)? ch.getData('area', prop) / par.getData('area', prop) : 1;
+    
+    var otherSize, size, dim, pos, pos2;
+    var horizontal = (orientation == "h");
+    if(horizontal) {
+      orientation = 'v';    
+      otherSize = height;
+      size = Math.round(width * fact);
+      dim = 'height';
+      pos = 'y';
+      pos2 = 'x';
+    } else {
+      orientation = 'h';    
+      otherSize = Math.round(height * fact);
+      size = width;
+      dim = 'width';
+      pos = 'x';
+      pos2 = 'y';
+    }
+    ch.getPos(prop).setc(0, 0);
+    ch.setData('width', size, prop);
+    ch.setData('height', otherSize, prop);
+
+    var offsetSize = 0, tm = this;
+    Graph.Util.eachSubnode(ch, function(n) {
+      tm.computePositions(ch, n, orientation);
+      var p = n.getPos(prop);
+      p[pos] = offsetSize;
+      p[pos2] = 0;
+      offsetSize += (elem.getData(dim, prop) >> 0);
+    });
+  }
+
+};
+
 Layouts.TM.Area = {
  /*
     Method: compute
@@ -422,14 +479,13 @@ Layouts.TM.Strip = new Class({
        top += h;
      }
     
-     var ans = {
+     return {
        'height': coord.height,
        'width': coord.width - width,
        'top': coord.top,
        'left': coord.left + width,
        'dim': w
      };
-     return ans;
     },
     
     layoutH: function(ch, w, coord, prop) {
@@ -446,13 +502,12 @@ Layouts.TM.Strip = new Class({
        chi.setData('height', height, prop);
        left += ch[i].coord.width;
      }
-     var ans = {
+     return {
        'height': coord.height - height,
        'width': coord.width,
        'top': coord.top,
        'left': coord.left,
        'dim': w
      };
-     return ans;
     }
  });

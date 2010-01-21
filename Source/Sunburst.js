@@ -138,10 +138,9 @@ this.Sunburst = new Class({
   
   Implements: [Loader, Extras, Layouts.Radial],
     
-  initialize: function(canvas, controller) {
+  initialize: function(id, controller) {
     
     var config= {
-      labelContainer: canvas.id + '-label',
       interpolation: 'linear',
       levelDistance: 100,
       withLabels: true,
@@ -150,16 +149,17 @@ this.Sunburst = new Class({
       },
       Edge: {
         'type': 'none'
-      },
-      Tips: Options.Tips,
-      NodeStyles: Options.NodeStyles
+      }
     };
     
-    this.controller = this.config = $merge(Options.Graph, 
-        Options.Animation, 
-        Options.Controller,
+    this.controller = this.config = $merge(Options("Canvas", "Node", "Edge", "Fx", 
+        "Tips", "NodeStyles", "Controller"),
         config, controller);
     
+    var canvasConfig = this.config.Canvas;
+    this.config.labelContainer = canvasConfig.injectInto + '-label';
+    this.canvas = new Canvas(canvasConfig);
+
     this.graphOptions = {
         'complex': false,
         'Node': {
@@ -169,11 +169,10 @@ this.Sunburst = new Class({
         }
     };
     this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
-    this.labels = new Sunburst.Label[canvas.getConfig().labels](this);
+    this.labels = new Sunburst.Label[canvasConfig.labels](this);
     this.fx = new Sunburst.Plot(this);
     this.op = new Sunburst.Op(this);
     this.json = null;
-    this.canvas = canvas;
     this.root = null;
     this.rotated = null;
     this.busy = false;

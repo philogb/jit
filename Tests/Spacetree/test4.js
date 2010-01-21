@@ -15,19 +15,13 @@ function init(){
         'data': {},
         'children': []
     }].concat(json.children);
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'backgroundColor': '#222',
-        'styles': {
-            'fillStyle': '#ccb',
-            'strokeStyle': '#ccb'
-        }
-    });
     //Create a new ST instance
-    st = new ST(canvas, {
+    st = new ST({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         levelDistance: 50,
         Node: {
             overridable: false,

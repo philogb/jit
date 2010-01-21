@@ -236,24 +236,24 @@ this.Hypertree = new Class({
    
   Implements: [Loader, Extras, Layouts.Radial], 
    
-  initialize: function(canvas, controller) { 
+  initialize: function(controller) { 
     var config = { 
-      labelContainer: canvas.id + '-label',
       radius: "auto",
       Edge: { 
           type: 'hyperline' 
       },
       withLabels: true,
       duration: 1500,
-      fps: 35,
-      Tips: Options.Tips,
-      NodeStyles: Options.NodeStyles
+      fps: 35
     }; 
-    this.controller = this.config = $merge(Options.Graph, 
-        Options.Animation, 
-        Options.Controller, 
+    this.controller = this.config = $merge(Options("Canvas", "Node", "Edge", "Fx", 
+        "Tips", "NodeStyles", "Controller"),
         config, controller); 
     
+    var canvasConfig = this.config.Canvas;
+    this.config.labelContainer = canvasConfig.injectInto + '-label';
+    this.canvas = new Canvas(canvasConfig);
+
     this.graphOptions = { 
         'complex': false, 
         'Node': { 
@@ -263,11 +263,10 @@ this.Hypertree = new Class({
         }
     }; 
     this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge); 
-    this.labels = new Hypertree.Label[canvas.getConfig().labels](this);
+    this.labels = new Hypertree.Label[canvasConfig.labels](this);
     this.fx = new Hypertree.Plot(this); 
     this.op = new Hypertree.Op(this); 
     this.json = null; 
-    this.canvas = canvas; 
     this.root = null; 
     this.busy = false; 
     //initialize extras

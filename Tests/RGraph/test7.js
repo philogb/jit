@@ -409,7 +409,7 @@ function init(){
         }],
         "data": []
     };
-    rgraph = new RGraph("rgraphid", {
+    rgraph = new RGraph({
         interpolation: "polar",
         duration: 2000,
         transition: Trans.linear,

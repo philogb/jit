@@ -364,7 +364,7 @@ function init(){
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     
     //init RGraph
-    var rgraph = new RGraph("rgraphid", {
+    var rgraph = new RGraph({
         //Set Canvas Options
         Canvas: {
           //Where to append the canvas widget

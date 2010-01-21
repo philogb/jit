@@ -21,16 +21,6 @@ function init(){
     
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
-    //end
-    
-    
     //Implement a node rendering function called 'nodeline' that plots a straight line
     //when contracting or expanding a subtree.
     ST.Plot.NodeTypes.implement({
@@ -58,7 +48,12 @@ function init(){
 
     //init st
     //Create a new ST instance
-    var st = new ST(canvas, {
+    var st = new ST({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         //set duration for the animation
         duration: 800,
         //set animation transition type

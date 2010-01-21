@@ -203,10 +203,8 @@ this.Canvas = (function(){
         ctx.translate(width / 2, height / 2);
     };
     
-    return function(id, opt){
-        var ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
-        if (arguments.length < 1) 
-            throw "Arguments missing";
+    return function(opt){
+        var id = opt.injectInto, ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
         var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
         opt = $merge(config, opt || {});
         //create elements
@@ -215,7 +213,7 @@ this.Canvas = (function(){
             'height': opt.height
         };
         mainContainer = create("div", {
-            'id': id
+            'id': id + '-canvaswidget'
         }, $merge(dim, {
             'position': 'relative'
         }));

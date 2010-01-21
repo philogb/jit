@@ -131,21 +131,21 @@ this.ForceDirected = new Class({
   
   Implements: [Loader, Extras, Layouts.ForceDirected],
     
-  initialize: function(canvas, controller) {
+  initialize: function(controller) {
     
     var config= {
-      labelContainer: canvas.id + '-label',
       withLabels: true,
       iterations: 50,
-      levelDistance: 50,
-      Tips: Options.Tips,
-      NodeStyles: Options.NodeStyles
+      levelDistance: 50
     };
     
-    this.controller = this.config = $merge(Options.Graph, 
-        Options.Animation,
-        Options.Controller,
+    this.controller = this.config = $merge(Options("Canvas", "Node", "Edge", "Fx", 
+        "Tips", "NodeStyles", "Controller"), 
         config, controller);
+    
+    var canvasConfig = this.config.Canvas;
+    this.config.labelContainer = canvasConfig.injectInto + '-label';
+    this.canvas = new Canvas(canvasConfig);
     
     this.graphOptions = {
         'complex': true,
@@ -156,11 +156,10 @@ this.ForceDirected = new Class({
         }
     };
     this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
-    this.labels = new ForceDirected.Label[canvas.getConfig().labels](this);
+    this.labels = new ForceDirected.Label[canvasConfig.labels](this);
     this.fx = new ForceDirected.Plot(this);
     this.op = new ForceDirected.Op(this);
     this.json = null;
-    this.canvas = canvas;
     this.busy = false;
     //initialize extras
     this.initializeExtras();

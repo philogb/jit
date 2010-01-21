@@ -211,16 +211,13 @@ function init(){
     //end
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    //init canvas
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
-    //end
     //init Hypertree
-    var ht = new Hypertree(canvas, {
+    var ht = new Hypertree({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         //By setting overridable=true,
         //Node and Edge global properties can be
         //overriden for each node/edge.

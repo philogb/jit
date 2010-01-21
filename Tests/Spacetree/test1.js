@@ -2,15 +2,14 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var json = Feeder.makeTree();
-    //Create a new canvas instance.
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h
-    });
     
     //Create a new ST instance
-    st = new ST(canvas, {
+    st = new ST({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h
+        },
         duration: 800,
         orientation: 'left',
         fps: 35,

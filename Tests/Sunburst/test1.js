@@ -325,21 +325,16 @@ function init(){
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
     var colors = ['#33a', '#55b', '#77c', '#99d', '#aae', '#bf0', '#cf5', '#dfa', '#faccff', '#ffccff', '#CCC', '#C37'];
     
-    //init canvas
-    //Create a new canvas instance.
-    //Select label type ('HTML', 'SVG' or Canvas 'Native').
-    var labels = 'Native';
-    var canvas = new Canvas('mycanvas', {
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        'labels':labels
-    });
-    //end
     var style = document.getElementById('mycanvas').style;
     style.marginLeft = style.marginTop = "25px";
     //init Sunburst
-    var sb = new Sunburst(canvas, {
+    var sb = new Sunburst({
+        Canvas: {
+          'injectInto': 'infovis',
+          'width': w,
+          'height': h,
+          'labels':'Native'
+        },
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
