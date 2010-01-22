@@ -16,3 +16,5 @@ Treemap
 Canvas
 * Implement mouse transformations (panning and zooming).
 
+SpaceTree
+* the select method should accept the same params as the onClick method (ie Move, etc).
