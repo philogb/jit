@@ -19,8 +19,6 @@ function init(){
         };
     })();
     
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //Implement a node rendering function called 'nodeline' that plots a straight line
     //when contracting or expanding a subtree.
     ST.Plot.NodeTypes.implement({
@@ -50,9 +48,7 @@ function init(){
     //Create a new ST instance
     var st = new ST({
         Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
+          'injectInto': 'infovis'
         },
         //set duration for the animation
         duration: 800,

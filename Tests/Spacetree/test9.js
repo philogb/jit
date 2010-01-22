@@ -1,6 +1,4 @@
 function init(){
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //init data
     var json = {
         id: "node02",
@@ -740,9 +738,7 @@ function init(){
     //Create a new ST instance
     var st = new ST({
     	  Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
+          'injectInto': 'infovis'
         },
         //add styles/shapes/colors
         //to nodes and edges

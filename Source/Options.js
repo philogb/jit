@@ -344,20 +344,6 @@ Options.Canvas = {
     $extend: false,
     
     'injectInto': 'id',
-    
-    'width': 200,
-    'height': 200,
-
-    //deprecated
-    'backgroundColor': '#333333',
-    
-    'styles': {
-        'fillStyle': '#000000',
-        'strokeStyle': '#000000'
-    },
-
     'labels': 'HTML', //can also be 'SVG' or 'Native'
-    
     'backgroundCanvas': false
-    
 };

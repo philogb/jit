@@ -1,7 +1,4 @@
 function init(){
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
-
     //init data    
     var json = {
         "id": "190_0",
@@ -416,8 +413,6 @@ function init(){
     var rgraph = new RGraph({
         Canvas: {
           'injectInto': 'infovis',
-          'width': w,
-          'height': h,
           //Optional: Create a background canvas
           //for painting concentric circles.
           'backgroundCanvas': {

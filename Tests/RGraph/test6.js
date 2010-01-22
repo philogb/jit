@@ -1,6 +1,4 @@
 function init(){
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //init data
     //If a node in this JSON structure
     //has the "$type" or "$dim" parameters
@@ -223,8 +221,6 @@ function init(){
         //Set Canvas options
         Canvas: {
           'injectInto': 'infovis',
-          'width': w,
-          'height': h,
           //Optional: Add a background canvas
           //that draws some concentric circles.
           'backgroundCanvas': {

@@ -160,27 +160,27 @@ this.ST= (function() {
       var graph = this.graph;
       var canvas = this.canvas;
       var level = node._depth, nodeArray = [];
-	  GUtil.eachNode(graph, function(n) {
-        if(n.exist && !n.selected) {
-            if(GUtil.isDescendantOf(n, node.id)) {
-              if(n._depth <= level) nodeArray.push(n);
-            } else {
-              nodeArray.push(n);
-            }
-        }
-	  });
-	  var leafLevel = Geom.getRightLevelToShow(node, canvas);
-	  GUtil.eachLevel(node, leafLevel, leafLevel, function(n) {
-        if(n.exist && !n.selected) nodeArray.push(n);
-	  });
-	    
-	  for (var i = 0; i < nodesInPath.length; i++) {
-	    var n = this.graph.getNode(nodesInPath[i]);
-	    if(!GUtil.isDescendantOf(n, node.id)) {
-	      nodeArray.push(n);
-	    }
-	  } 
-	  return nodeArray;       
+  	  GUtil.eachNode(graph, function(n) {
+          if(n.exist && !n.selected) {
+              if(GUtil.isDescendantOf(n, node.id)) {
+                if(n._depth <= level) nodeArray.push(n);
+              } else {
+                nodeArray.push(n);
+              }
+          }
+  	  });
+  	  var leafLevel = Geom.getRightLevelToShow(node, canvas);
+  	  GUtil.eachLevel(node, leafLevel, leafLevel, function(n) {
+          if(n.exist && !n.selected) nodeArray.push(n);
+  	  });
+  	    
+  	  for (var i = 0; i < nodesInPath.length; i++) {
+  	    var n = this.graph.getNode(nodesInPath[i]);
+  	    if(!GUtil.isDescendantOf(n, node.id)) {
+  	      nodeArray.push(n);
+  	    }
+  	  } 
+  	  return nodeArray;       
     };
     // Nodes to expand
      function getNodesToShow(node) {
@@ -191,7 +191,7 @@ this.ST= (function() {
             		&& GUtil.anySubnode(n, function(ch){ return ch.exist && !ch.drawn; })) {
             	nodeArray.push(n);
             } else if(n.drawn && !GUtil.anySubnode(n, "drawn")) {
-        		nodeArray.push(n);
+              nodeArray.push(n);
             }
         });
         return nodeArray;

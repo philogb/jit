@@ -735,15 +735,11 @@ function init(){
         }]
     };
     //end
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //init st
     //Create a new ST instance
     var st = new ST({
         Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
+          'injectInto': 'infovis'
         },
         //set duration for the animation
         duration: 800,

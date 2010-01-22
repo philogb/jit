@@ -119,17 +119,8 @@
 this.Canvas = (function(){
     var config = {
         'injectInto': 'id',
-        
-        'width': 200,
-        'height': 200,
-        //deprecated
-        'backgroundColor': '#333333',
-        
-        'styles': {
-            'fillStyle': '#000000',
-            'strokeStyle': '#000000'
-        },
-
+        'width': false,
+        'height': false,
         'labels': 'HTML', //can also be 'SVG' or 'Native'
         
         'backgroundCanvas': false
@@ -193,10 +184,6 @@ this.Canvas = (function(){
       }
     }; 
     
-    function get(id){
-        return document.getElementById(id);
-    };
-    
     function translateToCenter(canvas, ctx, w, h){
         var width = w ? (canvas.width - w) : canvas.width;
         var height = h ? (canvas.height - h) : canvas.height;
@@ -206,11 +193,12 @@ this.Canvas = (function(){
     return function(opt){
         var id = opt.injectInto, ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
         var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
+        var wrapper = $get(id);
         opt = $merge(config, opt || {});
         //create elements
         var dim = {
-            'width': opt.width,
-            'height': opt.height
+            'width': opt.width || wrapper.offsetWidth || 200,
+            'height': opt.height || wrapper.offsetHeight || 200
         };
         mainContainer = create("div", {
             'id': id + '-canvaswidget'
@@ -238,11 +226,7 @@ this.Canvas = (function(){
         }
         mainContainer.appendChild(canvas);
         mainContainer.appendChild(labelContainer);
-        if($type(opt.injectInto) == 'string') {
-          get(opt.injectInto).appendChild(mainContainer);
-        } else {
-          opt.injectInto.appendChild(mainContainer);
-        }
+        wrapper.appendChild(mainContainer);
         
         //create contexts
         ctx = canvas.getContext('2d');

@@ -360,17 +360,12 @@ function init(){
     };
     //end
     
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    
     //init RGraph
     var rgraph = new RGraph({
         //Set Canvas Options
         Canvas: {
           //Where to append the canvas widget
           'injectInto': 'infovis',
-          'width': w,
-          'height': h,
           
           //Optional: create a background canvas and plot
           //concentric circles in it.

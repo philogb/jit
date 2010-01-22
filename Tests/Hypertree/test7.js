@@ -209,14 +209,10 @@ function init(){
         }]
     }];
     //end
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //init Hypertree
     var ht = new Hypertree({
         Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
+          'injectInto': 'infovis'
         },
         //By setting overridable=true,
         //Node and Edge global properties can be
