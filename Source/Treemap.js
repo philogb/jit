@@ -1471,8 +1471,8 @@ TM.Strip = new Class({
   
      Parameters:
 
-        par - The parent node of the json subtree.  
-        ch - An Array of nodes
+      par - The parent node of the json subtree.  
+      ch - An Array of nodes
       coord - A coordinates object specifying width, height, left and top style properties.
   */
   processChildrenLayout: function(par, ch, coord) {

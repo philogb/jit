@@ -385,6 +385,20 @@ tests_model = {
         }
    ],
    
+    'newTreemap': [
+        {
+            'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
+            'Description': 
+            """
+            Loads a random generated weighted tree and renders it as Squarified Tree by default.<br> 
+            Treemap nodes should have colors by default. <br>
+            You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).<br> 
+            Each time an option is changed, a new random tree is generated and rendered.
+            """,
+            'Extras': ['generators.js']
+        },
+   ],
+
     'ForceDirected': [
         {
             'Title': 'Tree Animation',

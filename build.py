@@ -22,6 +22,7 @@ class Build():
             'Layouts.Tree': ['Layouts'],
             'Layouts.Radial': ['Layouts'],
             'Layouts.ForceDirected': ['Layouts'],
+            'Layouts.TM': ['Layouts'],
             'Loader': ['Core', 'Graph'],
             'Options': ['Core', 'Animation'],
             'Polar': ['Complex'],
@@ -91,6 +92,19 @@ class Build():
                             'Layouts.Tree', 
                             'Animation'],
                             
+            'newTreemap':   ['Core',
+                            'Options', 
+                            'Extras',
+                            'Canvas', 
+                            'Complex',
+                            'Polar', 
+                            'Graph', 
+                            'Graph.Op',
+                            'Graph.Plot',
+                            'Loader',
+                            'Layouts.TM', 
+                            'Animation'],
+
             'Treemap':      ['Core',
                              'Options',
                              'Extras']

@@ -4,7 +4,7 @@ from tests import tests_model
 from build import Build
 
 urls = (
-    '/testcase/(RGraph|Treemap|Hypertree|Spacetree|ForceDirected|Sunburst|Other)/([0-9]+)/', 'testcase',
+    '/testcase/(RGraph|Treemap|newTreemap|Hypertree|Spacetree|ForceDirected|Sunburst|Other)/([0-9]+)/', 'testcase',
 )
 
 app = web.application(urls, globals())

@@ -12,56 +12,66 @@ Layouts.TM = {};
 
 Layouts.TM.SliceAndDice = {
   compute: function(prop) {
-    this.controller.onBeforeCompute(json);
+    var root = this.graph.getNode(this.root);
+    this.controller.onBeforeCompute(root);
     var size = this.canvas.getSize(),
         config = this.config,
         width = size.width,
         height = size.height;
     Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
     //set root position and dimensions
-    var root = this.graph.getNode(this.root);
-    root.getPos(prop).setc(0, 0);
+    root.getPos(prop).setc(-width/2, -height/2);
     root.setData('width', width, prop);
-    root.setData('height', height + config.titleHeight + config.offset, prop);
-    this.computePositions(root, root, this.layout.orientation, prop);
+    root.setData('height', height + config.titleHeight, prop);
+    this.computePositions(root, root, this.layout.orientation, prop, root.getData('area', prop));
     this.controller.onAfterCompute(root);
   },
   
-  computePositions: function(par, ch, orientation, prop) {
-    var config = this.config, 
+  computePositions: function(par, ch, orn, prop, totalArea) {
+    var config = this.config, GUtil = Graph.Util,
         offst = config.offset,
-        width  = par.getData('width', prop) - offst,
-        height = par.getData('height', prop) - offst - config.titleHeight,
-        fact = par.getData('area', prop)? ch.getData('area', prop) / par.getData('area', prop) : 1;
+        width  = par.getData('width', prop),
+        height = par.getData('height', prop) - config.titleHeight,
+        fact = ch.getData('area', prop) / totalArea;
+    
+    //compute children areas
+    totalArea = 0;
+    GUtil.eachSubnode(ch, function(n) {
+      totalArea += n.getData('area', prop);
+    });
     
     var otherSize, size, dim, pos, pos2;
-    var horizontal = (orientation == "h");
+    var horizontal = (orn == "h");
     if(horizontal) {
-      orientation = 'v';    
+      orn = 'v';    
       otherSize = height;
-      size = Math.round(width * fact);
+      size = width * fact;
       dim = 'height';
       pos = 'y';
       pos2 = 'x';
     } else {
-      orientation = 'h';    
-      otherSize = Math.round(height * fact);
+      orn = 'h';    
+      otherSize = height * fact;
       size = width;
       dim = 'width';
       pos = 'x';
       pos2 = 'y';
     }
-    ch.getPos(prop).setc(0, 0);
+    var cpos = ch.getPos(prop);
     ch.setData('width', size, prop);
     ch.setData('height', otherSize, prop);
-
     var offsetSize = 0, tm = this;
-    Graph.Util.eachSubnode(ch, function(n) {
-      tm.computePositions(ch, n, orientation);
+    GUtil.eachSubnode(ch, function(n) {
       var p = n.getPos(prop);
-      p[pos] = offsetSize;
-      p[pos2] = 0;
-      offsetSize += (elem.getData(dim, prop) >> 0);
+      p[pos] = offsetSize + cpos[pos];
+      p[pos2] = cpos[pos2];
+      if(orn == 'v') {
+        p[pos] += config.titleHeight;
+      } else {
+        p[pos2] += config.titleHeight;
+      }
+      tm.computePositions(ch, n, orn, prop, totalArea);
+      offsetSize += n.getData(dim, prop);
     });
   }
 
