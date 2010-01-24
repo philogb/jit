@@ -440,3 +440,11 @@ TM.Plot.EdgeTypes = new Class({
 TM.SliceAndDice = new Class({
   Implements: [Loader, Extras, TM.Base, Layouts.TM.SliceAndDice]
 });
+
+TM.Squarified = new Class({
+  Implements: [Loader, Extras, TM.Base, Layouts.TM.Squarified]
+});
+
+TM.Strip = new Class({
+  Implements: [Loader, Extras, TM.Base, Layouts.TM.Strip]
+});

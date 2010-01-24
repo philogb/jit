@@ -7,7 +7,7 @@ function init() {
     idPrefix : "node",
     levelStart : 0,
     levelEnd : 3,
-    maxChildrenPerNode : 25,
+    maxChildrenPerNode : 40,
     minChildrenPerNode : 1,
     counter : 0,
     color : false,
@@ -15,12 +15,12 @@ function init() {
   });
 
   
-  tm = new TM.SliceAndDice({
+  tm = new TM.Strip({
     Canvas: {
       'injectInto': 'infovis'
     },
-    orientation: "h",
-    titleHeight: 10,
+    //orientation: "v",
+    titleHeight: 0,
     offset: 1
   });
   

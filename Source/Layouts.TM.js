@@ -40,7 +40,7 @@ Layouts.TM.SliceAndDice = {
       totalArea += n.getData('area', prop);
     });
     
-    var otherSize, size, dim, pos, pos2;
+    var otherSize, size, dim, pos, pos2, posth, pos2th;
     var horizontal = (orn == "h");
     if(horizontal) {
       orn = 'v';    
@@ -49,6 +49,8 @@ Layouts.TM.SliceAndDice = {
       dim = 'height';
       pos = 'y';
       pos2 = 'x';
+      posth = config.titleHeight;
+      pos2th = 0;
     } else {
       orn = 'h';    
       otherSize = height * fact;
@@ -56,6 +58,8 @@ Layouts.TM.SliceAndDice = {
       dim = 'width';
       pos = 'x';
       pos2 = 'y';
+      posth = 0;
+      pos2th = config.titleHeight;
     }
     var cpos = ch.getPos(prop);
     ch.setData('width', size, prop);
@@ -63,13 +67,8 @@ Layouts.TM.SliceAndDice = {
     var offsetSize = 0, tm = this;
     GUtil.eachSubnode(ch, function(n) {
       var p = n.getPos(prop);
-      p[pos] = offsetSize + cpos[pos];
-      p[pos2] = cpos[pos2];
-      if(orn == 'v') {
-        p[pos] += config.titleHeight;
-      } else {
-        p[pos2] += config.titleHeight;
-      }
+      p[pos] = offsetSize + cpos[pos] + posth;
+      p[pos2] = cpos[pos2] + pos2th;
       tm.computePositions(ch, n, orn, prop, totalArea);
       offsetSize += n.getData(dim, prop);
     });
@@ -98,16 +97,16 @@ Layouts.TM.Area = {
         height = size.height,
         offst = config.offset,
         offwdth = width - offst,
-        offhght = height - offst - config.titleHeight;
+        offhght = height - offst;
     Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
     //set root position and dimensions
-    root.getPos(prop).setc(0, 0);
+    root.getPos(prop).setc(-width/2, -height/2);
     root.setData('width', width, prop);
     root.setData('height', height, prop);
     //create a coordinates object
     var coord = {
-        'top': 0,
-        'left': 0,
+        'top': -height/2,
+        'left': -width/2,
         'width': offwdth,
         'height': offhght
     };
@@ -253,14 +252,14 @@ Layouts.TM.Squarified = new Class({
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i]; 
        var offst = config.offset,
-           height = chi.getData('height', prop) 
-             - (config.titleHeight + offst),
+           height = chi.getData('height', prop) - offst,
            width = chi.getData('width', prop) - offst;
+       var chipos = chi.getPos(prop);
        coord = {
-         'width':width,
-         'height':height,
-         'top':0,
-         'left':0
+         'width': width,
+         'height': height,
+         'top': chipos.y,
+         'left': chipos.x
        };
        this.computePositions(chi, coord);
      }
@@ -332,7 +331,7 @@ Layouts.TM.Squarified = new Class({
  },
  
  layoutV: function(ch, w, coord, prop) {
-   var totalArea = 0, rnd = Math.round; 
+   var totalArea = 0, rnd = function(x) { return x; }; 
    $each(ch, function(elem) { totalArea += elem._area; });
    var width = rnd(totalArea / w), top =  0; 
    for(var i=0, l=ch.length; i<l; i++) {
@@ -356,18 +355,19 @@ Layouts.TM.Squarified = new Class({
  },
  
  layoutH: function(ch, w, coord, prop) {
-   var totalArea = 0, rnd = Math.round; 
+   var totalArea = 0; 
    $each(ch, function(elem) { totalArea += elem._area; });
-   var height = rnd(totalArea / w),
-   top = coord.top, 
-   left = 0;
+   var height = totalArea / w,
+       top = coord.top, 
+       left = 0;
    
    for(var i=0, l=ch.length; i<l; i++) {
      var chi = ch[i];
+     var w = chi._area / height;
      chi.getPos(prop).setc(coord.left + left, top);
-     chi.setData('width', rnd(ch[i]._area / height), prop);
+     chi.setData('width', w, prop);
      chi.setData('height', height, prop);
-     left += ch[i].coord.width;
+     left += w;
    }
    var ans = {
      'height': coord.height - height,
@@ -401,13 +401,14 @@ Layouts.TM.Strip = new Class({
        for(var i=0, l=ch.length; i<l; i++) {
          var chi = ch[i];
          var offst = config.offset,
-             height = chi.getData('height', prop) - (config.titleHeight + offst),
-             width  = chi.getData('width', prop) - offst;
+             height = chi.getData('height', prop) - offst,
+             width  = chi.getData('width', prop)  - offst;
+         var chipos = chi.getPos(prop);
          coord = {
-           'width':width,
-           'height':height,
-           'top':0,
-           'left':0
+           'width': width,
+           'height': height,
+           'top': chipos.y,
+           'left': chipos.x
          };
          this.computePositions(chi, coord, prop);
        }
@@ -427,11 +428,15 @@ Layouts.TM.Strip = new Class({
     */
     processChildrenLayout: function(par, ch, coord, prop) {
      //compute children real areas
-     var area = coord.width * coord.height;
-     var dataValue = parseFloat(par.getData('area', prop));
-     $each(ch, function(elem) {
-       elem._area = area * parseFloat(elem.getData('area', prop)) / dataValue;
-     });
+      var parentArea = coord.width * coord.height;
+      var i, l=ch.length, totalChArea=0, chArea = [];
+      for(i=0; i<l; i++) {
+        chArea[i] = +ch[i].getData('area', prop);
+        totalChArea += chArea[i];
+      }
+      for(i=0; i<l; i++) {
+        ch[i]._area = parentArea * chArea[i] / totalChArea;
+      }
      var side = this.layout.horizontal()? coord.width : coord.height;
      var initElem = [ch[0]];
      var tail = ch.slice(1);
@@ -475,13 +480,12 @@ Layouts.TM.Strip = new Class({
     },
     
     layoutV: function(ch, w, coord, prop) {
-    //TODO(nico): handle node dimensions properly
-     var totalArea = 0, rnd = function(x) { return x; }; //Math.round; 
+     var totalArea = 0; 
      $each(ch, function(elem) { totalArea += elem._area; });
-     var width = rnd(totalArea / w), top =  0; 
+     var width = totalArea / w, top =  0; 
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i];
-       var h = rnd(chi._area / width);
+       var h = chi._area / width;
        chi.getPos(prop).setc(coord.left, 
            coord.top + (w - h - top));
        chi.setData('width', width, prop);
@@ -499,18 +503,19 @@ Layouts.TM.Strip = new Class({
     },
     
     layoutH: function(ch, w, coord, prop) {
-     var totalArea = 0, rnd = function(x) { return x; }; //Math.round; 
+     var totalArea = 0; 
      $each(ch, function(elem) { totalArea += elem._area; });
-     var height = rnd(totalArea / w),
-     top = coord.height - height, 
-     left = 0;
+     var height = totalArea / w,
+         top = coord.height - height, 
+         left = 0;
      
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i];
-       chi.getPos(prop).setc(coord.left + left, top);
-       chi.setData('width', rnd(chi._area / height), prop);
+       var s = chi._area / height;
+       chi.getPos(prop).setc(coord.left + left, coord.top + top);
+       chi.setData('width', s, prop);
        chi.setData('height', height, prop);
-       left += ch[i].coord.width;
+       left += s;
      }
      return {
        'height': coord.height - height,
