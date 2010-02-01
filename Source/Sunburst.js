@@ -641,16 +641,14 @@ Sunburst.Plot.NodeTypes = new Class({
         var p4coord = polar.getc(true);
         
         var ctx = canvas.getCtx();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, polarNode.rho, begin, end, false);
+        ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
         ctx.beginPath();
         ctx.moveTo(p1coord.x, p1coord.y);
         ctx.lineTo(p4coord.x, p4coord.y);
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, polarNode.rho, begin, end, false);
-      
         ctx.moveTo(p2coord.x, p2coord.y);
         ctx.lineTo(p3coord.x, p3coord.y);
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
         ctx.fill();
 
         if(node.collapsed) {
