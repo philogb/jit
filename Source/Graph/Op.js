@@ -71,8 +71,8 @@ Graph.Op = {
   
     removeNode: function(node, opt) {
         var viz = this.viz;
-        var options = $merge(this.options, viz.controller, opt);
-        var n = $splat(node);
+        var options = $.merge(this.options, viz.controller, opt);
+        var n = $.splat(node);
         var i, that, nodeObj;
         switch(options.type) {
             case 'nothing':
@@ -92,13 +92,13 @@ Graph.Op = {
                     nodeObj = viz.graph.getNode(n[i]);
                     nodeObj.setData('alpha', 0, 'end');
                 }
-                viz.fx.animate($merge(options, {
+                viz.fx.animate($.merge(options, {
                     modes: ['node-property:alpha'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
                         viz.labels.clearLabels();
                         viz.reposition();
-                        viz.fx.animate($merge(options, {
+                        viz.fx.animate($.merge(options, {
                             modes: ['linear']
                         }));
                     }
@@ -114,7 +114,7 @@ Graph.Op = {
                     nodeObj.ignore = true;
                 }
                 viz.reposition();
-                viz.fx.animate($merge(options, {
+                viz.fx.animate($.merge(options, {
                     modes: ['node-property:alpha', 'linear'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
@@ -173,8 +173,8 @@ Graph.Op = {
     */
     removeEdge: function(vertex, opt) {
         var viz = this.viz;
-        var options = $merge(this.options, viz.controller, opt);
-        var v = ($type(vertex[0]) == 'string')? [vertex] : vertex;
+        var options = $.merge(this.options, viz.controller, opt);
+        var v = ($.type(vertex[0]) == 'string')? [vertex] : vertex;
         var i, that, adjs;
         switch(options.type) {
             case 'nothing':
@@ -196,12 +196,12 @@ Graph.Op = {
                         adjs[1].setData('alpha', 0,'end');
                     }
                 }
-                viz.fx.animate($merge(options, {
+                viz.fx.animate($.merge(options, {
                     modes: ['edge-property:alpha'],
                     onComplete: function() {
                         that.removeEdge(v, { type: 'nothing' });
                         viz.reposition();
-                        viz.fx.animate($merge(options, {
+                        viz.fx.animate($.merge(options, {
                             modes: ['linear']
                         }));
                     }
@@ -221,7 +221,7 @@ Graph.Op = {
                     }
                 }
                 viz.reposition();
-                viz.fx.animate($merge(options, {
+                viz.fx.animate($.merge(options, {
                     modes: ['edge-property:alpha', 'linear'],
                     onComplete: function() {
                         that.removeEdge(v, { type: 'nothing' });
@@ -285,7 +285,7 @@ Graph.Op = {
     */
     sum: function(json, opt) {
         var viz = this.viz;
-        var options = $merge(this.options, viz.controller, opt), root = viz.root;
+        var options = $.merge(this.options, viz.controller, opt), root = viz.root;
         var GUtil, graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
@@ -315,10 +315,10 @@ Graph.Op = {
                 var modes = !fadeEdges? ['node-property:alpha'] : ['node-property:alpha', 'edge-property:alpha'];
                 viz.reposition();
                 if(options.type != 'fade:con') {
-                    viz.fx.animate($merge(options, {
+                    viz.fx.animate($.merge(options, {
                         modes: ['linear'],
                         onComplete: function() {
-                            viz.fx.animate($merge(options, {
+                            viz.fx.animate($.merge(options, {
                                 modes: modes,
                                 onComplete: function() {
                                     options.onComplete();
@@ -332,7 +332,7 @@ Graph.Op = {
                           elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
                         }
                     });
-                    viz.fx.animate($merge(options, {
+                    viz.fx.animate($.merge(options, {
                         modes: ['linear'].concat(modes)
                     }));
                 }
@@ -382,7 +382,7 @@ Graph.Op = {
     */
     morph: function(json, opt) {
         var viz = this.viz;
-        var options = $merge(this.options, viz.controller, opt), root = viz.root;
+        var options = $.merge(this.options, viz.controller, opt), root = viz.root;
         var GUtil, graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
@@ -453,7 +453,7 @@ Graph.Op = {
                       elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
                     }
                 });
-                viz.fx.animate($merge(options, {
+                viz.fx.animate($.merge(options, {
                     modes: ['polar'].concat(modes),
                     onComplete: function() {
                         GUtil.eachNode(viz.graph, function(elem) {
@@ -503,8 +503,8 @@ Graph.Op = {
     contract: function(node, opt) {
       var GUtil = Graph.Util;
       var viz = this.viz;
-      if(node.collapsed || !GUtil.anySubnode(node, $lambda(true))) return;
-      opt = $merge(this.options, viz.config, opt || {}, {
+      if(node.collapsed || !GUtil.anySubnode(node, $.lambda(true))) return;
+      opt = $.merge(this.options, viz.config, opt || {}, {
         'modes': ['node-property:alpha:span', 'linear']
       });
       node.collapsed = true;
@@ -564,7 +564,7 @@ Graph.Op = {
       if(!('collapsed' in node)) return;
       var GUtil = Graph.Util;
       var viz = this.viz;
-      opt = $merge(this.options, viz.config, opt || {}, {
+      opt = $.merge(this.options, viz.config, opt || {}, {
         'modes': ['node-property:alpha:span', 'linear']
       });
       delete node.collapsed;

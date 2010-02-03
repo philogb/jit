@@ -69,7 +69,7 @@ var NodeDim = {
   },
   
   setLabelStyles: function(opt) {
-    $extend(this.label.style, {
+    $.extend(this.label.style, {
       'visibility': 'hidden',
       'position': 'absolute',
       'width': 'auto',

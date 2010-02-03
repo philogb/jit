@@ -82,10 +82,10 @@ Graph.Plot = {
         },
 
         'color': function(elem, prop, delta) {
-          var from = $hexToRgb(elem.getData(prop, 'start'));
-          var to = $hexToRgb(elem.getData(prop, 'end'));
+          var from = $.hexToRgb(elem.getData(prop, 'start'));
+          var to = $.hexToRgb(elem.getData(prop, 'end'));
           var comp = this.compute;
-          var val = $rgbToHex([parseInt(comp(from[0], to[0], delta)),
+          var val = $.rgbToHex([parseInt(comp(from[0], to[0], delta)),
                                 parseInt(comp(from[1], to[1], delta)),
                                 parseInt(comp(from[2], to[2], delta))]);
           
@@ -148,10 +148,10 @@ Graph.Plot = {
     */
     sequence: function(options) {
         var that = this;
-        options = $merge({
-          condition: $lambda(false),
-          step: $empty,
-          onComplete: $empty,
+        options = $.merge({
+          condition: $.lambda(false),
+          step: $.empty,
+          onComplete: $.empty,
           duration: 200
         }, options || {});
 
@@ -247,7 +247,7 @@ Graph.Plot = {
        
     */
     animate: function(opt, versor) {
-      opt = $merge(this.viz.config, opt || {});
+      opt = $.merge(this.viz.config, opt || {});
       var that = this,
       viz = this.viz,
       graph  = viz.graph,
@@ -259,7 +259,7 @@ Graph.Plot = {
       
       //animate
       if(opt.hideLabels) this.labels.hideLabels(true);
-      this.animation.setOptions($merge(opt, {
+      this.animation.setOptions($.merge(opt, {
         $animating: false,
         compute: function(delta) {
           GUtil.eachNode(graph, function(node) { 
@@ -330,16 +330,16 @@ Graph.Plot = {
      var viz = this.viz,
      graph  = viz.graph,
      GUtil = Graph.Util,
-     options = $merge(this.viz.config, {
+     options = $.merge(this.viz.config, {
        'elements': {
          'id': false,
          'properties': {}
        },
        'reposition': false
      });
-     opt = $merge(options, opt || {}, {
-       onBeforeCompute: $empty,
-       onAfterCompute: $empty
+     opt = $.merge(options, opt || {}, {
+       onBeforeCompute: $.empty,
+       onAfterCompute: $.empty
      });
      //check if an animation is running and exit
      //if it's not a nodefx one.
@@ -361,8 +361,8 @@ Graph.Plot = {
          }
        });
      } else {
-       var ids = $splat(opt.elements.id);
-       $each(ids, function(id) {
+       var ids = $.splat(opt.elements.id);
+       $.each(ids, function(id) {
          var n = graph.getNode(id);
          if(n) {
            for(var prop in props) {
@@ -382,7 +382,7 @@ Graph.Plot = {
        viz.compute('end');
      }
      //animate
-     this.animate($merge(opt, {
+     this.animate($.merge(opt, {
        modes: modes,
        type:'nodefx'
      }));
@@ -602,8 +602,8 @@ Graph.Label.Native = new Class({
         ctx.fillText(node.name, coord.x, coord.y);
     },
 
-    hideLabel: $empty,
-    hideLabels: $empty
+    hideLabel: $.empty,
+    hideLabels: $.empty
 });
 
 /*
@@ -765,9 +765,9 @@ Graph.Label.DOM = new Class({
        (end code)
     */
     hideLabel: function(node, flag) {
-      node = $splat(node);
+      node = $.splat(node);
       var st = flag? "" : "none", lab, that = this;
-      $each(node, function(n) {
+      $.each(node, function(n) {
         var lab = that.getLabel(n.id);
         if (lab) {
            lab.style.display = st;

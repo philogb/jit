@@ -140,8 +140,8 @@ this.Trans = {
 (function() {
 
   var makeTrans = function(transition, params){
-      params = $splat(params);
-      return $extend(transition, {
+      params = $.splat(params);
+      return $.extend(transition, {
           easeIn: function(pos){
               return transition(pos, params);
           },
@@ -194,11 +194,11 @@ this.Trans = {
   
   };
   
-  $each(transitions, function(val, key) {
+  $.each(transitions, function(val, key) {
     Trans[key] = makeTrans(val);
   });
 
-  $each(['Quad', 'Cubic', 'Quart', 'Quint'], function(elem, i) {
+  $.each(['Quad', 'Cubic', 'Quart', 'Quint'], function(elem, i) {
     Trans[elem] = makeTrans(function(p){
             return Math.pow(p, [i + 2]);
         });
@@ -235,16 +235,16 @@ var Animation = new Class({
         duration: 2500,
         fps: 40,
         transition: Trans.Quart.easeInOut,
-        compute: $empty,
-        complete: $empty,
+        compute: $.empty,
+        complete: $.empty,
         link: 'ignore'
     };
-    this.opt = $merge(opt, options || {});
+    this.opt = $.merge(opt, options || {});
     return this;
   },
   
   step: function(){
-    var time = $time(), opt = this.opt;
+    var time = $.time(), opt = this.opt;
     if (time < this.time + opt.duration){
       var delta = opt.transition((time - this.time) / opt.duration);
       opt.compute(delta);
@@ -265,7 +265,7 @@ var Animation = new Class({
   startTimer: function(){
     var that = this, fps = this.opt.fps;
     if (this.timer) return false;
-    this.time = $time() - this.time;
+    this.time = $.time() - this.time;
     this.timer = setInterval((function () { that.step(); }), Math.round(1000 / fps));
     return true;
   },
@@ -282,7 +282,7 @@ var Animation = new Class({
 
   stopTimer: function(){
     if (!this.timer) return false;
-    this.time = $time() - this.time;
+    this.time = $.time() - this.time;
     this.timer = clearInterval(this.timer);
     return true;
   },

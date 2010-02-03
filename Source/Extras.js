@@ -55,17 +55,17 @@ var MouseEventsManager = new Class({
 
     this.click = {
       node: null,
-      time: $time()
+      time: $.time()
     };
     
     this.rightClick = {
         node: null,
-        time: $time()
+        time: $.time()
     };
 
     this.mousemove = {
       node: null,
-      time: $time()
+      time: $.time()
     };
     
     this.mintime = 10;    
@@ -74,8 +74,8 @@ var MouseEventsManager = new Class({
   
   attachEvents: function() {
     var htmlCanvas = this.canvas.getElement(), that = this;
-    htmlCanvas.oncontextmenu = $lambda(false);
-    $addEvent(htmlCanvas, 'mouseup', function(e, win) {
+    htmlCanvas.oncontextmenu = $.lambda(false);
+    $.addEvent(htmlCanvas, 'mouseup', function(e, win) {
       var rightClick = (e.which == 3 || e.button == 2);
       if (rightClick) {
         that.handleEvent(that.rightClick, 'onRightClick', e, win);
@@ -89,7 +89,7 @@ var MouseEventsManager = new Class({
       else 
           e.returnValue = false;
     });
-    $addEvent(htmlCanvas, 'mousemove', function(e, win) {
+    $.addEvent(htmlCanvas, 'mousemove', function(e, win) {
       that.handleEvent(that.mousemove, 'onMousemove', e, win);
     });
   },
@@ -99,8 +99,8 @@ var MouseEventsManager = new Class({
   },
   
   handleEvent: function(obj, method, e, win) {
-    if($time() - obj.time <= this.mintime) return;
-    obj.time = $time();
+    if($.time() - obj.time <= this.mintime) return;
+    obj.time = $.time();
     var fx = this.viz.fx;
     var g = this.viz.graph;
     var pos = Event.getPos(e, win);
@@ -178,22 +178,22 @@ var Tips = new Class({
   attach: function(node, elem) {
     if(this.config.Tips.allow) {
       var that = this, cont = this.controller;
-      $addEvent(elem, 'mouseover', function(e){
+      $.addEvent(elem, 'mouseover', function(e){
         cont.Tips.onShow(that.tip, node, elem);
       });
-      $addEvent(elem, 'mouseout', function(e){
+      $.addEvent(elem, 'mouseout', function(e){
           that.tip.style.display = 'none';
       });
       //Add mousemove event handler
-      $addEvent(elem, 'mousemove', function(e, win){
+      $.addEvent(elem, 'mousemove', function(e, win){
         var pos = Event.getPos(e, win);
         that.setTooltipPosition(pos);
       });
     }
   },
 
-  onClick: $empty,
-  onRightClick: $empty,
+  onClick: $.empty,
+  onRightClick: $.empty,
   
   onMousemove: function(node, opt) {
     if(!node) {
@@ -291,7 +291,7 @@ var NodeStyles = new Class({
     if(set) {
       var that = this;
       if(!node.styles) {
-        node.styles = $merge(node.data, {});
+        node.styles = $.merge(node.data, {});
       }
       for(var s in this['nodeStylesOn' + type]) {
         var $s = '$' + s;
@@ -331,13 +331,13 @@ var NodeStyles = new Class({
   attachOnHover: function(node, elem) {
     var that = this, viz = this.viz;
     var nStyles = viz.config.NodeStyles.stylesHover;
-    $addEvent(elem, 'mouseover', function() {
+    $.addEvent(elem, 'mouseover', function() {
       if(!node.selected) {
         that.toggleStylesOnHover(node, true);
       }
     });
     
-    $addEvent(elem, 'mouseout', function() {
+    $.addEvent(elem, 'mouseout', function() {
       !node.selected && that.toggleStylesOnHover(node, false);
     });
   },
@@ -345,7 +345,7 @@ var NodeStyles = new Class({
   attachOnClick: function(node, elem) {
     var viz = this.viz, that = this;
     var nStyles = viz.config.NodeStyles.stylesClick;
-    $addEvent(elem, 'click', function() {
+    $.addEvent(elem, 'click', function() {
       that.onClick(node);
     });
   },

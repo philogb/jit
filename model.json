@@ -1,0 +1,146 @@
+{
+  'Core': [],
+
+  'Animation': [
+    'Core'
+  ],
+  
+  'Canvas': [
+    'Core'
+  ],
+  
+  'Coordinates': {
+    'Complex': [
+      'Coordinates.Polar'
+    ],
+    'Polar': [
+      'Coordinates.Complex'
+    ]
+  },
+  
+  'Extras': [
+      'Core', 'Animation'
+  ],
+  
+  'Graph': {
+    'Base': [
+        'Core', 'Coordinates.Complex', 'Coordinates.Polar'
+    ],
+    'Op': [
+        'Core', 'Graph.Base'
+    ],
+    'Plot': [
+        'Core', 'Graph.Base'
+    ]
+  },
+  
+  'Layouts': {
+    'Base': [
+      'Graph.Base'
+    ],
+    'Tree': [
+      'Layouts.Base'
+    ],
+    'Radial': [
+      'Layouts.Base'
+    ],
+    'ForceDirected': [
+      'Layouts.Base'
+    ],
+    'TM': [
+      'Layouts.Base'
+    ]
+  },
+  
+  'Loader': [
+      'Core', 'Graph.Base'
+  ],
+  
+  'Options': [
+      'Core', 'Animation'
+  ],
+
+  'Hypertree': [
+      'Core',
+      'Options',
+      'Extras',
+      'Canvas',
+      'Complex',
+      'Polar',
+      'Graph.Op',
+      'Graph.Plot',
+      'Loader',
+      'Layouts.Radial',
+      'Animation'
+  ],
+
+  'RGraph': [
+      'Core',
+      'Options',
+      'Extras',
+      'Canvas',
+      'Complex',
+      'Polar',
+      'Graph.Op',
+      'Graph.Plot',
+      'Loader',
+      'Layouts.Radial',
+      'Animation'
+  ],
+
+  'Sunburst': [
+      'Core',
+      'Options',
+      'Extras',
+      'Canvas',
+      'Complex',
+      'Polar',
+      'Graph.Op',
+      'Graph.Plot',
+      'Loader',
+      'Layouts.Radial',
+      'Animation'
+  ],
+
+  'ForceDirected': [
+      'Core',
+      'Options',
+      'Extras',
+      'Canvas',
+      'Complex',
+      'Polar',
+      'Graph.Op',
+      'Graph.Plot',
+      'Loader',
+      'Layouts.ForceDirected',
+      'Animation'
+  ],
+
+  'Spacetree': [
+      'Core',
+      'Options',
+      'Extras',
+      'Canvas',
+      'Complex',
+      'Polar',
+      'Graph.Op',
+      'Graph.Plot',
+      'Loader',
+      'Layouts.Tree',
+      'Animation'
+  ],
+
+  'Treemap': [
+      'Core',
+      'Options',
+      'Extras',
+      'Canvas',
+      'Complex',
+      'Polar',
+      'Graph.Op',
+      'Graph.Plot',
+      'Loader',
+      'Layouts.TM',
+      'Animation'
+  ]
+}

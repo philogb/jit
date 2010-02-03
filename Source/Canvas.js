@@ -193,8 +193,8 @@ this.Canvas = (function(){
     return function(opt){
         var id = opt.injectInto, ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
         var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
-        var wrapper = $get(id);
-        opt = $merge(config, opt || {});
+        var wrapper = $.get(id);
+        opt = $.merge(config, opt || {});
         //create elements
         var dim = {
             'width': opt.width || wrapper.offsetWidth || 200,
@@ -202,7 +202,7 @@ this.Canvas = (function(){
         };
         mainContainer = create("div", {
             'id': id + '-canvaswidget'
-        }, $merge(dim, {
+        }, $.merge(dim, {
             'position': 'relative'
         }));
         labelContainer =  createLabelContainer(opt.labels, idLabel, dim);       
@@ -213,12 +213,12 @@ this.Canvas = (function(){
             'width': dim.width + 'px',
             'height': dim.height + 'px'
         };
-        canvas = create("canvas", $merge({
+        canvas = create("canvas", $.merge({
             'id': idCanvas
         }, dim), dimPos);
         var bc = opt.backgroundCanvas;
         if (bc) {
-            bkcanvas = create("canvas", $merge({
+            bkcanvas = create("canvas", $.merge({
                 'id': idBCanvas
             }, dim), dimPos);
             //append elements
@@ -406,7 +406,7 @@ this.Canvas = (function(){
             */
            getPos: function(force){
               if(force || !this.pos) {
-                return this.pos = $getPos(this.getElement());
+                return this.pos = $.getPos(this.getElement());
               }
               return this.pos;
            },

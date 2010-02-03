@@ -367,11 +367,11 @@ Complex.prototype = {
         var x = this.x, y = this.y;
         var sq = pos.squaredNorm();
         this.x = x * pos.x + y * pos.y; this.y = y * pos.x - x * pos.y;
-        return this.$scale(1 / sq);
+        return this.$.scale(1 / sq);
     }
 };
 
 var $C = function(a, b) { return new Complex(a, b); };
 
-Complex.KER = $C(0, 0);
+Complex.KER = $.C(0, 0);
 

@@ -55,7 +55,7 @@ this.Graph = new Class({
     };
     this.Node = Node;
     this.Edge = Edge;
-    this.opt = $merge(innerOptions, opt || {});
+    this.opt = $.merge(innerOptions, opt || {});
     this.nodes= {};
  },
 
@@ -128,7 +128,7 @@ this.Graph = new Class({
   */  
   addNode: function(obj) {
     if(!this.nodes[obj.id]) {  
-      this.nodes[obj.id] = new Graph.Node($extend({
+      this.nodes[obj.id] = new Graph.Node($.extend({
         'id': obj.id,
         'name': obj.name,
         'data': obj.data
@@ -290,12 +290,12 @@ Graph.Node = new Class({
         'end' : 0
       },
 
-      'pos': (complex && $C(0, 0)) || $P(0, 0),
-      'startPos': (complex && $C(0, 0)) || $P(0, 0),
-      'endPos': (complex && $C(0, 0)) || $P(0, 0)
+      'pos': (complex && $.C(0, 0)) || $.P(0, 0),
+      'startPos': (complex && $.C(0, 0)) || $.P(0, 0),
+      'endPos': (complex && $.C(0, 0)) || $.P(0, 0)
     };
     
-    $extend(this, $extend(innerOptions, opt));
+    $.extend(this, $.extend(innerOptions, opt));
     this.Node = Node;
     this.Edge = Edge;
 },
@@ -615,7 +615,7 @@ Graph.Util = {
        For internal use only. Provides a filtering function based on flags.
     */
     filter: function(param) {
-        if(!param || !($type(param) == 'string')) return function() { return true; };
+        if(!param || !($.type(param) == 'string')) return function() { return true; };
         var props = param.split(" ");
         return function(elem) {
             for(var i=0; i<props.length; i++) { 
@@ -861,8 +861,8 @@ Graph.Util = {
     */
     anySubnode: function(node, cond, flags) {
       var flag = false;
-      cond = cond || $lambda(true);
-      var c = $type(cond) == 'string'? function(n) { return n[cond]; } : cond;
+      cond = cond || $.lambda(true);
+      var c = $.type(cond) == 'string'? function(n) { return n[cond]; } : cond;
       this.eachSubnode(node, function(elem) {
         if(c(elem)) flag = true;
       }, flags);
@@ -886,7 +886,7 @@ Graph.Util = {
         var ans = [], that = this;
         level = level || 0;
         var levelStart, levelEnd;
-        if($type(level) == 'array') {
+        if($.type(level) == 'array') {
             levelStart = level[0];
             levelEnd = level[1];
         } else {

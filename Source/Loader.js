@@ -27,7 +27,7 @@
 */
 var Loader = {
      construct: function(json) {
-        var isGraph = ($type(json) == 'array');
+        var isGraph = ($.type(json) == 'array');
         var ans = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
         if(!isGraph) 
             //make tree
@@ -181,7 +181,7 @@ var Loader = {
         this.labels.clearLabels(true);
       }
       this.graph = this.construct(json);
-      if($type(json) != 'array'){
+      if($.type(json) != 'array'){
         this.root = json.id;
       } else {
         this.root = json[i? i : 0].id;

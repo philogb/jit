@@ -146,7 +146,7 @@
     - _labels_ Access a <ST.Label> instance.
  */
 
-this.ST= (function() {
+$jit.ST= (function() {
     // Define some private methods first...
     // Nodes in path
     var nodesInPath = [];
@@ -196,13 +196,15 @@ this.ST= (function() {
         });
         return nodeArray;
      };
-    //Now define the actual class.    
+    // Now define the actual class.
     return new Class({
     
         Implements: [Loader, Extras, Layouts.Tree],
         
         initialize: function(controller) {            
-            var config= {
+          var $ST = $jit.ST;
+          
+          var config= {
                 levelsToShow: 2,
                 levelDistance: 30,
                 withLabels: true,
@@ -214,25 +216,24 @@ this.ST= (function() {
                 fps: 25
             };
             
-            this.controller = this.config = $merge(
-                Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", "Tips", "NodeStyles"),
-                config, controller);
+            this.controller = this.config = $.merge(
+                Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", 
+                    "Tips", "NodeStyles"), config, controller);
 
-            var canvasConfig = this.config.Canvas;
+            var canvasConfig = this.config;
             this.config.labelContainer = canvasConfig.injectInto + '-label';
             this.canvas = new Canvas(canvasConfig);
-            
             this.graphOptions = {
                 'complex': true
             };
             this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
-            this.labels = new ST.Label[canvasConfig.labels](this);
-            this.fx = new ST.Plot(this);
-            this.op = new ST.Op(this);
-            this.group = new ST.Group(this);
-            this.geom = new ST.Geom(this);
+            this.labels = new $ST.Label[canvasConfig.labels](this);
+            this.fx = new $ST.Plot(this);
+            this.op = new $ST.Op(this);
+            this.group = new $ST.Group(this);
+            this.geom = new $ST.Geom(this);
             this.clickedNode=  null;
-            //initialize extras
+            // initialize extras
             this.initializeExtras();
         },
     
@@ -377,7 +378,7 @@ this.ST= (function() {
         },
         
           requestNodes: function(node, onComplete) {
-            var handler = $merge(this.controller, onComplete), 
+            var handler = $.merge(this.controller, onComplete), 
             lev = this.config.levelsToShow, GUtil = Graph.Util;
             if(handler.request) {
                 var leaves = [], d = node._depth;
@@ -400,7 +401,7 @@ this.ST= (function() {
             if(switched) Geom.switchOrientation(switched);
             var nodes = getNodesToHide.call(this);
             if(switched) Geom.switchOrientation(orn);
-            Group.contract(nodes, $merge(this.controller, onComplete));
+            Group.contract(nodes, $.merge(this.controller, onComplete));
           },
       
          move: function(node, onComplete) {
@@ -412,13 +413,13 @@ this.ST= (function() {
             if(move.enable) {
                 this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
             }
-            this.fx.animate($merge(this.controller, { modes: ['linear'] }, onComplete));
+            this.fx.animate($.merge(this.controller, { modes: ['linear'] }, onComplete));
          },
       
       
         expand: function (node, onComplete) {
             var nodeArray = getNodesToShow.call(this, node);
-            this.group.expand(nodeArray, $merge(this.controller, onComplete));
+            this.group.expand(nodeArray, $.merge(this.controller, onComplete));
         },
     
     
@@ -428,7 +429,7 @@ this.ST= (function() {
           function path(node) {
               if(node == null || node.selected) return;
               node.selected = true;
-              $each(that.group.getSiblings([node])[node.id], 
+              $.each(that.group.getSiblings([node])[node.id], 
               function(n) { 
                    n.exist = true; 
                    n.drawn = true; 
@@ -491,7 +492,7 @@ this.ST= (function() {
             	Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
         	}
 
-        	//delete previous orientations (if any)
+        	// delete previous orientations (if any)
         	delete rootNode.data.$orns;
 
         	if(method == 'animate') {
@@ -529,9 +530,9 @@ this.ST= (function() {
         */
         addSubtree: function(subtree, method, onComplete) {
             if(method == 'replot') {
-                this.op.sum(subtree, $extend({ type: 'replot' }, onComplete || {}));
+                this.op.sum(subtree, $.extend({ type: 'replot' }, onComplete || {}));
             } else if (method == 'animate') {
-                this.op.sum(subtree, $extend({ type: 'fade:seq' }, onComplete || {}));
+                this.op.sum(subtree, $.extend({ type: 'fade:seq' }, onComplete || {}));
             }
         },
     
@@ -563,9 +564,9 @@ this.ST= (function() {
                 subids.push(n.id);
             });
             if(method == 'replot') {
-                this.op.removeNode(subids, $extend({ type: 'replot' }, onComplete || {}));
+                this.op.removeNode(subids, $.extend({ type: 'replot' }, onComplete || {}));
             } else if (method == 'animate') {
-                this.op.removeNode(subids, $extend({ type: 'fade:seq'}, onComplete || {}));
+                this.op.removeNode(subids, $.extend({ type: 'fade:seq'}, onComplete || {}));
             }
         },
     
@@ -592,7 +593,7 @@ this.ST= (function() {
             var group = this.group, geom = this.geom;
             var node=  this.graph.getNode(id), canvas = this.canvas;
             var root  = this.graph.getNode(this.root);
-            var complete = $merge(this.controller, onComplete);
+            var complete = $.merge(this.controller, onComplete);
             var that = this;
     
             complete.onBeforeCompute(node);
@@ -656,12 +657,12 @@ this.ST= (function() {
               offsetX: 0,
               offsetY: 0  
             },
-            onBeforeRequest: $empty,
-            onBeforeContract: $empty,
-            onBeforeMove: $empty,
-            onBeforeExpand: $empty
+            onBeforeRequest: $.empty,
+            onBeforeContract: $.empty,
+            onBeforeMove: $.empty,
+            onBeforeExpand: $.empty
         };
-        var complete = $merge(this.controller, innerController, options);
+        var complete = $.merge(this.controller, innerController, options);
         
         if(!this.busy) {
             this.busy= true;
@@ -687,13 +688,13 @@ this.ST= (function() {
                                             complete.onAfterCompute(id);
                                             complete.onComplete();
                                         }
-                                    }); //expand
+                                    }); // expand
                                 }
-                            }); //move
+                            }); // move
                         }
-                    });//contract
+                    });// contract
                 }
-            });//request
+            });// request
         }
       }
     });
@@ -721,7 +722,7 @@ this.ST= (function() {
    (end code)
 
 */
-ST.Op = new Class({
+$jit.ST.Op = new Class({
     Implements: Graph.Op,
     
     initialize: function(viz) {
@@ -734,7 +735,7 @@ ST.Op = new Class({
      Performs operations on group of nodes.
 
 */
-ST.Group = new Class({
+$jit.ST.Group = new Class({
     
     initialize: function(viz) {
         this.viz = viz;
@@ -780,7 +781,7 @@ ST.Group = new Class({
         var that = this;
 
         nodes = this.prepare(nodes);
-        this.animation.setOptions($merge(controller, {
+        this.animation.setOptions($.merge(controller, {
             $animating: false,
             compute: function(delta) {
               if(delta == 1) delta = 0.99;
@@ -797,15 +798,15 @@ ST.Group = new Class({
     hide: function(nodes, controller) {
         var GUtil = Graph.Util, viz = this.viz;
         for(var i=0; i<nodes.length; i++) {
-            //TODO nodes are requested on demand, but not
-            //deleted when hidden. Would that be a good feature? 
-            //Currently that feature is buggy, so I'll turn it off
-            //Actually this feature is buggy because trimming should take
-            //place onAfterCompute and not right after collapsing nodes.
+            // TODO nodes are requested on demand, but not
+            // deleted when hidden. Would that be a good feature?
+            // Currently that feature is buggy, so I'll turn it off
+            // Actually this feature is buggy because trimming should take
+            // place onAfterCompute and not right after collapsing nodes.
             if (true || !controller || !controller.request) {
                 GUtil.eachLevel(nodes[i], 1, false, function(elem){
                     if (elem.exist) {
-                        $extend(elem, {
+                        $.extend(elem, {
                             'drawn': false,
                             'exist': false
                         });
@@ -831,7 +832,7 @@ ST.Group = new Class({
     expand: function(nodes, controller) {
         var that = this, GUtil = Graph.Util;
         this.show(nodes);
-        this.animation.setOptions($merge(controller, {
+        this.animation.setOptions($.merge(controller, {
             $animating: false,
             compute: function(delta) {
                 that.plotStep(delta, controller, this.$animating);
@@ -849,8 +850,8 @@ ST.Group = new Class({
     show: function(nodes) {
         var GUtil = Graph.Util, config = this.config;
         this.prepare(nodes);
-        $each(nodes, function(n) {
-        	//check for root nodes if multitree
+        $.each(nodes, function(n) {
+        	// check for root nodes if multitree
         	if(config.multitree && !('$orn' in n.data)) {
         		delete n.data.$orns;
         		var orns = ' ';
@@ -901,7 +902,7 @@ ST.Group = new Class({
         nodes = this.nodes,
         GUtil = Graph.Util;
         var i, node;
-        //hide nodes that are meant to be collapsed/expanded
+        // hide nodes that are meant to be collapsed/expanded
         var nds = {};
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
@@ -909,9 +910,9 @@ ST.Group = new Class({
           var root = config.multitree && !('$orn' in node.data);
           var orns = root && node.data.$orns;
           GUtil.eachSubgraph(node, function(n) { 
-            //TODO(nico): Cleanup
-        	  //special check for root node subnodes when
-        	  //multitree is checked.
+            // TODO(nico): Cleanup
+        	  // special check for root node subnodes when
+        	  // multitree is checked.
         	  if(root && orns && orns.indexOf(n.data.$orn) > 0 
         			  && n.drawn) {
         		  n.drawn = false;
@@ -923,13 +924,13 @@ ST.Group = new Class({
             });	
             node.drawn = true;
         }
-        //plot the whole (non-scaled) tree
+        // plot the whole (non-scaled) tree
         if(nodes.length > 0) viz.fx.plot();
-        //show nodes that were previously hidden
+        // show nodes that were previously hidden
         for(i in nds) {
-          $each(nds[i], function(n) { n.drawn = true; });
+          $.each(nds[i], function(n) { n.drawn = true; });
         }
-        //plot each scaled subtree
+        // plot each scaled subtree
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
           ctx.save();
@@ -940,7 +941,7 @@ ST.Group = new Class({
 
       getSiblings: function(nodes) {
         var siblings = {}, GUtil = Graph.Util;
-        $each(nodes, function(n) {
+        $.each(nodes, function(n) {
             var par = GUtil.getParents(n);
             if (par.length == 0) {
                 siblings[n.id] = [n];
@@ -974,7 +975,7 @@ ST.Group = new Class({
 
 */
 
-ST.Geom = new Class({
+$jit.ST.Geom = new Class({
     
     initialize: function(viz) {
         this.viz = viz;
@@ -1000,9 +1001,9 @@ ST.Geom = new Class({
        (end code)
     */  
     translate: function(pos, prop) {
-        prop = $splat(prop);
+        prop = $.splat(prop);
         Graph.Util.eachNode(this.viz.graph, function(elem) {
-            $each(prop, function(p) { elem[p].$add(pos); });
+            $.each(prop, function(p) { elem[p].$add(pos); });
         });
     },
 
@@ -1020,7 +1021,7 @@ ST.Geom = new Class({
        Works like a CSS property, either _top-right-bottom-left_ or _top|bottom - left|right_.
      */
     dispatch: function() {
-    	  //TODO(nico) should store Array.prototype.slice.call somewhere.
+    	  // TODO(nico) should store Array.prototype.slice.call somewhere.
         var args = Array.prototype.slice.call(arguments);
         var s = args.shift(), len = args.length;
         var val = function(a) { return typeof a == 'function'? a() : a; };
@@ -1132,7 +1133,7 @@ ST.Geom = new Class({
 
         var $C = function(a, b) { 
           return function(){
-            return node.pos.add(new Complex(a, b)).$scale(1 - scale);
+            return node.pos.add(new Complex(a, b)).$.scale(1 - scale);
           }; 
         };
         if(dim.align == "left") {
@@ -1225,7 +1226,7 @@ ST.Geom = new Class({
 
 
 */
-ST.Plot = new Class({
+$jit.ST.Plot = new Class({
     
     Implements: Graph.Plot,
     
@@ -1235,8 +1236,8 @@ ST.Plot = new Class({
         this.node = this.config.Node;
         this.edge = this.config.Edge;
         this.animation = new Animation;
-        this.nodeTypes = new ST.Plot.NodeTypes;
-        this.edgeTypes = new ST.Plot.EdgeTypes;        
+        this.nodeTypes = new $jit.ST.Plot.NodeTypes;
+        this.edgeTypes = new $jit.ST.Plot.EdgeTypes;        
         this.labels = viz.labels;
     },
     
@@ -1253,7 +1254,7 @@ ST.Plot = new Class({
             ctx.translate(diff.x, diff.y);
             ctx.scale(scale, scale);
         }
-        this.plotTree(node, $merge(opt, {
+        this.plotTree(node, $.merge(opt, {
           'withLabels': true,
           'hideLabels': !!scale,
           'plotSubtree': function(n, ch) {
@@ -1331,7 +1332,7 @@ ST.Plot = new Class({
   <Graph.Label>, <ST.Label.HTML>, <RGraph.Label.SVG>
 
  */ 
-ST.Label = {};
+$jit.ST.Label = {};
 
 /*
    Class: ST.Label.Native
@@ -1347,7 +1348,7 @@ ST.Label = {};
    <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
 
 */
-ST.Label.Native = new Class({
+$jit.ST.Label.Native = new Class({
   Extends: Graph.Label.Native,
   /*
        Method: plotLabel
@@ -1371,7 +1372,7 @@ ST.Label.Native = new Class({
     }
 });
 
-ST.Label.DOM = new Class({
+$jit.ST.Label.DOM = new Class({
   Implements: Graph.Label.DOM,
 
   /* 
@@ -1448,8 +1449,8 @@ ST.Label.DOM = new Class({
    <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
 
 */
-ST.Label.SVG = new Class({
-  Implements: [ST.Label.DOM, Graph.Label.SVG],
+$jit.ST.Label.SVG = new Class({
+  Implements: [$jit.ST.Label.DOM, Graph.Label.SVG],
 
   initialize: function(viz) {
     this.viz = viz;
@@ -1470,8 +1471,8 @@ ST.Label.SVG = new Class({
    <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
 
 */
-ST.Label.HTML = new Class({
-  Implements: [ST.Label.DOM, Graph.Label.HTML],
+$jit.ST.Label.HTML = new Class({
+  Implements: [$jit.ST.Label.DOM, Graph.Label.HTML],
 
   initialize: function(viz) {
     this.viz = viz;
@@ -1498,12 +1499,7 @@ ST.Label.HTML = new Class({
   (end code)
 
 */
-ST.Plot.NodeTypes = new Class({
-  'none': {
-    'render': $empty,
-    'contains': $lambda(false)
-  },
-    
+$jit.ST.Plot.NodeTypes = new Class({
   'circle': {
     'render': function(node, canvas) {
       var pos = node.pos.getc(true);
@@ -1513,7 +1509,7 @@ ST.Plot.NodeTypes = new Class({
           context.arc(algnPos.x + dim/2, algnPos.y + dim/2, dim/2, 0, Math.PI * 2, true);            
       });
     },
-    'contains': $lambda(false)
+    'contains': $.lambda(false)
   },
 
   'square': {
@@ -1523,7 +1519,7 @@ ST.Plot.NodeTypes = new Class({
       var algnPos = this.getAlignedPos(pos, dim, dim);
       canvas.getCtx().fillRect(algnPos.x, algnPos.y, dim, dim);
     },
-    'contains': $lambda(false)
+    'contains': $.lambda(false)
   },
 
   'ellipse': {
@@ -1541,7 +1537,7 @@ ST.Plot.NodeTypes = new Class({
       });
       ctx.restore();
     },
-    'contains': $lambda(false)
+    'contains': $.lambda(false)
   },
 
   'rectangle': {
@@ -1552,7 +1548,7 @@ ST.Plot.NodeTypes = new Class({
       var algnPos = this.getAlignedPos(pos, width, height);
       canvas.getCtx().fillRect(algnPos.x, algnPos.y, width, height);
     },
-    'contains': $lambda(false)
+    'contains': $.lambda(false)
   }
 });
 
@@ -1575,7 +1571,7 @@ ST.Plot.NodeTypes = new Class({
   (end code)
 
 */
-ST.Plot.EdgeTypes = new Class({
+$jit.ST.Plot.EdgeTypes = new Class({
     'none': function() {},
     
     'line': function(adj, canvas) {
@@ -1698,10 +1694,10 @@ ST.Plot.EdgeTypes = new Class({
     	var orn = this.getOrientation(adj);
     	var node = adj.nodeFrom, child = adj.nodeTo;
       var data = adj.data, econfig = this.edge;
-      //get edge dim
+      // get edge dim
       var cond = econfig.overridable;
       var edgeDim = adj.getData('dim');
-      //get edge direction
+      // get edge direction
       if(cond && data.$direction && data.$direction.length > 1) {
           var nodeHash = {};
           nodeHash[node.id] = node;

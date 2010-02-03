@@ -299,5 +299,5 @@ Polar.prototype = {
 
 var $P = function(a, b) { return new Polar(a, b); };
 
-Polar.KER = $P(0, 0);
+Polar.KER = $.P(0, 0);
 

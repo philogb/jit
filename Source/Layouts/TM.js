@@ -332,7 +332,7 @@ Layouts.TM.Squarified = new Class({
  
  layoutV: function(ch, w, coord, prop) {
    var totalArea = 0, rnd = function(x) { return x; }; 
-   $each(ch, function(elem) { totalArea += elem._area; });
+   $.each(ch, function(elem) { totalArea += elem._area; });
    var width = rnd(totalArea / w), top =  0; 
    for(var i=0, l=ch.length; i<l; i++) {
      var h = rnd(ch[i]._area / width);
@@ -356,7 +356,7 @@ Layouts.TM.Squarified = new Class({
  
  layoutH: function(ch, w, coord, prop) {
    var totalArea = 0; 
-   $each(ch, function(elem) { totalArea += elem._area; });
+   $.each(ch, function(elem) { totalArea += elem._area; });
    var height = totalArea / w,
        top = coord.top, 
        left = 0;
@@ -481,7 +481,7 @@ Layouts.TM.Strip = new Class({
     
     layoutV: function(ch, w, coord, prop) {
      var totalArea = 0; 
-     $each(ch, function(elem) { totalArea += elem._area; });
+     $.each(ch, function(elem) { totalArea += elem._area; });
      var width = totalArea / w, top =  0; 
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i];
@@ -504,7 +504,7 @@ Layouts.TM.Strip = new Class({
     
     layoutH: function(ch, w, coord, prop) {
      var totalArea = 0; 
-     $each(ch, function(elem) { totalArea += elem._area; });
+     $.each(ch, function(elem) { totalArea += elem._area; });
      var height = totalArea / w,
          top = coord.height - height, 
          left = 0;

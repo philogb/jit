@@ -51,7 +51,7 @@ Layouts.Tree = (function() {
 
   function moveextent(extent, val) {
     var ans = [];
-    $each(extent, function(elem) {
+    $.each(extent, function(elem) {
       elem = slice.call(elem);
       elem[0] += val;
       elem[1] += val;
@@ -91,27 +91,27 @@ Layouts.Tree = (function() {
 
 
   function fitlistl(es, subtreeOffset, siblingOffset) {
-    function $fitlistl(acc, es, i) {
+    function $.fitlistl(acc, es, i) {
       if (es.length <= i)
         return [];
       var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset, 0);
-      return [ ans ].concat($fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
+      return [ ans ].concat($.fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
     }
     ;
-    return $fitlistl( [], es, 0);
+    return $.fitlistl( [], es, 0);
   }
 
 
   function fitlistr(es, subtreeOffset, siblingOffset) {
-    function $fitlistr(acc, es, i) {
+    function $.fitlistr(acc, es, i) {
       if (es.length <= i)
         return [];
       var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset, 0);
-      return [ ans ].concat($fitlistr(merge(moveextent(e, ans), acc), es, ++i));
+      return [ ans ].concat($.fitlistr(merge(moveextent(e, ans), acc), es, ++i));
     }
     ;
     es = slice.call(es);
-    var ans = $fitlistr( [], es.reverse(), 0);
+    var ans = $.fitlistr( [], es.reverse(), 0);
     return ans.reverse();
   }
 
@@ -147,7 +147,7 @@ Layouts.Tree = (function() {
 
     var GUtil = Graph.Util;
 
-    function $design(node, maxsize, acum) {
+    function $.design(node, maxsize, acum) {
       var sval = node.getData(s, prop);
       var notsval = maxsize
           || (node.getData(nots, prop));
@@ -162,7 +162,7 @@ Layouts.Tree = (function() {
               if (!chmaxsize)
                 chmaxsize = getBoundaries(graph, config, n._depth, orn, prop);
 
-              var s = $design(n, chmaxsize[nots], acum + chacum);
+              var s = $.design(n, chmaxsize[nots], acum + chacum);
               trees.push(s.tree);
               extents.push(s.extent);
             }
@@ -188,7 +188,7 @@ Layouts.Tree = (function() {
       };
     }
 
-    $design(node, false, 0);
+    $.design(node, false, 0);
   }
 
 
@@ -202,7 +202,7 @@ Layouts.Tree = (function() {
     compute : function(property, computeLevels) {
       var prop = property || 'start';
       var node = this.graph.getNode(this.root);
-      $extend(node, {
+      $.extend(node, {
         'drawn' : true,
         'exist' : true,
         'selected' : true
@@ -223,7 +223,7 @@ Layouts.Tree = (function() {
       var orn = config.orientation;
       var orns = multitree ? [ 'top', 'right', 'bottom', 'left' ] : [ orn ];
       var that = this;
-      $each(orns, function(orn) {
+      $.each(orns, function(orn) {
         //calculate layout
           design(that.graph, node, prop, that.config, orn, prop);
           var i = [ 'x', 'y' ][+(orn == "left" || orn == "right")];
