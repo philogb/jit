@@ -44,7 +44,7 @@ Layouts.Radial = new Class({
 
     for ( var i=0, l=propArray.length; i < l; i++) {
       var pi = propArray[i];
-      root.setPos($.P(0, 0), pi);
+      root.setPos($P(0, 0), pi);
       root.setData('span', Math.PI * 2, pi);
     }
 
@@ -85,7 +85,7 @@ Layouts.Radial = new Class({
 
           for ( var i=0, l=propArray.length; i < l; i++) {
             var pi = propArray[i];
-            child.setPos($.P(theta, len), pi);
+            child.setPos($P(theta, len), pi);
             child.setData('span', angleProportion, pi);
             child.setData('dim-quotient', child.getData('dim', pi) / maxDim[pi], pi);
           }

@@ -290,9 +290,9 @@ Graph.Node = new Class({
         'end' : 0
       },
 
-      'pos': (complex && $.C(0, 0)) || $.P(0, 0),
-      'startPos': (complex && $.C(0, 0)) || $.P(0, 0),
-      'endPos': (complex && $.C(0, 0)) || $.P(0, 0)
+      'pos': (complex && $C(0, 0)) || $P(0, 0),
+      'startPos': (complex && $C(0, 0)) || $P(0, 0),
+      'endPos': (complex && $C(0, 0)) || $P(0, 0)
     };
     
     $.extend(this, $.extend(innerOptions, opt));

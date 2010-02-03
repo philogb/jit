@@ -293,6 +293,8 @@ $jit.ForceDirected = new Class( {
   }
 });
 
+$jit.ForceDirected.$extend = true;
+
 (function(ForceDirected) {
 
   /*

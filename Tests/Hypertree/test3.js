@@ -410,13 +410,12 @@ function init(){
     var effectHash = {};
     var nodesCache = {};
     var N = null;
-    
+    $jit();
     ht = new Hypertree({    
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+
         Node: {
           overridable:true
         },

@@ -49,7 +49,7 @@ Layouts.ForceDirected = new Class({
         //initialize disp vector
         n.disp = {};
         $.each(prop, function(p) {
-          n.disp[p] = $.C(0, 0);
+          n.disp[p] = $C(0, 0);
         });
       });
     });
@@ -82,7 +82,7 @@ Layouts.ForceDirected = new Class({
   computePositionStep: function(property, opt) {
     var graph = this.graph, GUtil = Graph.Util;
     var min = Math.min, max = Math.max;
-    var dpos = $.C(0, 0);
+    var dpos = $C(0, 0);
     //calculate repulsive forces
     GUtil.eachNode(graph, function(v) {
       //initialize disp
@@ -96,8 +96,8 @@ Layouts.ForceDirected = new Class({
             dpos.x = vp.x - up.x;
             dpos.y = vp.y - up.y;
             var norm = dpos.norm() || 1;
-            v.disp[p].$.add(dpos
-                .$.scale(opt.nodef(norm) / norm));
+            v.disp[p].$add(dpos
+                .$scale(opt.nodef(norm) / norm));
           });
         }
       });
@@ -113,8 +113,8 @@ Layouts.ForceDirected = new Class({
             dpos.x = vp.x - up.x;
             dpos.y = vp.y - up.y;
             var norm = dpos.norm() || 1;
-            node.disp[p].$.add(dpos.$.scale(-opt.edgef(norm) / norm));
-            nodeTo.disp[p].$.add(dpos.$.scale(-1));
+            node.disp[p].$add(dpos.$scale(-opt.edgef(norm) / norm));
+            nodeTo.disp[p].$add(dpos.$scale(-1));
           });
         }
       });
@@ -127,7 +127,7 @@ Layouts.ForceDirected = new Class({
         var disp = u.disp[p];
         var norm = disp.norm() || 1;
         var p = u.getPos(p);
-        p.$.add($.C(disp.x * min(Math.abs(disp.x), t) / norm, 
+        p.$add($C(disp.x * min(Math.abs(disp.x), t) / norm, 
             disp.y * min(Math.abs(disp.y), t) / norm));
         p.x = min(w2, max(-w2, p.x));
         p.y = min(h2, max(-h2, p.y));

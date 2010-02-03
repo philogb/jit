@@ -291,6 +291,8 @@ $jit.Sunburst = new Class({
   }
 });
 
+$jit.Sunburst.$extend = true;
+
 (function(Sunburst) {
 
   /*

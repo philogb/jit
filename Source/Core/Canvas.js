@@ -121,6 +121,7 @@ this.Canvas = (function(){
         'injectInto': 'id',
         'width': false,
         'height': false,
+        'useCanvas': false,
         'labels': 'HTML', //can also be 'SVG' or 'Native'
         
         'backgroundCanvas': false
@@ -193,7 +194,7 @@ this.Canvas = (function(){
     return function(opt){
         var id = opt.injectInto, ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
         var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
-        var wrapper = $.get(id);
+        var wrapper = $(id);
         opt = $.merge(config, opt || {});
         //create elements
         var dim = {

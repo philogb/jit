@@ -91,27 +91,27 @@ Layouts.Tree = (function() {
 
 
   function fitlistl(es, subtreeOffset, siblingOffset) {
-    function $.fitlistl(acc, es, i) {
+    function $fitlistl(acc, es, i) {
       if (es.length <= i)
         return [];
       var e = es[i], ans = fit(acc, e, subtreeOffset, siblingOffset, 0);
-      return [ ans ].concat($.fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
+      return [ ans ].concat($fitlistl(merge(acc, moveextent(e, ans)), es, ++i));
     }
     ;
-    return $.fitlistl( [], es, 0);
+    return $fitlistl( [], es, 0);
   }
 
 
   function fitlistr(es, subtreeOffset, siblingOffset) {
-    function $.fitlistr(acc, es, i) {
+    function $fitlistr(acc, es, i) {
       if (es.length <= i)
         return [];
       var e = es[i], ans = -fit(e, acc, subtreeOffset, siblingOffset, 0);
-      return [ ans ].concat($.fitlistr(merge(moveextent(e, ans), acc), es, ++i));
+      return [ ans ].concat($fitlistr(merge(moveextent(e, ans), acc), es, ++i));
     }
     ;
     es = slice.call(es);
-    var ans = $.fitlistr( [], es.reverse(), 0);
+    var ans = $fitlistr( [], es.reverse(), 0);
     return ans.reverse();
   }
 
@@ -147,7 +147,7 @@ Layouts.Tree = (function() {
 
     var GUtil = Graph.Util;
 
-    function $.design(node, maxsize, acum) {
+    function $design(node, maxsize, acum) {
       var sval = node.getData(s, prop);
       var notsval = maxsize
           || (node.getData(nots, prop));
@@ -162,7 +162,7 @@ Layouts.Tree = (function() {
               if (!chmaxsize)
                 chmaxsize = getBoundaries(graph, config, n._depth, orn, prop);
 
-              var s = $.design(n, chmaxsize[nots], acum + chacum);
+              var s = $design(n, chmaxsize[nots], acum + chacum);
               trees.push(s.tree);
               extents.push(s.extent);
             }
@@ -188,7 +188,7 @@ Layouts.Tree = (function() {
       };
     }
 
-    $.design(node, false, 0);
+    $design(node, false, 0);
   }
 
 

@@ -409,36 +409,35 @@ function init(){
         }],
         "data": []
     };
+    $jit();
     rgraph = new RGraph({
         interpolation: "polar",
         duration: 2000,
         transition: Trans.linear,
         fps: 30,
         levelDistance:180,
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-          'backgroundCanvas': {
-              'styles': {
-                  'fillStyle': '#fafafa',
-                  'strokeStyle': '#ddd'
-              },
-              'impl': {
-                  'init': function(){
-                  },
-                  'plot': function(canvas, ctx){
-                      var times = 6, d = 100;
-                      var pi2 = Math.PI * 2;
-                      for (var i = 1; i <= times; i++) {
-                          ctx.beginPath();
-                          ctx.arc(0, 0, i * d, 0, pi2, true);
-                          ctx.stroke();
-                          ctx.closePath();
-                      }
-                  }
-              }
-          }
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+        'backgroundCanvas': {
+            'styles': {
+                'fillStyle': '#fafafa',
+                'strokeStyle': '#ddd'
+            },
+            'impl': {
+                'init': function(){
+                },
+                'plot': function(canvas, ctx){
+                    var times = 6, d = 100;
+                    var pi2 = Math.PI * 2;
+                    for (var i = 1; i <= times; i++) {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, i * d, 0, pi2, true);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
+            }
         },
         Node: {
             type: 'none',

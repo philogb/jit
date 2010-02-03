@@ -210,10 +210,8 @@ function init(){
     }];
     //end
     //init Hypertree
-    var ht = new Hypertree({
-        Canvas: {
-          'injectInto': 'infovis'
-        },
+    var ht = new $jit.Hypertree({
+        'injectInto': 'infovis',
         //By setting overridable=true,
         //Node and Edge global properties can be
         //overriden for each node/edge.
@@ -229,7 +227,7 @@ function init(){
         },
         
         //Change the animation transition type
-        transition: Trans.Back.easeOut,
+        transition: $jit.Trans.Back.easeOut,
         duration:1000,
         
         //This method is called right before plotting an

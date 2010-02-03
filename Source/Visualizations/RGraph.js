@@ -136,9 +136,11 @@
 
 $jit.RGraph = new Class( {
 
-  Implements: [ Loader, Extras, Layouts.Radial ],
+  Implements: [
+      Loader, Extras, Layouts.Radial
+  ],
 
-  initialize: function(controller) {
+  initialize: function(controller){
     var $RGraph = $jit.RGraph;
 
     var config = {
@@ -186,9 +188,9 @@ $jit.RGraph = new Class( {
     parent node as parameter and returns a float.
 
    */
-  createLevelDistanceFunc: function() {
+  createLevelDistanceFunc: function(){
     var ld = this.config.levelDistance;
-    return function(elem) {
+    return function(elem){
       return (elem._depth + 1) * ld;
     };
   },
@@ -199,7 +201,7 @@ $jit.RGraph = new Class( {
      Computes nodes' positions and replots the tree.
 
    */
-  refresh: function() {
+  refresh: function(){
     this.compute();
     this.plot();
   },
@@ -214,7 +216,7 @@ $jit.RGraph = new Class( {
    <RGraph.compute>
    
   */
-  reposition: function() {
+  reposition: function(){
     this.compute('end');
   },
 
@@ -223,7 +225,7 @@ $jit.RGraph = new Class( {
   
    Plots the RGraph
   */
-  plot: function() {
+  plot: function(){
     this.fx.plot();
   },
   /*
@@ -231,11 +233,11 @@ $jit.RGraph = new Class( {
   
    Returns the _parent_ of the given node, also calculating its angle span.
   */
-  getNodeAndParentAngle: function(id) {
+  getNodeAndParentAngle: function(id){
     var theta = false;
     var n = this.graph.getNode(id);
     var ps = Graph.Util.getParents(n);
-    var p = (ps.length > 0) ? ps[0] : false;
+    var p = (ps.length > 0)? ps[0] : false;
     if (p) {
       var posParent = p.pos.getc(), posChild = n.pos.getc();
       var newPos = posParent.add(posChild.scale(-1));
@@ -254,10 +256,10 @@ $jit.RGraph = new Class( {
   
    Enumerates the children in order to mantain child ordering (second constraint of the paper).
   */
-  tagChildren: function(par, id) {
+  tagChildren: function(par, id){
     if (par.angleSpan) {
       var adjs = [];
-      Graph.Util.eachAdjacency(par, function(elem) {
+      Graph.Util.eachAdjacency(par, function(elem){
         adjs.push(elem.nodeTo);
       }, "ignore");
       var len = adjs.length;
@@ -292,7 +294,7 @@ $jit.RGraph = new Class( {
    (end code)
    
   */
-  onClick: function(id, opt) {
+  onClick: function(id, opt){
     if (this.root != id && !this.busy) {
       this.busy = true;
       this.root = id;
@@ -301,35 +303,39 @@ $jit.RGraph = new Class( {
       var obj = this.getNodeAndParentAngle(id);
 
       // second constraint
-  this.tagChildren(obj.parent, id);
-  this.parent = obj.parent;
-  this.compute('end');
+      this.tagChildren(obj.parent, id);
+      this.parent = obj.parent;
+      this.compute('end');
 
-  // first constraint
-  var thetaDiff = obj.theta - obj.parent.endPos.theta;
-  Graph.Util.eachNode(this.graph, function(elem) {
-    elem.endPos.set(elem.endPos.getp().add($.P(thetaDiff, 0)));
-  });
+      // first constraint
+      var thetaDiff = obj.theta - obj.parent.endPos.theta;
+      Graph.Util.eachNode(this.graph, function(elem){
+        elem.endPos.set(elem.endPos.getp().add($P(thetaDiff, 0)));
+      });
 
-  var mode = this.config.interpolation;
-  opt = $.merge( {
-    onComplete: $.empty
-  }, opt || {});
+      var mode = this.config.interpolation;
+      opt = $.merge( {
+        onComplete: $.empty
+      }, opt || {});
 
-  this.fx.animate($.merge( {
-    hideLabels: true,
-    modes: [ mode ]
-  }, opt, {
-    onComplete: function() {
-      that.busy = false;
-      opt.onComplete();
+      this.fx.animate($.merge( {
+        hideLabels: true,
+        modes: [
+          mode
+        ]
+      }, opt, {
+        onComplete: function(){
+          that.busy = false;
+          opt.onComplete();
+        }
+      }));
     }
-  }));
-}
-}
+  }
 });
 
-(function(RGraph) {
+$jit.RGraph.$extend = true;
+
+(function(RGraph){
 
   /*
      Class: RGraph.Op
@@ -356,7 +362,7 @@ $jit.RGraph = new Class( {
 
     Implements: Graph.Op,
 
-    initialize: function(viz) {
+    initialize: function(viz){
       this.viz = viz;
     }
   });
@@ -386,7 +392,7 @@ $jit.RGraph = new Class( {
 
     Implements: Graph.Plot,
 
-    initialize: function(viz) {
+    initialize: function(viz){
       this.viz = viz;
       this.config = viz.config;
       this.node = viz.config.Node;
@@ -445,7 +451,7 @@ $jit.RGraph = new Class( {
   RGraph.Label.SVG = new Class( {
     Implements: Graph.Label.SVG,
 
-    initialize: function(viz) {
+    initialize: function(viz){
       this.viz = viz;
     },
 
@@ -461,7 +467,7 @@ $jit.RGraph = new Class( {
        controller - A configuration/controller object passed to the visualization.
       
      */
-    placeLabel: function(tag, node, controller) {
+    placeLabel: function(tag, node, controller){
       var pos = node.pos.getc(true), canvas = this.viz.canvas;
       var radius = canvas.getSize();
       var labelPos = {
@@ -492,7 +498,7 @@ $jit.RGraph = new Class( {
   RGraph.Label.HTML = new Class( {
     Implements: Graph.Label.HTML,
 
-    initialize: function(viz) {
+    initialize: function(viz){
       this.viz = viz;
     },
     /* 
@@ -507,7 +513,7 @@ $jit.RGraph = new Class( {
        controller - A configuration/controller object passed to the visualization.
       
      */
-    placeLabel: function(tag, node, controller) {
+    placeLabel: function(tag, node, controller){
       var pos = node.pos.getc(true), canvas = this.viz.canvas;
       var radius = canvas.getSize();
       var labelPos = {
@@ -518,7 +524,7 @@ $jit.RGraph = new Class( {
       var style = tag.style;
       style.left = labelPos.x + 'px';
       style.top = labelPos.y + 'px';
-      style.display = this.fitsInCanvas(labelPos, canvas) ? '' : 'none';
+      style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
 
       controller.onPlaceLabel(tag, node);
     }
@@ -546,10 +552,10 @@ $jit.RGraph = new Class( {
   RGraph.Plot.NodeTypes = new Class(
       {
         'circle': {
-          'render': function(node, canvas) {
+          'render': function(node, canvas){
             var pos = node.pos.getc(true);
             var nodeDim = node.getData('dim') / 2;
-            canvas.path('fill', function(context) {
+            canvas.path('fill', function(context){
               context.arc(pos.x, pos.y, nodeDim, 0, Math.PI * 2, true);
             });
           },
@@ -557,14 +563,14 @@ $jit.RGraph = new Class( {
         },
 
         'ellipse': {
-          'render': function(node, canvas) {
+          'render': function(node, canvas){
             var pos = node.pos.getc(true);
             var width = node.getData('width') / 2;
             var height = node.getData('height') / 2;
             var ctx = canvas.getCtx();
             ctx.save();
             ctx.scale(width / height, height / width);
-            canvas.path('fill', function(context) {
+            canvas.path('fill', function(context){
               context.arc(pos.x * (height / width), pos.y * (width / height),
                   height, 0, Math.PI * 2, true);
             });
@@ -574,7 +580,7 @@ $jit.RGraph = new Class( {
         },
 
         'square': {
-          'render': function(node, canvas) {
+          'render': function(node, canvas){
             var pos = node.pos.getc(true);
             var nodeDim = node.getData('dim');
             var nodeDim2 = 2 * nodeDim;
@@ -585,7 +591,7 @@ $jit.RGraph = new Class( {
         },
 
         'rectangle': {
-          'render': function(node, canvas) {
+          'render': function(node, canvas){
             var pos = node.pos.getc(true);
             var width = node.getData('width');
             var height = node.getData('height');
@@ -596,12 +602,12 @@ $jit.RGraph = new Class( {
         },
 
         'triangle': {
-          'render': function(node, canvas) {
+          'render': function(node, canvas){
             var pos = node.pos.getc(true);
             var nodeDim = node.getData('dim');
             var c1x = pos.x, c1y = pos.y - nodeDim, c2x = c1x - nodeDim, c2y = pos.y
                 + nodeDim, c3x = c1x + nodeDim, c3y = c2y;
-            canvas.path('fill', function(ctx) {
+            canvas.path('fill', function(ctx){
               ctx.moveTo(c1x, c1y);
               ctx.lineTo(c2x, c2y);
               ctx.lineTo(c3x, c3y);
@@ -611,7 +617,7 @@ $jit.RGraph = new Class( {
         },
 
         'star': {
-          'render': function(node, canvas) {
+          'render': function(node, canvas){
             var pos = node.pos.getc(true);
             var nodeDim = node.getData('dim');
             var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
@@ -657,47 +663,47 @@ $jit.RGraph = new Class( {
   RGraph.Plot.EdgeTypes = new Class( {
     'none': $.empty,
 
-    'line': function(adj, canvas) {
+    'line': function(adj, canvas){
       var pos = adj.nodeFrom.pos.getc(true);
       var posChild = adj.nodeTo.pos.getc(true);
-      canvas.path('stroke', function(context) {
+      canvas.path('stroke', function(context){
         context.moveTo(pos.x, pos.y);
         context.lineTo(posChild.x, posChild.y);
       });
     },
 
-    'arrow': function(adj, canvas) {
+    'arrow': function(adj, canvas){
       var node = adj.nodeFrom, child = adj.nodeTo;
       var data = adj.data, econfig = this.edge;
       // get edge dim
-      var cond = econfig.overridable;
-      var edgeDim = adj.getData('dim');
-      // get edge direction
-      if (cond && data.$direction && data.$direction.length > 1) {
-        var nodeHash = {};
-        nodeHash[node.id] = node;
-        nodeHash[child.id] = child;
-        var sense = data.$direction;
-        node = nodeHash[sense[0]];
-        child = nodeHash[sense[1]];
-      }
-      var posFrom = node.pos.getc(true), posTo = child.pos.getc(true);
-      var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
-      vect.$scale(edgeDim / vect.norm());
-      var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
-      var normal = new Complex(-vect.y / 2, vect.x / 2);
-      var v1 = intermediatePoint.add(normal), v2 = intermediatePoint
-          .$add(normal.$scale(-1));
-      canvas.path('stroke', function(context) {
-        context.moveTo(posFrom.x, posFrom.y);
-        context.lineTo(posTo.x, posTo.y);
-      });
-      canvas.path('fill', function(context) {
-        context.moveTo(v1.x, v1.y);
-        context.lineTo(v2.x, v2.y);
-        context.lineTo(posTo.x, posTo.y);
-      });
+    var cond = econfig.overridable;
+    var edgeDim = adj.getData('dim');
+    // get edge direction
+    if (cond && data.$direction && data.$direction.length > 1) {
+      var nodeHash = {};
+      nodeHash[node.id] = node;
+      nodeHash[child.id] = child;
+      var sense = data.$direction;
+      node = nodeHash[sense[0]];
+      child = nodeHash[sense[1]];
     }
+    var posFrom = node.pos.getc(true), posTo = child.pos.getc(true);
+    var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
+    vect.$scale(edgeDim / vect.norm());
+    var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
+    var normal = new Complex(-vect.y / 2, vect.x / 2);
+    var v1 = intermediatePoint.add(normal), v2 = intermediatePoint.$add(normal
+        .$scale(-1));
+    canvas.path('stroke', function(context){
+      context.moveTo(posFrom.x, posFrom.y);
+      context.lineTo(posTo.x, posTo.y);
+    });
+    canvas.path('fill', function(context){
+      context.moveTo(v1.x, v1.y);
+      context.lineTo(v2.x, v2.y);
+      context.lineTo(posTo.x, posTo.y);
+    });
+  }
   });
 
 })($jit.RGraph);

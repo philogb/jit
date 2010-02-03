@@ -320,12 +320,11 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var nodesCache = {};
+    $jit();
     var ht = new Hypertree({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
         transition: Trans.linear,
         Node: {
             type: 'none',

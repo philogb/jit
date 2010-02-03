@@ -9,14 +9,9 @@ function init(){
     };
     var json = Feeder.makeTree(p);
     Feeder.setWeights(json, true);
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    $jit();
     ht = new Hypertree({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+        'injectInto': 'infovis',
         Node: {
             transform: false,
             overridable: true

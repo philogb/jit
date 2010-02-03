@@ -361,32 +361,29 @@ function init(){
     //end
     
     //init RGraph
-    var rgraph = new RGraph({
-        //Set Canvas Options
-        Canvas: {
-          //Where to append the canvas widget
-          'injectInto': 'infovis',
-          
-          //Optional: create a background canvas and plot
-          //concentric circles in it.
-          'backgroundCanvas': {
-              'styles': {
-                  'strokeStyle': '#555'
-              },
-              'impl': {
-                  'init': function(){},
-                  'plot': function(canvas, ctx){
-                      var times = 6, d = 100;
-                      var pi2 = Math.PI * 2;
-                      for (var i = 1; i <= times; i++) {
-                          ctx.beginPath();
-                          ctx.arc(0, 0, i * d, 0, pi2, true);
-                          ctx.stroke();
-                          ctx.closePath();
-                      }
-                  }
-              }
-          }
+    var rgraph = new $jit.RGraph({
+        //Where to append the visualization
+        'injectInto': 'infovis',
+        
+        //Optional: create a background canvas and plot
+        //concentric circles in it.
+        'backgroundCanvas': {
+            'styles': {
+                'strokeStyle': '#555'
+            },
+            'impl': {
+                'init': function(){},
+                'plot': function(canvas, ctx){
+                    var times = 6, d = 100;
+                    var pi2 = Math.PI * 2;
+                    for (var i = 1; i <= times; i++) {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, i * d, 0, pi2, true);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
+            }
         },
       
         //Set Node and Edge colors.

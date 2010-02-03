@@ -217,27 +217,24 @@ function init(){
     }];
     //end
     //init RGraph
-    var rgraph = new RGraph({
-        //Set Canvas options
-        Canvas: {
-          'injectInto': 'infovis',
-          //Optional: Add a background canvas
-          //that draws some concentric circles.
-          'backgroundCanvas': {
-              'styles': {
-                  'strokeStyle': '#444'
-              },
-              'impl': {
-                  'init': function(){},
-                  'plot': function(canvas, ctx){
-                      var times = 6, d = 200;
-                      var pi2 = Math.PI * 2;
-                      for (var i = 1; i <= times; i++) {
-                          ctx.beginPath();
-                          ctx.arc(0, 0, i * d, 0, pi2, true);
-                          ctx.stroke();
-                          ctx.closePath();
-                      }
+    var rgraph = new $jit.RGraph({
+      'injectInto': 'infovis',
+      //Optional: Add a background canvas
+      //that draws some concentric circles.
+      'backgroundCanvas': {
+          'styles': {
+              'strokeStyle': '#444'
+          },
+          'impl': {
+              'init': function(){},
+              'plot': function(canvas, ctx){
+                  var times = 6, d = 200;
+                  var pi2 = Math.PI * 2;
+                  for (var i = 1; i <= times; i++) {
+                      ctx.beginPath();
+                      ctx.arc(0, 0, i * d, 0, pi2, true);
+                      ctx.stroke();
+                      ctx.closePath();
                   }
               }
           }
@@ -265,7 +262,7 @@ function init(){
         
         //Change the transition effect from linear
         //to elastic.
-        transition: Trans.Elastic.easeOut,
+        transition: $jit.Trans.Elastic.easeOut,
         //Change other animation parameters.
         duration:3500,
         fps: 30,

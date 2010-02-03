@@ -409,13 +409,12 @@ function init(){
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var nodesCache = {};
     var N = null;
-    
+    $jit();
     ht = new Hypertree({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+        
         Node: {
           overridable:true
         },

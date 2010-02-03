@@ -8,14 +8,9 @@ function init(){
         counter: 0
     };
     var json = Feeder.makeTree(p);
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    $jit();
     ht = new Hypertree({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+        'injectInto': 'infovis',
         onBeforeCompute: function(node){
             Log.write("centering");
         },

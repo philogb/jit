@@ -1,5 +1,7 @@
 $jit.TM = {};
 
+$jit.TM.$extend = true;
+
 (function(TM) {
 
   TM.Base = {

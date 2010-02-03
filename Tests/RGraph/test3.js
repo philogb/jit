@@ -407,33 +407,32 @@ function init(){
     };
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
+    $jit();
     rgraph = new RGraph({
         interpolation: "linear",
         levelDistance: 100,
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-          'backgroundCanvas': {
-              'styles': {
-                  'fillStyle': '#ddd',
-                  'strokeStyle': '#ddd'
-              },
-              'impl': {
-                  'init': function(){
-                  },
-                  'plot': function(canvas, ctx){
-                      var times = 6, d = 100;
-                      var pi2 = Math.PI * 2;
-                      for (var i = 1; i <= times; i++) {
-                          ctx.beginPath();
-                          ctx.arc(0, 0, i * d, 0, pi2, true);
-                          ctx.stroke();
-                          ctx.closePath();
-                      }
-                  }
-              }
-          }
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+        'backgroundCanvas': {
+            'styles': {
+                'fillStyle': '#ddd',
+                'strokeStyle': '#ddd'
+            },
+            'impl': {
+                'init': function(){
+                },
+                'plot': function(canvas, ctx){
+                    var times = 6, d = 100;
+                    var pi2 = Math.PI * 2;
+                    for (var i = 1; i <= times; i++) {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, i * d, 0, pi2, true);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
+            }
         },
         Node: {
           overridable: true

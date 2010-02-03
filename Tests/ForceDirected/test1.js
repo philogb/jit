@@ -322,15 +322,11 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
     
-    var style = document.getElementById('mycanvas').style;
-    style.marginLeft = style.marginTop = "25px";
-    //init Hypertree
-    var fd = new ForceDirected({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    //init ForceDirected
+    var fd = new $jit.ForceDirected({
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -377,7 +373,7 @@ function init(){
 
         iterations:100,
         levelDistance:55,
-        transition: Trans.Elastic.easeOut,
+        transition: $jit.Trans.Elastic.easeOut,
         
         onBeforeCompute: function(node){
             Log.write("centering");

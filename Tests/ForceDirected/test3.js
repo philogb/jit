@@ -1,7 +1,4 @@
 function init(){
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
-
     //init data    
     var json = {
         "id": "190_0",
@@ -414,12 +411,8 @@ function init(){
     //end
     
     //init ForceDirected
-    var fd = new ForceDirected({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    var fd = new $jit.ForceDirected({
+        'injectInto': 'infovis',
         //Set Edge and Node colors.
         Node: {
             color: '#ccddee',
@@ -434,7 +427,7 @@ function init(){
         
         iterations: 100,
         levelDistance: 70,
-        transition: Trans.Quart.easeOut,
+        transition: $jit.Trans.Quart.easeOut,
         
         nodeStylesOnHover: {
           'color': '#faa',

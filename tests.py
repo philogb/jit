@@ -335,7 +335,7 @@ tests_model = {
         }
    ],
     
-    'Treemap': [
+    'oldTreemap': [
         {
             'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
             'Description': 
@@ -385,7 +385,7 @@ tests_model = {
         }
    ],
    
-    'newTreemap': [
+    'Treemap': [
         {
             'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
             'Description': 

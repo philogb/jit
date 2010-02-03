@@ -1,6 +1,4 @@
 function init(){
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //init data
     //If a node in this JSON structure
     //has the "$type" or "$dim" parameters
@@ -219,12 +217,8 @@ function init(){
     }];
     //end
     //init ForceDirected
-    var fd = new ForceDirected({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    var fd = new $jit.ForceDirected({
+        'injectInto': 'infovis',
         //Nodes and Edges parameters
         //can be overriden if defined in 
         //the JSON input data.
@@ -244,7 +238,7 @@ function init(){
 
         //Change the transition effect from linear
         //to elastic.
-        transition: Trans.Elastic.easeOut,
+        transition: $jit.Trans.Elastic.easeOut,
         //Change other animation parameters.
         duration:3500,
         fps: 30,

@@ -146,19 +146,16 @@ function init() {
     };
     //end
     
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    
     //init nodetypes
     //Here we implement custom node rendering types for the RGraph
     //Using this feature requires some javascript and canvas experience.
-    RGraph.Plot.NodeTypes.implement({
+    $jit.RGraph.Plot.NodeTypes.implement({
         //This node type is used for plotting pie-chart slices as nodes
         'nodepie': {
           'render': function(node, canvas) {
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
-            var polar = new Polar(polarNode.rho, begin);
+            var polar = new $jit.Polar(polarNode.rho, begin);
             var p1coord = polar.getc(true);
             polar.theta = end;
             var p2coord = polar.getc(true);
@@ -191,31 +188,27 @@ function init() {
     //init pie
     //This RGraph instance will be used as the node for 
     //another RGraph instance.
-    var pie = new RGraph({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-          //Optional: create a background canvas and plot
-          //concentric circles in it.
-          'backgroundCanvas': {
-              'styles': {
-                'strokeStyle': '#555'
-              },
-              'impl': {
-                  'init': function(){},
-                  'plot': function(canvas, ctx){
-                      var times = 4, d = 100;
-                      var pi2 = Math.PI * 2;
-                      for (var i = 1; i <= times; i++) {
-                          ctx.beginPath();
-                          ctx.arc(0, 0, i * d, 0, pi2, true);
-                          ctx.stroke();
-                          ctx.closePath();
-                      }
-                  }
-              }
-          }
+    var pie = new $jit.RGraph({
+        'injectInto': 'infovis',
+        //Optional: create a background canvas and plot
+        //concentric circles in it.
+        'backgroundCanvas': {
+            'styles': {
+              'strokeStyle': '#555'
+            },
+            'impl': {
+                'init': function(){},
+                'plot': function(canvas, ctx){
+                    var times = 4, d = 100;
+                    var pi2 = Math.PI * 2;
+                    for (var i = 1; i <= times; i++) {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, i * d, 0, pi2, true);
+                        ctx.stroke();
+                        ctx.closePath();
+                    }
+                }
+            }
         },
         //Add node/edge styles and set
         //overridable=true if you want your
@@ -241,7 +234,7 @@ function init() {
     //end
 
     //init rgraph
-    var rgraph = new RGraph(canvas, {
+    var rgraph = new $jit.RGraph({
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden

@@ -331,13 +331,13 @@ function init() {
     //init nodetypes
     //Here we implement custom node rendering types for the RGraph
     //Using this feature requires some javascript and canvas experience.
-    RGraph.Plot.NodeTypes.implement({
+    $jit.RGraph.Plot.NodeTypes.implement({
         //This node type is used for plotting the upper-left pie chart
         'nodepie': {
           'render': function(node, canvas) {
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
-            var polar = new Polar(polarNode.rho, begin);
+            var polar = new $jit.Polar(polarNode.rho, begin);
             var p1coord = polar.getc(true);
             polar.theta = end;
             var p2coord = polar.getc(true);
@@ -360,7 +360,7 @@ function init() {
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
             
-            var polar = new Polar(polarNode.rho, begin);
+            var polar = new $jit.Polar(polarNode.rho, begin);
             var p1coord = polar.getc(true);
             
             polar.theta = end;
@@ -394,12 +394,10 @@ function init() {
     //init rgraph
     //This RGraph is used to plot the upper-left pie chart.
     //It has custom *pie-chart-nodes*.
-    var rgraph = new RGraph({
-        Canvas: {
-          'injectInto': 'infovis1',
-          'width': w/2,
-          'height': h/2
-        },
+    var rgraph = new $jit.RGraph({
+        'injectInto': 'infovis1',
+        'width': w/2,
+        'height': h/2,
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden
@@ -437,12 +435,10 @@ function init() {
     //init rgraph2
     //This RGraph instance is used for plotting the upper-right
     //pie chart.
-    var rgraph2 = new RGraph({
-        Canvas: {
-          'injectInto': 'infovis2',
-          'width': w/2,
-          'height': h/2
-        },
+    var rgraph2 = new $jit.RGraph({
+        'injectInto': 'infovis2',
+        'width': w/2,
+        'height': h/2,
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden
@@ -482,12 +478,10 @@ function init() {
     //init st
     //This Spacetree nodes' heights are overriden individually
     //so that it serves as a bar chart.
-    var st = new ST({
-        Canvas: {
-          'injectInto': 'infovis3',
-          'width': w,
-          'height': h/2
-        },
+    var st = new $jit.ST({
+        'injectInto': 'infovis3',
+        'width': w,
+        'height': h/2,
         //set orientarion
         orientation:'bottom',
         //set duration for the animation

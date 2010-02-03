@@ -54,9 +54,13 @@
 
 
 
-window.$jit = function() {
-  // TODO(nico) implement appending classes
-  // to the global object if this function is called.
+window.$jit = function(w) {
+  w = w || window;
+  for(var k in $jit) {
+    if($jit[k].$extend) {
+      w[k] = $jit[k];
+    }
+  }
 };
 
 

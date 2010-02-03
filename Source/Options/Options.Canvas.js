@@ -18,6 +18,7 @@ Options.Canvas = {
     $extend: true,
     
     'injectInto': 'id',
+    'useCanvas': false,
     'labels': 'HTML', //can also be 'SVG' or 'Native'
     'backgroundCanvas': false
 };

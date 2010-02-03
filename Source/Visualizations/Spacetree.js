@@ -701,6 +701,8 @@ $jit.ST= (function() {
 
 })();
 
+$jit.ST.$extend = true;
+
 /*
    Class: ST.Op
     
@@ -1133,7 +1135,7 @@ $jit.ST.Geom = new Class({
 
         var $C = function(a, b) { 
           return function(){
-            return node.pos.add(new Complex(a, b)).$.scale(1 - scale);
+            return node.pos.add(new Complex(a, b)).$scale(1 - scale);
           }; 
         };
         if(dim.align == "left") {

@@ -323,12 +323,10 @@ function init(){
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
     
     //init Hypertree
-    var ht = new Hypertree({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    var ht = new $jit.Hypertree({
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {

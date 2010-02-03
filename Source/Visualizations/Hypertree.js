@@ -74,7 +74,7 @@ Graph.Util.getClosestNodeToOrigin = function(graph, prop, flags) {
    Parameters:
   
     graph - A <Graph> instance.
-    p[os - A <Complex> or <Polar> instance.
+    pos - A <Complex> or <Polar> instance.
     prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
 
    Returns:
@@ -315,7 +315,7 @@ $jit.Hypertree = new Class( {
       var valSeries = (1 - Math.pow(i, depth)) / (1 - i);
       if (valSeries >= 2) { return genDistFunc(i - 0.01); }
     }
-    return genDistFunc(0.85);
+    return genDistFunc(0.75);
   },
 
   /* 
@@ -458,6 +458,8 @@ $jit.Hypertree = new Class( {
     }
   }
 });
+
+$jit.Hypertree.$extend = true;
 
 (function(Hypertree) {
 
@@ -720,7 +722,7 @@ $jit.Hypertree = new Class( {
 
     'ellipse': {
       'render': function(node, canvas) {
-        var pos = node.pos.getc().$.scale(node.scale);
+        var pos = node.pos.getc().$scale(node.scale);
         var width = node.getData('width') / 2;
         var height = node.getData('height') / 2;
         var ctx = canvas.getCtx();
