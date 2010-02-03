@@ -1,4 +1,4 @@
-import sys
+import sys, json
 
 #build model
 class Build():
@@ -9,125 +9,35 @@ class Build():
         
         self.script = ''
         
-        self.build_model = {
-            'Animation': ['Core'],
-            'Canvas': ['Core'],
-            'Complex': ['Polar'],
-            'Core': [],
-            'Extras': ['Core', 'Animation'],
-            'Graph': ['Core', 'Complex', 'Polar'],
-            'Graph.Op': ['Core', 'Graph'],
-            'Graph.Plot': ['Core', 'Graph'],
-            'Layouts': ['Graph'],
-            'Layouts.Tree': ['Layouts'],
-            'Layouts.Radial': ['Layouts'],
-            'Layouts.ForceDirected': ['Layouts'],
-            'Layouts.TM': ['Layouts'],
-            'Loader': ['Core', 'Graph'],
-            'Options': ['Core', 'Animation'],
-            'Polar': ['Complex'],
-            
-            'Hypertree': ['Core',
-                          'Options',
-                          'Extras', 
-                          'Canvas', 
-                          'Complex', 
-                          'Polar', 
-                          'Graph', 
-                          'Graph.Op',
-                          'Graph.Plot',
-                          'Loader',
-                          'Layouts.Radial', 
-                          'Animation'],
-            
-            'RGraph':     ['Core', 
-                           'Options',
-                           'Extras',
-                           'Canvas', 
-                           'Complex', 
-                           'Polar', 
-                           'Graph', 
-                           'Graph.Op',
-                           'Graph.Plot',
-                           'Loader', 
-                           'Layouts.Radial',
-                           'Animation'],
-            
-            'Sunburst':     ['Core', 
-                           'Options',
-                           'Extras',
-                           'Canvas', 
-                           'Complex', 
-                           'Polar', 
-                           'Graph', 
-                           'Graph.Op',
-                           'Graph.Plot',
-                           'Loader', 
-                           'Layouts.Radial',
-                           'Animation'],
-            
-            'ForceDirected':['Core', 
-                           'Options',
-                           'Extras',
-                           'Canvas', 
-                           'Complex', 
-                           'Polar', 
-                           'Graph', 
-                           'Graph.Op',
-                           'Graph.Plot',
-                           'Loader', 
-                           'Layouts.ForceDirected',
-                           'Animation'],
-
-            'Spacetree':   ['Core',
-                            'Options', 
-                            'Extras',
-                            'Canvas', 
-                            'Complex',
-                            'Polar', 
-                            'Graph', 
-                            'Graph.Op',
-                            'Graph.Plot',
-                            'Loader',
-                            'Layouts.Tree', 
-                            'Animation'],
-                            
-            'newTreemap':   ['Core',
-                            'Options', 
-                            'Extras',
-                            'Canvas', 
-                            'Complex',
-                            'Polar', 
-                            'Graph', 
-                            'Graph.Op',
-                            'Graph.Plot',
-                            'Loader',
-                            'Layouts.TM', 
-                            'Animation'],
-
-            'Treemap':      ['Core',
-                             'Options',
-                             'Extras']
-        }
+        self.build_model = json.load(open('model.json', 'r'))
         
-    def build(self, args=['Spacetree', 'RGraph', 'ForceDirected', 'Hypertree', 'Treemap', 'Sunburst']):
-        self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model])
-        self.script = '(function () { \n\n' + self.script + '\n\n })();'
-        return self.script
+        self.build_paths = {}
+        
+        for group in self.build_model:
+            for script in self.build_model[group]:
+                self.build_paths[script] = {
+                    'path': self.sources + group + '/' + script + '.js',
+                    'deps': self.build_model[group][script]
+                }
+    
+    def build(self, args=[]):
+        if len(args) == 0: args = [viz for viz in self.build_model['Visualizations']]
+        self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model['Visualizations']])
+        return '(function () { \n\n' + self.script + '\n\n })();'
     
     def load_script(self, script=None):
         ans = ''
         if script and not (script in self.included):
             self.included.append(script)
-            ans = ''.join([self.load_script(s) for s in self.build_model[script]])
-            f = open(self.sources + script + '.js', 'r')
+            ans = ''.join([self.load_script(s) for s in self.build_paths[script]['deps']])
+            f = open(self.build_paths[script]['path'])
             ans += f.read() + '\n\n'
             f.close()
         
         return ans
 
 def main():
-    ans = Build().build(sys.argv)
+    ans = Build().build(sys.argv[1:])
     print ans
     
 if __name__ == "__main__": main()

@@ -360,7 +360,7 @@ var Event = {
 };
 
 //common json manipulation methods
-$jit.json = {
+$jit.$json = {
 
   /*
      Method: prune
