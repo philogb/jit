@@ -133,7 +133,7 @@
 
 
 */
-this.Trans = {
+$jit.Trans = {
     linear: function(p) { return p; }
 };
 
@@ -195,11 +195,11 @@ this.Trans = {
   };
   
   $.each(transitions, function(val, key) {
-    Trans[key] = makeTrans(val);
+    $jit.Trans[key] = makeTrans(val);
   });
 
   $.each(['Quad', 'Cubic', 'Quart', 'Quint'], function(elem, i) {
-    Trans[elem] = makeTrans(function(p){
+    $jit.Trans[elem] = makeTrans(function(p){
             return Math.pow(p, [i + 2]);
         });
   });
