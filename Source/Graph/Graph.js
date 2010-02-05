@@ -46,7 +46,7 @@
  
 */  
 
-var Graph = new Class({
+$jit.Graph = new Class({
 
  initialize: function(opt, Node, Edge) {
     var innerOptions = {
@@ -239,6 +239,8 @@ var Graph = new Class({
   empty: function() { this.nodes = {}; }
 
 });
+
+var Graph = $jit.Graph;
 
 /*
      Class: Graph.Node

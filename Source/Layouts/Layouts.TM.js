@@ -105,10 +105,10 @@ Layouts.TM.Area = {
     root.setData('height', height, prop);
     //create a coordinates object
     var coord = {
-        'top': -height/2,
+        'top': -height/2 + config.titleHeight,
         'left': -width/2,
         'width': offwdth,
-        'height': offhght
+        'height': offhght - config.titleHeight
     };
     this.computePositions(root, coord, prop);
     this.controller.onAfterCompute(root);
@@ -252,13 +252,13 @@ Layouts.TM.Squarified = new Class({
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i]; 
        var offst = config.offset,
-           height = chi.getData('height', prop) - offst,
+           height = chi.getData('height', prop) - offst - config.titleHeight,
            width = chi.getData('width', prop) - offst;
        var chipos = chi.getPos(prop);
        coord = {
          'width': width,
          'height': height,
-         'top': chipos.y,
+         'top': chipos.y + config.titleHeight,
          'left': chipos.x
        };
        this.computePositions(chi, coord);
@@ -401,13 +401,13 @@ Layouts.TM.Strip = new Class({
        for(var i=0, l=ch.length; i<l; i++) {
          var chi = ch[i];
          var offst = config.offset,
-             height = chi.getData('height', prop) - offst,
+             height = chi.getData('height', prop) - offst - config.titleHeight,
              width  = chi.getData('width', prop)  - offst;
          var chipos = chi.getPos(prop);
          coord = {
            'width': width,
            'height': height,
-           'top': chipos.y,
+           'top': chipos.y + config.titleHeight,
            'left': chipos.x
          };
          this.computePositions(chi, coord, prop);

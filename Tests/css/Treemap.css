@@ -1,3 +1,9 @@
+.node {
+  color:#fff;
+  font-size:9px;
+  overflow:hidden;
+}
+
 /*TOOLTIPS*/
 .tip {
     color: #fff;
