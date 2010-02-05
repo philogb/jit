@@ -17,7 +17,7 @@ function init(){
   tm = new $jit.TM.Squarified( {
     'injectInto': 'infovis',
     // orientation: "v",
-    titleHeight: 0,
+    titleHeight: 10,
     offset: 1
   });
 
