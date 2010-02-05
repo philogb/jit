@@ -9,7 +9,7 @@ class Build():
         
         self.script = ''
         
-        self.build_model = json.load(open('model.json', 'r'))
+        self.build_model = json.load(open('build.json', 'r'))
         
         self.build_paths = {}
         
