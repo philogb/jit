@@ -157,8 +157,13 @@ $jit.Sunburst = new Class({
         "Fx", "Tips", "NodeStyles", "Controller"), config, controller);
 
     var canvasConfig = this.config;
-    this.config.labelContainer = canvasConfig.injectInto + '-label';
-    this.canvas = new Canvas(canvasConfig);
+    if(canvasConfig.useCanvas) {
+      this.canvas = canvasConfig.useCanvas;
+      this.config.labelContainer = this.canvas.id + '-label';
+    } else {
+      this.canvas = new Canvas(canvasConfig);
+      this.config.labelContainer = canvasConfig.injectInto + '-label';
+    }
 
     this.graphOptions = {
       'complex': false,
@@ -389,7 +394,7 @@ $jit.Sunburst.$extend = true;
 
   */
   Sunburst.Label.Native = new Class( {
-    Extends: Graph.Label.Native,
+    Implements: Graph.Label.Native,
 
     initialize: function(viz) {
       this.viz = viz;
@@ -644,9 +649,9 @@ $jit.Sunburst.$extend = true;
 
         var ctx = canvas.getCtx();
         ctx.moveTo(0, 0);
+        ctx.beginPath();
         ctx.arc(0, 0, polarNode.rho, begin, end, false);
         ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
-        ctx.beginPath();
         ctx.moveTo(p1coord.x, p1coord.y);
         ctx.lineTo(p4coord.x, p4coord.y);
         ctx.moveTo(p2coord.x, p2coord.y);

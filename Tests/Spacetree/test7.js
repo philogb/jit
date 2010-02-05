@@ -737,14 +737,12 @@ function init(){
     //end
     //init st
     //Create a new ST instance
-    var st = new ST({
-        Canvas: {
-          'injectInto': 'infovis'
-        },
+    var st = new $jit.ST({
+        'injectInto': 'infovis',
         //set duration for the animation
         duration: 800,
         //set animation transition type
-        transition: Trans.Quart.easeInOut,
+        transition: $jit.Trans.Quart.easeInOut,
         //set distance between node and its children
         levelDistance: 50,
         //set node and edge styles
@@ -838,7 +836,7 @@ function init(){
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new Complex(-200, 0), "pos");
+    st.geom.translate(new $jit.Complex(-200, 0), "pos");
     //emulate a click on the root node.
     st.onClick(st.root);
     //end

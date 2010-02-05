@@ -736,10 +736,8 @@ function init(){
     var removing = false;
     //init st
     //Create a new ST instance
-    var st = new ST({
-    	  Canvas: {
-          'injectInto': 'infovis'
-        },
+    var st = new $jit.ST({
+        'injectInto': 'infovis',
         //add styles/shapes/colors
         //to nodes and edges
         
@@ -752,7 +750,7 @@ function init(){
           color: '#ccc'
         },
         //change the animation/transition effect
-        transition: Trans.Quart.easeOut,
+        transition: $jit.Trans.Quart.easeOut,
         
         onBeforeCompute: function(node){
             Log.write("loading " + node.name);
@@ -813,7 +811,7 @@ function init(){
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new Complex(-200, 0), "pos");
+    st.geom.translate(new $jit.Complex(-200, 0), "pos");
     //Emulate a click on the root node.
     st.onClick(st.root);
     //end

@@ -235,6 +235,7 @@ function init() {
 
     //init rgraph
     var rgraph = new $jit.RGraph({
+        'useCanvas': pie.canvas,
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden

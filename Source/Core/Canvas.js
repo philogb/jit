@@ -116,14 +116,13 @@
  The _init_ method is only called once, at the instanciation of the background canvas.
  The _plot_ method is called for plotting a Canvas image.
  */
-this.Canvas = (function(){
+var Canvas = (function(){
     var config = {
         'injectInto': 'id',
         'width': false,
         'height': false,
         'useCanvas': false,
         'labels': 'HTML', //can also be 'SVG' or 'Native'
-        
         'backgroundCanvas': false
     };
     

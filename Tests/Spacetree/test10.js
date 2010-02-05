@@ -740,34 +740,28 @@ function init(){
     for(var i=0; i < len; i++) {
     	if(i < len / 2) {
     		arr[i].data.$orn = 'left';
-    		TreeUtil.each(arr[i], function(n) {
+    		$jit.json.each(arr[i], function(n) {
     			n.data.$orn = 'left';
     		});
     	} else {
     		arr[i].data.$orn = 'right';
-    		TreeUtil.each(arr[i], function(n) {
+    		$jit.json.each(arr[i], function(n) {
     			n.data.$orn = 'right';
     		});
     	}
     }
     
     //end
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     //init st
     //Create a new ST instance
-    st = new ST({
-    	  Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    st = new $jit.ST({
+        'injectInto': 'infovis',
         //multitree
     	  multitree: true,
         //set duration for the animation
         duration: 800,
         //set animation transition type
-        transition: Trans.Quart.easeInOut,
+        transition: $jit.Trans.Quart.easeInOut,
         //set distance between node and its children
         levelDistance: 50,
         //set node and edge styles

@@ -146,13 +146,10 @@ function init() {
     };
     //end
     
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
-    
     //init nodetypes
     //Here we implement custom node rendering types for the RGraph
     //Using this feature requires some javascript and canvas experience.
-    RGraph.Plot.NodeTypes.implement({
+    $jit.RGraph.Plot.NodeTypes.implement({
         //This node type is used for plotting pie-chart slices as nodes
         'shortnodepie': {
           'render': function(node, canvas) {
@@ -160,7 +157,7 @@ function init() {
             var span = node.angleSpan, begin = span.begin, end = span.end;
             var polarNode = node.pos.getp(true);
             
-            var polar = new Polar(polarNode.rho, begin);
+            var polar = new $jit.Polar(polarNode.rho, begin);
             var p1coord = polar.getc(true);
             
             polar.theta = end;
@@ -190,7 +187,7 @@ function init() {
         }
     });
     
-    ST.Plot.NodeTypes.implement({
+    $jit.ST.Plot.NodeTypes.implement({
         //Create a new node type that renders an entire RGraph visualization
         'piechart': {
           'render': function(node, canvas, animating) {
@@ -205,12 +202,8 @@ function init() {
     //end
     
     //init pie
-    var pie = new RGraph({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-        },
+    var pie = new $jit.RGraph({
+        'injectInto': 'infovis',
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden
@@ -234,7 +227,8 @@ function init() {
     //end
 
     //init st
-    var st = new ST(canvas, {
+    var st = new $jit.ST({
+        'useCanvas': pie.canvas,
         orientation: 'bottom',
         //Add node/edge styles
         Node: {
@@ -276,7 +270,7 @@ function init() {
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new Complex(0, 200), "startPos");
+    st.geom.translate(new $jit.Complex(0, 200), "startPos");
     //Emulate a click on the root node.
     st.onClick(st.root, {
         Move: {

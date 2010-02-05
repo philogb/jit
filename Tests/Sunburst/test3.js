@@ -100,17 +100,12 @@ function init(){
     //end
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
-    
-    var style = document.getElementById('mycanvas').style;
-    style.marginLeft = style.marginTop = "25px";
     //init Sunburst
-    var sb = new Sunburst({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-          'labels':'Native'
-        },
+    var sb = new $jit.Sunburst({
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+        'labels':'Native',
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {

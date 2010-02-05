@@ -144,8 +144,13 @@ $jit.ForceDirected = new Class( {
         "Fx", "Tips", "NodeStyles", "Controller"), config, controller);
 
     var canvasConfig = this.config;
-    this.config.labelContainer = canvasConfig.injectInto + '-label';
-    this.canvas = new Canvas(canvasConfig);
+    if(canvasConfig.useCanvas) {
+      this.canvas = canvasConfig.useCanvas;
+      this.config.labelContainer = this.canvas.id + '-label';
+    } else {
+      this.canvas = new Canvas(canvasConfig);
+      this.config.labelContainer = canvasConfig.injectInto + '-label';
+    }
 
     this.graphOptions = {
       'complex': true,

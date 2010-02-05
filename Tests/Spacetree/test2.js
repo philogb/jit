@@ -1,15 +1,10 @@
 function init(){
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     Feeder.p.color = false;
     var json = Feeder.makeTree();
     //Create a new ST instance
-    st = new ST({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    st = new $jit.ST({
+        'injectInto': 'infovis',
+        
         Node: {
           overridable: true
         },
@@ -40,7 +35,7 @@ function init(){
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new Complex(-200, 0), "pos");
+    st.geom.translate(new $jit.Complex(-200, 0), "pos");
     //Emulate a click on the root node.
     //    Tree.Plot.plot(st.tree, st.canvas);
     st.onClick(st.root);

@@ -11,7 +11,7 @@ function init(){
           function(all, match) {
             return "id:\"" + match + "_" + i + "\""  
           }) + ')');
-          TreeUtil.prune(subtree, level); i++;
+          $jit.json.prune(subtree, level); i++;
           return {
               'id': nodeId,
               'children': subtree.children
@@ -21,7 +21,7 @@ function init(){
     
     //Implement a node rendering function called 'nodeline' that plots a straight line
     //when contracting or expanding a subtree.
-    ST.Plot.NodeTypes.implement({
+    $jit.ST.Plot.NodeTypes.implement({
         'nodeline': {
           'render': function(node, canvas, animating) {
                 if(animating === 'expand' || animating === 'contract') {
@@ -46,14 +46,12 @@ function init(){
 
     //init st
     //Create a new ST instance
-    var st = new ST({
-        Canvas: {
-          'injectInto': 'infovis'
-        },
+    var st = new $jit.ST({
+        'injectInto': 'infovis',
         //set duration for the animation
         duration: 800,
         //set animation transition type
-        transition: Trans.Quart.easeInOut,
+        transition: $jit.Trans.Quart.easeInOut,
         //set distance between node and its children
         levelDistance: 50,
         //set max levels to show. Useful when used with

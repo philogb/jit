@@ -324,17 +324,12 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
     var colors = ['#33a', '#55b', '#77c', '#99d', '#aae', '#bf0', '#cf5', '#dfa', '#faccff', '#ffccff', '#CCC', '#C37'];
-    
-    var style = document.getElementById('mycanvas').style;
-    style.marginLeft = style.marginTop = "25px";
     //init Sunburst
-    var sb = new Sunburst({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-          'labels':'Native'
-        },
+    var sb = new $jit.Sunburst({
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+        'labels':'Native',
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -383,7 +378,7 @@ function init(){
             //rotate
             sb.rotate(node, 'animate', {
               'duration': 1500,
-              'transition': Trans.Quart.easeInOut
+              'transition': $jit.Trans.Quart.easeInOut
             });
           },
           onRightClick: function(node) {
@@ -391,13 +386,13 @@ function init(){
               sb.op.expand(node, {
                 'type': 'animate',
                 'duration': 700,
-                'transition': Trans.Back.easeOut
+                'transition': $jit.Trans.Back.easeOut
               });
             } else {
               sb.op.contract(node, {
                 'type': 'animate',
                 'duration': 700,
-                'transition': Trans.Quart.easeInOut
+                'transition': $jit.Trans.Quart.easeInOut
               });
             }
           }

@@ -16,12 +16,10 @@ function init(){
         'children': []
     }].concat(json.children);
     //Create a new ST instance
-    st = new ST({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h
-        },
+    st = new $jit.ST({
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
         levelDistance: 50,
         Node: {
             overridable: false,
@@ -57,7 +55,7 @@ function init(){
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new Complex(-200, 0), "pos");
+    st.geom.translate(new $jit.Complex(-200, 0), "pos");
     //Emulate a click on the root node.
     //  Tree.Plot.plot(st.tree, st.canvas);
     st.onClick(st.root);

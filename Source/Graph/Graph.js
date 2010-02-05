@@ -46,7 +46,7 @@
  
 */  
 
-this.Graph = new Class({
+var Graph = new Class({
 
  initialize: function(opt, Node, Edge) {
     var innerOptions = {

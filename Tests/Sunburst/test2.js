@@ -52,17 +52,13 @@ function init(){
     //end
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
-    
-    var style = document.getElementById('mycanvas').style;
-    style.marginLeft = style.marginTop = "25px";
+    var labels = 'HTML';
     //init Sunburst
-    var sb = new Sunburst({
-        Canvas: {
-          'injectInto': 'infovis',
-          'width': w,
-          'height': h,
-          'labels':'HTML'
-        },
+    var sb = new $jit.Sunburst({
+        'injectInto': 'infovis',
+        'width': w,
+        'height': h,
+        'labels':'HTML',
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -141,5 +137,4 @@ function init(){
     //compute positions and plot.
     sb.refresh();
     //end
-   // sb.config.NodeStyles.onClick(sb.graph.getNode(sb.root));
 }
