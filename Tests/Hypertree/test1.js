@@ -380,10 +380,10 @@ function init(){
             //Build the right column relations list.
             //This is done by collecting the information (stored in the data property) 
             //for all the nodes adjacent to the centered node.
-            var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;

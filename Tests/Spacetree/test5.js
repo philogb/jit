@@ -68,7 +68,7 @@ function init(){
     });
     //load json data
     st.loadJSON(json);
-    Graph.Util.eachNode(st.graph, function(node){
+    $jit.Graph.Util.eachNode(st.graph, function(node){
         node.data.$width = 30 + Math.random() * 30;
         node.data.$height = 30 + Math.random() * 30;
     });
@@ -103,7 +103,7 @@ function init(){
     
     //make node list
     var elemUl = document.createElement('ul');
-    Graph.Util.eachNode(st.graph, function(elem){
+    $jit.Graph.Util.eachNode(st.graph, function(elem){
         var elemLi = document.createElement('li');
         elemLi.onclick = function() {
             st.select(elem.id);

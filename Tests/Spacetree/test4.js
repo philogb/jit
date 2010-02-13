@@ -75,7 +75,7 @@ function init(){
     
     //make node list
     var elemUl = document.createElement('ul');
-    Graph.Util.eachNode(st.graph, function(elem){
+    $jit.Graph.Util.eachNode(st.graph, function(elem){
         var elemLi = document.createElement('li');
         elemLi.onclick = function() {
             st.select(elem.id);

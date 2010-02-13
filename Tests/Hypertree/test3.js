@@ -444,10 +444,10 @@ function init(){
         
         onAfterCompute: function(){
             Log.write("done");
-            var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -493,7 +493,7 @@ function init(){
         
         var hideLabels = !!document.getElementById('hide-labels').checked;
 
-        var subnodes = Graph.Util.getSubnodes(ht.graph.getNode('236585_30'), 0);
+        var subnodes = $jit.Graph.Util.getSubnodes(ht.graph.getNode('236585_30'), 0);
         var map = [];
         for (var i = 0; i < subnodes.length; i++) {
             map.push(subnodes[i].id);
@@ -504,7 +504,7 @@ function init(){
             fps: fps,
             hideLabels:hideLabels,
             onComplete: function(){
-                N = Graph.Util.getClosestNodeToOrigin(ht.graph, 'pos');
+                N = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, 'pos');
             }
         });
         ht.controller.onAfterCompute();

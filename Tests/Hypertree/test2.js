@@ -50,9 +50,9 @@ function init(){
        
         onAfterCompute: function(){
             Log.write("done");
-            var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
             var _self = this;
-            Graph.Util.eachNode(ht.graph, function(n){
+            $jit.Graph.Util.eachNode(ht.graph, function(n){
                 var domNode = (n.id in nodesCache) ? nodesCache[n.id] : nodesCache[n.id] = document.getElementById(n.id);
                 if (node.adjacentTo(n) || node.id == n.id) {
                     domNode.style.display = "";

@@ -446,7 +446,7 @@ function init(){
             Log.write("centering " + node.name + "...");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -514,7 +514,7 @@ function init(){
     //make first plot
     rgraph.plot();
     
-    rgraph.controller.onBeforeCompute(Graph.Util.getNode(rgraph.graph, rgraph.root));
+    rgraph.controller.onBeforeCompute($jit.Graph.Util.getNode(rgraph.graph, rgraph.root));
     rgraph.controller.onAfterCompute();
     
     //remove an entire subtree by removing an array of nodes.
@@ -535,7 +535,7 @@ function init(){
         
         var hideLabels = !!document.getElementById('hide-labels').checked;
 
-        var subnodes = Graph.Util.getSubnodes(rgraph.graph.getNode('236585_30'), 0);
+        var subnodes = $jit.Graph.Util.getSubnodes(rgraph.graph.getNode('236585_30'), 0);
         var map = [];
         for (var i = 0; i < subnodes.length; i++) {
             map.push(subnodes[i].id);

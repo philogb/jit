@@ -802,7 +802,7 @@ function init(){
             }
             else {
                 delete node.data.$color;
-                var GUtil = Graph.Util;
+                var GUtil = $jit.Graph.Util;
                 //if the node belongs to the last plotted level
                 if(!GUtil.anySubnode(node, "exist")) {
                     //count children number

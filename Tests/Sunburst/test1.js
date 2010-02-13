@@ -363,7 +363,7 @@ function init(){
             //for all the nodes adjacent to the centered node.
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -403,7 +403,7 @@ function init(){
         onBeforePlotNode: function(node) {
           if(!('$color' in node.data)) {
             var len = 0;
-            Graph.Util.eachSubnode(node, function() { len++; });
+            $jit.Graph.Util.eachSubnode(node, function() { len++; });
             node.data.$color = colors[len];
           }
         },

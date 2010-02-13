@@ -264,10 +264,10 @@ function init(){
             Log.write("done");
 
             //Make the relations list shown in the right column.
-            var node = Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 html += "<li>" + child.name + "</li>";
             });
@@ -280,6 +280,6 @@ function init(){
     //compute positions and plot
     ht.refresh();
     //end
-    ht.controller.onBeforeCompute(Graph.Util.getNode(ht.graph, ht.root));
+    ht.controller.onBeforeCompute($jit.Graph.Util.getNode(ht.graph, ht.root));
     ht.controller.onAfterCompute();
 }

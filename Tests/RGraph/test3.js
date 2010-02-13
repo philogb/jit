@@ -445,7 +445,7 @@ function init(){
             Log.write("centering " + node.name + "...");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 if (child.data && child.data.length > 0) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;

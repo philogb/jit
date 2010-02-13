@@ -357,7 +357,7 @@ function init(){
           //Aux method: Build the tooltip inner html by using the data property
           makeHTMLFromData: function(node){
               var count = 0;
-              Graph.Util.eachAdjacency(node, function() { count++; });
+              $jit.Graph.Util.eachAdjacency(node, function() { count++; });
               return "connections" + ': ' + count + '<br />';
           }
         },
@@ -414,7 +414,7 @@ function init(){
             var node = fd.graph.getNode(fd.root);
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            Graph.Util.eachAdjacency(node, function(adj){
+            $jit.Graph.Util.eachAdjacency(node, function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
