@@ -268,7 +268,7 @@ Class.Mutators = {
 
   Implements: function(self, klasses) {
     $.each($.splat(klasses), function(klass) {
-      Class.prototying = klass;
+      Class.prototyping = klass;
       var instance = (typeof klass == 'function') ? new klass : klass;
       for ( var prop in instance) {
         if (!(prop in self)) {
