@@ -27,7 +27,7 @@ def make_examples(fancy=False):
 #clean examples folder
     system("rm -rf Examples/*")
 #create example folders
-    system('mkdir Examples/Hypertree Examples/RGraph Examples/Treemap Examples/Spacetree Examples/Other')
+    system('mkdir Examples/Hypertree Examples/RGraph Examples/Treemap Examples/Spacetree Examples/ForceDirected Examples/Sunburst Examples/Other')
 #copy css base files
     system('cp -r Tests/css Examples/css')
 #iterate over the examples
@@ -99,17 +99,23 @@ def make_build(fancy=False):
     system('rm -rf Jit/*')
     print "Building Examples..."
     make_examples(fancy)
-    system('cp -r Examples/ Jit/')
+    system('cp -r Examples Jit/')
     print "Done. Building Extras..."
     system('mkdir Jit/Extras && cp Extras/excanvas.js Jit/Extras/excanvas.js')
     print "Done. Building Library..."
     lib = Build().build()
+    license = open('LICENSE', 'r').read()
     f = open('Jit/jit.js', 'w')
+    f.write(license)
     f.write(lib)
     f.close()
     print "Done. Compressing Library..."
-    system('java -jar Extras/' + YC + ' Jit/jit.js > Jit/jit-yc.js')
+    f = open('Jit/jit-yc.js', 'w')
+    f.write(license)
+    f.close()
+    system('java -jar Extras/' + YC + ' Jit/jit.js >> Jit/jit-yc.js')
     print "Done. Zipping..."
-    system('zip -r Jit/ Jit.zip')
+    system('rm Jit.zip')
+    system('zip -r Jit.zip Jit/')
     print "Done, I guess."
 if __name__ == "__main__": main()

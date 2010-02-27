@@ -334,56 +334,6 @@ tests_model = {
             'Example': False 
         }
    ],
-    
-    'oldTreemap': [
-        {
-            'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
-            'Description': 
-            """
-            Loads a random generated weighted tree and renders it as Squarified Tree by default.<br> 
-            Treemap nodes should have colors by default. <br>
-            You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).<br> 
-            Each time an option is changed, a new random tree is generated and rendered.
-            """,
-            'Extras': ['generators.js']
-        },
-        {
-            'Title': 'Squarified Treemap with on-demand nodes',
-            'Description': 
-            """
-            This example shows how you can use the <b>request</b> controller method to create a Treemap with <em>on demand</em> nodes<br /><br />
-            There should be only one level shown at a time. <br /><br />
-            Clicking on a band should show a new treemap with its most listened albums. 
-            """,
-            'Extras': [],
-            'Example': True
-        },
-        {
-            'Title': 'Squarified Treemap',
-            'Description': 
-            """
-            In this example a static JSON tree is loaded into a Squarified Treemap.<br /><br />
-            Tooltips are manually added for each Treemap DOM node.<br /><br />
-            <b>Left click</b> to set a node as root for the visualization.<br /><br />
-            <b>Right click</b> to set the parent node as root for the visualization.
-            """,
-            'Extras': [],
-            'Example':True        
-        },
-        {
-            'Title': 'Strip Cushioned Treemap',
-            'Description': 
-            """
-            In this example a static JSON tree is loaded into a Strip Treemap.<br /><br />
-            Tooltips are manually added for each Treemap DOM node.<br /><br />
-            Also an image is added as background for each leaf node to simulate cushions.<br /><br />
-            <b>Left click</b> to set a node as root for the visualization.<br /><br />
-            <b>Right click</b> to set the parent node as root for the visualization.
-            """,
-            'Extras': [],
-            'Example':True        
-        }
-   ],
    
     'Treemap': [
         {
