@@ -41,7 +41,7 @@ window.$jit = function(w) {
   }
 };
 
-
+//TODO(nico) add these methods to $jit.util
 var $ = function(d) {
   return document.getElementById(d);
 };

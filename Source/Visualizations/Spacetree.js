@@ -213,7 +213,9 @@ $jit.ST= (function() {
                   type: 'rectangle'
                 },
                 duration: 700,
-                fps: 25
+                fps: 25,
+                offsetX: 0,
+                offsetY: 0
             };
             
             this.controller = this.config = $.merge(
@@ -616,7 +618,8 @@ $jit.ST= (function() {
                         n.endPos.setc(pos.x, pos.y);
                         n.visited = false; 
                     });
-                    that.geom.translate(node.endPos.scale(-1), ["pos", "startPos", "endPos"]);
+                    var offset = { x: complete.offsetX, y: complete.offsetY };
+                    that.geom.translate(node.endPos.add(offset).$scale(-1), ["pos", "startPos", "endPos"]);
                     group.show(getNodesToShow.call(that));              
                     that.plot();
                     complete.onAfterCompute(that.clickedNode);
@@ -656,12 +659,12 @@ $jit.ST= (function() {
     
         */    
       onClick: function (id, options) {
-        var canvas = this.canvas, that = this, Fx = this.fx, Util = Graph.Util, Geom = this.geom;
+        var canvas = this.canvas, that = this, Geom = this.geom, config = this.config;
         var innerController = {
             Move: {
-        	  enable: true,
-              offsetX: 0,
-              offsetY: 0  
+        	    enable: true,
+              offsetX: config.offsetX || 0,
+              offsetY: config.offsetY || 0  
             },
             onBeforeRequest: $.empty,
             onBeforeContract: $.empty,
