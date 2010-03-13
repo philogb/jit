@@ -1,4 +1,6 @@
 Options.BarChart = {
+  $extend: true,
+  
   animate: true,
   type: 'default', //stack, group
   offset: 1, //node offset

@@ -120,6 +120,17 @@ $.unlink = function(object) {
   return unlinked;
 };
 
+$.zip = function() {
+  if(arguments.length === 0) return [];
+  for(var j=0, ans=[], l=arguments.length, ml=arguments[0].length; j<ml; j++) {
+    for(var i=0, row=[]; i<l; i++) {
+      row.push(arguments[i][j]);
+    }
+    ans.push(row);
+  }
+  return ans;
+};
+
 $.rgbToHex = function(srcArray, array) {
   if (srcArray.length < 3)
     return null;

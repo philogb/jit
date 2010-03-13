@@ -87,6 +87,12 @@
     ],
     "Options.Tree": [
       "Options"
+    ],
+    "Options.BarChart": [
+       "Options"
+    ],
+    "Options.AreaChart": [
+      "Options"
     ]
   },
 
@@ -211,6 +217,11 @@
         "Loader",
         "Layouts.TM",
         "Fx"
+    ],
+    
+    "AreaChart": [ 
+        "Options.AreaChart",
+        "Spacetree" 
     ]
   }
 }

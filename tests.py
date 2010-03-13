@@ -479,6 +479,18 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example':False
         }
-  ]
+  ],
+
+   'AreaChart': [
+        {
+            'Title': 'Area Chart Example',
+            'Description': 
+            """
+            A static Area Chart example that displays tooltips when hovering the stacks.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        }
+    ]
 
 }   
