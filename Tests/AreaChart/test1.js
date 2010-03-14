@@ -28,8 +28,7 @@ function init(){
     //init ForceDirected
     var ac = new $jit.AreaChart({
         'injectInto': 'infovis',
-        'width': w,
-        'height': h
+        'animate': true
     });
     
     //load JSON data.

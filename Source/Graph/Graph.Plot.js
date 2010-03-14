@@ -40,7 +40,9 @@ Graph.Plot = {
           'dim': 'number',
           'alpha': 'number',
           'angularWidth':'number',
-          'span':'number'
+          'span':'number',
+          'valueArray':'array-number'
+          //'colorArray':'array-color'
         },
   
         //Number interpolator
@@ -90,6 +92,24 @@ Graph.Plot = {
                                 parseInt(comp(from[2], to[2], delta))]);
           
           elem.setData(prop, val);
+        },
+        
+        'array-number': function(elem, prop, delta) {
+          var from = elem.getData(prop, 'start'),
+              to = elem.getData(prop, 'end'),
+              cur = [];
+          for(var i=0, l=from.length; i<l; i++) {
+            var fromi = from[i], toi = to[i];
+            if(fromi.length) {
+              for(var j=0, len=fromi.length, curi=[]; j<len; j++) {
+                curi.push(this.compute(fromi[j], toi[j], delta));
+              }
+              cur.push(curi);
+            } else {
+              cur.push(this.compute(fromi, toi, delta));
+            }
+          }
+          elem.setData(prop, cur);
         },
         
         'node-property': function(elem, props, delta) {

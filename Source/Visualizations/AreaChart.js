@@ -6,7 +6,7 @@ $jit.ST.Plot.NodeTypes.implement({
           width = node.getData('width'),
           height = node.getData('height'),
           algnPos = this.getAlignedPos(pos, width, height),
-          y = algnPos.y,
+          x = algnPos.x, y = algnPos.y,
           valueArray = node.getData('valueArray'),
           colorArray = node.getData('colorArray'),
           stringArray = node.getData('stringArray');
@@ -17,11 +17,11 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.fillStyle = ctx.strokeStyle = colorArray[i];
           ctx.save();
           ctx.beginPath();
-          ctx.moveTo(algnPos.x, y - acumLeft);
-          ctx.lineTo(algnPos.x + width, y - acumRight);
-          ctx.lineTo(algnPos.x + width, y - acumRight - valueArray[i][1]);
-          ctx.lineTo(algnPos.x, y - acumLeft - valueArray[i][0]);
-          ctx.lineTo(algnPos.x, y - acumLeft);
+          ctx.moveTo(x, y - acumLeft);
+          ctx.lineTo(x + width, y - acumRight);
+          ctx.lineTo(x + width, y - acumRight - valueArray[i][1]);
+          ctx.lineTo(x, y - acumLeft - valueArray[i][0]);
+          ctx.lineTo(x, y - acumLeft);
           ctx.fill();
           ctx.restore();
           acumLeft += (valueArray[i][0] || 0);
@@ -112,16 +112,30 @@ $jit.AreaChart = new Class({
     var fixedDim = size.width / l,
         animate = config.animate;
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {
-      var acumLeft = 0, acumRight = 0;
+      var acumLeft = 0, acumRight = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acumLeft += +v[0];
         acumRight += +v[1];
+        animateValue.push([0, 0]);
       });
       var acum = acumRight>acumLeft? acumRight:acumLeft;
-      n.setData('height', acum * size['height'] / maxValue);
       n.setData('width', fixedDim);
+      if(animate) {
+        n.setData('height', 0);
+        n.setData('height', acum * size['height'] / maxValue, 'end');
+        n.setData('valueArray', n.getData('valueArray'), 'end');
+        n.setData('valueArray', animateValue);
+      } else {
+        n.setData('height', acum * size['height'] / maxValue);
+      }
     });
     st.compute();
     st.select(st.root);
+    if(animate) {
+      st.fx.animate({
+        modes: ['node-property:height:valueArray'],
+        duration:1000
+      });
+    }
   }
 });
