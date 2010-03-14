@@ -1,17 +1,16 @@
-ST.Plot.NodeTypes.implement({
+$jit.ST.Plot.NodeTypes.implement({
   'barchart-default' : {
     'render' : function(node, canvas) {
       var pos = node.pos.getc(true), 
           nconfig = this.node, 
-          data = node.data,
           orn = this.viz.config.orientation,
           xcoord = (orn == "top" || orn == "bottom"),
-          width = data.getData('width'),
-          height = data.getData('height'),
+          width = node.getData('width'),
+          height = node.getData('height'),
           algnPos = this.getAlignedPos(pos, width, height),
-          valueArray = data.getData('valueArray'),
-          colorArray = data.getData('colorArray'),
-          stringArray = data.getData('stringArray');
+          valueArray = node.getData('valueArray'),
+          colorArray = node.getData('colorArray'),
+          stringArray = node.getData('stringArray');
 
       var ctx = canvas.getCtx();
       if (colorArray && valueArray && stringArray) {
@@ -34,15 +33,14 @@ ST.Plot.NodeTypes.implement({
     'render': function(node, canvas) {
       var pos = node.pos.getc(true), 
         nconfig = this.node, 
-        data = node.data,
         orn = this.viz.config.orientation,
         xcoord = (orn == "top" || orn == "bottom"),
-        width = data.getData('width'),
-        height = data.getData('height'),
+        width = node.getData('width'),
+        height = node.getData('height'),
         algnPos = this.getAlignedPos(pos, width, height),
-        valueArray = data.getData('valueArray'),
-        colorArray = data.getData('colorArray'),
-        stringArray = data.getData('stringArray');
+        valueArray = node.getData('valueArray'),
+        colorArray = node.getData('colorArray'),
+        stringArray = node.getData('stringArray');
 
       var ctx = canvas.getCtx();
       if (colorArray && valueArray && stringArray) {
@@ -86,23 +84,24 @@ $jit.BarChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "BarChart"), controller);
+      $.merge(Options("Canvas", "BarChart"), opt);
     this.initializeViz();
   },
   
   initializeViz: function() {
     var config = this.config;
-    var st = new ST({
+    var st = new $jit.ST({
       injectInto: config.injectInto,
       orientation: config.orientation,
-      levelDistance: 0,
+      levelDistance: 100,
       siblingOffset: config.offset,
       Node: {
         overridable: true,
-        type: 'barchart-' + config.type
+        type: 'barchart-' + config.type,
+        align: 'left'
       },
       Edge: {
-        type: 'none'
+//        type: 'none'
       }
     });
     
@@ -136,11 +135,12 @@ $jit.BarChart = new Class({
         size = this.st.canvas.getSize(),
         name = $.splat(json.label), 
         color = $.splat(json.color || that.colors),
-        st = this.st;
+        st = this.st,
+        config = this.config;
     
-    for(var i=0, values=json.values, maxValue=0, l=values.length; i<l; i++) {
+    for(var i=0, values=json.values, maxValue=0, l=values.length; i<l-1; i++) {
       var val = values[i];
-      var valArray = $.splat(val.value);
+      var valArray = values[i].values;
       var acum = 0;
       ch.push({
         'id': prefix + val.label,
@@ -153,7 +153,9 @@ $jit.BarChart = new Class({
         },
         'children': []
       });
-      $.each(valArray, function(v) { acum += +v; });
+      $.each(valArray, function(v) { 
+        acum += +v;
+      });
       maxValue = maxValue>acum? maxValue:acum;
     }
     var root = {
@@ -168,21 +170,31 @@ $jit.BarChart = new Class({
     };
     st.loadJSON(root);
     
-    var orn = this.config.orientation,
-        h = (orn == 'top' || orn == 'bottom'),
-        fixedDim = size.width / l - config.offset,
-        animate = config.animate,
-        dim1 = h? 'height':'width',
-        dim2 = h? 'width':'height';
+    var fixedDim = size.width / l,
+        animate = config.animate;
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {
-      var acum = 0;
+      var acum = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acum += +v;
+        animateValue.push(0);
       });
-      n.setData(dim1, acum * size[dim1] / maxValue);
-      n.setData(dim2, fixedDim);
+      n.setData('width', fixedDim);
+      if(animate) {
+        n.setData('height', 0);
+        n.setData('height', acum * size['height'] / maxValue, 'end');
+        n.setData('valueArray', n.getData('valueArray'), 'end');
+        n.setData('valueArray', animateValue);
+      } else {
+        n.setData('height', acum * size['height'] / maxValue);
+      }
     });
     st.compute();
     st.select(st.root);
+    if(animate) {
+      st.fx.animate({
+        modes: ['node-property:height:valueArray'],
+        duration:1000
+      });
+    }
   }
 });

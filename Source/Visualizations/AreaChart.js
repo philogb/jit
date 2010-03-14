@@ -2,7 +2,6 @@ $jit.ST.Plot.NodeTypes.implement({
   'areachart-default' : {
     'render' : function(node, canvas) {
       var pos = node.pos.getc(true), 
-          nconfig = this.node, 
           width = node.getData('width'),
           height = node.getData('height'),
           algnPos = this.getAlignedPos(pos, width, height),
@@ -28,6 +27,15 @@ $jit.ST.Plot.NodeTypes.implement({
           acumRight += (valueArray[i][1] || 0);
         }
       }
+    },
+    'contains': function(node, mpos) {
+      var pos = node.pos.getc(true), 
+          width = node.getData('width'),
+          height = node.getData('height'),
+          algnPos = this.getAlignedPos(pos, width, height),
+          x = algnPos.x, y = algnPos.y,
+          valueArray = node.getData('valueArray');
+      //if()
     }
   }
 });

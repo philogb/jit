@@ -222,6 +222,11 @@
     "AreaChart": [ 
         "Options.AreaChart",
         "Spacetree" 
+    ],
+    
+    "BarChart": [ 
+        "Options.BarChart",
+        "Spacetree" 
     ]
   }
 }

@@ -491,6 +491,19 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': True
         }
+    ],
+    
+   'BarChart': [
+        {
+            'Title': 'Bar Chart Example',
+            'Description': 
+            """
+            A static Bar Chart example that displays tooltips when hovering the stacks.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        }
     ]
+    
 
 }   
