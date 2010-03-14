@@ -59,6 +59,9 @@
     ],
     "Layouts.TM": [
       "Layouts"
+    ],
+    "Layouts.Icicle": [
+      "Layouts"
     ]
   },
 
@@ -264,20 +267,46 @@
         "Layouts.TM",
         "Fx"
     ],
-    
+
+    "Icicle": [
+        "Core",
+        "Options.Canvas",
+        "Options.Tree",
+        "Options.Node",
+        "Options.Edge",
+        "Options.Fx",
+        "Options.Label",
+        "Options.Tips",
+        "Options.Navigation",
+        "Options.NodeStyles",
+        "Options.Events",
+        "Options.Controller",
+        "Extras",
+        "Canvas",
+        "Complex",
+        "Polar",
+        "Graph.Op",
+        "Graph.Plot",
+        "Graph.Label",
+        "Loader",
+        "Layouts.TM",
+        "Layouts.Icicle",
+        "Fx"
+    ],
+
     "AreaChart": [
         "Options.AreaChart",
-        "Spacetree" 
+        "Spacetree"
     ],
-    
+
     "PieChart": [
         "Options.PieChart",
-        "Sunburst" 
+        "Sunburst"
     ],
-              
-    "BarChart": [ 
+
+    "BarChart": [
         "Options.BarChart",
-        "Spacetree" 
+        "Spacetree"
     ]
   }
 }

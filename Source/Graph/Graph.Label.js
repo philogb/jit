@@ -78,9 +78,9 @@ Graph.Label.Native = new Class({
        controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
     */
     renderLabel: function(canvas, node, controller) {
-        var ctx = canvas.getCtx();
-        var pos = node.pos.getc(true);
-        ctx.fillText(node.name, pos.x, pos.y + node.getData("height") / 2);
+      var ctx = canvas.getCtx();
+      var pos = node.pos.getc(true);
+      ctx.fillText(node.name, pos.x, pos.y + node.getData("height") / 2);
     },
 
     hideLabel: $.empty,

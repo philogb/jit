@@ -427,6 +427,16 @@ tests_model = {
         },
    ],
 
+    'Icicle': [
+        {
+            'Title': 'Icicle tree',
+            'Description': 
+            """
+            """,
+            'Extras': ['generators.js']
+        },
+   ],
+
     'ForceDirected': [
         {
             'Title': 'Force Directed Static Graph',
