@@ -34,5 +34,6 @@ Options.Tips = {
   attachToCanvas: false,
   offsetX: 20,
   offsetY: 20,
+  force: false,
   onShow: $.empty
 };

@@ -34,14 +34,36 @@ $jit.ST.Plot.NodeTypes.implement({
           height = node.getData('height'),
           algnPos = this.getAlignedPos(pos, width, height),
           x = algnPos.x, y = algnPos.y,
-          dimArray = node.getData('dimArray');
-      //if()
+          dimArray = node.getData('dimArray'),
+          rx = mpos.x - x;
+      //bounding box check
+      if(mpos.x < x || mpos.x > x + width
+        || mpos.y > y || mpos.y < y - height) {
+        return false;
+      }
+      //deep check
+      for(var i=0, l=dimArray.length, lAcum=y, rAcum=y; i<l; i++) {
+        var dimi = dimArray[i];
+        lAcum -= dimi[0];
+        rAcum -= dimi[1];
+        var intersec = lAcum + (rAcum - lAcum) * rx / width;
+        if(mpos.y >= intersec) {
+          var index = +(rx > width/2);
+          return {
+            'name': node.getData('stringArray')[i],
+            'color': node.getData('colorArray')[i],
+            'value': node.getData('valueArray')[i][index]
+          };
+        }
+      }
+      return false;
     }
   }
 });
 
 $jit.AreaChart = new Class({
   st: null,
+  maxValue:null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
   
   initialize: function(opt) {
@@ -57,6 +79,7 @@ $jit.AreaChart = new Class({
       orientation: "bottom",
       levelDistance: 0,
       siblingOffset: 0,
+      subtreeOffset: 0,
       Node: {
         overridable: true,
         type: 'areachart-' + config.type,
@@ -64,6 +87,16 @@ $jit.AreaChart = new Class({
       },
       Edge: {
         type: 'none'
+      },
+      Tips: {
+        allow: config.Tips.enable,
+        attachToDOM: false,
+        attachToCanvas: true,
+        force: true,
+        onShow: function(tip, node, opt) {
+          var elem = opt.contains;
+          config.Tips.onShow(tip, elem, node);
+        }
       }
     });
     
@@ -75,15 +108,13 @@ $jit.AreaChart = new Class({
   loadJSON: function(json) {
     var prefix = $.time(), 
         ch = [], 
-        that = this,
         st = this.st,
-        size = st.canvas.getSize(),
         name = $.splat(json.label), 
-        color = $.splat(json.color || that.colors),
-        config = this.config;
+        color = $.splat(json.color || this.colors),
+        animate = this.config.animate;
     
-    for(var i=0, values=json.values, maxValue=0, l=values.length; i<l-1; i++) {
-      var val = values[i];
+    for(var i=0, values=json.values, l=values.length; i<l-1; i++) {
+      var val = values[i], prev = values[i-1], next = values[i+1];
       var valLeft = values[i].values, valRight = values[i+1].values;
       var valArray = $.zip(valLeft, valRight);
       var acumLeft = 0, acumRight = 0;
@@ -94,16 +125,12 @@ $jit.AreaChart = new Class({
           'value': valArray,
           '$valueArray': valArray,
           '$colorArray': color,
-          '$stringArray': name
+          '$stringArray': name,
+          '$next': next.label,
+          '$prev': prev? prev.label:null
         },
         'children': []
       });
-      $.each(valArray, function(v) { 
-        acumLeft += +v[0];
-        acumRight += +v[1];
-      });
-      var acum = acumRight>acumLeft? acumRight:acumLeft;
-      maxValue = maxValue>acum? maxValue:acum;
     }
     var root = {
       'id': prefix + '$root',
@@ -117,9 +144,103 @@ $jit.AreaChart = new Class({
     };
     st.loadJSON(root);
     
-    var fixedDim = size.width / l,
-        animate = config.animate,
+    this.normalizeDims();
+    st.compute();
+    st.select(st.root);
+    if(animate) {
+      st.fx.animate({
+        modes: ['node-property:height:dimArray'],
+        duration:1500
+      });
+    }
+  },
+  
+  updateJSON: function(json) {
+    var st = this.st;
+    var graph = st.graph;
+    var values = json.values;
+    var animate = this.config.animate;
+    $.each(values, function(v) {
+      var n = graph.getByName(v.label);
+      if(n) {
+        var valArray = n.getData('valueArray');
+        $.each(valArray, function(a, i) {
+          a[0] = v.values[i];
+        });
+        n.setData('valueArray', valArray);
+        var prev = n.getData('prev');
+        if(prev) {
+          var p = graph.getByName(prev);
+          var valArray = p.getData('valueArray');
+          $.each(valArray, function(a, i) {
+            a[1] = v.values[i];
+          });
+          p.setData('valueArray', valArray);
+        }
+      }
+    });
+    this.normalizeDims();
+    st.compute();
+    st.select(st.root);
+    if(animate) {
+      st.fx.animate({
+        modes: ['node-property:height:dimArray'],
+        duration:1500
+      });
+    }
+  },
+  
+  filter: function(name) {
+    var rt = this.st.graph.getNode(this.st.root);
+    $jit.Graph.Util.eachAdjacency(rt, function(adj) {
+      var n = adj.nodeTo, 
+          dimArray = n.getData('dimArray'),
+          stringArray = n.getData('stringArray');
+      n.setData('dimArray', $.map(dimArray, function(d, i) {
+        return stringArray[i] == name? d:[0, 0];
+      }), 'end');
+    });
+    this.st.fx.animate({
+      modes: ['node-property:dimArray'],
+      duration:1500
+    });
+  },
+  
+  restore: function() {
+    this.normalizeDims();
+    this.st.fx.animate({
+      modes: ['node-property:height:dimArray'],
+      duration:1500
+    });
+  },
+  
+  getMaxValue: function() {
+    var maxValue = 0;
+    $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+      var valArray = n.getData('valueArray'),
+          acumLeft = 0, acumRight = 0;
+      $.each(valArray, function(v) { 
+        acumLeft += +v[0];
+        acumRight += +v[1];
+      });
+      var acum = acumRight>acumLeft? acumRight:acumLeft;
+      maxValue = maxValue>acum? maxValue:acum;
+    });
+    return maxValue;
+  },
+  
+  normalizeDims: function() {
+    //number of elements
+    var root = this.st.graph.getNode(this.st.root), l=0;
+    $jit.Graph.Util.eachAdjacency(root, function() {
+      l++;
+    });
+    var maxValue = this.getMaxValue(),
+        size = this.st.canvas.getSize(),
+        config = this.config,
         offset = config.offset,
+        fixedDim = size.width / l,
+        animate = config.animate,
         height = size.height - 2 * offset;
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {
       var acumLeft = 0, acumRight = 0, animateValue = [];
@@ -136,7 +257,10 @@ $jit.AreaChart = new Class({
         n.setData('dimArray', $.map(n.getData('valueArray'), function(n) { 
           return [n[0] * height / maxValue, n[1] * height / maxValue]; 
         }), 'end');
-        n.setData('dimArray', animateValue);
+        var dimArray = n.getData('dimArray');
+        if(!dimArray) {
+          n.setData('dimArray', animateValue);
+        }
       } else {
         n.setData('height', acum * height / maxValue);
         n.setData('dimArray', $.map(n.getData('valueArray'), function(n) { 
@@ -144,13 +268,5 @@ $jit.AreaChart = new Class({
         }));
       }
     });
-    st.compute();
-    st.select(st.root);
-    if(animate) {
-      st.fx.animate({
-        modes: ['node-property:height:dimArray'],
-        duration:1000
-      });
-    }
   }
 });

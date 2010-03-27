@@ -83,6 +83,33 @@ $jit.Graph = new Class({
     return false;
  },
 
+ /*
+   Method: getByName
+  
+   Returns a <Graph.Node> by _name_.
+  
+   Parameters:
+  
+   name - A <Graph.Node> name.
+  
+   Returns:
+  
+   A <Graph.Node> having _name_ as name. Returns *false* otherwise.
+  
+   Example:
+  
+   (start code js)
+     var node = graph.getByName('someName');
+   (end code)
+  */  
+  getByName: function(name) {
+    for(var id in this.nodes) {
+      var n = this.nodes[id];
+      if(n.name == name) return n;
+    }
+    return false;
+  },
+
 /*
      Method: getAdjacence
     

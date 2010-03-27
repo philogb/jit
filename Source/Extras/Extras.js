@@ -101,24 +101,27 @@ var MouseEventsManager = new Class({
   handleEvent: function(obj, method, e, win) {
     if($.time() - obj.time <= this.mintime) return;
     obj.time = $.time();
-    var fx = this.viz.fx;
-    var g = this.viz.graph;
-    var pos = Event.getPos(e, win);
-    var p = this.canvas.getPos();
-    var s = this.canvas.getSize();
-    var newpos = {
-        x: pos.x - p.x - s.width /2,
-        y: pos.y - p.y - s.height /2
-    };
-    var positions = this.nodeTypes;
-    var opt = {
-        'position': pos  
-    };
+    var fx = this.viz.fx,
+        g = this.viz.graph,
+        pos = Event.getPos(e, win),
+        p = this.canvas.getPos(),
+        s = this.canvas.getSize(),
+        newpos = {
+            x: pos.x - p.x - s.width /2,
+            y: pos.y - p.y - s.height /2
+        },
+        positions = this.nodeTypes,
+        opt = {
+            'position': pos,
+            'contains': false
+        };
 
     if(obj.node) {
       var n = g.getNode(obj.node);
       var elem = n && positions[n.getData('type')];
-      if(elem && elem.contains && elem.contains.call(fx, n, newpos)) {
+      var contains = elem && elem.contains && elem.contains.call(fx, n, newpos);
+      if(contains) {
+        opt.contains = contains;
         for(var i=0, l=this.registeredObjects.length; i<l; i++) {
           this.registeredObjects[i][method](n, opt);
         }
@@ -128,8 +131,10 @@ var MouseEventsManager = new Class({
     for(var id in g.nodes) {
       var n = g.nodes[id];
       var elem = n && positions[n.getData('type')];
-      if(elem && elem.contains && elem.contains.call(fx, n, newpos)) {
+      var contains = elem && elem.contains && elem.contains.call(fx, n, newpos);
+      if(contains) {
         obj.node = id;
+        opt.contains = contains;
         for(var i=0, l=this.registeredObjects.length; i<l; i++) {
           this.registeredObjects[i][method](n, opt);
         }
@@ -201,9 +206,9 @@ var Tips = new Class({
       this.node = false;
       return;
     }
-    if(!this.node || this.node.id != node.id) {
+    if(this.config.Tips.force || !this.node || this.node.id != node.id) {
       this.node = node;
-      this.config.Tips.onShow(this.tip, node);
+      this.config.Tips.onShow(this.tip, node, opt);
     }
     this.setTooltipPosition(opt.position);
   },

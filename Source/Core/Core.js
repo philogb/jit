@@ -88,8 +88,8 @@ $.each = function(iterable, fn) {
 
 $.map = function(array, f) {
   var ans = [];
-  $.each(array, function(elem) {
-    ans.push(f(elem));
+  $.each(array, function(elem, i) {
+    ans.push(f(elem, i));
   });
   return ans;
 };
