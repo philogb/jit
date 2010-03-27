@@ -73,7 +73,7 @@ $jit.AreaChart = new Class({
   },
   
   initializeViz: function() {
-    var config = this.config;
+    var config = this.config, that = this;
     var st = new $jit.ST({
       injectInto: config.injectInto,
       orientation: "bottom",
@@ -96,6 +96,19 @@ $jit.AreaChart = new Class({
         onShow: function(tip, node, opt) {
           var elem = opt.contains;
           config.Tips.onShow(tip, elem, node);
+        }
+      },
+      NodeStyles: {
+        attachToDOM: false,
+        attachToCanvas: true,
+        onClick: function(node, opt, set) {
+          if(!config.filterOnClick) return;
+          var elem = opt.contains;
+          that.filter(elem.name);
+        },
+        onRightClick: function(node, opt, set) {
+          if(!config.restoreOnRightClick) return;
+          that.restore();
         }
       }
     });
@@ -239,7 +252,7 @@ $jit.AreaChart = new Class({
         size = this.st.canvas.getSize(),
         config = this.config,
         offset = config.offset,
-        fixedDim = size.width / l,
+        fixedDim = (size.width - 2 * offset) / l,
         animate = config.animate,
         height = size.height - 2 * offset;
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {

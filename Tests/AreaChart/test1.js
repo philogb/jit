@@ -57,12 +57,15 @@ function init(){
     ac = new $jit.AreaChart({
         'injectInto': 'infovis',
         'animate': true,
+        'offset': 5,
         Tips: {
           'enable': true,
           'onShow': function(tip, elem) {
              tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
           }
-        }
+        },
+        filterOnClick: true,
+        restoreOnRightClick:true
     });
     
     //load JSON data.

@@ -266,31 +266,31 @@ var NodeStyles = new Class({
     return restoredStyles;
   },
   
-  toggleStylesOnHover: function(node, set) {
+  toggleStylesOnHover: function(node, set, opt) {
     if(this.nodeStylesOnHover) {
-      this.toggleStylesOn('Hover', node, set);
+      this.toggleStylesOn('Hover', node, set, opt);
     } else {
-      this.nStyles.onHover(node, set);
+      this.nStyles.onHover(node, opt, set);
     }
   },
 
-  toggleStylesOnClick: function(node, set) {
+  toggleStylesOnClick: function(node, set, opt) {
     if(this.nodeStylesOnClick) {
-      this.toggleStylesOn('Click', node, set);
+      this.toggleStylesOn('Click', node, set, opt);
     } else {
-      this.nStyles.onClick(node, set);
+      this.nStyles.onClick(node, opt, set);
     }
   },
   
-  toggleStylesOnRightClick: function(node, set) {
+  toggleStylesOnRightClick: function(node, set, opt) {
     if(this.nodeStylesOnRightClick) {
-      this.toggleStylesOn('RightClick', node, set);
+      this.toggleStylesOn('RightClick', node, set, opt);
     } else {
-      this.nStyles.onRightClick(node, set);
+      this.nStyles.onRightClick(node, opt, set);
     }
   },
 
-  toggleStylesOn: function(type, node, set) {
+  toggleStylesOn: function(type, node, set, opt) {
     var viz = this.viz;
     var nStyles = this.nStyles;
     if(set) {
@@ -313,7 +313,7 @@ var NodeStyles = new Class({
          duration:300,
          fps:30,
          onComplete: function() {
-           nStyles['on' + type](node, set);
+           nStyles['on' + type](node, opt, set);
          }
       });
     } else {
@@ -327,7 +327,7 @@ var NodeStyles = new Class({
          duration:300,
          fps:30,
          onComplete: function() {
-           nStyles['on' + type](node, set);
+           nStyles['on' + type](node, opt, set);
          }
       });
     }
@@ -359,12 +359,12 @@ var NodeStyles = new Class({
     if(!node) return;
     var nStyles = this.nodeStylesOnClick;
     if(!nStyles) {
-      this.nStyles.onClick(node);
+      this.nStyles.onClick(node, opt);
       return;
     }
     //if the node is selected then unselect it
     if(node.selected) {
-      this.toggleStylesOnClick(node, false);
+      this.toggleStylesOnClick(node, false, opt);
       delete node.selected;
     } else {
       //unselect all selected nodes...
@@ -377,7 +377,7 @@ var NodeStyles = new Class({
         }
       });
       //select clicked node
-      this.toggleStylesOnClick(node, true);
+      this.toggleStylesOnClick(node, true, opt);
       node.selected = true;
     }
   },
@@ -386,12 +386,12 @@ var NodeStyles = new Class({
     if(!node) return;
     var nStyles = this.nodeStylesOnRightClick;
     if(!nStyles) {
-      this.nStyles.onRightClick(node);
+      this.nStyles.onRightClick(node, opt);
       return;
     }
     //if the node is selected then unselect it
     if(node.rightClickSelected) {
-      this.toggleStylesOnRightClick(node, false);
+      this.toggleStylesOnRightClick(node, false, opt);
       delete node.rightClickSelected;
     } else {
       //unselect all selected nodes...
@@ -404,7 +404,7 @@ var NodeStyles = new Class({
         }
       });
       //select clicked node
-      this.toggleStylesOnRightClick(node, true);
+      this.toggleStylesOnRightClick(node, true, opt);
       node.rightClickSelected = true;
     }
   },
@@ -420,7 +420,7 @@ var NodeStyles = new Class({
     if(!node || node.selected) {
       GUtil.eachNode(this.viz.graph, function(n) {
         if(n.hovered && !n.selected) {
-          that.toggleStylesOnHover(n, false);
+          that.toggleStylesOnHover(n, false, opt);
           delete n.hovered;
         }
       });
@@ -451,7 +451,7 @@ var NodeStyles = new Class({
       }
     });
     //select hovered node
-    this.toggleStylesOnHover(node, true);
+    this.toggleStylesOnHover(node, true, opt);
     node.hovered = true;
   }
 });
