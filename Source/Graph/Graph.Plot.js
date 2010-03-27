@@ -41,7 +41,8 @@ Graph.Plot = {
           'alpha': 'number',
           'angularWidth':'number',
           'span':'number',
-          'valueArray':'array-number'
+          'valueArray':'array-number',
+          'dimArray':'array-number'
           //'colorArray':'array-color'
         },
   

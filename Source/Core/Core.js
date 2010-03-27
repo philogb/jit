@@ -86,6 +86,14 @@ $.each = function(iterable, fn) {
   }
 };
 
+$.map = function(array, f) {
+  var ans = [];
+  $.each(array, function(elem) {
+    ans.push(f(elem));
+  });
+  return ans;
+};
+
 $.merge = function() {
   var mix = {};
   for ( var i = 0, l = arguments.length; i < l; i++) {
