@@ -11,15 +11,25 @@ $jit.ST.Plot.NodeTypes.implement({
           colorLength = colorArray.length,
           stringArray = node.getData('stringArray');
 
-      var ctx = canvas.getCtx(), border = node.getData('border');
+      var ctx = canvas.getCtx(), 
+          border = node.getData('border'),
+          opt = {};
       if (colorArray && dimArray && stringArray) {
         for (var i=0, l=dimArray.length, acum=0; i<l; i++) {
           ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
           ctx.fillRect(x, y - acum - dimArray[i], width, dimArray[i]);
-          if(border) {
-            //so stuff if it's selected
+          if(border && border.name == stringArray[i]) {
+            opt.acum = acum;
+            opt.dimValue = dimArray[i];
           }
           acum += (dimArray[i] || 0);
+        }
+        if(border) {
+          ctx.save();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = border.color;
+          ctx.strokeRect(x, y - opt.acum - opt.dimValue, width, opt.dimValue);
+          ctx.restore();
         }
       }
     },
@@ -90,10 +100,10 @@ $jit.BarChart = new Class({
         onShow: function(tip, node, opt) {
           var elem = opt.contains;
           config.Tips.onShow(tip, elem, node);
-          //that.select(node.id, elem.name, elem.index);
+          that.select(node.id, elem.name, elem.index);
         },
         onHide: function() {
-          //that.select(false, false, false);
+          that.select(false, false, false);
         }
       }
     });
@@ -181,31 +191,19 @@ $jit.BarChart = new Class({
   },
   
   //adds the little brown bar when hovering the node
-  select: function(id, name, index) {
+  select: function(id, name) {
     var s = this.selected;
-    if(s.id != id || s.name != name 
-        || s.index != index) {
+    if(s.id != id || s.name != name) {
       s.id = id;
       s.name = name;
-      s.index = index;
+      s.color = this.config.hoveredColor;
       $jit.Graph.Util.eachNode(this.st.graph, function(n) {
-        n.setData('border', false);
-      });
-      if(id) {
-        var n = this.st.graph.getNode(id);
-        n.setData('border', s);
-        var link = index === 0? 'prev':'next';
-        link = n.getData(link);
-        if(link) {
-          n = this.st.graph.getByName(link);
-          if(n) {
-            n.setData('border', {
-              name: name,
-              index: 1-index
-            });
-          }
+        if(id == n.id) {
+          n.setData('border', s);
+        } else {
+          n.setData('border', false);
         }
-      }
+      });
       this.st.plot();
     }
   },

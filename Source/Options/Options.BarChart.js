@@ -5,6 +5,7 @@ Options.BarChart = {
   type: 'default', //stack, group
   offset: 25, //page offset
   barsOffset: 3, //distance between bars
+  hoveredColor: '#9fd4ff',
   orientation: 'bottom', //top, left, right
   Tips: {
     enable: false,
