@@ -35,5 +35,6 @@ Options.Tips = {
   offsetX: 20,
   offsetY: 20,
   force: false,
-  onShow: $.empty
+  onShow: $.empty,
+  onHide: $.empty
 };

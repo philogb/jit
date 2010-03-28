@@ -10,7 +10,7 @@ $jit.ST.Plot.NodeTypes.implement({
           colorArray = node.getData('colorArray'),
           stringArray = node.getData('stringArray');
 
-      var ctx = canvas.getCtx();
+      var ctx = canvas.getCtx(), border = node.getData('border');
       if (colorArray && dimArray && stringArray) {
         for (var i=0, l=dimArray.length, acumLeft=0, acumRight=0; i<l; i++) {
           ctx.fillStyle = ctx.strokeStyle = colorArray[i];
@@ -23,6 +23,24 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.lineTo(x, y - acumLeft);
           ctx.fill();
           ctx.restore();
+          if(border) {
+            var strong = border.name == stringArray[i];
+            var color = $.rgbToHex($.map($.hexToRgb(colorArray[i].slice(1)), 
+                function(v) { return v * (strong? 0.7 : 0.8) >> 0; }));
+            ctx.strokeStyle = color;
+            ctx.lineWidth = strong? 4 : 1;
+            ctx.save();
+            ctx.beginPath();
+            if(border.index === 0) {
+              ctx.moveTo(x, y - acumLeft);
+              ctx.lineTo(x, y - acumLeft - dimArray[i][0]);
+            } else {
+              ctx.moveTo(x + width, y - acumRight);
+              ctx.lineTo(x + width, y - acumRight - dimArray[i][1]);
+            }
+            ctx.stroke();
+            ctx.restore();
+          }
           acumLeft += (dimArray[i][0] || 0);
           acumRight += (dimArray[i][1] || 0);
         }
@@ -52,7 +70,8 @@ $jit.ST.Plot.NodeTypes.implement({
           return {
             'name': node.getData('stringArray')[i],
             'color': node.getData('colorArray')[i],
-            'value': node.getData('valueArray')[i][index]
+            'value': node.getData('valueArray')[i][index],
+            'index': index
           };
         }
       }
@@ -63,8 +82,8 @@ $jit.ST.Plot.NodeTypes.implement({
 
 $jit.AreaChart = new Class({
   st: null,
-  maxValue:null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
+  selected: {},
   
   initialize: function(opt) {
     this.controller = this.config = 
@@ -96,6 +115,10 @@ $jit.AreaChart = new Class({
         onShow: function(tip, node, opt) {
           var elem = opt.contains;
           config.Tips.onShow(tip, elem, node);
+          that.select(node.id, elem.name, elem.index);
+        },
+        onHide: function() {
+          that.select(false, false, false);
         }
       },
       NodeStyles: {
@@ -203,14 +226,15 @@ $jit.AreaChart = new Class({
     }
   },
   
-  filter: function(name) {
+  filter: function() {
+    var args = Array.prototype.slice.call(arguments);
     var rt = this.st.graph.getNode(this.st.root);
     $jit.Graph.Util.eachAdjacency(rt, function(adj) {
       var n = adj.nodeTo, 
           dimArray = n.getData('dimArray'),
           stringArray = n.getData('stringArray');
       n.setData('dimArray', $.map(dimArray, function(d, i) {
-        return stringArray[i] == name? d:[0, 0];
+        return (args.indexOf(stringArray[i]) > -1)? d:[0, 0];
       }), 'end');
     });
     this.st.fx.animate({
@@ -226,6 +250,37 @@ $jit.AreaChart = new Class({
       duration:1500
     });
   },
+  //adds the little brown bar when hovering the node
+  select: function(id, name, index) {
+    var s = this.selected;
+    if(s.id != id || s.name != name 
+        || s.index != index) {
+      s.id = id;
+      s.name = name;
+      s.index = index;
+      $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+        n.setData('border', false);
+      });
+      if(id) {
+        var n = this.st.graph.getNode(id);
+        n.setData('border', s);
+        var link = index === 0? 'prev':'next';
+        link = n.getData(link);
+        if(link) {
+          n = this.st.graph.getByName(link);
+          if(n) {
+            n.setData('border', {
+              name: name,
+              index: 1-index
+            });
+          }
+        }
+      }
+      this.st.plot();
+    }
+  },
+  
+  
   
   getMaxValue: function() {
     var maxValue = 0;

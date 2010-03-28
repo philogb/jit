@@ -6,7 +6,8 @@ Options.AreaChart = {
   type: 'default', //gradient
   Tips: {
     enable: false,
-    onShow: $.empty
+    onShow: $.empty,
+    onHide: $.empty
   },
   filterOnClick: false,
   restoreOnRightClick: false

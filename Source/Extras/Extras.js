@@ -188,6 +188,7 @@ var Tips = new Class({
       });
       $.addEvent(elem, 'mouseout', function(e){
           that.tip.style.display = 'none';
+          cont.Tips.onHide();
       });
       //Add mousemove event handler
       $.addEvent(elem, 'mousemove', function(e, win){
@@ -204,6 +205,7 @@ var Tips = new Class({
     if(!node) {
       this.tip.style.display = 'none';
       this.node = false;
+      this.config.Tips.onHide();
       return;
     }
     if(this.config.Tips.force || !this.node || this.node.id != node.id) {
