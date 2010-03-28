@@ -280,7 +280,17 @@ $jit.AreaChart = new Class({
     }
   },
   
-  
+  getLegend: function() {
+    var legend = {};
+    var n;
+    $jit.Graph.Util.eachAdjacency(this.st.graph.getNode(this.st.root), function(adj) {
+      n = adj.nodeTo;
+    });
+    $.each(n.getData('stringArray'), function(s, i) {
+      legend[s] = n.getData('colorArray')[i];
+    });
+    return legend;
+  },
   
   getMaxValue: function() {
     var maxValue = 0;
