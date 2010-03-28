@@ -6,7 +6,7 @@ Options.BarChart = {
   offset: 25, //page offset
   barsOffset: 3, //distance between bars
   hoveredColor: '#9fd4ff',
-  orientation: 'bottom', //top, left, right
+  orientation: 'horizontal',
   Tips: {
     enable: false,
     onShow: $.empty,
