@@ -52,13 +52,12 @@ function init(){
   //end
 
     var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
     
     //init ForceDirected
     var bc = new $jit.BarChart({
         'injectInto': 'infovis',
         'animate': true,
-        'orientation': 'horizontal',
+        'orientation': 'vertical',
         barsOffset: 5,
         type:'stacked:gradient',
         Tips: {

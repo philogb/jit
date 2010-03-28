@@ -81,11 +81,11 @@ $jit.ST.Plot.NodeTypes.implement({
           }
       }
       //deep check
-      for(var i=0, l=dimArray.length, acum=x; i<l; i++) {
+      for(var i=0, l=dimArray.length, acum=(horz? x:y); i<l; i++) {
         var dimi = dimArray[i];
-        acum += dimi;
-        var intersec = acum;
         if(horz) {
+          acum += dimi;
+          var intersec = acum;
           if(mpos.x <= intersec) {
             return {
               'name': node.getData('stringArray')[i],
@@ -94,6 +94,8 @@ $jit.ST.Plot.NodeTypes.implement({
             };
           }
         } else {
+          acum -= dimi;
+          var intersec = acum;
           if(mpos.y >= intersec) {
             return {
               'name': node.getData('stringArray')[i],
