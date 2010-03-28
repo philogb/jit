@@ -7,26 +7,30 @@ $jit.ST.Plot.NodeTypes.implement({
           algnPos = this.getAlignedPos(pos, width, height),
           x = algnPos.x, y = algnPos.y,
           dimArray = node.getData('dimArray'),
+          valueArray = node.getData('valueArray'),
           colorArray = node.getData('colorArray'),
           colorLength = colorArray.length,
           stringArray = node.getData('stringArray');
 
       var ctx = canvas.getCtx(), 
-          border = node.getData('border'),
           opt = {},
+          border = node.getData('border'),
           gradient = node.getData('gradient'),
-          horz = node.getData('orientation') == 'horizontal';
+          horz = node.getData('orientation') == 'horizontal',
+          aggregates = node.getData('aggregates'),
+          label = node.getData('label');
+      
       if (colorArray && dimArray && stringArray) {
-        for (var i=0, l=dimArray.length, acum=0; i<l; i++) {
+        for (var i=0, l=dimArray.length, acum=0, valAcum=0; i<l; i++) {
           ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
           if(gradient) {
             var linear;
-            if(!horz) {
-              linear = ctx.createLinearGradient(x, y - acum - dimArray[i]/2, 
-                  x + width, y - acum- dimArray[i]/2);
-            } else {
+            if(horz) {
               linear = ctx.createLinearGradient(x + acum + dimArray[i]/2, y, 
                   x + acum + dimArray[i]/2, y + height);
+            } else {
+              linear = ctx.createLinearGradient(x, y - acum - dimArray[i]/2, 
+                  x + width, y - acum- dimArray[i]/2);
             }
             var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
                 function(v) { return (v * 0.5) >> 0; }));
@@ -35,27 +39,40 @@ $jit.ST.Plot.NodeTypes.implement({
             linear.addColorStop(1, color);
             ctx.fillStyle = linear;
           }
-          if(!horz) {
-            ctx.fillRect(x, y - acum - dimArray[i], width, dimArray[i]);
-          } else {
+          if(horz) {
             ctx.fillRect(x + acum, y, dimArray[i], height);
+          } else {
+            ctx.fillRect(x, y - acum - dimArray[i], width, dimArray[i]);
           }
           if(border && border.name == stringArray[i]) {
             opt.acum = acum;
             opt.dimValue = dimArray[i];
           }
           acum += (dimArray[i] || 0);
+          valAcum += (valueArray[i] || 0);
         }
         if(border) {
           ctx.save();
           ctx.lineWidth = 2;
           ctx.strokeStyle = border.color;
-          if(!horz) {
-            ctx.strokeRect(x + 1, y - opt.acum - opt.dimValue + 1, width -2, opt.dimValue -2);
-          } else {
+          if(horz) {
             ctx.strokeRect(x + opt.acum + 1, y - 1, opt.dimValue -2, height -2);
+          } else {
+            ctx.strokeRect(x + 1, y - opt.acum - opt.dimValue + 1, width -2, opt.dimValue -2);
           }
           ctx.restore();
+        }
+        if(aggregates) {
+          ctx.save();
+          ctx.fillStyle = ctx.strokeStyle = label.color;
+          ctx.font = label.size + 'px ' + label.family;
+          if(horz) {
+            ctx.textAlign = 'right';
+            ctx.fillText(valAcum, x + acum -5, y + height/2);
+          } else {
+            ctx.textAlign = 'center';
+            ctx.fillText(valAcum, x + width/2, y - height - label.size +1, width);
+          }
         }
       }
     },
@@ -118,7 +135,7 @@ $jit.BarChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "BarChart"), opt);
+      $.merge(Options("Canvas", "BarChart", "Label"), opt);
     this.initializeViz();
   },
   
@@ -135,7 +152,9 @@ $jit.BarChart = new Class({
       Node: {
         overridable: true,
         type: 'barchart-' + nodeType,
-        align: 'left'
+        align: 'left',
+        width: 1,
+        height: 1
       },
       Edge: {
         type: 'none'
@@ -189,7 +208,9 @@ $jit.BarChart = new Class({
           '$colorArray': color,
           '$stringArray': name,
           '$gradient': gradient,
-          '$orientation': config.orientation
+          '$orientation': config.orientation,
+          '$label': config.Label,
+          '$aggregates': config.showAggregates
         },
         'children': []
       });
@@ -324,7 +345,7 @@ $jit.BarChart = new Class({
         horz = config.orientation == 'horizontal',
         fixedDim = (size[horz? 'height':'width'] - 2 * offset) / l,
         animate = config.animate,
-        height = size[horz? 'width':'height'] - 2 * offset,
+        height = size[horz? 'width':'height'] - 2 * offset - (!horz && config.showAggregates && config.Label.size),
         dim1 = horz? 'height':'width',
         dim2 = horz? 'width':'height';
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {
@@ -335,7 +356,6 @@ $jit.BarChart = new Class({
       });
       n.setData(dim1, fixedDim);
       if(animate) {
-        n.setData(dim2, 0);
         n.setData(dim2, acum * height / maxValue, 'end');
         n.setData('dimArray', $.map(n.getData('valueArray'), function(n) { 
           return n * height / maxValue; 

@@ -76,6 +76,9 @@
     "Options.Fx": [
       "Options"
     ],
+    "Options.Label": [
+      "Options"
+    ],
     "Options.Node": [
       "Options"
     ],
@@ -219,12 +222,14 @@
         "Fx"
     ],
     
-    "AreaChart": [ 
+    "AreaChart": [
+        "Options.Label",
         "Options.AreaChart",
         "Spacetree" 
     ],
     
     "BarChart": [ 
+        "Options.Label",
         "Options.BarChart",
         "Spacetree" 
     ]

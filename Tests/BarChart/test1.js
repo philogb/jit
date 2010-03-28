@@ -58,8 +58,14 @@ function init(){
         'injectInto': 'infovis',
         'animate': true,
         'orientation': 'vertical',
-        barsOffset: 5,
+        barsOffset: 0,
         type:'stacked:gradient',
+        showAggregates:true,
+        Label: {
+          size: 13,
+          family: 'Arial',
+          color: 'white'
+        },
         Tips: {
           'enable': true,
           'onShow': function(tip, elem) {
