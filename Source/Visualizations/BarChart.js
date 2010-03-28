@@ -73,6 +73,7 @@ $jit.ST.Plot.NodeTypes.implement({
             ctx.textAlign = 'center';
             ctx.fillText(valAcum, x + width/2, y - height - label.size +1, width);
           }
+          ctx.restore();
         }
       }
     },

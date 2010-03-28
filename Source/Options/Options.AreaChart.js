@@ -9,6 +9,7 @@ Options.AreaChart = {
     onShow: $.empty,
     onHide: $.empty
   },
+  showAggregates: false,
   filterOnClick: false,
   restoreOnRightClick: false
 };

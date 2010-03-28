@@ -7,13 +7,17 @@ $jit.ST.Plot.NodeTypes.implement({
           algnPos = this.getAlignedPos(pos, width, height),
           x = algnPos.x, y = algnPos.y,
           dimArray = node.getData('dimArray'),
+          valArray = node.getData('valueArray'),
           colorArray = node.getData('colorArray'),
           colorLength = colorArray.length,
-          stringArray = node.getData('stringArray');
+          stringArray = node.getData('stringArray'),
+          aggregates = node.getData('aggregates'),
+          label = node.getData('label'),
+          prev = node.getData('prev');
 
       var ctx = canvas.getCtx(), border = node.getData('border');
       if (colorArray && dimArray && stringArray) {
-        for (var i=0, l=dimArray.length, acumLeft=0, acumRight=0; i<l; i++) {
+        for (var i=0, l=dimArray.length, acumLeft=0, acumRight=0, valAcum=0; i<l; i++) {
           ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
           ctx.save();
           ctx.beginPath();
@@ -44,6 +48,17 @@ $jit.ST.Plot.NodeTypes.implement({
           }
           acumLeft += (dimArray[i][0] || 0);
           acumRight += (dimArray[i][1] || 0);
+          
+          if(dimArray[i][0] > 0)
+            valAcum += (valArray[i][0] || 0);
+        }
+        if(prev && aggregates) {
+          ctx.save();
+          ctx.fillStyle = ctx.strokeStyle = label.color;
+          ctx.font = label.size + 'px ' + label.family;
+          ctx.textAlign = 'center';
+          ctx.fillText(valAcum, x, y - acumLeft - label.size, width);
+          ctx.restore();
         }
       }
     },
@@ -89,7 +104,7 @@ $jit.AreaChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "AreaChart"), opt);
+      $.merge(Options("Canvas", "AreaChart", "Label"), opt);
     this.initializeViz();
   },
   
@@ -104,7 +119,9 @@ $jit.AreaChart = new Class({
       Node: {
         overridable: true,
         type: 'areachart-' + config.type,
-        align: 'left'
+        align: 'left',
+        width: 1,
+        height: 1
       },
       Edge: {
         type: 'none'
@@ -149,7 +166,8 @@ $jit.AreaChart = new Class({
         st = this.st,
         name = $.splat(json.label), 
         color = $.splat(json.color || this.colors),
-        animate = this.config.animate;
+        config = this.config,
+        animate = config.animate;
     
     for(var i=0, values=json.values, l=values.length; i<l-1; i++) {
       var val = values[i], prev = values[i-1], next = values[i+1];
@@ -165,7 +183,9 @@ $jit.AreaChart = new Class({
           '$colorArray': color,
           '$stringArray': name,
           '$next': next.label,
-          '$prev': prev? prev.label:null
+          '$prev': prev? prev.label:null,
+          '$label': config.Label,
+          '$aggregates': config.showAggregates
         },
         'children': []
       });
@@ -345,7 +365,7 @@ $jit.AreaChart = new Class({
         offset = config.offset,
         fixedDim = (size.width - 2 * offset) / l,
         animate = config.animate,
-        height = size.height - 2 * offset;
+        height = size.height - 2 * offset - (config.showAggregates && config.Label.size * 2);
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {
       var acumLeft = 0, acumRight = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
@@ -356,7 +376,6 @@ $jit.AreaChart = new Class({
       var acum = acumRight>acumLeft? acumRight:acumLeft;
       n.setData('width', fixedDim);
       if(animate) {
-        n.setData('height', 0);
         n.setData('height', acum * height / maxValue, 'end');
         n.setData('dimArray', $.map(n.getData('valueArray'), function(n) { 
           return [n[0] * height / maxValue, n[1] * height / maxValue]; 

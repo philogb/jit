@@ -8,7 +8,6 @@ Options.BarChart = {
   hoveredColor: '#9fd4ff',
   orientation: 'horizontal',
   showAggregates: false,
-  
   Tips: {
     enable: false,
     onShow: $.empty,

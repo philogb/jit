@@ -51,12 +51,17 @@ function init(){
     };
     //end
     var infovis = document.getElementById('infovis');
-    
     //init ForceDirected
     ac = new $jit.AreaChart({
         'injectInto': 'infovis',
         'animate': true,
         'offset': 5,
+        showAggregates:true,
+        Label: {
+          size: 13,
+          family: 'Arial',
+          color: 'white'
+        },
         Tips: {
           'enable': true,
           'onShow': function(tip, elem) {
