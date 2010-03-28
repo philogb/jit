@@ -2,7 +2,7 @@ Options.BarChart = {
   $extend: true,
   
   animate: true,
-  type: 'default', //stack, group
+  type: 'stacked', //stack, group, : gradient
   offset: 25, //page offset
   barsOffset: 3, //distance between bars
   hoveredColor: '#9fd4ff',

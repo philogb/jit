@@ -30,6 +30,8 @@ function init(){
         'injectInto': 'infovis',
         'animate': true,
         'orientation': 'bottom',
+        barsOffset: 0,
+        type:'stacked:gradient',
         Tips: {
           'enable': true,
           'onShow': function(tip, elem) {

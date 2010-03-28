@@ -1,5 +1,5 @@
 $jit.ST.Plot.NodeTypes.implement({
-  'barchart-default' : {
+  'barchart-stacked' : {
     'render' : function(node, canvas) {
       var pos = node.pos.getc(true), 
           width = node.getData('width'),
@@ -13,10 +13,20 @@ $jit.ST.Plot.NodeTypes.implement({
 
       var ctx = canvas.getCtx(), 
           border = node.getData('border'),
-          opt = {};
+          opt = {},
+          gradient = node.getData('gradient');
       if (colorArray && dimArray && stringArray) {
         for (var i=0, l=dimArray.length, acum=0; i<l; i++) {
           ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
+          if(gradient) {
+            var linear = ctx.createLinearGradient(x, y - acum - dimArray[i]/2, x + width, y - acum- dimArray[i]/2);
+            var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
+                function(v) { return (v * 0.5) >> 0; }));
+            linear.addColorStop(0, color);
+            linear.addColorStop(0.5, colorArray[i % colorLength]);
+            linear.addColorStop(1, color);
+            ctx.fillStyle = linear;
+          }
           ctx.fillRect(x, y - acum - dimArray[i], width, dimArray[i]);
           if(border && border.name == stringArray[i]) {
             opt.acum = acum;
@@ -28,7 +38,7 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.save();
           ctx.lineWidth = 2;
           ctx.strokeStyle = border.color;
-          ctx.strokeRect(x, y - opt.acum - opt.dimValue, width, opt.dimValue);
+          ctx.strokeRect(x + 1, y - opt.acum - opt.dimValue + 1, width -2, opt.dimValue -2);
           ctx.restore();
         }
       }
@@ -78,15 +88,16 @@ $jit.BarChart = new Class({
   
   initializeViz: function() {
     var config = this.config, that = this;
+    var nodeType = config.type.split(":")[0];
     var st = new $jit.ST({
       injectInto: config.injectInto,
       orientation: "bottom",
       levelDistance: 0,
-      siblingOffset: 2,
+      siblingOffset: config.barsOffset,
       subtreeOffset: 0,
       Node: {
         overridable: true,
-        type: 'barchart-' + config.type,
+        type: 'barchart-' + nodeType,
         align: 'left'
       },
       Edge: {
@@ -119,7 +130,9 @@ $jit.BarChart = new Class({
         st = this.st,
         name = $.splat(json.label), 
         color = $.splat(json.color || this.colors),
-        animate = this.config.animate;
+        config = this.config,
+        gradient = !!config.type.split(":")[1],
+        animate = config.animate;
     
     for(var i=0, values=json.values, l=values.length; i<l; i++) {
       var val = values[i]
@@ -132,7 +145,8 @@ $jit.BarChart = new Class({
           'value': valArray,
           '$valueArray': valArray,
           '$colorArray': color,
-          '$stringArray': name
+          '$stringArray': name,
+          '$gradient': gradient
         },
         'children': []
       });
