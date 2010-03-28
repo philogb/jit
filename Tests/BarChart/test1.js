@@ -30,7 +30,12 @@ function init(){
         'injectInto': 'infovis',
         'animate': true,
         'orientation': 'bottom',
-        'style': 'gradient'
+        Tips: {
+          'enable': true,
+          'onShow': function(tip, elem) {
+             tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
+          }
+        }
     });
     
     //load JSON data.
