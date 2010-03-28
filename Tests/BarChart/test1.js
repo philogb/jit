@@ -28,7 +28,7 @@ function init(){
     //init ForceDirected
     var bc = new $jit.BarChart({
         'injectInto': 'infovis',
-        'animate': false,
+        'animate': true,
         'orientation': 'bottom',
         'style': 'gradient'
     });

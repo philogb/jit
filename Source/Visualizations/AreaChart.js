@@ -8,12 +8,13 @@ $jit.ST.Plot.NodeTypes.implement({
           x = algnPos.x, y = algnPos.y,
           dimArray = node.getData('dimArray'),
           colorArray = node.getData('colorArray'),
+          colorLength = colorArray.length,
           stringArray = node.getData('stringArray');
 
       var ctx = canvas.getCtx(), border = node.getData('border');
       if (colorArray && dimArray && stringArray) {
         for (var i=0, l=dimArray.length, acumLeft=0, acumRight=0; i<l; i++) {
-          ctx.fillStyle = ctx.strokeStyle = colorArray[i];
+          ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
           ctx.save();
           ctx.beginPath();
           ctx.moveTo(x, y - acumLeft);
@@ -25,7 +26,7 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.restore();
           if(border) {
             var strong = border.name == stringArray[i];
-            var color = $.rgbToHex($.map($.hexToRgb(colorArray[i].slice(1)), 
+            var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
                 function(v) { return v * (strong? 0.7 : 0.8) >> 0; }));
             ctx.strokeStyle = color;
             ctx.lineWidth = strong? 4 : 1;
@@ -84,6 +85,7 @@ $jit.AreaChart = new Class({
   st: null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
   selected: {},
+  busy: false,
   
   initialize: function(opt) {
     this.controller = this.config = 
@@ -191,11 +193,15 @@ $jit.AreaChart = new Class({
     }
   },
   
-  updateJSON: function(json) {
+  updateJSON: function(json, onComplete) {
+    if(this.busy) return;
+    this.busy = true;
+    
     var st = this.st;
     var graph = st.graph;
     var values = json.values;
     var animate = this.config.animate;
+    var that = this;
     $.each(values, function(v) {
       var n = graph.getByName(v.label);
       if(n) {
@@ -221,14 +227,22 @@ $jit.AreaChart = new Class({
     if(animate) {
       st.fx.animate({
         modes: ['node-property:height:dimArray'],
-        duration:1500
+        duration:1500,
+        onComplete: function() {
+          that.busy = false;
+          onComplete && onComplete.onComplete();
+        }
       });
     }
   },
   
   filter: function() {
+    if(this.busy) return;
+    this.busy = true;
+    
     var args = Array.prototype.slice.call(arguments);
     var rt = this.st.graph.getNode(this.st.root);
+    var that = this;
     $jit.Graph.Util.eachAdjacency(rt, function(adj) {
       var n = adj.nodeTo, 
           dimArray = n.getData('dimArray'),
@@ -239,15 +253,25 @@ $jit.AreaChart = new Class({
     });
     this.st.fx.animate({
       modes: ['node-property:dimArray'],
-      duration:1500
+      duration:1500,
+      onComplete: function() {
+        that.busy = false;
+      }
     });
   },
   
   restore: function() {
+    if(this.busy) return;
+    this.busy = true;
+    
     this.normalizeDims();
+    var that = this;
     this.st.fx.animate({
       modes: ['node-property:height:dimArray'],
-      duration:1500
+      duration:1500,
+      onComplete: function() {
+        that.busy = false;
+      }
     });
   },
   //adds the little brown bar when hovering the node
@@ -286,8 +310,10 @@ $jit.AreaChart = new Class({
     $jit.Graph.Util.eachAdjacency(this.st.graph.getNode(this.st.root), function(adj) {
       n = adj.nodeTo;
     });
+    var colors = n.getData('colorArray'),
+        len = colors.length;
     $.each(n.getData('stringArray'), function(s, i) {
-      legend[s] = n.getData('colorArray')[i];
+      legend[s] = colors[i % len];
     });
     return legend;
   },

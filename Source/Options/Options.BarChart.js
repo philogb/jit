@@ -3,11 +3,12 @@ Options.BarChart = {
   
   animate: true,
   type: 'default', //stack, group
-  offset: 1, //node offset
+  offset: 25, //page offset
+  barsOffset: 3, //distance between bars
   orientation: 'bottom', //top, left, right
-  style: 'default', //gradient
   Tips: {
     enable: false,
-    onShow: $.empty
+    onShow: $.empty,
+    onHide: $.empty
   }
 };

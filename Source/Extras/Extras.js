@@ -385,9 +385,8 @@ var NodeStyles = new Class({
   },
   
   onRightClick: function(node, opt) {
-    if(!node) return;
     var nStyles = this.nodeStylesOnRightClick;
-    if(!nStyles) {
+    if(!node || !nStyles) {
       this.nStyles.onRightClick(node, opt);
       return;
     }
