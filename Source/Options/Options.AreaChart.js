@@ -1,15 +1,17 @@
 Options.AreaChart = {
   $extend: true,
-  
+
   animate: true,
-  offset: 25, //page offset
-  type: 'default', //gradient
+  offset: 25, // page offset
+  labelOffset: 3, // label offset
+  type: 'default', // gradient
   Tips: {
     enable: false,
     onShow: $.empty,
     onHide: $.empty
   },
-  showAggregates: false,
+  showAggregates: true,
+  showLabels: true,
   filterOnClick: false,
   restoreOnRightClick: false
 };

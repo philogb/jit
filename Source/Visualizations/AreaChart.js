@@ -6,13 +6,15 @@ $jit.ST.Plot.NodeTypes.implement({
           height = node.getData('height'),
           algnPos = this.getAlignedPos(pos, width, height),
           x = algnPos.x, y = algnPos.y,
+          stringArray = node.getData('stringArray'),
           dimArray = node.getData('dimArray'),
           valArray = node.getData('valueArray'),
           colorArray = node.getData('colorArray'),
           colorLength = colorArray.length,
-          stringArray = node.getData('stringArray'),
-          aggregates = node.getData('aggregates'),
-          label = node.getData('label'),
+          config = node.getData('config'),
+          showLabels = config.showLabels,
+          aggregates = config.showAggregates,
+          label = config.Label,
           prev = node.getData('prev');
 
       var ctx = canvas.getCtx(), border = node.getData('border');
@@ -52,12 +54,18 @@ $jit.ST.Plot.NodeTypes.implement({
           if(dimArray[i][0] > 0)
             valAcum += (valArray[i][0] || 0);
         }
-        if(prev && aggregates) {
+        if(prev) {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
           ctx.font = label.size + 'px ' + label.family;
           ctx.textAlign = 'center';
-          ctx.fillText(valAcum, x, y - acumLeft - label.size, width);
+          ctx.textBaseline = 'middle';
+          if(aggregates) {
+            ctx.fillText(valAcum, x, y - acumLeft - config.labelOffset - config.Label.size/2, width);
+          }
+          if(showLabels) {
+            ctx.fillText(node.name, x, y + config.Label.size/2 + config.labelOffset, width);
+          }
           ctx.restore();
         }
       }
@@ -156,7 +164,8 @@ $jit.AreaChart = new Class({
     });
     
     var size = st.canvas.getSize();
-    st.config.offsetY = -size.height/2 + config.offset;    
+    st.config.offsetY = -size.height/2 + config.offset 
+      + (config.showLabels && (config.labelOffset + config.Label.size));    
     this.st = st;
   },
   
@@ -184,8 +193,7 @@ $jit.AreaChart = new Class({
           '$stringArray': name,
           '$next': next.label,
           '$prev': prev? prev.label:null,
-          '$label': config.Label,
-          '$aggregates': config.showAggregates
+          '$config': config
         },
         'children': []
       });
@@ -363,9 +371,11 @@ $jit.AreaChart = new Class({
         size = this.st.canvas.getSize(),
         config = this.config,
         offset = config.offset,
+        labelOffset = config.labelOffset + config.Label.size,
         fixedDim = (size.width - 2 * offset) / l,
         animate = config.animate,
-        height = size.height - 2 * offset - (config.showAggregates && config.Label.size * 2);
+        height = size.height - 2 * offset - (config.showAggregates && labelOffset) 
+          - (config.showLabels && labelOffset);
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {
       var acumLeft = 0, acumRight = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {

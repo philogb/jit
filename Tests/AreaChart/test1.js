@@ -56,7 +56,9 @@ function init(){
         'injectInto': 'infovis',
         'animate': true,
         'offset': 5,
+        labelOffset:10,
         showAggregates:true,
+        showLabels:true,
         Label: {
           size: 13,
           family: 'Arial',
