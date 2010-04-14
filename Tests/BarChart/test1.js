@@ -57,10 +57,11 @@ function init(){
     var bc = new $jit.BarChart({
         'injectInto': 'infovis',
         'animate': true,
-        'orientation': 'horizontal',
+        'orientation': 'vertical',
         barsOffset: 0,
         type:'stacked:gradient',
         showAggregates:true,
+        showLabels:true,
         Label: {
           size: 13,
           family: 'Arial',

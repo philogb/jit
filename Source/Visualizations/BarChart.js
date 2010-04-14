@@ -16,9 +16,11 @@ $jit.ST.Plot.NodeTypes.implement({
           opt = {},
           border = node.getData('border'),
           gradient = node.getData('gradient'),
-          horz = node.getData('orientation') == 'horizontal',
-          aggregates = node.getData('aggregates'),
-          label = node.getData('label');
+          config = node.getData('config'),
+          horz = config.orientation == 'horizontal',
+          aggregates = config.showAggregates,
+          showLabels = config.showLabels,
+          label = config.Label;
       
       if (colorArray && dimArray && stringArray) {
         for (var i=0, l=dimArray.length, acum=0, valAcum=0; i<l; i++) {
@@ -62,16 +64,30 @@ $jit.ST.Plot.NodeTypes.implement({
           }
           ctx.restore();
         }
-        if(aggregates) {
+        if(aggregates || showLabels) {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
           ctx.font = label.size + 'px ' + label.family;
-          if(horz) {
-            ctx.textAlign = 'right';
-            ctx.fillText(valAcum, x + acum -5, y + height/2);
-          } else {
-            ctx.textAlign = 'center';
-            ctx.fillText(valAcum, x + width/2, y - height - label.size +1, width);
+          ctx.textBaseline = 'middle';
+          if(aggregates) {
+            if(horz) {
+              ctx.textAlign = 'right';
+              ctx.fillText(valAcum, x + acum - config.labelOffset, y + height/2);
+            } else {
+              ctx.textAlign = 'center';
+              ctx.fillText(valAcum, x + width/2, y - height - label.size/2 - config.labelOffset, width);
+            }
+          }
+          if(showLabels) {
+            if(horz) {
+              ctx.textAlign = 'right';
+              ctx.translate(x + config.labelOffset, y + height/2);
+              ctx.rotate(Math.PI / 2);
+              ctx.fillText(valAcum, 0, 0, width);
+            } else {
+              ctx.textAlign = 'center';
+              ctx.fillText(valAcum, x + width/2, y - label.size/2 + config.labelOffset, width);
+            }
           }
           ctx.restore();
         }
@@ -178,9 +194,11 @@ $jit.BarChart = new Class({
     
     var size = st.canvas.getSize();
     if(horz) {
-      st.config.offsetX = + size.width/2 - config.offset;    
+      st.config.offsetX = + size.width/2 - config.offset
+        - (config.showLabels && (config.labelOffset + config.Label.size));    
     } else {
-      st.config.offsetY = -size.height/2 + config.offset;    
+      st.config.offsetY = -size.height/2 + config.offset 
+        + (config.showLabels && (config.labelOffset + config.Label.size));    
     }
     this.st = st;
   },
@@ -209,9 +227,7 @@ $jit.BarChart = new Class({
           '$colorArray': color,
           '$stringArray': name,
           '$gradient': gradient,
-          '$orientation': config.orientation,
-          '$label': config.Label,
-          '$aggregates': config.showAggregates
+          '$config': config
         },
         'children': []
       });
@@ -346,7 +362,9 @@ $jit.BarChart = new Class({
         horz = config.orientation == 'horizontal',
         fixedDim = (size[horz? 'height':'width'] - 2 * offset) / l,
         animate = config.animate,
-        height = size[horz? 'width':'height'] - 2 * offset - (!horz && config.showAggregates && config.Label.size),
+        height = size[horz? 'width':'height'] - 2 * offset 
+          - (!horz && config.showAggregates && config.Label.size)
+          - (config.showLabels && config.Label.size),
         dim1 = horz? 'height':'width',
         dim2 = horz? 'width':'height';
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {

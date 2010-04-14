@@ -503,7 +503,18 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': True
         }
-    ]
+    ],
     
+   'PieChart': [
+        {
+            'Title': 'Pie Chart Example',
+            'Description': 
+            """
+            A static Pie Chart example that displays tooltips when hovering the stacks.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        }
+    ]
 
 }   

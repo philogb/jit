@@ -61,10 +61,10 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           if(aggregates) {
-            ctx.fillText(valAcum, x, y - acumLeft - config.labelOffset - config.Label.size/2, width);
+            ctx.fillText(valAcum, x, y - acumLeft - config.labelOffset - label.size/2, width);
           }
           if(showLabels) {
-            ctx.fillText(node.name, x, y + config.Label.size/2 + config.labelOffset, width);
+            ctx.fillText(node.name, x, y + label.size/2 + config.labelOffset, width);
           }
           ctx.restore();
         }

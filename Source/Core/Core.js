@@ -94,6 +94,16 @@ $.map = function(array, f) {
   return ans;
 };
 
+$.reduce = function(array, f, opt) {
+  var l = array.length;
+  if(l==0) return opt;
+  var acum = opt || array[--l];
+  while(l--) {
+    acum = f(array[l], acum);
+  }
+  return acum;
+};
+
 $.merge = function() {
   var mix = {};
   for ( var i = 0, l = arguments.length; i < l; i++) {

@@ -5,5 +5,7 @@ Options.Label = {
   family: 'sans-serif',
   textAlign: 'center',
   textBaseline: 'alphabetic',
-  color: '#fff'
+  color: '#fff',
+  //CSS specific styles
+  styles: {}
 };

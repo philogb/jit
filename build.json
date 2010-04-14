@@ -94,6 +94,9 @@
     "Options.BarChart": [
        "Options"
     ],
+    "Options.PieChart": [
+       "Options"
+    ],
     "Options.AreaChart": [
       "Options"
     ]
@@ -228,6 +231,12 @@
         "Spacetree" 
     ],
     
+    "PieChart": [
+        "Options.Label",
+        "Options.PieChart",
+        "Sunburst" 
+    ],
+              
     "BarChart": [ 
         "Options.Label",
         "Options.BarChart",
