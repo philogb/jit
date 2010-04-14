@@ -55,8 +55,10 @@ function init(){
     pie = new $jit.PieChart({
         'injectInto': 'infovis',
         'animate': true,
-        'offset': 25,
-        'type':'default:gradient',
+        'offset': 30,
+        'sliceOffset': 0,
+        'labelOffset': 20,
+        'type':'default',
         showLabels:true,
         Label: {
           size: 13,

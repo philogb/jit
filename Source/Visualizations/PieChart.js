@@ -19,24 +19,27 @@ $jit.Sunburst.Plot.NodeTypes.implement({
           config = node.getData('config'),
           showLabels = config.showLabels,
           label = config.Label;
+
+      var xpos = config.sliceOffset * Math.cos((begin + end) /2);
+      var ypos = config.sliceOffset * Math.sin((begin + end) /2);
+
       if (colorArray && dimArray && stringArray) {
-        for (var i=0, l=dimArray.length, acum=config.offset, valAcum=0; i<l; i++) {
+        for (var i=0, l=dimArray.length, acum=0, valAcum=0; i<l; i++) {
           var dimi = dimArray[i], colori = colorArray[i % colorLength];
           ctx.fillStyle = ctx.strokeStyle = colori;
           if(gradient && dimi) {
-            var radialGradient = ctx.createRadialGradient(0, 0, acum,
-                0, 0, acum + dimi);
+            var radialGradient = ctx.createRadialGradient(xpos, ypos, acum + config.sliceOffset,
+                xpos, ypos, acum + dimi + config.sliceOffset);
             var colorRgb = $.hexToRgb(colori), 
-                ans = $.map(colorRgb, function(i) { return (i * 0.7) >> 0; }),
+                ans = $.map(colorRgb, function(i) { return (i * 0.6) >> 0; }),
                 endColor = $.rgbToHex(ans);
 
-            radialGradient.addColorStop(0, endColor);
-            radialGradient.addColorStop(0.5, colori);
+            radialGradient.addColorStop(1, colori);
             radialGradient.addColorStop(0, endColor);
             ctx.fillStyle = radialGradient;
           }
           
-          polar.rho = acum;
+          polar.rho = acum + config.sliceOffset;
           polar.theta = begin;
           var p1coord = polar.getc(true);
           polar.theta = end;
@@ -46,14 +49,10 @@ $jit.Sunburst.Plot.NodeTypes.implement({
           polar.theta = begin;
           var p4coord = polar.getc(true);
 
-          ctx.moveTo(0, 0);
           ctx.beginPath();
-          ctx.arc(0, 0, acum, begin, end, false);
-          ctx.arc(0, 0, acum + dimi, end, begin, true);
-          ctx.moveTo(p1coord.x, p1coord.y);
-          ctx.lineTo(p4coord.x, p4coord.y);
-          ctx.moveTo(p2coord.x, p2coord.y);
-          ctx.lineTo(p3coord.x, p3coord.y);
+          //fixing FF arc method + fill
+          ctx.arc(xpos, ypos, acum + .01, begin, end, false);
+          ctx.arc(xpos, ypos, acum + dimi + .01, end, begin, true);
           ctx.fill();
           
           acum += (dimi || 0);
@@ -66,11 +65,11 @@ $jit.Sunburst.Plot.NodeTypes.implement({
           ctx.textBaseline = 'middle';
           ctx.textAlign = 'center';
           
-          polar.rho = node.pos.rho + config.offset + config.labelOffset;
+          polar.rho = acum + config.labelOffset + config.sliceOffset;
           polar.theta = node.pos.theta;
           var cart = polar.getc(true);
           
-          ctx.fillText(valAcum, cart.x, cart.y);
+          ctx.fillText(node.name, cart.x, cart.y);
           ctx.restore();
         }
       }
@@ -79,10 +78,10 @@ $jit.Sunburst.Plot.NodeTypes.implement({
       if (this.nodeTypes['none'].anglecontains.call(this, node, pos)) {
         var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
         var ld = this.config.levelDistance, d = node._depth;
-        if(rho <=ld * d) {
-          var config = node.getData('config'),
-              dimArray = node.getData('dimArray');
-          for(var i=0,l=dimArray.length,acum=config.offset; i<l; i++) {
+        var config = node.getData('config');
+        if(rho <=ld * d + config.sliceOffset) {
+          var dimArray = node.getData('dimArray');
+          for(var i=0,l=dimArray.length,acum=config.sliceOffset; i<l; i++) {
             var dimi = dimArray[i];
             if(rho >= acum && rho <= acum + dimi) {
               return {
@@ -146,7 +145,8 @@ $jit.PieChart = new Class({
     
     var size = sb.canvas.getSize(),
         min = Math.min;
-    sb.config.levelDistance = min(size.width, size.height)/2 - config.offset;
+    sb.config.levelDistance = min(size.width, size.height)/2 
+      - config.offset - config.sliceOffset;
     this.sb = sb;
   },
   
@@ -218,16 +218,18 @@ $jit.PieChart = new Class({
       }
     });
     this.normalizeDims();
-    sb.refresh();
     if(animate) {
+      sb.compute('end');
       sb.fx.animate({
-        modes: ['node-property:dimArray'],
+        modes: ['node-property:dimArray:span', 'linear'],
         duration:1500,
         onComplete: function() {
           that.busy = false;
           onComplete && onComplete.onComplete();
         }
       });
+    } else {
+      sb.refresh();
     }
   },
     
@@ -269,7 +271,6 @@ $jit.PieChart = new Class({
     });
     var maxValue = this.getMaxValue(),
         config = this.config,
-        offset = config.offset,
         animate = config.animate,
         rho = this.sb.config.levelDistance;
     $jit.Graph.Util.eachNode(this.sb.graph, function(n) {

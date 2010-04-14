@@ -3,6 +3,7 @@ Options.PieChart = {
 
   animate: true,
   offset: 25, // page offset
+  sliceOffset:0,
   labelOffset: 3, // label offset
   type: 'default', // gradient
   Tips: {
