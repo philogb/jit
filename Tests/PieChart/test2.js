@@ -1,31 +1,32 @@
 function init(){
     //init data
     var json = {
-        'label': ['label A', 'label B', 'label C', 'label D'],
+        //'color': "#416D9C",
+        'label': 'label A',
         'values': [
         {
           'label': 'date A',
-          'values': [20, 40, 15, 5]
+          'values': 20
         }, 
         {
           'label': 'date B',
-          'values': [30, 10, 45, 10]
+          'values': 30
         }, 
         {
           'label': 'date E',
-          'values': [38, 20, 35, 17]
+          'values': 38
         }, 
         {
           'label': 'date F',
-          'values': [58, 10, 35, 32]
+          'values': 58
         }, 
         {
           'label': 'date D',
-          'values': [55, 60, 34, 38]
+          'values': 55
         }, 
         {
           'label': 'date C',
-          'values': [26, 40, 25, 40]
+          'values': 26
         }],
         
     };
@@ -33,21 +34,20 @@ function init(){
         'values': [
         {
           'label': 'date A',
-          'values': [10, 40, 15, 7]
+          'values': 70
         }, 
         {
           'label': 'date B',
-          'values': [30, 40, 45, 9]
+          'values': 30
         }, 
         {
           'label': 'date D',
-          'values': [55, 30, 34, 26]
+          'values': 25
         }, 
         {
           'label': 'date C',
-          'values': [26, 40, 85, 28]
-        }],
-        
+          'values': 46
+        }]
     };
     //end
     var infovis = document.getElementById('infovis');
@@ -55,10 +55,11 @@ function init(){
     pie = new $jit.PieChart({
         'injectInto': 'infovis',
         'animate': true,
-        'offset': 30,
-        'sliceOffset': 0,
+        'offset': 60,
+        'sliceOffset': 5,
         'labelOffset': 20,
         'type':'default:gradient',
+        updateHeights:false,
         showLabels:true,
         Label: {
           size: 13,
@@ -68,7 +69,7 @@ function init(){
         Tips: {
           'enable': true,
           'onShow': function(tip, elem) {
-             tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
+             tip.innerHTML = "<b>" + elem.label + "</b>: " + elem.value;
           }
         }
     });

@@ -14,5 +14,5 @@ Options.PieChart = {
   showLabels: true,
   
   //only valid for mono-valued datasets
-  updateHeight: false
+  updateHeights: false
 };

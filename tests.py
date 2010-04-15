@@ -514,6 +514,15 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example': True
+        },
+        {
+            'Title': 'Mono Valued PieChart',
+            'Description': 
+            """
+            More like a regular PieChart (mono valued).
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
         }
     ]
 

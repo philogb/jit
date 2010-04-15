@@ -1,7 +1,7 @@
 $jit.Sunburst.Plot.NodeTypes.implement({
   'piechart-default' : {
     'render' : function(node, canvas) {
-      var pos = node.pos.getp(true), 
+      var pos = node.pos.getp(true),
           dimArray = node.getData('dimArray'),
           valueArray = node.getData('valueArray'),
           colorArray = node.getData('colorArray'),
@@ -31,11 +31,12 @@ $jit.Sunburst.Plot.NodeTypes.implement({
             var radialGradient = ctx.createRadialGradient(xpos, ypos, acum + config.sliceOffset,
                 xpos, ypos, acum + dimi + config.sliceOffset);
             var colorRgb = $.hexToRgb(colori), 
-                ans = $.map(colorRgb, function(i) { return (i * 0.6) >> 0; }),
+                ans = $.map(colorRgb, function(i) { return (i * 0.8) >> 0; }),
                 endColor = $.rgbToHex(ans);
 
-            radialGradient.addColorStop(1, colori);
-            radialGradient.addColorStop(0, endColor);
+            radialGradient.addColorStop(0, colori);
+            radialGradient.addColorStop(0.5, colori);
+            radialGradient.addColorStop(1, endColor);
             ctx.fillStyle = radialGradient;
           }
           
@@ -87,7 +88,8 @@ $jit.Sunburst.Plot.NodeTypes.implement({
               return {
                 name: node.getData('stringArray')[i],
                 color: node.getData('colorArray')[i],
-                value: node.getData('valueArray')[i]
+                value: node.getData('valueArray')[i],
+                label: node.name
               };
             }
             acum += dimi;
@@ -154,23 +156,25 @@ $jit.PieChart = new Class({
     var prefix = $.time(), 
         ch = [], 
         sb = this.sb,
-        name = $.splat(json.label), 
+        name = $.splat(json.label),
+        nameLength = name.length,
         color = $.splat(json.color || this.colors),
+        colorLength = color.length,
         config = this.config,
         gradient = !!config.type.split(":")[1],
-        animate = config.animate;
+        animate = config.animate,
+        mono = nameLength == 1;
     
     for(var i=0, values=json.values, l=values.length; i<l; i++) {
-      var val = values[i]
-      var valArray = values[i].values;
-      var acum = 0;
+      var val = values[i];
+      var valArray = $.splat(val.values);
       ch.push({
         'id': prefix + val.label,
         'name': val.label,
         'data': {
           'value': valArray,
           '$valueArray': valArray,
-          '$colorArray': color,
+          '$colorArray': mono? $.splat(color[i % colorLength]) : color,
           '$stringArray': name,
           '$gradient': gradient,
           '$config': config,
@@ -211,10 +215,11 @@ $jit.PieChart = new Class({
     var animate = this.config.animate;
     var that = this;
     $.each(values, function(v) {
-      var n = graph.getByName(v.label);
+      var n = graph.getByName(v.label),
+          vals = $.splat(v.values);
       if(n) {
-        n.setData('valueArray', v.values);
-        n.setData('angularWidth', $.reduce(v.values, function(x,y){return x+y;}));
+        n.setData('valueArray', vals);
+        n.setData('angularWidth', $.reduce(vals, function(x,y){return x+y;}));
       }
     });
     this.normalizeDims();
@@ -279,9 +284,10 @@ $jit.PieChart = new Class({
         acum += +v;
         animateValue.push(0);
       });
+      var stat = (animateValue.length == 1) && !config.updateHeights;
       if(animate) {
         n.setData('dimArray', $.map(n.getData('valueArray'), function(n) { 
-          return n * rho / maxValue; 
+          return stat? rho: (n * rho / maxValue); 
         }), 'end');
         var dimArray = n.getData('dimArray');
         if(!dimArray) {
@@ -289,7 +295,7 @@ $jit.PieChart = new Class({
         }
       } else {
         n.setData('dimArray', $.map(n.getData('valueArray'), function(n) { 
-          return n * rho / maxValue; 
+          return stat? rho : (n * rho / maxValue); 
         }));
       }
     });
