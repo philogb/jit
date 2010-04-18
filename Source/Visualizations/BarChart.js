@@ -12,7 +12,7 @@ $jit.ST.Plot.NodeTypes.implement({
           colorLength = colorArray.length,
           stringArray = node.getData('stringArray');
 
-      var ctx = canvas.getCtx(), 
+      var ctx = canvas.getCtx(),
           opt = {},
           border = node.getData('border'),
           gradient = node.getData('gradient'),
@@ -58,7 +58,7 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.lineWidth = 2;
           ctx.strokeStyle = border.color;
           if(horz) {
-            ctx.strokeRect(x + opt.acum + 1, y - 1, opt.dimValue -2, height -2);
+            ctx.strokeRect(x + opt.acum + 1, y + 1, opt.dimValue -2, height - 2);
           } else {
             ctx.strokeRect(x + 1, y - opt.acum - opt.dimValue + 1, width -2, opt.dimValue -2);
           }
@@ -80,13 +80,13 @@ $jit.ST.Plot.NodeTypes.implement({
           }
           if(showLabels) {
             if(horz) {
-              ctx.textAlign = 'right';
-              ctx.translate(x + config.labelOffset, y + height/2);
+              ctx.textAlign = 'center';
+              ctx.translate(x - config.labelOffset - label.size/2, y + height/2);
               ctx.rotate(Math.PI / 2);
-              ctx.fillText(valAcum, 0, 0, width);
+              ctx.fillText(node.name, 0, 0, width);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(valAcum, x + width/2, y - label.size/2 + config.labelOffset, width);
+              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset, width);
             }
           }
           ctx.restore();
@@ -100,8 +100,9 @@ $jit.ST.Plot.NodeTypes.implement({
           algnPos = this.getAlignedPos(pos, width, height),
           x = algnPos.x, y = algnPos.y,
           dimArray = node.getData('dimArray'),
+          config = node.getData('config'),
           rx = mpos.x - x,
-          horz = node.getData('orientation') == 'horizontal';
+          horz = config.orientation == 'horizontal';
       //bounding box check
       if(horz) {
         if(mpos.x < x || mpos.x > x + width
@@ -360,11 +361,11 @@ $jit.BarChart = new Class({
         config = this.config,
         offset = config.offset,
         horz = config.orientation == 'horizontal',
-        fixedDim = (size[horz? 'height':'width'] - 2 * offset) / l,
+        fixedDim = (size[horz? 'height':'width'] - 2 * offset - (l -1) * config.barsOffset) / l,
         animate = config.animate,
         height = size[horz? 'width':'height'] - 2 * offset 
-          - (!horz && config.showAggregates && config.Label.size)
-          - (config.showLabels && config.Label.size),
+          - (!horz && config.showAggregates && (config.Label.size + config.labelOffset))
+          - (config.showLabels && (config.Label.size + config.labelOffset)),
         dim1 = horz? 'height':'width',
         dim2 = horz? 'width':'height';
     $jit.Graph.Util.eachNode(this.st.graph, function(n) {

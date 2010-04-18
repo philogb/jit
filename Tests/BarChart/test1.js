@@ -55,10 +55,12 @@ function init(){
     
     //init ForceDirected
     var bc = new $jit.BarChart({
-        'injectInto': 'infovis',
-        'animate': true,
-        'orientation': 'vertical',
-        barsOffset: 0,
+        injectInto: 'infovis',
+        animate: true,
+        orientation: 'vertical',
+        barsOffset: 20,
+        offset:10,
+        labelOffset:5,
         type:'stacked:gradient',
         showAggregates:true,
         showLabels:true,
