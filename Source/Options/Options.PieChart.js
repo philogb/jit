@@ -5,7 +5,7 @@ Options.PieChart = {
   offset: 25, // page offset
   sliceOffset:0,
   labelOffset: 3, // label offset
-  type: 'default', // gradient
+  type: 'stacked', // gradient
   Tips: {
     enable: false,
     onShow: $.empty,

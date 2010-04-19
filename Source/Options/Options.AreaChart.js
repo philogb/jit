@@ -4,7 +4,7 @@ Options.AreaChart = {
   animate: true,
   offset: 25, // page offset
   labelOffset: 3, // label offset
-  type: 'default', // gradient
+  type: 'stacked', // gradient
   Tips: {
     enable: false,
     onShow: $.empty,

@@ -59,6 +59,7 @@ function init(){
         labelOffset:10,
         showAggregates:true,
         showLabels:true,
+        type:'stacked:gradient',
         Label: {
           size: 13,
           family: 'Arial',

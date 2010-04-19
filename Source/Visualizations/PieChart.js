@@ -1,5 +1,5 @@
 $jit.Sunburst.Plot.NodeTypes.implement({
-  'piechart-default' : {
+  'piechart-stacked' : {
     'render' : function(node, canvas) {
       var pos = node.pos.getp(true),
           dimArray = node.getData('dimArray'),
@@ -104,7 +104,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
 });
 
 $jit.PieChart = new Class({
-  st: null,
+  sb: null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
   selected: {},
   busy: false,

@@ -1,5 +1,5 @@
 $jit.ST.Plot.NodeTypes.implement({
-  'areachart-default' : {
+  'areachart-stacked' : {
     'render' : function(node, canvas) {
       var pos = node.pos.getc(true), 
           width = node.getData('width'),
@@ -12,6 +12,7 @@ $jit.ST.Plot.NodeTypes.implement({
           colorArray = node.getData('colorArray'),
           colorLength = colorArray.length,
           config = node.getData('config'),
+          gradient = node.getData('gradient'),
           showLabels = config.showLabels,
           aggregates = config.showAggregates,
           label = config.Label,
@@ -22,6 +23,21 @@ $jit.ST.Plot.NodeTypes.implement({
         for (var i=0, l=dimArray.length, acumLeft=0, acumRight=0, valAcum=0; i<l; i++) {
           ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
           ctx.save();
+          if(gradient && (dimArray[i][0] > 0 || dimArray[i][1] > 0)) {
+            var h1 = acumLeft + dimArray[i][0],
+                h2 = acumRight + dimArray[i][1],
+                alpha = Math.atan((h2 - h1) / width),
+                delta = 55;
+            var linear = ctx.createLinearGradient(x + width/2, 
+                y - (h1 + h2)/2,
+                x + width/2 + delta * Math.sin(alpha),
+                y - (h1 + h2)/2 + delta * Math.cos(alpha));
+            var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
+                function(v) { return v * 0.85 >> 0; }));
+            linear.addColorStop(0, colorArray[i % colorLength]);
+            linear.addColorStop(1, color);
+            ctx.fillStyle = linear;
+          }
           ctx.beginPath();
           ctx.moveTo(x, y - acumLeft);
           ctx.lineTo(x + width, y - acumRight);
@@ -117,7 +133,10 @@ $jit.AreaChart = new Class({
   },
   
   initializeViz: function() {
-    var config = this.config, that = this;
+    var config = this.config,
+        that = this,
+        nodeType = config.type.split(":")[0];
+
     var st = new $jit.ST({
       injectInto: config.injectInto,
       orientation: "bottom",
@@ -126,7 +145,7 @@ $jit.AreaChart = new Class({
       subtreeOffset: 0,
       Node: {
         overridable: true,
-        type: 'areachart-' + config.type,
+        type: 'areachart-' + nodeType,
         align: 'left',
         width: 1,
         height: 1
@@ -176,6 +195,7 @@ $jit.AreaChart = new Class({
         name = $.splat(json.label), 
         color = $.splat(json.color || this.colors),
         config = this.config,
+        gradient = !!config.type.split(":")[1],
         animate = config.animate;
     
     for(var i=0, values=json.values, l=values.length; i<l-1; i++) {
@@ -193,7 +213,8 @@ $jit.AreaChart = new Class({
           '$stringArray': name,
           '$next': next.label,
           '$prev': prev? prev.label:null,
-          '$config': config
+          '$config': config,
+          '$gradient': gradient
         },
         'children': []
       });
