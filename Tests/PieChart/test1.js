@@ -58,7 +58,7 @@ function init(){
         'offset': 30,
         'sliceOffset': 0,
         'labelOffset': 20,
-        'type':'default:gradient',
+        'type':'stacked:gradient',
         showLabels:true,
         Label: {
           size: 13,

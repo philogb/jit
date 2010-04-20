@@ -50,14 +50,14 @@ function init(){
     };
     //end
     var infovis = document.getElementById('infovis');
-    //init ForceDirected
+    //init PieChart
     pie = new $jit.PieChart({
-        'injectInto': 'infovis',
-        'animate': true,
-        'offset': 60,
-        'sliceOffset': 5,
-        'labelOffset': 20,
-        'type':'default:gradient',
+        injectInto: 'infovis',
+        animate: true,
+        offset: 60,
+        sliceOffset: 5,
+        labelOffset: 20,
+        type:'stacked:gradient',
         updateHeights:false,
         showLabels:true,
         Label: {

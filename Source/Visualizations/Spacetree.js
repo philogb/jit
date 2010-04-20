@@ -207,7 +207,6 @@ $jit.ST= (function() {
           var config= {
                 levelsToShow: 2,
                 levelDistance: 30,
-                withLabels: true,
                 constrained: true,                
                 Node: {
                   type: 'rectangle'

@@ -167,6 +167,8 @@ $jit.BarChart = new Class({
       levelDistance: 0,
       siblingOffset: config.barsOffset,
       subtreeOffset: 0,
+      useCanvas: config.useCanvas,
+      withLabels: false,
       Node: {
         overridable: true,
         type: 'barchart-' + nodeType,
@@ -202,6 +204,7 @@ $jit.BarChart = new Class({
         + (config.showLabels && (config.labelOffset + config.Label.size));    
     }
     this.st = st;
+    this.canvas = this.st.canvas;
   },
   
   loadJSON: function(json) {

@@ -135,7 +135,6 @@ $jit.ForceDirected = new Class( {
     var $ForceDirected = $jit.ForceDirected;
 
     var config = {
-      withLabels: true,
       iterations: 50,
       levelDistance: 50
     };

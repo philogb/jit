@@ -120,6 +120,8 @@ $jit.PieChart = new Class({
     var nodeType = config.type.split(":")[0];
     var sb = new $jit.Sunburst({
       injectInto: config.injectInto,
+      useCanvas: config.useCanvas,
+      withLabels: false,
       Node: {
         overridable: true,
         type: 'piechart-' + nodeType,
@@ -150,6 +152,7 @@ $jit.PieChart = new Class({
     sb.config.levelDistance = min(size.width, size.height)/2 
       - config.offset - config.sliceOffset;
     this.sb = sb;
+    this.canvas = this.sb.canvas;
   },
   
   loadJSON: function(json) {

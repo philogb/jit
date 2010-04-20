@@ -28,7 +28,6 @@ TM.Base = {
       addLeftClickHandler: false,
       addRightClickHandler: false,
       selectPathOnHover: false,
-      withLabels: true,
       Node: {
         type: 'rectangle',
         overridable: true

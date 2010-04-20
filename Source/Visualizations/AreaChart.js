@@ -143,6 +143,8 @@ $jit.AreaChart = new Class({
       levelDistance: 0,
       siblingOffset: 0,
       subtreeOffset: 0,
+      useCanvas: config.useCanvas,
+      withLabels: false,
       Node: {
         overridable: true,
         type: 'areachart-' + nodeType,
@@ -186,6 +188,7 @@ $jit.AreaChart = new Class({
     st.config.offsetY = -size.height/2 + config.offset 
       + (config.showLabels && (config.labelOffset + config.Label.size));    
     this.st = st;
+    this.canvas = this.st.canvas;
   },
   
   loadJSON: function(json) {

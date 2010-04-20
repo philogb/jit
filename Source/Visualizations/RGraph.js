@@ -145,8 +145,7 @@ $jit.RGraph = new Class( {
 
     var config = {
       interpolation: 'linear',
-      levelDistance: 100,
-      withLabels: true
+      levelDistance: 100
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",

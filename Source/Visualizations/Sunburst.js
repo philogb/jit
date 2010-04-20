@@ -144,7 +144,6 @@ $jit.Sunburst = new Class({
     var config = {
       interpolation: 'linear',
       levelDistance: 100,
-      withLabels: true,
       Node: {
         'type': 'multipie'
       },

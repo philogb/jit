@@ -247,7 +247,6 @@ $jit.Hypertree = new Class( {
       Edge: {
         type: 'hyperline'
       },
-      withLabels: true,
       duration: 1500,
       fps: 35
     };
