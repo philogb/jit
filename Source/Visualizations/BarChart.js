@@ -310,6 +310,7 @@ $jit.BarChart = new Class({
   
   //adds the little brown bar when hovering the node
   select: function(id, name) {
+    if(!this.config.hoveredColor) return;
     var s = this.selected;
     if(s.id != id || s.name != name) {
       s.id = id;

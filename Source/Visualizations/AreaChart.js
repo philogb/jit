@@ -291,7 +291,8 @@ $jit.AreaChart = new Class({
   filter: function() {
     if(this.busy) return;
     this.busy = true;
-    
+    if(this.st.tips) this.st.tips.hide();
+    this.select(false, false, false);
     var args = Array.prototype.slice.call(arguments);
     var rt = this.st.graph.getNode(this.st.root);
     var that = this;
@@ -315,7 +316,8 @@ $jit.AreaChart = new Class({
   restore: function() {
     if(this.busy) return;
     this.busy = true;
-    
+    if(this.st.tips) this.st.tips.hide();
+    this.select(false, false, false);
     this.normalizeDims();
     var that = this;
     this.st.fx.animate({
@@ -328,6 +330,7 @@ $jit.AreaChart = new Class({
   },
   //adds the little brown bar when hovering the node
   select: function(id, name, index) {
+    if(!this.config.selectOnHover) return;
     var s = this.selected;
     if(s.id != id || s.name != name 
         || s.index != index) {

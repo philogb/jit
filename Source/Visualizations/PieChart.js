@@ -16,6 +16,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
       var ctx = canvas.getCtx(), 
           opt = {},
           gradient = node.getData('gradient'),
+          border = node.getData('border'),
           config = node.getData('config'),
           showLabels = config.showLabels,
           label = config.Label;
@@ -55,9 +56,27 @@ $jit.Sunburst.Plot.NodeTypes.implement({
           ctx.arc(xpos, ypos, acum + .01, begin, end, false);
           ctx.arc(xpos, ypos, acum + dimi + .01, end, begin, true);
           ctx.fill();
-          
+          if(border && border.name == stringArray[i]) {
+            opt.acum = acum;
+            opt.dimValue = dimArray[i];
+            opt.begin = begin;
+            opt.end = end;
+          }
           acum += (dimi || 0);
           valAcum += (valueArray[i] || 0);
+        }
+        if(border) {
+          ctx.save();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = border.color;
+          var s = begin < end? 1 : -1;
+          ctx.beginPath();
+          //fixing FF arc method + fill
+          ctx.arc(xpos, ypos, opt.acum + .01 + 1, opt.begin, opt.end, false);
+          ctx.arc(xpos, ypos, opt.acum + opt.dimValue + .01 - 1, opt.end, opt.begin, true);
+          ctx.closePath();
+          ctx.stroke();
+          ctx.restore();
         }
         if(showLabels) {
           ctx.save();
@@ -241,7 +260,23 @@ $jit.PieChart = new Class({
     }
   },
     
-  select: function(id, name, index) {
+  //adds the little brown bar when hovering the node
+  select: function(id, name) {
+    if(!this.config.hoveredColor) return;
+    var s = this.selected;
+    if(s.id != id || s.name != name) {
+      s.id = id;
+      s.name = name;
+      s.color = this.config.hoveredColor;
+      $jit.Graph.Util.eachNode(this.sb.graph, function(n) {
+        if(id == n.id) {
+          n.setData('border', s);
+        } else {
+          n.setData('border', false);
+        }
+      });
+      this.sb.plot();
+    }
   },
   
   getLegend: function() {

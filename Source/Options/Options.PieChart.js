@@ -6,6 +6,7 @@ Options.PieChart = {
   sliceOffset:0,
   labelOffset: 3, // label offset
   type: 'stacked', // gradient
+  hoveredColor: '#9fd4ff',
   Tips: {
     enable: false,
     onShow: $.empty,

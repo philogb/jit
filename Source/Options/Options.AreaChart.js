@@ -10,6 +10,7 @@ Options.AreaChart = {
     onShow: $.empty,
     onHide: $.empty
   },
+  selectOnHover: true,
   showAggregates: true,
   showLabels: true,
   filterOnClick: false,

@@ -177,6 +177,16 @@ var Tips = new Class({
         document.body.appendChild(tip);
         this.tip = tip;
         this.node = false;
+        //hide the tip when we mouse out the canvas
+        var elem = viz.canvas.getElement();
+        $.addEvent(elem, 'mouseout', function(e) {
+          var rt = e.relatedTarget;
+          while(rt && rt.parentNode) {
+            if(elem == rt.parentNode) return;
+            rt = rt.parentNode;
+          }
+          tip.style.display = 'none';
+        });
     }
   },
   
@@ -234,7 +244,11 @@ var Tips = new Class({
         (pos.y - obj.height - y) : pos.y + y) + 'px';
     style.left = ((pos.x + obj.width + x > win.width)? 
         (pos.x - obj.width - x) : pos.x + x) + 'px';
-  }  
+  },
+  
+  hide: function() {
+    this.tip.style.display = 'none';
+  }
 });
 
 /*
