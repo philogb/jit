@@ -33,7 +33,7 @@ $jit.ST.Plot.NodeTypes.implement({
                 x + width/2 + delta * Math.sin(alpha),
                 y - (h1 + h2)/2 + delta * Math.cos(alpha));
             var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
-                function(v) { return v * 0.85 >> 0; }));
+                function(v) { return (v * 0.85) >> 0; }));
             linear.addColorStop(0, colorArray[i % colorLength]);
             linear.addColorStop(1, color);
             ctx.fillStyle = linear;
@@ -48,8 +48,9 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.restore();
           if(border) {
             var strong = border.name == stringArray[i];
+            var perc = strong? 0.7 : 0.8;
             var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
-                function(v) { return v * (strong? 0.7 : 0.8) >> 0; }));
+                function(v) { return (v * perc) >> 0; }));
             ctx.strokeStyle = color;
             ctx.lineWidth = strong? 4 : 1;
             ctx.save();
