@@ -97,9 +97,9 @@ $.map = function(array, f) {
 $.reduce = function(array, f, opt) {
   var l = array.length;
   if(l==0) return opt;
-  var acum = opt || array[--l];
+  var acum = arguments.length == 3? opt : array[--l];
   while(l--) {
-    acum = f(array[l], acum);
+    acum = f(acum, array[l]);
   }
   return acum;
 };
