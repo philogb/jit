@@ -1512,12 +1512,13 @@ $jit.ST.Label.HTML = new Class({
 $jit.ST.Plot.NodeTypes = new Class({
   'circle': {
     'render': function(node, canvas) {
-      var pos = node.pos.getc(true);
-      var dim  = node.getData('dim');
-      var algnPos = this.getAlignedPos(pos, dim, dim);
-      canvas.path('fill', function(context) {
-          context.arc(algnPos.x + dim/2, algnPos.y + dim/2, dim/2, 0, Math.PI * 2, true);            
-      });
+      var pos = node.pos.getc(true),
+          dim  = node.getData('dim'),
+          algnPos = this.getAlignedPos(pos, dim, dim),
+          ctx = canvas.getCtx();
+      ctx.beginPath();
+      ctx.arc(algnPos.x + dim/2, algnPos.y + dim/2, dim/2, 0, Math.PI * 2, true);            
+      ctx.fill();
     },
     'contains': $.lambda(false)
   },

@@ -33,7 +33,10 @@
     ],
     "Graph.Plot": [
         "Core", "Graph"
-    ]
+    ],
+    "Types": [
+         "Core", "Graph"
+     ]
   },
 
   "Layouts": {
@@ -112,6 +115,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
+        "Types",
         "Extras",
         "Canvas",
         "Complex",
@@ -132,6 +136,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
+        "Types",
         "Extras",
         "Canvas",
         "Complex",
@@ -152,6 +157,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
+        "Types",
         "Extras",
         "Canvas",
         "Complex",
@@ -172,6 +178,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
+        "Types",
         "Extras",
         "Canvas",
         "Complex",

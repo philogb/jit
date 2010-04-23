@@ -702,12 +702,9 @@ $jit.Hypertree.$extend = true;
     (end code)
 
   */
-  Hypertree.Plot.NodeTypes = new Class( {
-    'none': {
-      'render': $.empty,
-      'contains': $.lambda(false)
-    },
-
+  Hypertree.Plot.NodeTypes = new Class({
+    Implements: NodeTypes,
+    
     'circle': {
       'render': function(node, canvas) {
         var nconfig = this.node, data = node.data;
@@ -721,7 +718,7 @@ $jit.Hypertree.$extend = true;
           });
         }
       },
-      'contains': $.lambda(false)
+      'contains': NodeTypes.circle.contains
     },
 
     'ellipse': {
@@ -738,7 +735,7 @@ $jit.Hypertree.$extend = true;
         });
         ctx.restore();
       },
-      'contains': $.lambda(false)
+      'contains': NodeTypes.ellipse.contains
     },
 
     'square': {
@@ -754,7 +751,7 @@ $jit.Hypertree.$extend = true;
               nodeDim2);
         }
       },
-      'contains': $.lambda(false)
+      'contains': NodeTypes.square.contains
     },
 
     'rectangle': {
@@ -771,7 +768,7 @@ $jit.Hypertree.$extend = true;
               width, height);
         }
       },
-      'contains': $.lambda(false)
+      'contains': NodeTypes.rectangle.contains
     },
 
     'triangle': {
@@ -791,7 +788,7 @@ $jit.Hypertree.$extend = true;
           });
         }
       },
-      'contains': $.lambda(false)
+      'contains': NodeTypes.triangle.contains
     },
 
     'star': {
@@ -820,7 +817,7 @@ $jit.Hypertree.$extend = true;
           ctx.restore();
         }
       },
-      'contains': $.lambda(false)
+      'contains': NodeTypes.star.contains
     }
   });
 
@@ -844,117 +841,7 @@ $jit.Hypertree.$extend = true;
 
   */
   Hypertree.Plot.EdgeTypes = new Class({
-        'none': $.empty,
-
-        'line': function(adj, canvas) {
-          var pos = adj.nodeFrom.pos.getc(true);
-          var posChild = adj.nodeTo.pos.getc(true);
-          var scale = adj.nodeFrom.scale;
-          canvas.path('stroke', function(context) {
-            context.moveTo(pos.x * scale, pos.y * scale);
-            context.lineTo(posChild.x * scale, posChild.y * scale);
-          });
-        },
-
-        /*
-           Plots a hyperline between two nodes. A hyperline is an arc of a circle which is orthogonal to the main circle. 
-        
-           Parameters:
-        
-           adj - A <Graph.Adjacence> object.
-           canvas - A <Canvas> instance.
-        */
-        'hyperline': function(adj, canvas) {
-          var node = adj.nodeFrom, child = adj.nodeTo, data = adj.data;
-          var pos = node.pos.getc(), posChild = child.pos.getc();
-          var r = this.viz.getRadius();
-          var centerOfCircle = computeArcThroughTwoPoints(pos, posChild);
-          if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
-              || centerOfCircle.ratio < 0) {
-            canvas.path('stroke', function(ctx) {
-              ctx.moveTo(pos.x * r, pos.y * r);
-              ctx.lineTo(posChild.x * r, posChild.y * r);
-            });
-          } else {
-            var angleBegin = Math.atan2(posChild.y - centerOfCircle.y,
-                posChild.x - centerOfCircle.x);
-            var angleEnd = Math.atan2(pos.y - centerOfCircle.y, pos.x
-                - centerOfCircle.x);
-            var sense = sense(angleBegin, angleEnd);
-            canvas.path('stroke', function(ctx) {
-              ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r,
-                  centerOfCircle.ratio * r, angleBegin, angleEnd, sense);
-            });
-          }
-
-          /*      
-            Calculates the arc parameters through two points.
-            
-            More information in <http://en.wikipedia.org/wiki/Poincar%C3%A9_disc_model#Analytic_geometry_constructions_in_the_hyperbolic_plane> 
-          
-            Parameters:
-          
-            p1 - A <Complex> instance.
-            p2 - A <Complex> instance.
-            scale - The Disk's diameter.
-          
-            Returns:
-          
-            An object containing some arc properties.
-          */
-          function computeArcThroughTwoPoints(p1, p2) {
-            var aDen = (p1.x * p2.y - p1.y * p2.x), bDen = aDen;
-            var sq1 = p1.squaredNorm(), sq2 = p2.squaredNorm();
-            // Fall back to a straight line
-            if (aDen == 0)
-              return {
-                x: 0,
-                y: 0,
-                ratio: -1
-              };
-
-            var a = (p1.y * sq2 - p2.y * sq1 + p1.y - p2.y) / aDen;
-            var b = (p2.x * sq1 - p1.x * sq2 + p2.x - p1.x) / bDen;
-            var x = -a / 2;
-            var y = -b / 2;
-            var squaredRatio = (a * a + b * b) / 4 - 1;
-            // Fall back to a straight line
-            if (squaredRatio < 0)
-              return {
-                x: 0,
-                y: 0,
-                ratio: -1
-              };
-            var ratio = Math.sqrt(squaredRatio);
-            var out = {
-              x: x,
-              y: y,
-              ratio: ratio > 1000 ? -1 : ratio,
-              a: a,
-              b: b
-            };
-
-            return out;
-          }
-
-          /*      
-            Sets angle direction to clockwise (true) or counterclockwise (false). 
-             
-            Parameters: 
-          
-               angleBegin - Starting angle for drawing the arc. 
-               angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
-          
-            Returns: 
-          
-               A Boolean instance describing the sense for drawing the HyperLine. 
-          */
-          function sense(angleBegin, angleEnd) {
-            return (angleBegin < angleEnd) ? ((angleBegin + Math.PI > angleEnd) ? false
-                : true)
-                : ((angleEnd + Math.PI > angleBegin) ? true : false);
-          }
-        }
-      });
+    Implements: EdgeTypes
+  });
 
 })($jit.Hypertree);

@@ -553,97 +553,9 @@ $jit.RGraph.$extend = true;
     (end code)
 
   */
-  RGraph.Plot.NodeTypes = new Class(
-      {
-        'circle': {
-          'render': function(node, canvas){
-            var pos = node.pos.getc(true);
-            var nodeDim = node.getData('dim') / 2;
-            canvas.path('fill', function(context){
-              context.arc(pos.x, pos.y, nodeDim, 0, Math.PI * 2, true);
-            });
-          },
-          'contains': $.lambda(false)
-        },
-
-        'ellipse': {
-          'render': function(node, canvas){
-            var pos = node.pos.getc(true);
-            var width = node.getData('width') / 2;
-            var height = node.getData('height') / 2;
-            var ctx = canvas.getCtx();
-            ctx.save();
-            ctx.scale(width / height, height / width);
-            canvas.path('fill', function(context){
-              context.arc(pos.x * (height / width), pos.y * (width / height),
-                  height, 0, Math.PI * 2, true);
-            });
-            ctx.restore();
-          },
-          'contains': $.lambda(false)
-        },
-
-        'square': {
-          'render': function(node, canvas){
-            var pos = node.pos.getc(true);
-            var nodeDim = node.getData('dim');
-            var nodeDim2 = 2 * nodeDim;
-            canvas.getCtx().fillRect(pos.x - nodeDim, pos.y - nodeDim,
-                nodeDim2, nodeDim2);
-          },
-          'contains': $.lambda(false)
-        },
-
-        'rectangle': {
-          'render': function(node, canvas){
-            var pos = node.pos.getc(true);
-            var width = node.getData('width');
-            var height = node.getData('height');
-            canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2,
-                width, height);
-          },
-          'contains': $.lambda(false)
-        },
-
-        'triangle': {
-          'render': function(node, canvas){
-            var pos = node.pos.getc(true);
-            var nodeDim = node.getData('dim');
-            var c1x = pos.x, c1y = pos.y - nodeDim, c2x = c1x - nodeDim, c2y = pos.y
-                + nodeDim, c3x = c1x + nodeDim, c3y = c2y;
-            canvas.path('fill', function(ctx){
-              ctx.moveTo(c1x, c1y);
-              ctx.lineTo(c2x, c2y);
-              ctx.lineTo(c3x, c3y);
-            });
-          },
-          'contains': $.lambda(false)
-        },
-
-        'star': {
-          'render': function(node, canvas){
-            var pos = node.pos.getc(true);
-            var nodeDim = node.getData('dim');
-            var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
-            ctx.save();
-            ctx.translate(pos.x, pos.y);
-            ctx.beginPath();
-            ctx.moveTo(nodeDim, 0);
-            for ( var i = 0; i < 9; i++) {
-              ctx.rotate(pi5);
-              if (i % 2 == 0) {
-                ctx.lineTo((nodeDim / 0.525731) * 0.200811, 0);
-              } else {
-                ctx.lineTo(nodeDim, 0);
-              }
-            }
-            ctx.closePath();
-            ctx.fill();
-            ctx.restore();
-          },
-          'contains': $.lambda(false)
-        }
-      });
+  RGraph.Plot.NodeTypes = new Class({
+    Implements: NodeTypes
+  });
 
   /*
     Class: RGraph.Plot.EdgeTypes
@@ -664,50 +576,8 @@ $jit.RGraph.$extend = true;
     (end code)
 
   */
-  RGraph.Plot.EdgeTypes = new Class( {
-    'none': $.empty,
-
-    'line': function(adj, canvas){
-      var pos = adj.nodeFrom.pos.getc(true);
-      var posChild = adj.nodeTo.pos.getc(true);
-      canvas.path('stroke', function(context){
-        context.moveTo(pos.x, pos.y);
-        context.lineTo(posChild.x, posChild.y);
-      });
-    },
-
-    'arrow': function(adj, canvas){
-      var node = adj.nodeFrom, child = adj.nodeTo;
-      var data = adj.data, econfig = this.edge;
-      // get edge dim
-    var cond = econfig.overridable;
-    var edgeDim = adj.getData('dim');
-    // get edge direction
-    if (cond && data.$direction && data.$direction.length > 1) {
-      var nodeHash = {};
-      nodeHash[node.id] = node;
-      nodeHash[child.id] = child;
-      var sense = data.$direction;
-      node = nodeHash[sense[0]];
-      child = nodeHash[sense[1]];
-    }
-    var posFrom = node.pos.getc(true), posTo = child.pos.getc(true);
-    var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
-    vect.$scale(edgeDim / vect.norm());
-    var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
-    var normal = new Complex(-vect.y / 2, vect.x / 2);
-    var v1 = intermediatePoint.add(normal), v2 = intermediatePoint.$add(normal
-        .$scale(-1));
-    canvas.path('stroke', function(context){
-      context.moveTo(posFrom.x, posFrom.y);
-      context.lineTo(posTo.x, posTo.y);
-    });
-    canvas.path('fill', function(context){
-      context.moveTo(v1.x, v1.y);
-      context.lineTo(v2.x, v2.y);
-      context.lineTo(posTo.x, posTo.y);
-    });
-  }
+  RGraph.Plot.EdgeTypes = new Class({
+    Implements: EdgeTypes
   });
 
 })($jit.RGraph);
