@@ -1520,7 +1520,18 @@ $jit.ST.Plot.NodeTypes = new Class({
       ctx.arc(algnPos.x + dim/2, algnPos.y + dim/2, dim/2, 0, Math.PI * 2, true);            
       ctx.fill();
     },
-    'contains': $.lambda(false)
+    'contains': function(node, pos) {
+      var pos = node.pos.getc(true),
+          dim  = node.getData('dim'),
+          algnPos = this.getAlignedPos(pos, dim, dim),
+          npos = {
+            x: algnPos.x + dim/2,
+            y: algnPos.y + dim/2
+          };
+      
+      
+      
+    }
   },
 
   'square': {

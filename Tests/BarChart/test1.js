@@ -26,7 +26,7 @@ function init(){
       {
         'label': 'date C',
         'values': [26, 40, 25, 40]
-      }],
+      }]
       
   };
   var json2 = {

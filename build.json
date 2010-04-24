@@ -34,6 +34,9 @@
     "Graph.Plot": [
         "Core", "Graph"
     ],
+    "Graph.Label": [
+        "Core", "Graph"
+    ],
     "Types": [
          "Core", "Graph"
      ]
@@ -122,6 +125,7 @@
         "Polar",
         "Graph.Op",
         "Graph.Plot",
+        "Graph.Label",
         "Loader",
         "Layouts.Radial",
         "Fx"
@@ -143,6 +147,7 @@
         "Polar",
         "Graph.Op",
         "Graph.Plot",
+        "Graph.Label",
         "Loader",
         "Layouts.Radial",
         "Fx"
@@ -164,6 +169,7 @@
         "Polar",
         "Graph.Op",
         "Graph.Plot",
+        "Graph.Label",
         "Loader",
         "Layouts.Radial",
         "Fx"
@@ -185,6 +191,7 @@
         "Polar",
         "Graph.Op",
         "Graph.Plot",
+        "Graph.Label",
         "Loader",
         "Layouts.ForceDirected",
         "Fx"
@@ -206,6 +213,7 @@
         "Polar",
         "Graph.Op",
         "Graph.Plot",
+        "Graph.Label",
         "Loader",
         "Layouts.Tree",
         "Fx"
@@ -227,6 +235,7 @@
         "Polar",
         "Graph.Op",
         "Graph.Plot",
+        "Graph.Label",
         "Loader",
         "Layouts.TM",
         "Fx"
