@@ -741,7 +741,26 @@ $jit.Sunburst.$extend = true;
 
   */
   Sunburst.Plot.EdgeTypes = new Class({
-    Implements: EdgeTypes
+    'none': $.empty,
+    'line': function(adj, canvas) {
+      var from = adj.nodeFrom.pos.getc(true),
+          to = adj.nodeTo.pos.getc(true);
+      this.edgeHelper.line(from, to, canvas);
+    },
+    'arrow': function(adj, canvas) {
+      var from = adj.nodeFrom.pos.getc(true),
+          to = adj.nodeTo.pos.getc(true),
+          dim = adj.getData('dim'),
+          direction = adj.data.$direction,
+          inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+      this.edgeHelper.arrow(from, to, dim, inv, canvas);
+    },
+    'hyperline': function(adj, canvas) {
+      var from = adj.nodeFrom.pos.getc(),
+          to = adj.nodeTo.pos.getc(),
+          dim = Math.max(from.norm(), to.norm());
+      this.edgeHelper.hyperline(from.$scale(1/dim), to.$scale(1/dim), dim, canvas);
+    }
   });
 
 })($jit.Sunburst);

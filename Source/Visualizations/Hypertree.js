@@ -703,121 +703,111 @@ $jit.Hypertree.$extend = true;
 
   */
   Hypertree.Plot.NodeTypes = new Class({
-    Implements: NodeTypes,
-    
+    'none': {
+      'render': $.empty,
+      'contains': $.lambda(false)
+    },
     'circle': {
       'render': function(node, canvas) {
-        var nconfig = this.node, data = node.data;
-        var nodeDim = node.getData('dim') / 2;
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        if (prod >= nodeDim / 4) {
-          canvas.path('fill', function(context) {
-            context.arc(pos.x, pos.y, prod, 0, Math.PI * 2, true);
-          });
+        var nconfig = this.node,
+            dim = node.getData('dim'),
+            p = node.pos.getc();
+        dim = nconfig.transform? dim * (1 - p.squaredNorm()) : dim;
+        p.$scale(node.scale);
+        if (dim > 0.2) {
+          this.nodeHelper.circle.render('fill', p, dim, canvas);
         }
       },
-      'contains': NodeTypes.circle.contains
+      'contains': function(node, pos) {
+        var dim = node.getData('dim'),
+            npos = node.pos.getc().$scale(node.scale);
+        return this.nodeHelper.circle.contains(npos, pos, dim);
+      }
     },
-
     'ellipse': {
       'render': function(node, canvas) {
-        var pos = node.pos.getc().$scale(node.scale);
-        var width = node.getData('width') / 2;
-        var height = node.getData('height') / 2;
-        var ctx = canvas.getCtx();
-        ctx.save();
-        ctx.scale(width / height, height / width);
-        canvas.path('fill', function(context) {
-          context.arc(pos.x * (height / width), pos.y * (width / height),
-              height, 0, Math.PI * 2, true);
-        });
-        ctx.restore();
+        var pos = node.pos.getc().$scale(node.scale),
+            width = node.getData('width'),
+            height = node.getData('height');
+        this.nodeHelper.ellipse.render('fill', pos, width, height, canvas);
       },
-      'contains': NodeTypes.ellipse.contains
+      'contains': function(node, pos) {
+        var width = node.getData('width'),
+            height = node.getData('height'),
+            npos = node.pos.getc().$scale(node.scale);
+        return this.nodeHelper.circle.contains(npos, pos, width, height);
+      }
     },
-
     'square': {
       'render': function(node, canvas) {
-        var nconfig = this.node;
-        var nodeDim = node.getData('dim') / 2;
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        var nodeDim2 = 2 * prod;
-        if (prod >= nodeDim / 4) {
-          canvas.getCtx().fillRect(pos.x - prod, pos.y - prod, nodeDim2,
-              nodeDim2);
+        var nconfig = this.node,
+            dim = node.getData('dim'),
+            p = node.pos.getc();
+        dim = nconfig.transform? dim * (1 - p.squaredNorm()) : dim;
+        p.$scale(node.scale);
+        if (dim > 0.2) {
+          this.nodeHelper.square.render('fill', p, dim, canvas);
         }
       },
-      'contains': NodeTypes.square.contains
+      'contains': function(node, pos) {
+        var dim = node.getData('dim'),
+            npos = node.pos.getc().$scale(node.scale);
+        return this.nodeHelper.square.contains(npos, pos, dim);
+      }
     },
-
     'rectangle': {
       'render': function(node, canvas) {
-        var nconfig = this.node;
-        var width = node.getData('width');
-        var height = node.getData('height');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = 1 - p.squaredNorm();
-        width = nconfig.transform ? width * prod : width;
-        height = nconfig.transform ? height * prod : height;
-        if (prod >= 0.25) {
-          canvas.getCtx().fillRect(pos.x - width / 2, pos.y - height / 2,
-              width, height);
+        var nconfig = this.node,
+            width = node.getData('width'),
+            height = node.getData('height'),
+            pos = node.pos.getc();
+        width = nconfig.transform? width * (1 - pos.squaredNorm()) : width;
+        height = nconfig.transform? height * (1 - pos.squaredNorm()) : height;
+        pos.$scale(node.scale);
+        if (width > 0.2 && height > 0.2) {
+          this.nodeHelper.rectangle.render('fill', pos, width, height, canvas);
         }
       },
-      'contains': NodeTypes.rectangle.contains
+      'contains': function(node, pos) {
+        var width = node.getData('width'),
+            height = node.getData('height'),
+            npos = node.pos.getc().$scale(node.scale);
+        return this.nodeHelper.square.contains(npos, pos, width, height);
+      }
     },
-
     'triangle': {
       'render': function(node, canvas) {
-        var nconfig = this.node;
-        var nodeDim = node.getData('dim');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        if (prod >= nodeDim / 4) {
-          var c1x = pos.x, c1y = pos.y - prod, c2x = c1x - prod, c2y = pos.y
-              + prod, c3x = c1x + prod, c3y = c2y;
-          canvas.path('fill', function(ctx) {
-            ctx.moveTo(c1x, c1y);
-            ctx.lineTo(c2x, c2y);
-            ctx.lineTo(c3x, c3y);
-          });
+        var nconfig = this.node,
+            dim = node.getData('dim'),
+            p = node.pos.getc();
+        dim = nconfig.transform? dim * (1 - p.squaredNorm()) : dim;
+        p.$scale(node.scale);
+        if (dim > 0.2) {
+          this.nodeHelper.triangle.render('fill', p, dim, canvas);
         }
       },
-      'contains': NodeTypes.triangle.contains
+      'contains': function(node, pos) {
+        var dim = node.getData('dim'),
+            npos = node.pos.getc().$scale(node.scale);
+        return this.nodeHelper.triangle.contains(npos, pos, dim);
+      }
     },
-
     'star': {
       'render': function(node, canvas) {
-        var nconfig = this.node;
-        var nodeDim = node.getData('dim');
-        var p = node.pos.getc(), pos = p.scale(node.scale);
-        var prod = nconfig.transform ? nodeDim * (1 - p.squaredNorm())
-            : nodeDim;
-        if (prod >= nodeDim / 4) {
-          var ctx = canvas.getCtx(), pi5 = Math.PI / 5;
-          ctx.save();
-          ctx.translate(pos.x, pos.y);
-          ctx.beginPath();
-          ctx.moveTo(nodeDim, 0);
-          for ( var i = 0; i < 9; i++) {
-            ctx.rotate(pi5);
-            if (i % 2 == 0) {
-              ctx.lineTo((prod / 0.525731) * 0.200811, 0);
-            } else {
-              ctx.lineTo(prod, 0);
-            }
-          }
-          ctx.closePath();
-          ctx.fill();
-          ctx.restore();
+        var nconfig = this.node,
+            dim = node.getData('dim'),
+            p = node.pos.getc();
+        dim = nconfig.transform? dim * (1 - p.squaredNorm()) : dim;
+        p.$scale(node.scale);
+        if (dim > 0.2) {
+          this.nodeHelper.star.render('fill', p, dim, canvas);
         }
       },
-      'contains': NodeTypes.star.contains
+      'contains': function(node, pos) {
+        var dim = node.getData('dim'),
+            npos = node.pos.getc().$scale(node.scale);
+        return this.nodeHelper.star.contains(npos, pos, dim);
+      }
     }
   });
 
@@ -841,7 +831,28 @@ $jit.Hypertree.$extend = true;
 
   */
   Hypertree.Plot.EdgeTypes = new Class({
-    Implements: EdgeTypes
+    'none': $.empty,
+    'line': function(adj, canvas) {
+      var from = adj.nodeFrom.pos.getc(true),
+          to = adj.nodeTo.pos.getc(true),
+          r = adj.nodeFrom.scale;
+      this.edgeHelper.line({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, canvas);
+    },
+    'arrow': function(adj, canvas) {
+      var from = adj.nodeFrom.pos.getc(true),
+          to = adj.nodeTo.pos.getc(true),
+          r = adj.nodeFrom.scale,
+          dim = adj.getData('dim'),
+          direction = adj.data.$direction,
+          inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+      this.edgeHelper.arrow({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, dim, inv, canvas);
+    },
+    'hyperline': function(adj, canvas) {
+      var from = adj.nodeFrom.pos.getc(),
+          to = adj.nodeTo.pos.getc(),
+          dim = this.viz.getRadius();
+      this.edgeHelper.hyperline(from, to, dim, canvas);
+    }
   });
 
 })($jit.Hypertree);

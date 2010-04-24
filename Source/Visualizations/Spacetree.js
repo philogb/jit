@@ -1510,67 +1510,65 @@ $jit.ST.Label.HTML = new Class({
 
 */
 $jit.ST.Plot.NodeTypes = new Class({
+  'none': {
+    'render': $.empty,
+    'contains': $.lambda(false)
+  },
   'circle': {
     'render': function(node, canvas) {
-      var pos = node.pos.getc(true),
-          dim  = node.getData('dim'),
-          algnPos = this.getAlignedPos(pos, dim, dim),
-          ctx = canvas.getCtx();
-      ctx.beginPath();
-      ctx.arc(algnPos.x + dim/2, algnPos.y + dim/2, dim/2, 0, Math.PI * 2, true);            
-      ctx.fill();
+      var dim  = node.getData('dim'),
+          pos = this.getAlignedPos(node.pos.getc(true), dim, dim),
+          dim2 = dim/2;
+      this.nodeHelper.circle.render('fill', {x:pos.x+dim2, y:pos.y+dim2}, dim2, canvas);
     },
     'contains': function(node, pos) {
-      var pos = node.pos.getc(true),
-          dim  = node.getData('dim'),
-          algnPos = this.getAlignedPos(pos, dim, dim),
-          npos = {
-            x: algnPos.x + dim/2,
-            y: algnPos.y + dim/2
-          };
-      
-      
-      
+      var dim  = node.getData('dim'),
+          npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
+          dim2 = dim/2;
+      this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, dim2);
     }
   },
-
   'square': {
     'render': function(node, canvas) {
-      var pos = node.pos.getc(true);
-      var dim  = node.getData('dim');
-      var algnPos = this.getAlignedPos(pos, dim, dim);
-      canvas.getCtx().fillRect(algnPos.x, algnPos.y, dim, dim);
+      var dim  = node.getData('dim'),
+          dim2 = dim/2,
+          pos = this.getAlignedPos(node.pos.getc(true), dim, dim);
+      this.nodeHelper.square.render('fill', {x:pos.x+dim2, y:pos.y+dim2}, dim2, canvas);
     },
-    'contains': $.lambda(false)
+    'contains': function(node, pos) {
+      var dim  = node.getData('dim'),
+          npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
+          dim2 = dim/2;
+      this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, dim2);
+    }
   },
-
   'ellipse': {
     'render': function(node, canvas) {
-      var pos = node.pos.getc(true);
-      var width  = node.getData('width') / 2;
-      var height = node.getData('height') / 2;
-      var algnPos = this.getAlignedPos(pos, width * 2, height * 2);
-      var ctx = canvas.getCtx();
-      ctx.save();
-      ctx.scale(width / height, height / width);
-      canvas.path('fill', function(context) {
-          context.arc((algnPos.x + width) * (height / width), 
-              (algnPos.y + height) * (width / height), height, 0, Math.PI * 2, true);            
-      });
-      ctx.restore();
+      var width = node.getData('width'),
+          height = node.getData('height'),
+          pos = this.getAlignedPos(node.pos.getc(true), width, height);
+      this.nodeHelper.ellipse.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, canvas);
     },
-    'contains': $.lambda(false)
+    'contains': function(node, pos) {
+      var width = node.getData('width'),
+          height = node.getData('height'),
+          npos = this.getAlignedPos(node.pos.getc(true), width, height);
+      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height, canvas);
+    }
   },
-
   'rectangle': {
     'render': function(node, canvas) {
-      var pos = node.pos.getc(true);
-      var width  = node.getData('width');
-      var height = node.getData('height');
-      var algnPos = this.getAlignedPos(pos, width, height);
-      canvas.getCtx().fillRect(algnPos.x, algnPos.y, width, height);
+      var width = node.getData('width'),
+          height = node.getData('height'),
+          pos = this.getAlignedPos(node.pos.getc(true), width, height);
+      this.nodeHelper.rectangle.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, canvas);
     },
-    'contains': $.lambda(false)
+    'contains': function(node, pos) {
+      var width = node.getData('width'),
+          height = node.getData('height'),
+          npos = this.getAlignedPos(node.pos.getc(true), width, height);
+      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height, canvas);
+    }
   }
 });
 
@@ -1594,156 +1592,107 @@ $jit.ST.Plot.NodeTypes = new Class({
 
 */
 $jit.ST.Plot.EdgeTypes = new Class({
-    'none': function() {},
-    
+    'none': $.empty,
     'line': function(adj, canvas) {
-    	var orn = this.getOrientation(adj);
-    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
-        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
-        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        canvas.path('stroke', function(ctx) {
-            ctx.moveTo(begin.x, begin.y);
-            ctx.lineTo(end.x, end.y);
-        });
-    },
-    
+    	var orn = this.getOrientation(adj),
+    	    nodeFrom = adj.nodeFrom, 
+    	    nodeTo = adj.nodeTo,
+    	    rel = nodeFrom._depth < nodeTo._depth,
+    	    from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+          to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
+    	this.edgeHelper.line(from, to, canvas);
+     },
+     'arrow': function(adj, canvas) {
+       var orn = this.getOrientation(adj),
+           node = adj.nodeFrom, 
+           child = adj.nodeTo,
+           dim = adj.getData('dim'),
+           from = this.viz.geom.getEdge(node, 'begin', orn),
+           to = this.viz.geom.getEdge(child, 'end', orn),
+           direction = adj.data.$direction,
+           inv = (direction && direction.length>1 && direction[0] != node.id);
+       this.edgeHelper.arrow(from, to, dim, inv, canvas);
+     },
     'quadratic:begin': function(adj, canvas) {
     	var orn = this.getOrientation(adj);
-        var data = adj.data, econfig = this.edge;
-    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
-        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
-        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        var dim = adj.getData('dim');
-        switch(orn) {
-            case "left":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(begin.x + dim, begin.y, end.x, end.y);
-                });
-                break;
-            case "right":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(begin.x - dim, begin.y, end.x, end.y);
-                });
-                break;
-            case "top":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(begin.x, begin.y + dim, end.x, end.y);
-                });
-                break;
-            case "bottom":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(begin.x, begin.y - dim, end.x, end.y);
-                });
-                break;
-        }
+    	var nodeFrom = adj.nodeFrom, 
+    	    nodeTo = adj.nodeTo,
+    	    rel = nodeFrom._depth < nodeTo._depth,
+    	    begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+          end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
+          dim = adj.getData('dim'),
+          ctx = canvas.getCtx();
+    	ctx.beginPath();
+    	ctx.moveTo(begin.x, begin.y);
+      switch(orn) {
+        case "left":
+          ctx.quadraticCurveTo(begin.x + dim, begin.y, end.x, end.y);
+          break;
+        case "right":
+          ctx.quadraticCurveTo(begin.x - dim, begin.y, end.x, end.y);
+          break;
+        case "top":
+          ctx.quadraticCurveTo(begin.x, begin.y + dim, end.x, end.y);
+          break;
+        case "bottom":
+          ctx.quadraticCurveTo(begin.x, begin.y - dim, end.x, end.y);
+          break;
+      }
+      ctx.stroke();
     },
-
     'quadratic:end': function(adj, canvas) {
     	var orn = this.getOrientation(adj);
-        var data = adj.data, econfig = this.edge;
-    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
-        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
-        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        var dim = adj.getData('dim');
-        switch(orn) {
-            case "left":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(end.x - dim, end.y, end.x, end.y);
-                });
-                break;
-            case "right":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(end.x + dim, end.y, end.x, end.y);
-                });
-                break;
-            case "top":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(end.x, end.y - dim, end.x, end.y);
-                });
-                break;
-            case "bottom":
-                canvas.path('stroke', function(ctx){
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.quadraticCurveTo(end.x, end.y + dim, end.x, end.y);
-                });
-                break;
-        }
-    },
-
-    'bezier': function(adj, canvas) {
-        var data = adj.data, econfig = this.edge;
-    	var orn = this.getOrientation(adj);
-    	var nodeFrom = adj.nodeFrom, nodeTo = adj.nodeTo;
-        var begin = this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeFrom:nodeTo, 'begin', orn);
-        var end =  this.viz.geom.getEdge(nodeFrom._depth < nodeTo._depth? nodeTo:nodeFrom, 'end', orn);
-        var dim = adj.getData('dim');
-        switch(orn) {
-            case "left":
-                canvas.path('stroke', function(ctx) {
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.bezierCurveTo(begin.x + dim, begin.y, end.x - dim, end.y, end.x, end.y);
-                });
-                break;
-            case "right":
-                canvas.path('stroke', function(ctx) {
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.bezierCurveTo(begin.x - dim, begin.y, end.x + dim, end.y, end.x, end.y);
-                });
-                break;
-            case "top":
-                canvas.path('stroke', function(ctx) {
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.bezierCurveTo(begin.x, begin.y + dim, end.x, end.y - dim, end.x, end.y);
-                });
-                break;
-            case "bottom":
-                canvas.path('stroke', function(ctx) {
-                    ctx.moveTo(begin.x, begin.y);
-                    ctx.bezierCurveTo(begin.x, begin.y - dim, end.x, end.y + dim, end.x, end.y);
-                });
-                break;
-        }
-    },
-
-    'arrow': function(adj, canvas) {
-    	var orn = this.getOrientation(adj);
-    	var node = adj.nodeFrom, child = adj.nodeTo;
-      var data = adj.data, econfig = this.edge;
-      // get edge dim
-      var cond = econfig.overridable;
-      var edgeDim = adj.getData('dim');
-      // get edge direction
-      if(cond && data.$direction && data.$direction.length > 1) {
-          var nodeHash = {};
-          nodeHash[node.id] = node;
-          nodeHash[child.id] = child;
-          var sense = data.$direction;
-          node = nodeHash[sense[0]];
-          child = nodeHash[sense[1]];
+    	var nodeFrom = adj.nodeFrom, 
+    	    nodeTo = adj.nodeTo,
+    	    rel = nodeFrom._depth < nodeTo._depth,
+    	    begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+          end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
+          dim = adj.getData('dim'),
+          ctx = canvas.getCtx();
+      ctx.beginPath();
+      ctx.moveTo(begin.x, begin.y);
+    	switch(orn) {
+        case "left":
+          ctx.quadraticCurveTo(end.x - dim, end.y, end.x, end.y);
+          break;
+        case "right":
+          ctx.quadraticCurveTo(end.x + dim, end.y, end.x, end.y);
+          break;
+        case "top":
+          ctx.quadraticCurveTo(end.x, end.y - dim, end.x, end.y);
+          break;
+        case "bottom":
+          ctx.quadraticCurveTo(end.x, end.y + dim, end.x, end.y);
+          break;
       }
-      var posFrom = this.viz.geom.getEdge(node, 'begin', orn);
-      var posTo =  this.viz.geom.getEdge(child, 'end', orn);
-      var vect = new Complex(posTo.x - posFrom.x, posTo.y - posFrom.y);
-      vect.$scale(edgeDim / vect.norm());
-      var intermediatePoint = new Complex(posTo.x - vect.x, posTo.y - vect.y);
-      var normal = new Complex(-vect.y / 2, vect.x / 2);
-      var v1 = intermediatePoint.add(normal), v2 = intermediatePoint.$add(normal.$scale(-1));
-      canvas.path('stroke', function(context) {
-          context.moveTo(posFrom.x, posFrom.y);
-          context.lineTo(posTo.x, posTo.y);
-      });
-      canvas.path('fill', function(context) {
-          context.moveTo(v1.x, v1.y);
-          context.lineTo(v2.x, v2.y);
-          context.lineTo(posTo.x, posTo.y);
-      });
+    	ctx.stroke();
+    },
+    'bezier': function(adj, canvas) {
+    	var orn = this.getOrientation(adj),
+    	    nodeFrom = adj.nodeFrom, 
+    	    nodeTo = adj.nodeTo,
+    	    rel = nodeFrom._depth < nodeTo._depth,
+    	    begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+    	    end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
+    	    dim = adj.getData('dim'),
+    	    ctx = canvas.getCtx();
+      ctx.beginPath();
+    	ctx.moveTo(begin.x, begin.y);
+    	switch(orn) {
+        case "left":
+          ctx.bezierCurveTo(begin.x + dim, begin.y, end.x - dim, end.y, end.x, end.y);
+          break;
+        case "right":
+          ctx.bezierCurveTo(begin.x - dim, begin.y, end.x + dim, end.y, end.x, end.y);
+          break;
+        case "top":
+          ctx.bezierCurveTo(begin.x, begin.y + dim, end.x, end.y - dim, end.x, end.y);
+          break;
+        case "bottom":
+          ctx.bezierCurveTo(begin.x, begin.y - dim, end.x, end.y + dim, end.x, end.y);
+          break;
+      }
+    	ctx.stroke();
     }
 });
 

@@ -30,7 +30,7 @@
 Graph.Plot = {
     //Add helpers
     nodeHelper: NodeHelper,
-    edgeHelper: edgeHelper,
+    edgeHelper: EdgeHelper,
     
     Interpolator: {
         //Mapping property to parser

@@ -32,13 +32,12 @@
         "Core", "Graph"
     ],
     "Graph.Plot": [
-        "Core", "Graph"
+        "Core", "Graph", "Helpers"
     ],
     "Graph.Label": [
         "Core", "Graph"
     ],
-    "Types": [
-         "Core", "Graph"
+    "Helpers": [
      ]
   },
 
@@ -118,7 +117,6 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
-        "Types",
         "Extras",
         "Canvas",
         "Complex",
@@ -140,7 +138,6 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
-        "Types",
         "Extras",
         "Canvas",
         "Complex",
@@ -162,7 +159,6 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
-        "Types",
         "Extras",
         "Canvas",
         "Complex",
@@ -184,7 +180,6 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Controller",
-        "Types",
         "Extras",
         "Canvas",
         "Complex",

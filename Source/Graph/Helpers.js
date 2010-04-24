@@ -53,7 +53,7 @@ var NodeHelper = {
   },
   'rectangle': {
     'render': function(type, pos, width, height, canvas){
-      canvas.getCtx().[type + "Rect"](pos.x - width / 2, pos.y - height / 2, 
+      canvas.getCtx()[type + "Rect"](pos.x - width / 2, pos.y - height / 2, 
                                       width, height);
     },
     'contains': function(npos, pos, width, height){
@@ -119,7 +119,7 @@ var EdgeHelper = {
   'arrow': function(from, to, dim, swap, canvas){
     var ctx = canvas.getCtx();
     // invert edge direction
-    if (invert) {
+    if (swap) {
       var tmp = from;
       from = to;
       to = tmp;
@@ -150,7 +150,7 @@ var EdgeHelper = {
   adj - A <Graph.Adjacence> object.
   canvas - A <Canvas> instance.
   */
-  'hyperline': function(from, to, dim, canvas){
+  'hyperline': function(from, to, r, canvas){
     var ctx = canvas.getCtx();  
     var centerOfCircle = computeArcThroughTwoPoints(from, to);
     if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
