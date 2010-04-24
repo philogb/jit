@@ -5,7 +5,6 @@
  *
  */
 
-
 /*
    Object: Graph.Plot
 
@@ -29,6 +28,9 @@
 
 */
 Graph.Plot = {
+    //Add helpers
+    nodeHelper: NodeHelper,
+    edgeHelper: edgeHelper,
     
     Interpolator: {
         //Mapping property to parser
