@@ -185,7 +185,11 @@ var Tips = new Class({
             if(elem == rt.parentNode) return;
             rt = rt.parentNode;
           }
-          tip.style.display = 'none';
+          var s = tip.style;
+          if(s.display != 'none') {
+            s.display = 'none';
+            viz.config.Tips.onHide();
+          }
         });
     }
   },
