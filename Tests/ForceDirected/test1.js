@@ -330,14 +330,25 @@ function init(){
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
-            dim: 4,
-            color: "#f00",
-            overridable: true
+          dim: 4,
+          color: "#f00",
+          Context: {
+            shadowBlur: 10,
+            shadowColor: 'red',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
+          }
         },
         
         Edge: {
-            lineWidth: 2,
-            color:'#23A4FF'
+          color:'#23A4FF',
+          lineWidth: 2,
+          Context: {
+            shadowBlur: 5,
+            shadowColor: '#23A4FF',
+            shadowOffsetX: 2,
+            shadowOffsetY: 2
+          }
         },
         
         //Allow tips

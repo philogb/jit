@@ -37,8 +37,9 @@ Options.Node = {
   
   overridable: false,
   type: 'circle',
-  dim: 3,
   color: '#ccb',
+  alpha: 1,
+  dim: 3,
   height: 20,
   width: 90,
   autoHeight: false,
@@ -47,7 +48,10 @@ Options.Node = {
   lineWidth: 1,
   transform: true,
   align: "center",
-  alpha: 1,
   angularWidth:1,
-  span:1
+  span:1,
+  //Raw canvas styles to be
+  //applied to the context instance
+  //before plotting a node
+  Context: {}
 };

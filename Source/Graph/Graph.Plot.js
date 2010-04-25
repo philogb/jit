@@ -520,17 +520,22 @@ Graph.Plot = {
 
     */
     plotNode: function(node, canvas, animating) {
-        var f = node.getData('type');
+        var f = node.getData('type'), 
+            ctxObj = this.node.Context;
         if(f != 'none') {
-          var width = node.getData('lineWidth');
-          var color = node.getData('color');
-          var alpha = node.getData('alpha');
-          var ctx = canvas.getCtx();
+          var width = node.getData('lineWidth'),
+              color = node.getData('color'),
+              alpha = node.getData('alpha'),
+              ctx = canvas.getCtx();
           
           ctx.lineWidth = width;
-          ctx.fillStyle = color;
-          ctx.strokeStyle = color; 
+          ctx.fillStyle = ctx.strokeStyle = color;
           ctx.globalAlpha = alpha;
+          
+          for(var s in ctxObj) {
+            var ds = '$' + s;
+            ctx[s] = ds in node.data? node.data[ds] : ctxObj[s];
+          }
 
           this.nodeTypes[f].render.call(this, node, canvas, animating);
         }
@@ -548,15 +553,20 @@ Graph.Plot = {
 
     */
     plotLine: function(adj, canvas, animating) {
-      var f = adj.getData('type');
+      var f = adj.getData('type'),
+          ctxObj = this.edge.Context;
       if(f != 'none') {
-        var width = adj.getData('lineWidth');
-        var color = adj.getData('color');
-        var ctx = canvas.getCtx();
+        var width = adj.getData('lineWidth'),
+            color = adj.getData('color'),
+            ctx = canvas.getCtx();
         
         ctx.lineWidth = width;
-        ctx.fillStyle = color;
-        ctx.strokeStyle = color; 
+        ctx.fillStyle = ctx.strokeStyle = color;
+        
+        for(var s in ctxObj) {
+          var ds = '$' + s;
+          ctx[s] = ds in adj.data? adj.data[ds] : ctxObj[s];
+        }
 
         this.edgeTypes[f].call(this, adj, canvas, animating);
       }

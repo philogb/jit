@@ -35,5 +35,10 @@ Options.Edge = {
   color: '#ccb',
   lineWidth: 1,
   dim:15,
-  alpha: 1
+  alpha: 1,
+
+  //Raw canvas styles to be
+  //applied to the context instance
+  //before plotting an edge
+  Context: {}
 };
