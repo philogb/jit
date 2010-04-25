@@ -322,7 +322,7 @@ function init(){
     };
     //end
     var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
+    var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var colors = ['#33a', '#55b', '#77c', '#99d', '#aae', '#bf0', '#cf5', '#dfa', '#faccff', '#ffccff', '#CCC', '#C37'];
     //init Sunburst
     var sb = new $jit.Sunburst({
