@@ -40,5 +40,5 @@ Options.Edge = {
   //Raw canvas styles to be
   //applied to the context instance
   //before plotting an edge
-  Context: {}
+  CanvasStyles: {}
 };

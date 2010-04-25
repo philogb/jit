@@ -33,19 +33,37 @@ Graph.Plot = {
     edgeHelper: EdgeHelper,
     
     Interpolator: {
-        //Mapping property to parser
+        //node/edge property parsers
         'map': {
           'color': 'color',
           'width': 'number',
           'height': 'number',
-          'lineWidth': 'number',
           'dim': 'number',
           'alpha': 'number',
+          'lineWidth': 'number',
           'angularWidth':'number',
           'span':'number',
           'valueArray':'array-number',
           'dimArray':'array-number'
           //'colorArray':'array-color'
+        },
+        
+        //canvas specific parsers
+        'canvas': {
+          'globalAlpha': 'number',
+          'fillStyle': 'color',
+          'strokeStyle': 'color',
+          'lineWidth': 'number',
+          'shadowBlur': 'number',
+          'shadowColor': 'color',
+          'shadowOffsetX': 'number',
+          'shadowOffsetY': 'number',
+          'miterLimit': 'number'
+        },
+  
+        //label parsers
+        'label': {
+          'size': 'number'
         },
   
         //Number interpolator
@@ -80,26 +98,26 @@ Graph.Plot = {
         },
         
         //Graph's Node/Edge interpolators
-        'number': function(elem, prop, delta) {
-          var from = elem.getData(prop, 'start');
-          var to = elem.getData(prop, 'end');
-          elem.setData(prop, this.compute(from, to, delta));
+        'number': function(elem, prop, delta, getter, setter) {
+          var from = elem[getter](prop, 'start');
+          var to = elem[getter](prop, 'end');
+          elem[setter](prop, this.compute(from, to, delta));
         },
 
-        'color': function(elem, prop, delta) {
-          var from = $.hexToRgb(elem.getData(prop, 'start'));
-          var to = $.hexToRgb(elem.getData(prop, 'end'));
+        'color': function(elem, prop, delta, getter, setter) {
+          var from = $.hexToRgb(elem[getter](prop, 'start'));
+          var to = $.hexToRgb(elem[getter](prop, 'end'));
           var comp = this.compute;
           var val = $.rgbToHex([parseInt(comp(from[0], to[0], delta)),
                                 parseInt(comp(from[1], to[1], delta)),
                                 parseInt(comp(from[2], to[2], delta))]);
           
-          elem.setData(prop, val);
+          elem[setter](prop, val);
         },
         
-        'array-number': function(elem, prop, delta) {
-          var from = elem.getData(prop, 'start'),
-              to = elem.getData(prop, 'end'),
+        'array-number': function(elem, prop, delta, getter, setter) {
+          var from = elem[getter](prop, 'start'),
+              to = elem[getter](prop, 'end'),
               cur = [];
           for(var i=0, l=from.length; i<l; i++) {
             var fromi = from[i], toi = to[i];
@@ -112,27 +130,43 @@ Graph.Plot = {
               cur.push(this.compute(fromi, toi, delta));
             }
           }
-          elem.setData(prop, cur);
+          elem[setter](prop, cur);
+        },
+        
+        'node': function(elem, props, delta, map, getter, setter) {
+          map = this[map];
+          if(props) {
+            var len = props.length;
+            for(var i=0; i<len; i++) {
+              var pi = props[i];
+              this[map[pi]](elem, pi, delta, getter, setter);
+            }
+          } else {
+            for(var pi in map) {
+              this[map[pi]](elem, pi, delta, getter, setter);
+            }
+          }
+        },
+        
+        'edge': function(elem, props, delta, mapKey, getter, setter) {
+            var adjs = elem.adjacencies;
+            for(var id in adjs) this['node'](adjs[id], props, delta, mapKey, getter, setter);
         },
         
         'node-property': function(elem, props, delta) {
-            var map = this.map;
-            if(props) {
-              var len = props.length;
-              for(var i=0; i<len; i++) {
-                var pi = props[i];
-                this[map[pi]](elem, pi, delta);
-              }
-            } else {
-              for(var pi in map) {
-                this[map[pi]](elem, pi, delta);
-              }
-            }
+          this['node'](elem, props, delta, 'map', 'getData', 'setData');
         },
         
         'edge-property': function(elem, props, delta) {
-            var adjs = elem.adjacencies;
-            for(var id in adjs) this['node-property'](adjs[id], props, delta);
+          this['edge'](elem, props, delta, 'map', 'getData', 'setData');  
+        },
+
+        'node-style': function(elem, props, delta) {
+          this['node'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');
+        },
+        
+        'edge-style': function(elem, props, delta) {
+          this['edge'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');  
         }
     },
     
@@ -201,7 +235,26 @@ Graph.Plot = {
 
     */
     prepare: function(modes) {
-      var GUtil = Graph.Util, graph = this.viz.graph;
+      var GUtil = Graph.Util, 
+          graph = this.viz.graph,
+          accessors = {
+            'node-property': {
+              'getter': 'getData',
+              'setter': 'setData'
+            },
+            'edge-property': {
+              'getter': 'getData',
+              'setter': 'setData'
+            },
+            'node-style': {
+              'getter': 'getCanvasStyle',
+              'setter': 'setCanvasStyle'
+            },
+            'edge-style': {
+              'getter': 'getCanvasStyle',
+              'setter': 'setCanvasStyle'
+            }
+          };
 
       //parse modes
       var m = {};
@@ -212,20 +265,24 @@ Graph.Plot = {
       
       GUtil.eachNode(graph, function(node) { 
         node.startPos.set(node.pos);
-        if('node-property' in m) {
-          var prop = m['node-property'];
-          for(var i=0, l=prop.length; i < l; i++) {
-            node.setData(prop[i], node.getData(prop[i]), 'start');
-          }
-        }
-        if('edge-property' in m) {
-          var prop = m['edge-property'];
-          GUtil.eachAdjacency(node, function(adj) {
+        $.each(['node-property', 'node-style'], function(p) {
+          if(p in m) {
+            var prop = m[p];
             for(var i=0, l=prop.length; i < l; i++) {
-              adj.setData(prop[i], adj.getData(prop[i]), 'start');
+              node[accessors[p].setter](prop[i], node[accessors[p].getter](prop[i]), 'start');
             }
-          });
-        }
+          }
+        });
+        $.each(['edge-property', 'edge-style'], function(p) {
+          if(p in m) {
+            var prop = m[p];
+            GUtil.eachAdjacency(node, function(adj) {
+              for(var i=0, l=prop.length; i < l; i++) {
+                adj[accessors[p].setter](prop[i], adj[accessors[p].getter](prop[i]), 'start');
+              }
+            });
+          }
+        });
       });
       
       return m;
@@ -521,7 +578,7 @@ Graph.Plot = {
     */
     plotNode: function(node, canvas, animating) {
         var f = node.getData('type'), 
-            ctxObj = this.node.Context;
+            ctxObj = this.node.CanvasStyles;
         if(f != 'none') {
           var width = node.getData('lineWidth'),
               color = node.getData('color'),
@@ -533,8 +590,7 @@ Graph.Plot = {
           ctx.globalAlpha = alpha;
           
           for(var s in ctxObj) {
-            var ds = '$' + s;
-            ctx[s] = ds in node.data? node.data[ds] : ctxObj[s];
+            ctx[s] = node.getCanvasStyle(s);
           }
 
           this.nodeTypes[f].render.call(this, node, canvas, animating);
@@ -554,7 +610,7 @@ Graph.Plot = {
     */
     plotLine: function(adj, canvas, animating) {
       var f = adj.getData('type'),
-          ctxObj = this.edge.Context;
+          ctxObj = this.edge.CanvasStyles;
       if(f != 'none') {
         var width = adj.getData('lineWidth'),
             color = adj.getData('color'),
@@ -564,8 +620,7 @@ Graph.Plot = {
         ctx.fillStyle = ctx.strokeStyle = color;
         
         for(var s in ctxObj) {
-          var ds = '$' + s;
-          ctx[s] = ds in adj.data? adj.data[ds] : ctxObj[s];
+          ctx[s] = adj.getCanvasStyle(s);
         }
 
         this.edgeTypes[f].call(this, adj, canvas, animating);

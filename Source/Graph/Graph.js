@@ -269,6 +269,255 @@ $jit.Graph = new Class({
 
 var Graph = $jit.Graph;
 
+var Accessors = {
+    /*
+    Method: getData
+ 
+    Returns the specified data value property. This is useful for querying special/reserved 
+    <Graph.Node> data properties (i.e dollar prefixed properties).
+
+    Parameters:
+ 
+       prop - The name of the property. The dollar sign is not necessary. For example _getData('width')_ will query 
+       _data.$width_
+       type - The type of the data property queried. Default's "current".
+       force - Whether to obtain the true value of the property (equivalent to _data.$prop_) or to check for _node.overridable=true_ first. 
+       For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
+ 
+    Returns:
+ 
+      The value of the dollar prefixed property or the global Node property value if _overridable=false_
+
+    Example:
+    (start code js)
+     node.getData('width'); //will return node.data.$width if Node.overridable=true;
+    (end code)
+     */
+   getData: function(prop, type, force) {
+      type = type || 'current';
+      var data;
+      if(type == 'current') {
+        data = this.data;
+      } else if(type == 'start') {
+        data = this.startData;
+      } else if(type == 'end') {
+        data = this.endData;
+      }
+      if(force) {
+        return data['$' + prop];
+      }
+      var n = this.Config, dollar = '$' + prop;
+      if(!n.overridable) return n[prop] || 0;
+      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : (n[prop] || 0));
+   },
+    
+    /*
+    Method: setData
+ 
+    Sets the current data property with some specific value. 
+    This method is only useful for (dollar prefixed) reserved properties.
+    
+    Parameters:
+ 
+       prop - The name of the property. The dollar sign is not necessary. For example _setData('width')_ will set 
+       _data.$width_.
+       value - The value to store.
+       type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
+ 
+    Example:
+    (start code js)
+     node.setData('width', 30);
+    (end code)
+     */
+   setData: function(prop, value, type) {
+      type = type || 'current';
+      var data;
+      if(type == 'current') {
+        data = this.data;
+      } else if(type == 'start') {
+        data = this.startData;
+      } else if(type == 'end') {
+        data = this.endData;
+      }
+      data['$' + prop] = value;
+   },
+   
+   /*
+   Method: setDataset
+
+   Example:
+   (start code js)
+     node.setDataset(['current', 'end'], {
+       'width': [100, 5],
+       'color': ['#fff', '#ccc']
+     });
+     //...or also
+     node.setDataset('end', {
+       'width': 5,
+       'color': '#ccc'
+     });
+   (end code)
+    */
+  setDataset: function(types, obj) {
+     types = $.splat(types);
+     for(attr in obj) {
+       for(var i=0, l=types.length; i<l; i++) {
+         this.setData(attr, obj[attr][i], types[i]);
+       }
+     }
+  },
+    
+    /*
+    Method: removeData
+
+    Will remove that property from data.
+    
+    Parameters:
+
+       prop - The name of the property. The dollar sign is not necessary. 
+
+    Example:
+    (start code js)
+     node.removeData('width'); //now the default width value is returned
+    (end code)
+     */
+   removeData: function(prop, value, type) {
+      var pref = '$' + prop;
+      delete this.data[pref];
+      delete this.endData[pref];
+      delete this.startData[pref];
+   },
+    /*
+    Method: getCanvasStyle
+
+    Returns the specified canvas style data value property. This is useful for querying special/reserved 
+    <Graph.Node> canvas style data properties (i.e dollar prefixed properties that match with $canvas-<name of canvas style>).
+
+    Parameters:
+
+       prop - The name of the property. The dollar signed prefix is not required. For example _getCanvasStyle('fillStyle')_ will query 
+       _data.$canvas-fillStyle_
+       type - The type of the data property queried. Default's "current".
+       force - Whether to obtain the true value of the property (equivalent to _data.$canvas-prop_) or to check for _node.overridable=true_ first. 
+       For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
+
+    Returns:
+
+      The value of the dollar prefixed property or the global Node property value if _overridable=false_
+
+    Example:
+    (start code js)
+     node.getCanvasStyle('fillStyle'); //will return node.data.$canvas-fillStyle if Node.overridable=true;
+    (end code)
+     */
+   getCanvasStyle: function(prop, type, force) {
+      type = type || 'current';
+      var data;
+      if(type == 'current') {
+        data = this.data;
+      } else if(type == 'start') {
+        data = this.startData;
+      } else if(type == 'end') {
+        data = this.endData;
+      }
+      if(force) {
+        return data['$canvas-' + prop];
+      }
+      var c = this.Config, 
+          n = c.CanvasStyles, 
+          dollar = '$canvas-' + prop;
+      if(!c.overridable) 
+        return n[prop] || 0;
+      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : (n[prop] || 0));
+   },
+    
+    /*
+    Method: setCanvasStyle
+
+    Sets the current canvas style prefixed data property with some specific value. 
+    This method is only useful for (dollar prefixed) reserved properties.
+    
+    Parameters:
+
+       prop - The name of the property. The dollar sign is not necessary. For example _setCanvasStyle('fillStyle')_ will set 
+       _data.$canvas-fillStyle_.
+       value - The value to store.
+       type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
+
+    Example:
+    (start code js)
+     node.setCanvasStyle('fillStyle', '#ccc');
+    (end code)
+     */
+   setCanvasStyle: function(prop, value, type) {
+      type = type || 'current';
+      var data;
+      if(type == 'current') {
+        data = this.data;
+      } else if(type == 'start') {
+        data = this.startData;
+      } else if(type == 'end') {
+        data = this.endData;
+      }
+      data['$canvas-' + prop] = value;
+   },
+
+   /*
+   Method: setCanvasStyles
+
+   Parameters:
+
+      obj - The name of the property. The dollar sign is not necessary. For example _setCanvasStyle('fillStyle')_ will set 
+      _data.$canvas-fillStyle_.
+      value - The value to store.
+      type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
+
+   Example:
+   (start code js)
+     node.setCanvasStyles(['current', 'end'], {
+       'shadowBlur': [100, 5],
+       'shadowOffsetX': [100, 5],
+       'shadowOffsetY': [100, 5]
+     });
+     //...or also
+     node.setCanvasStyles('end', {
+       'shadowBlur': 5,
+       'shadowOffsetX': 5,
+       'shadowOffsetY': 5
+     });
+   (end code)
+    */
+  setCanvasStyles: function(types, obj) {
+     types = $.splat(types);
+     for(attr in obj) {
+       for(var i=0, l=types.length; i<l; i++) {
+         this.setCanvasStyle(attr, obj[attr][i], types[i]);
+       }
+     }
+  },
+
+  /*
+   Method: removeCanvasStyle
+
+   Will remove that canvas style property from data.
+   
+   Parameters:
+
+      prop - The name of the property. 
+
+   Example:
+   (start code js)
+    node.removeCanvasStyle('fillStyle'); //now the default fillStyle value is returned
+   (end code)
+    */
+  removeCanvasStyle: function(prop) {
+     var pref = '$canvas-' + prop;
+     delete this.data[pref];
+     delete this.endData[pref];
+     delete this.startData[pref];
+  }
+};
+
 /*
      Class: Graph.Node
 
@@ -301,7 +550,7 @@ var Graph = $jit.Graph;
 */
 Graph.Node = new Class({
     
-    initialize: function(opt, complex, Node, Edge) {
+  initialize: function(opt, complex, Node, Edge) {
     var innerOptions = {
       'id': '',
       'name': '',
@@ -325,9 +574,9 @@ Graph.Node = new Class({
     };
     
     $.extend(this, $.extend(innerOptions, opt));
-    this.Node = Node;
+    this.Config = this.Node = Node;
     this.Edge = Edge;
-},
+  },
 
     /*
        Method: adjacentTo
@@ -449,79 +698,10 @@ Graph.Node = new Class({
         pos = this.startPos;
       }
       pos.set(value);
-  },
-    /*
-    Method: getData
- 
-    Returns the specified data value property. This is useful for querying special/reserved 
-    <Graph.Node> data properties (i.e dollar prefixed properties).
-
-    Parameters:
- 
-       prop - The name of the property. The dollar sign is not necessary. For example _getData('width')_ will query 
-       _data.$width_
-       type - The type of the data property queried. Default's "current".
-       force - Whether to obtain the true value of the property (equivalent to _data.$prop_) or to check for _node.overridable=true_ first. 
-       For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
- 
-    Returns:
- 
-      The value of the dollar prefixed property or the global Node property value if _overridable=false_
-
-    Example:
-    (start code js)
-     node.getData('width'); //will return node.data.$width if Node.overridable=true;
-    (end code)
-     */
-   getData: function(prop, type, force) {
-      type = type || 'current';
-      var data;
-      if(type == 'current') {
-        data = this.data;
-      } else if(type == 'start') {
-        data = this.startData;
-      } else if(type == 'end') {
-        data = this.endData;
-      }
-      if(force) {
-        return data['$' + prop];
-      }
-      var n = this.Node, dollar = '$' + prop;
-      if(!n.overridable) return n[prop] || 0;
-      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : (n[prop] || 0));
-   },
-    
-    /*
-    Method: setData
- 
-    Sets the current data property with some specific value. 
-    This method is only useful for (dollar prefixed) reserved properties.
-    
-    Parameters:
- 
-       prop - The name of the property. The dollar sign is not necessary. For example _setData('width')_ will set 
-       _data.$width_.
-       value - The value to store.
-       type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
- 
-    Example:
-    (start code js)
-     node.setData('width', 30);
-    (end code)
-     */
-   setData: function(prop, value, type) {
-      type = type || 'current';
-      var data;
-      if(type == 'current') {
-        data = this.data;
-      } else if(type == 'start') {
-        data = this.startData;
-      } else if(type == 'end') {
-        data = this.endData;
-      }
-      data['$' + prop] = value;
-   }
+  }
 });
+
+Graph.Node.implement(Accessors);
 
 /*
      Class: Graph.Adjacence
@@ -557,80 +737,11 @@ Graph.Adjacence = new Class({
     this.data = data || {};
     this.startData = {};
     this.endData = {};
-    this.Edge = edge;
-  },
-  
-  /*
-  Method: getData
-
-  Returns the specified data value property. This is useful for querying special/reserved 
-  <Graph.Adjacence> data properties (i.e dollar prefixed properties).
-
-  Parameters:
-
-     prop - The name of the property. The dollar sign is not necessary. For example _getData('width')_ will query 
-     _data.$width_
-     type - The type of the queried data property. Default's "current".
-     force - Whether to obtain the true value of the property (equivalent to _data.$prop_) or to check for _node.overridable=true_ first. 
-     For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
-
-  Returns:
-
-    The value of the dollar prefixed property or the global Node property value if _overridable=false_
-
-  Example:
-  (start code js)
-   adj.getData('lineWidth'); //will return adj.data.$lineWidth if Node.overridable=true;
-  (end code)
-   */
- getData: function(prop, type, force) {
-    type = type || 'current';
-    var data;
-    if(type == 'current') {
-      data = this.data;
-    } else if(type == 'start') {
-      data = this.startData;
-    } else if(type == 'end') {
-      data = this.endData;
-    }
-    if(force) {
-      return data['$' + prop];
-    }
-    var n = this.Edge, dollar = '$' + prop;
-    if(!n.overridable) return n[prop];
-    return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : n[prop]);
- },
- /*
-   Method: setData
-  
-   Sets the current data property with some specific value. 
-   This method is only useful for (dollar prefixed) reserved properties.
-   
-   Parameters:
-  
-      prop - The name of the property. The dollar sign is not necessary. For example _setData('width', value)_ will set 
-      _data.$width_ with _value_.
-      value - The value to store.
-      type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
-  
-   Example:
-   (start code js)
-    adj.setData('lineWidth', 30);
-   (end code)
-    */
-   setData: function(prop, value, type) {
-     type = type || 'current';
-     var data;
-     if(type == 'current') {
-       data = this.data;
-     } else if(type == 'start') {
-       data = this.startData;
-     } else if(type == 'end') {
-       data = this.endData;
-     }
-     data['$' + prop] = value;
-  }  
+    this.Config = this.Edge = edge;
+  }
 });
+
+Graph.Adjacence.implement(Accessors);
 
 /*
    Object: Graph.Util

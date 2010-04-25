@@ -320,34 +320,32 @@ function init(){
     };
     //end
     var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
-    
     //init ForceDirected
     var fd = new $jit.ForceDirected({
         'injectInto': 'infovis',
-        'width': w,
-        'height': h,
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
+          overridable:true,
           dim: 4,
           color: "#f00",
-          Context: {
+          CanvasStyles: {
             shadowBlur: 10,
-            shadowColor: 'red',
-            shadowOffsetX: 2,
-            shadowOffsetY: 2
+            shadowColor: '#ccc',
+            shadowOffsetX: 5,
+            shadowOffsetY: 5
           }
         },
         
         Edge: {
+          overridable:true,
           color:'#23A4FF',
           lineWidth: 2,
-          Context: {
+          CanvasStyles: {
             shadowBlur: 5,
-            shadowColor: '#23A4FF',
-            shadowOffsetX: 2,
-            shadowOffsetY: 2
+            shadowColor: '#ccc',
+            shadowOffsetX: 5,
+            shadowOffsetY: 5
           }
         },
         
@@ -448,7 +446,27 @@ function init(){
       },
       onComplete: function() {
         Log.write('done');
-       fd.animate(); 
+       $jit.Graph.Util.eachNode(fd.graph, function(n) {
+         n.setCanvasStyles(['current', 'end'], {
+           'shadowBlur': [50, 5],
+           'shadowOffsetX': [100, 5],
+           'shadowOffsetY': [100, 5]
+         });
+         $jit.Graph.Util.eachAdjacency(n, function(a) {
+           a.setCanvasStyles(['current', 'end'], {
+             'shadowBlur': [50, 5],
+             'shadowOffsetX': [100, 5],
+             'shadowOffsetY': [100, 5]
+           });
+         });
+       });
+       fd.animate({
+         modes: ['linear', 
+                 'node-style:shadowBlur:shadowOffsetX:shadowOffsetY', 
+                 'edge-style:shadowBlur:shadowOffsetX:shadowOffsetY'],
+         transition: $jit.Trans.Quint.easeOut,
+         duration: 2500
+       });
       }
     });
     //end

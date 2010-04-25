@@ -53,5 +53,5 @@ Options.Node = {
   //Raw canvas styles to be
   //applied to the context instance
   //before plotting a node
-  Context: {}
+  CanvasStyles: {}
 };
