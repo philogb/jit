@@ -276,6 +276,17 @@ var NodeStyles = new Class({
     this.nodeStylesOnHover = this.nStyles.stylesHover;
     this.nodeStylesOnClick = this.nStyles.stylesClick;
     this.nodeStylesOnRightClick = this.nStyles.stylesRightClick;
+    //hide the tip when we mouse out the canvas
+    var elem = viz.canvas.getElement(), that = this;
+    $.addEvent(elem, 'mouseout', function(e) {
+      var rt = e.relatedTarget;
+      while(rt && rt.parentNode) {
+        if(elem == rt.parentNode) return;
+        rt = rt.parentNode;
+      }
+      that.onMousemove(false);
+    });
+
   },
   
   getRestoredStyles: function(node, type) {
