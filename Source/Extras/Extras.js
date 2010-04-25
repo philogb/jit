@@ -18,13 +18,13 @@ var Extras = {
   initializeExtras: function() {
     var tips = this.config.Tips;
     var ns = this.config.NodeStyles;
-    if(tips && tips.allow && tips.attachToCanvas 
+    if(tips && tips.enable && tips.attachToCanvas 
         || ns && ns.attachToCanvas) {
       this.mouseEventsManager = new MouseEventsManager(this);
     }
     if(tips) {
       this.tips = new Tips(this);
-      if(tips.allow && tips.attachToCanvas) {
+      if(tips.enable && tips.attachToCanvas) {
         this.mouseEventsManager.register(this.tips);
       }
     }
@@ -166,7 +166,7 @@ var Tips = new Class({
     this.viz = viz;
     this.controller = this.config = viz.config;
     //add tooltip
-    if(this.config.Tips.allow && document.body) {
+    if(this.config.Tips.enable && document.body) {
         var tip = document.getElementById('_tooltip') || document.createElement('div');
         tip.id = '_tooltip';
         tip.className = 'tip';
@@ -191,7 +191,7 @@ var Tips = new Class({
   },
   
   attach: function(node, elem) {
-    if(this.config.Tips.allow) {
+    if(this.config.Tips.enable) {
       var that = this, cont = this.controller;
       $.addEvent(elem, 'mouseover', function(e){
         cont.Tips.onShow(that.tip, node, elem);

@@ -180,7 +180,7 @@ $jit.BarChart = new Class({
         type: 'none'
       },
       Tips: {
-        allow: config.Tips.enable,
+        enable: config.Tips.enable,
         attachToDOM: false,
         attachToCanvas: true,
         force: true,

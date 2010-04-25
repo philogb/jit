@@ -342,7 +342,7 @@ function init(){
         
         //Allow tips
         Tips: {
-          allow: true,
+          enable: true,
           //add positioning offsets
           offsetX: 20,
           offsetY: 20,

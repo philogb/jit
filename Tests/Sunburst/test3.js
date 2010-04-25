@@ -122,7 +122,7 @@ function init(){
         },
 
         Tips: {
-          allow: true,
+          enable: true,
           attachToDOM: false,
           attachToCanvas: true,
           onShow: function(tip, node, elem) {

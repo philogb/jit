@@ -73,7 +73,9 @@ $jit.ST.Plot.NodeTypes.implement({
         }
         if(prev) {
           ctx.save();
+          ctx.beginPath();
           ctx.fillStyle = ctx.strokeStyle = label.color;
+          ctx.fillStyle = '#ffffff';
           ctx.font = label.size + 'px ' + label.family;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
@@ -157,7 +159,7 @@ $jit.AreaChart = new Class({
         type: 'none'
       },
       Tips: {
-        allow: config.Tips.enable,
+        enable: config.Tips.enable,
         attachToDOM: false,
         attachToCanvas: true,
         force: true,

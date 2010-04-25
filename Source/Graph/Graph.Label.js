@@ -246,7 +246,7 @@ Graph.Label.DOM = new Class({
     attachExtras: function(node, tag) {
       var viz = this.viz, config = viz.config;
       var tips = config.Tips, nodeStyles = config.NodeStyles;
-      if(tips && tips.allow && tips.attachToDOM) {
+      if(tips && tips.enable && tips.attachToDOM) {
         viz.tips.attach(node, tag);
       }
       if(nodeStyles && nodeStyles.attachToDOM) {
