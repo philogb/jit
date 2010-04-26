@@ -212,7 +212,6 @@ $jit.ST= (function() {
                   type: 'rectangle'
                 },
                 duration: 700,
-                fps: 25,
                 offsetX: 0,
                 offsetY: 0
             };
