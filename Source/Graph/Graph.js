@@ -1102,6 +1102,6 @@ Graph.Util = {
      Parameters:
      graph - A <Graph> instance.
   */
-  clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); },
+  clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); }
 };
 
