@@ -6,12 +6,12 @@
    Description:
 
    This is a generic interface for plotting/hiding/showing labels.
-   The <Graph.Label> interface is implemented in multiple ways to provide 
+   The <Graph.Label> interface is implemented in multiple ways to provide
    different label types.
 
-   For example, the Graph.Label interface is implemented as Graph.Label.DOM to provide 
-   DOM label elements. Also we provide the Graph.Label.SVG interface (currently not working in IE) 
-   for providing SVG type labels. The Graph.Label.Native interface implements these methods with the 
+   For example, the Graph.Label interface is implemented as Graph.Label.DOM to provide
+   DOM label elements. Also we provide the Graph.Label.SVG interface (currently not working in IE)
+   for providing SVG type labels. The Graph.Label.Native interface implements these methods with the
    native Canvas text rendering functions (currently not working in Opera).
 
    Implemented by:
@@ -43,7 +43,7 @@ Graph.Label = {};
 Graph.Label.Native = new Class({
      /*
        Method: plotLabel
-    
+
        Plots a label for a given node.
 
        Parameters:
@@ -54,9 +54,9 @@ Graph.Label.Native = new Class({
 
     */
     plotLabel: function(canvas, node, controller) {
-        var ctx = canvas.getCtx();
-        var coord = node.pos.getc(true);
-        ctx.fillText(node.name, coord.x, coord.y);
+      var ctx = canvas.getCtx();
+      var coord = node.pos.getc(true);
+      ctx.fillText(node.name, coord.x, coord.y);
     },
 
     hideLabel: $.empty,
@@ -80,14 +80,14 @@ Graph.Label.Native = new Class({
 Graph.Label.DOM = new Class({
     //A flag value indicating if node labels are being displayed or not.
     labelsHidden: false,
-    //Label container 
+    //Label container
     labelContainer: false,
     //Label elements hash.
     labels: {},
 
     /*
        Method: getLabelContainer
-    
+
        Lazy fetcher for the label container.
 
        Returns:
@@ -103,14 +103,14 @@ Graph.Label.DOM = new Class({
       (end code)
     */
     getLabelContainer: function() {
-        return this.labelContainer? this.labelContainer 
-        : this.labelContainer = document
-          .getElementById(this.viz.config.labelContainer);
+      return this.labelContainer ?
+        this.labelContainer :
+        this.labelContainer = document.getElementById(this.viz.config.labelContainer);
     },
-    
+
     /*
        Method: getLabel
-      
+
        Lazy fetcher for the label element.
 
        Parameters:
@@ -128,16 +128,17 @@ Graph.Label.DOM = new Class({
         var label = rg.fx.getLabel('someid');
         alert(label.innerHTML);
       (end code)
-      
+
     */
     getLabel: function(id) {
-        return (id in this.labels && this.labels[id] != null)? this.labels[id] 
-          : this.labels[id] = document.getElementById(id);
+      return (id in this.labels && this.labels[id] != null) ?
+        this.labels[id] :
+        this.labels[id] = document.getElementById(id);
     },
-    
+
     /*
        Method: hideLabels
-    
+
        Hides all labels (by hiding the label container).
 
        Parameters:
@@ -149,18 +150,20 @@ Graph.Label.DOM = new Class({
         var rg = new RGraph(canvas, config); //can be also Hypertree or ST
         rg.fx.hideLabels(true);
        (end code)
-       
+
     */
     hideLabels: function (hide) {
-        var container = this.getLabelContainer();
-        if(hide) container.style.display = 'none';
-        else container.style.display = '';
-        this.labelsHidden = hide;
+      var container = this.getLabelContainer();
+      if(hide)
+        container.style.display = 'none';
+      else
+        container.style.display = '';
+      this.labelsHidden = hide;
     },
-    
+
     /*
        Method: clearLabels
-    
+
        Clears the label container.
 
        Useful when using a new visualization with the same canvas element/widget.
@@ -176,16 +179,17 @@ Graph.Label.DOM = new Class({
         (end code)
     */
     clearLabels: function(force) {
-        for(var id in this.labels) {
-            if (force || !this.viz.graph.hasNode(id)) {
-                this.disposeLabel(id);
-                delete this.labels[id];
-            }
+      for(var id in this.labels) {
+        if (force || !this.viz.graph.hasNode(id)) {
+          this.disposeLabel(id);
+          delete this.labels[id];
         }
+      }
     },
+
     /*
        Method: disposeLabel
-    
+
        Removes a label.
 
        Parameters:
@@ -199,17 +203,17 @@ Graph.Label.DOM = new Class({
        (end code)
     */
     disposeLabel: function(id) {
-        var elem = this.getLabel(id);
-        if(elem && elem.parentNode) {
-          elem.parentNode.removeChild(elem);
-        }  
+      var elem = this.getLabel(id);
+      if(elem && elem.parentNode) {
+        elem.parentNode.removeChild(elem);
+      }
     },
 
     /*
        Method: hideLabel
-    
+
        Hides the corresponding <Graph.Node> label.
-        
+
        Parameters:
 
        node - A <Graph.Node>. Can also be an array of <Graph.Nodes>.
@@ -227,21 +231,21 @@ Graph.Label.DOM = new Class({
       $.each(node, function(n) {
         var lab = that.getLabel(n.id);
         if (lab) {
-           lab.style.display = st;
-        } 
+          lab.style.display = st;
+        }
       });
     },
-    
+
     /*
       Method: attachExtras
-   
+
       Called only when a label is created to attach <Extras> like <Tips> or <NodeStyles> to labels
-      
+
       Parameters:
-  
+
       node - A <Graph.Node>.
       tag - A DOM element.
-      
+
    */
     attachExtras: function(node, tag) {
       var viz = this.viz, config = viz.config;
@@ -258,26 +262,27 @@ Graph.Label.DOM = new Class({
         }
       }
     },
-  /*
+
+    /*
        Method: fitsInCanvas
-    
+
        Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.
 
        Parameters:
 
        pos - A <Complex> instance (I'm doing duck typing here so any object with _x_ and _y_ parameters will do).
        canvas - A <Canvas> instance.
-       
+
        Returns:
 
        A boolean value specifying if the label is contained in the <Canvas> DOM element or not.
 
     */
     fitsInCanvas: function(pos, canvas) {
-        var size = canvas.getSize();
-        if(pos.x >= size.width || pos.x < 0 
-            || pos.y >= size.height || pos.y < 0) return false;
-        return true;                    
+      var size = canvas.getSize();
+      if(pos.x >= size.width || pos.x < 0
+         || pos.y >= size.height || pos.y < 0) return false;
+       return true;
     }
 });
 
@@ -297,10 +302,10 @@ Graph.Label.DOM = new Class({
 */
 Graph.Label.HTML = new Class({
     Implements: Graph.Label.DOM,
-    
+
     /*
        Method: plotLabel
-    
+
        Plots a label for a given node.
 
        Parameters:
@@ -311,19 +316,21 @@ Graph.Label.HTML = new Class({
 
     */
     plotLabel: function(canvas, node, controller) {
-        var id = node.id, tag = this.getLabel(id);
-        if(!tag && !(tag = document.getElementById(id))) {
-          tag = document.createElement('div');
-          var container = this.getLabelContainer();
-          tag.id = id;
-          tag.className = 'node';
-          tag.style.position = 'absolute';
-          controller.onCreateLabel(tag, node);
-          container.appendChild(tag);
-          this.labels[node.id] = tag;
-          this.attachExtras(node, tag);
-        }
-        this.placeLabel(tag, node, controller);
+      var id = node.id, tag = this.getLabel(id);
+
+      if(!tag && !(tag = document.getElementById(id))) {
+        tag = document.createElement('div');
+        var container = this.getLabelContainer();
+        tag.id = id;
+        tag.className = 'node';
+        tag.style.position = 'absolute';
+        controller.onCreateLabel(tag, node);
+        container.appendChild(tag);
+        this.labels[node.id] = tag;
+        this.attachExtras(node, tag);
+      }
+
+      this.placeLabel(tag, node, controller);
     }
 });
 
@@ -343,10 +350,10 @@ Graph.Label.HTML = new Class({
 */
 Graph.Label.SVG = new Class({
     Implements: Graph.Label.DOM,
-    
+
     /*
        Method: plotLabel
-    
+
        Plots a label for a given node.
 
        Parameters:
@@ -360,7 +367,7 @@ Graph.Label.SVG = new Class({
       var id = node.id, tag = this.getLabel(id);
       if(!tag && !(tag = document.getElementById(id))) {
         var ns = 'http://www.w3.org/2000/svg';
-        tag = document.createElementNS(ns, 'svg:text');
+          tag = document.createElementNS(ns, 'svg:text');
         var tspan = document.createElementNS(ns, 'svg:tspan');
         tag.appendChild(tspan);
         var container = this.getLabelContainer();
