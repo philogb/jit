@@ -217,7 +217,7 @@ Graph.Label.DOM = new Class({
        Parameters:
 
        node - A <Graph.Node>. Can also be an array of <Graph.Nodes>.
-       flag - If *true*, nodes will be shown. Otherwise nodes will be hidden.
+       show - If *true*, nodes will be shown. Otherwise nodes will be hidden.
 
        Example:
        (start code js)
@@ -225,9 +225,9 @@ Graph.Label.DOM = new Class({
         rg.fx.hideLabel(rg.graph.getNode('someid'), false);
        (end code)
     */
-    hideLabel: function(node, flag) {
+    hideLabel: function(node, show) {
       node = $.splat(node);
-      var st = flag? "" : "none", lab, that = this;
+      var st = show ? "" : "none", lab, that = this;
       $.each(node, function(n) {
         var lab = that.getLabel(n.id);
         if (lab) {
