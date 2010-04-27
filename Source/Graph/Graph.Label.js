@@ -12,7 +12,7 @@
    For example, the Graph.Label interface is implemented as Graph.Label.DOM to provide
    DOM label elements. Also we provide the Graph.Label.SVG interface (currently not working in IE)
    for providing SVG type labels. The Graph.Label.Native interface implements these methods with the
-   native Canvas text rendering functions (currently not working in Opera).
+   native Canvas text rendering functions.
 
    Implemented by:
 
@@ -41,7 +41,7 @@ Graph.Label = {};
 
 */
 Graph.Label.Native = new Class({
-     /*
+    /*
        Method: plotLabel
 
        Plots a label for a given node.
@@ -51,12 +51,37 @@ Graph.Label.Native = new Class({
        canvas - A <Canvas> instance.
        node - A <Graph.Node>.
        controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
-
     */
     plotLabel: function(canvas, node, controller) {
       var ctx = canvas.getCtx();
-      var coord = node.pos.getc(true);
-      ctx.fillText(node.name, coord.x, coord.y);
+      var pos = node.pos.getc(true);
+      var config = controller.Label;
+
+      ctx.font = config.size + 'px ' + config.family;
+      ctx.textAlign = config.textAlign;
+      ctx.fillStyle = ctx.strokeStyle = config.color;
+      ctx.textBaseline = config.textBaseline;
+
+      this.renderLabel(canvas, node, controller);
+    },
+
+    /*
+       Method: renderLabel
+
+       Does the actual rendering of the label in the canvas. The default
+       implementation renders the label close to the position of the node, this
+       method should be overriden to position the labels differently.
+
+       Parameters:
+
+       canvas - A <Canvas> instance.
+       node - A <Graph.Node>.
+       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+    */
+    renderLabel: function(canvas, node, controller) {
+        var ctx = canvas.getCtx();
+        var pos = node.pos.getc(true);
+        ctx.fillText(node.name, pos.x, pos.y + node.getData("height") / 2);
     },
 
     hideLabel: $.empty,

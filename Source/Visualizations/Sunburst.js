@@ -153,7 +153,7 @@ $jit.Sunburst = new Class({
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Tips", "NodeStyles", "Controller"), config, controller);
+        "Fx", "Tips", "NodeStyles", "Controller", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {
@@ -399,7 +399,7 @@ $jit.Sunburst.$extend = true;
       this.viz = viz;
     },
 
-    plotLabel: function(canvas, node, controller) {
+    renderLabel: function(canvas, node, controller) {
       var ctx = canvas.getCtx();
       var measure = ctx.measureText(node.name);
       if (node.id == this.viz.root) {
@@ -414,23 +414,22 @@ $jit.Sunburst.$extend = true;
         var ct = clone.getc(true);
         var x = ct.x, y = ct.y;
         // get angle in degrees
-    var pi = Math.PI;
-    var cond = (p.theta > pi / 2 && p.theta < 3 * pi / 2);
-    var thetap = cond ? p.theta + pi : p.theta;
-    if (cond) {
-      x -= Math.abs(Math.cos(p.theta) * measure.width);
-      y += Math.sin(p.theta) * measure.width;
-    } else if (node.id == this.viz.root) {
-      x -= measure.width / 2;
+        var pi = Math.PI;
+        var cond = (p.theta > pi / 2 && p.theta < 3 * pi / 2);
+        var thetap = cond ? p.theta + pi : p.theta;
+        if (cond) {
+          x -= Math.abs(Math.cos(p.theta) * measure.width);
+          y += Math.sin(p.theta) * measure.width;
+        } else if (node.id == this.viz.root) {
+          x -= measure.width / 2;
+        }
+      }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(thetap);
+      ctx.fillText(node.name, 0, 0, ld);
+      ctx.restore();
     }
-  }
-  ctx.save();
-  ctx.fillStyle = '#fff';
-  ctx.translate(x, y);
-  ctx.rotate(thetap);
-  ctx.fillText(node.name, 0, 0, ld);
-  ctx.restore();
-}
   });
 
   /*
