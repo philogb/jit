@@ -218,7 +218,7 @@ $jit.ST= (function() {
             
             this.controller = this.config = $.merge(
                 Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", 
-                    "Tips", "NodeStyles"), config, controller);
+                    "Tips", "NodeStyles", "Label"), config, controller);
 
             var canvasConfig = this.config;
             if(canvasConfig.useCanvas) {
@@ -1348,37 +1348,22 @@ $jit.ST.Label = {};
 
    Implements labels natively, using the Canvas text API.
 
-   Extends:
+   Implements:
 
    <Graph.Label.Native>
 
    See also:
 
    <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
 */
 $jit.ST.Label.Native = new Class({
-  Extends: Graph.Label.Native,
-  /*
-       Method: plotLabel
-    
-       Plots a label for a given node.
+  Implements: Graph.Label.Native,
 
-       Parameters:
-
-       canvas - A <Canvas> instance.
-       node - A <Graph.Node>.
-       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
-
-    */
-    plotLabel: function(canvas, node, controller) {
-        var ctx = canvas.getCtx();
-        var coord = node.pos.getc(true);
-        ctx.save();
-        ctx.fillStyle = ctx.strokeStyle = '#000';
-        ctx.fillText(node.name, coord.x, coord.y);
-        ctx.restore();
-    }
+  renderLabel: function(canvas, node, controller) {
+    var ctx = canvas.getCtx();
+    var coord = node.pos.getc(true);
+    ctx.fillText(node.name, coord.x, coord.y);
+  }
 });
 
 $jit.ST.Label.DOM = new Class({

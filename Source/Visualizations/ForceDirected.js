@@ -140,7 +140,7 @@ $jit.ForceDirected = new Class( {
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Tips", "NodeStyles", "Controller"), config, controller);
+        "Fx", "Tips", "NodeStyles", "Controller", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {
@@ -395,7 +395,7 @@ $jit.ForceDirected.$extend = true;
 
   */
   ForceDirected.Label.Native = new Class( {
-    Implements: Graph.Label.Native
+    Implements: Graph.Label.Native,
   });
 
   /*

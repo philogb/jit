@@ -251,7 +251,7 @@ $jit.Hypertree = new Class( {
       fps: 35
     };
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Tips", "NodeStyles", "Controller"), config, controller);
+        "Fx", "Tips", "NodeStyles", "Controller", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {
@@ -551,7 +551,7 @@ $jit.Hypertree.$extend = true;
 
      Implements labels natively, using the Canvas text API.
 
-     Extends:
+     Implements:
 
      <Graph.Label.Native>
 
@@ -561,25 +561,13 @@ $jit.Hypertree.$extend = true;
 
   */
   Hypertree.Label.Native = new Class( {
-    Extends: Graph.Label.Native,
+    Implements: Graph.Label.Native,
 
     initialize: function(viz) {
       this.viz = viz;
     },
 
-    /*
-         Method: plotLabel
-      
-         Plots a label for a given node.
-
-         Parameters:
-
-         canvas - A <Canvas> instance.
-         node - A <Graph.Node>.
-         controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
-
-      */
-    plotLabel: function(canvas, node, controller) {
+    renderLabel: function(canvas, node, controller) {
       var ctx = canvas.getCtx();
       var coord = node.pos.getc(true);
       var s = this.viz.getRadius();
