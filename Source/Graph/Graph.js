@@ -360,9 +360,9 @@ var Accessors = {
     */
   setDataset: function(types, obj) {
      types = $.splat(types);
-     for(attr in obj) {
+     for(var attr in obj) {
        for(var i=0, l=types.length; i<l; i++) {
-         this.setData(attr, obj[attr][i], types[i]);
+         this.setData(attr, obj[attr], types[i]);
        }
      }
   },
@@ -381,11 +381,14 @@ var Accessors = {
      node.removeData('width'); //now the default width value is returned
     (end code)
      */
-   removeData: function(prop, value, type) {
-      var pref = '$' + prop;
-      delete this.data[pref];
-      delete this.endData[pref];
-      delete this.startData[pref];
+   removeData: function() {
+      var that = this;
+      $.each(arguments, function(prop){
+        var pref = '$' + prop;
+        delete that.data[pref];
+        delete that.endData[pref];
+        delete that.startData[pref];
+      });
    },
     /*
     Method: getCanvasStyle
@@ -489,9 +492,9 @@ var Accessors = {
     */
   setCanvasStyles: function(types, obj) {
      types = $.splat(types);
-     for(attr in obj) {
+     for(var attr in obj) {
        for(var i=0, l=types.length; i<l; i++) {
-         this.setCanvasStyle(attr, obj[attr][i], types[i]);
+         this.setCanvasStyle(attr, obj[attr], types[i]);
        }
      }
   },
@@ -510,11 +513,14 @@ var Accessors = {
     node.removeCanvasStyle('fillStyle'); //now the default fillStyle value is returned
    (end code)
     */
-  removeCanvasStyle: function(prop) {
-     var pref = '$canvas-' + prop;
-     delete this.data[pref];
-     delete this.endData[pref];
-     delete this.startData[pref];
+  removeCanvasStyle: function() {
+     var that = this;
+     $.each(arguments, function(prop){
+       var pref = '$canvas-' + prop;
+       delete that.data[pref];
+       delete that.endData[pref];
+       delete that.startData[pref];
+     });
   }
 };
 
