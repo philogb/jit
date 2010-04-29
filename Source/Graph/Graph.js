@@ -382,11 +382,12 @@ var Accessors = {
     (end code)
      */
    removeData: function() {
+      var that = this;
       $.each(arguments, function(prop){
         var pref = '$' + prop;
-        delete this.data[pref];
-        delete this.endData[pref];
-        delete this.startData[pref];
+        delete that.data[pref];
+        delete that.endData[pref];
+        delete that.startData[pref];
       });
    },
     /*
@@ -513,11 +514,12 @@ var Accessors = {
    (end code)
     */
   removeCanvasStyle: function() {
+     var that = this;
      $.each(arguments, function(prop){
        var pref = '$canvas-' + prop;
-       delete this.data[pref];
-       delete this.endData[pref];
-       delete this.startData[pref];
+       delete that.data[pref];
+       delete that.endData[pref];
+       delete that.startData[pref];
      });
   }
 };
