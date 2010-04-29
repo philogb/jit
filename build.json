@@ -237,19 +237,16 @@
     ],
     
     "AreaChart": [
-        "Options.Label",
         "Options.AreaChart",
         "Spacetree" 
     ],
     
     "PieChart": [
-        "Options.Label",
         "Options.PieChart",
         "Sunburst" 
     ],
               
     "BarChart": [ 
-        "Options.Label",
         "Options.BarChart",
         "Spacetree" 
     ]
