@@ -381,11 +381,13 @@ var Accessors = {
      node.removeData('width'); //now the default width value is returned
     (end code)
      */
-   removeData: function(prop, value, type) {
-      var pref = '$' + prop;
-      delete this.data[pref];
-      delete this.endData[pref];
-      delete this.startData[pref];
+   removeData: function() {
+      $.each(arguments, function(prop){
+        var pref = '$' + prop;
+        delete this.data[pref];
+        delete this.endData[pref];
+        delete this.startData[pref];
+      });
    },
     /*
     Method: getCanvasStyle
@@ -510,11 +512,13 @@ var Accessors = {
     node.removeCanvasStyle('fillStyle'); //now the default fillStyle value is returned
    (end code)
     */
-  removeCanvasStyle: function(prop) {
-     var pref = '$canvas-' + prop;
-     delete this.data[pref];
-     delete this.endData[pref];
-     delete this.startData[pref];
+  removeCanvasStyle: function() {
+     $.each(arguments, function(prop){
+       var pref = '$canvas-' + prop;
+       delete this.data[pref];
+       delete this.endData[pref];
+       delete this.startData[pref];
+     });
   }
 };
 
