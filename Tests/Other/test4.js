@@ -394,7 +394,7 @@ function init(){
         },
         
         Label: {
-          type: 'svg'
+          type: 'SVG'
         },
 
         onBeforeCompute: function(node){
