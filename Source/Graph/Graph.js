@@ -288,14 +288,14 @@ var Accessors;
     }
 
     if(force) {
-      return data['$' + prop];
+      return data[prefix + prop];
     }
 
     var dollar = prefix + prop;
 
     if(!this.Config.overridable)
       return prefixConfig[prop] || 0;
-
+    
     return (dollar in data) ?
       data[dollar] : ((dollar in this.data) ? this.data[dollar] : (prefixConfig[prop] || 0));
   }
@@ -313,7 +313,7 @@ var Accessors;
     } else if(type == 'end') {
       data = this.endData;
     }
-
+    console.log('setData', prefix, prop, type, value);
     data[prefix + prop] = value;
   }
 
