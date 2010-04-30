@@ -174,7 +174,7 @@ $jit.Sunburst = new Class({
     };
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
-    this.labels = new $Sunburst.Label[canvasConfig.labels](this);
+    this.labels = new $Sunburst.Label[canvasConfig.Label.type](this);
     this.fx = new $Sunburst.Plot(this);
     this.op = new $Sunburst.Op(this);
     this.json = null;

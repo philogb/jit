@@ -364,7 +364,6 @@ function init(){
     var rgraph = new $jit.RGraph({
           //Where to append the canvas widget
         'injectInto': 'infovis',
-        'labels': 'SVG',
         //Optional: create a background canvas and plot
         //concentric circles in it.
         'backgroundCanvas': {
@@ -392,6 +391,10 @@ function init(){
         
         Edge: {
             color: '#772277'
+        },
+        
+        Label: {
+          type: 'svg'
         },
 
         onBeforeCompute: function(node){

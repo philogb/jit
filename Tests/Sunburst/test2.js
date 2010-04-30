@@ -58,7 +58,6 @@ function init(){
         'injectInto': 'infovis',
         'width': w,
         'height': h,
-        'labels':'HTML',
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -66,6 +65,10 @@ function init(){
             type:'gradient-pie',
             color: "#f00",
             overridable: true
+        },
+        
+        Label: {
+          type: 'HTML'
         },
 
         Tips: {

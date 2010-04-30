@@ -57,10 +57,10 @@ Graph.Label.Native = new Class({
       var pos = node.pos.getc(true);
       var config = controller.Label;
 
-      ctx.font = config.size + 'px ' + config.family;
-      ctx.textAlign = config.textAlign;
-      ctx.fillStyle = ctx.strokeStyle = config.color;
-      ctx.textBaseline = config.textBaseline;
+      ctx.font = node.getLabelData('size') + 'px ' + node.getLabelData('family');
+      ctx.textAlign = node.getLabelData('textAlign');
+      ctx.fillStyle = ctx.strokeStyle = node.getLabelData('color');
+      ctx.textBaseline = node.getLabelData('textBaseline');
 
       this.renderLabel(canvas, node, controller);
     },

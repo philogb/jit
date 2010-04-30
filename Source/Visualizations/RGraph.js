@@ -170,7 +170,7 @@ $jit.RGraph = new Class( {
     };
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
-    this.labels = new $RGraph.Label[canvasConfig.labels](this);
+    this.labels = new $RGraph.Label[canvasConfig.Label.type](this);
     this.fx = new $RGraph.Plot(this);
     this.op = new $RGraph.Op(this);
     this.json = null;

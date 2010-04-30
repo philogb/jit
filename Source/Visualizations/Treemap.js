@@ -62,7 +62,7 @@ TM.Base = {
     };
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
-    this.labels = new TM.Label[canvasConfig.labels](this);
+    this.labels = new TM.Label[canvasConfig.Label.type](this);
     this.fx = new TM.Plot(this);
     this.op = new TM.Op(this);
     this.group = new TM.Group(this);

@@ -272,7 +272,7 @@ $jit.Hypertree = new Class( {
     };
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
-    this.labels = new $Hypertree.Label[canvasConfig.labels](this);
+    this.labels = new $Hypertree.Label[canvasConfig.Label.type](this);
     this.fx = new $Hypertree.Plot(this);
     this.op = new $Hypertree.Op(this);
     this.json = null;

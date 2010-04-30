@@ -233,7 +233,7 @@ $jit.ST= (function() {
                 'complex': true
             };
             this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
-            this.labels = new $ST.Label[canvasConfig.labels](this);
+            this.labels = new $ST.Label[canvasConfig.Label.type](this);
             this.fx = new $ST.Plot(this);
             this.op = new $ST.Op(this);
             this.group = new $ST.Group(this);

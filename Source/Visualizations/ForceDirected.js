@@ -161,7 +161,7 @@ $jit.ForceDirected = new Class( {
     };
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
-    this.labels = new $ForceDirected.Label[canvasConfig.labels](this);
+    this.labels = new $ForceDirected.Label[canvasConfig.Label.type](this);
     this.fx = new $ForceDirected.Plot(this);
     this.op = new $ForceDirected.Op(this);
     this.json = null;

@@ -117,15 +117,6 @@
  The _plot_ method is called for plotting a Canvas image.
  */
 var Canvas = (function(){
-    var config = {
-        'injectInto': 'id',
-        'width': false,
-        'height': false,
-        'useCanvas': false,
-        'labels': 'HTML', //can also be 'SVG' or 'Native'
-        'backgroundCanvas': false
-    };
-    
     function hasCanvas(){
         hasCanvas.t = hasCanvas.t || typeof(HTMLCanvasElement);
         return "function" == hasCanvas.t || "object" == hasCanvas.t;
@@ -194,7 +185,6 @@ var Canvas = (function(){
         var id = opt.injectInto, ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
         var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
         var wrapper = $(id);
-        opt = $.merge(config, opt || {});
         //create elements
         var dim = {
             'width': opt.width || wrapper.offsetWidth || 200,
@@ -205,7 +195,7 @@ var Canvas = (function(){
         }, $.merge(dim, {
             'position': 'relative'
         }));
-        labelContainer =  createLabelContainer(opt.labels, idLabel, dim);       
+        labelContainer =  createLabelContainer(opt.Label.type, idLabel, dim);       
         var dimPos = {
             'position': 'absolute',
             'top': 0,

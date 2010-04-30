@@ -105,7 +105,6 @@ function init(){
         'injectInto': 'infovis',
         'width': w,
         'height': h,
-        'labels':'Native',
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {
@@ -119,6 +118,10 @@ function init(){
           overridable: true,
           type: 'hyperline',
           lineWidth: 3
+        },
+        
+        Label: {
+          type: 'Native'
         },
 
         Tips: {
