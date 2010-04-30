@@ -149,6 +149,9 @@ $jit.Sunburst = new Class({
       },
       Edge: {
         'type': 'none'
+      },
+      Label: {
+        textAlign: 'start'
       }
     };
 

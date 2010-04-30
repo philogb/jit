@@ -63,8 +63,8 @@ Graph.Label.Native = new Class({
 //      ctx.textBaseline = node.getLabelData('textBaseline');
         ctx.font = config.size + 'px ' + config.family;
         ctx.fillStyle = ctx.strokeStyle = config.color;
-//        ctx.textAlign = config.textAlign;
-//        ctx.textBaseline = config.textBaseline;
+        ctx.textAlign = config.textAlign;
+        ctx.textBaseline = config.textBaseline;
 
       this.renderLabel(canvas, node, controller);
     },

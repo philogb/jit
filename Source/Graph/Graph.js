@@ -363,8 +363,8 @@ var Accessors = {
   setDataset: function(types, obj) {
      types = $.splat(types);
      for(var attr in obj) {
-       for(var i=0, l=types.length; i<l; i++) {
-         this.setData(attr, obj[attr], types[i]);
+       for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
+         this.setData(attr, val[i], types[i]);
        }
      }
   },
@@ -495,8 +495,8 @@ var Accessors = {
   setCanvasStyles: function(types, obj) {
      types = $.splat(types);
      for(var attr in obj) {
-       for(var i=0, l=types.length; i<l; i++) {
-         this.setCanvasStyle(attr, obj[attr], types[i]);
+       for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
+         this.setCanvasStyle(attr, val[i], types[i]);
        }
      }
   },
