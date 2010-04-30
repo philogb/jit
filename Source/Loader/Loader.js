@@ -28,7 +28,7 @@
 var Loader = {
      construct: function(json) {
         var isGraph = ($.type(json) == 'array');
-        var ans = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
+        var ans = new Graph(this.graphOptions, this.config.Node, this.config.Edge, this.config.Label);
         if(!isGraph) 
             //make tree
             (function (ans, json) {

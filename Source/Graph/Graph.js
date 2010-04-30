@@ -48,13 +48,14 @@
 
 $jit.Graph = new Class({
 
- initialize: function(opt, Node, Edge) {
+ initialize: function(opt, Node, Edge, Label) {
     var innerOptions = {
     'complex': false,
     'Node': {}
     };
     this.Node = Node;
     this.Edge = Edge;
+    this.Label = Label;
     this.opt = $.merge(innerOptions, opt || {});
     this.nodes= {};
  },
@@ -162,7 +163,8 @@ $jit.Graph = new Class({
       }, this.opt.Node), 
       this.opt.complex, 
       this.Node, 
-      this.Edge);
+      this.Edge,
+      this.Label);
     }
     return this.nodes[obj.id];
   },
@@ -272,7 +274,7 @@ var Graph = $jit.Graph;
 var Accessors;
 
 (function () {
-  var getDataInternal = function(prefix, prop, type, force, prefix_config) {
+  var getDataInternal = function(prefix, prop, type, force, prefixConfig) {
     var data;
     type = type || 'current';
     prefix = "$" + (prefix ? prefix + "-" : "");
@@ -292,10 +294,10 @@ var Accessors;
     var dollar = prefix + prop;
 
     if(!this.Config.overridable)
-      return prefix_config[prop] || 0;
+      return prefixConfig[prop] || 0;
 
     return (dollar in data) ?
-      data[dollar] : ((dollar in this.data) ? this.data[dollar] : (prefix_config[prop] || 0));
+      data[dollar] : ((dollar in this.data) ? this.data[dollar] : (prefixConfig[prop] || 0));
   }
 
   var setDataInternal = function(prefix, prop, value, type) {
@@ -490,7 +492,7 @@ var Accessors;
     */
     getLabelData: function(prop, type, force) {
       return getDataInternal.call(
-          this, 'label', prop, type, force, this.Config.Label);
+          this, 'label', prop, type, force, this.Label);
     },
 
     /*
@@ -566,7 +568,7 @@ var Accessors;
 */
 Graph.Node = new Class({
     
-  initialize: function(opt, complex, Node, Edge) {
+  initialize: function(opt, complex, Node, Edge, Label) {
     var innerOptions = {
       'id': '',
       'name': '',
@@ -592,6 +594,7 @@ Graph.Node = new Class({
     $.extend(this, $.extend(innerOptions, opt));
     this.Config = this.Node = Node;
     this.Edge = Edge;
+    this.Label = Label;
   },
 
     /*
@@ -643,7 +646,7 @@ Graph.Node = new Class({
           data - Some custom hash information.
     */  
     addAdjacency: function(node, data) {
-        var adj = new Graph.Adjacence(this, node, data, this.Edge);
+        var adj = new Graph.Adjacence(this, node, data, this.Edge, this.Label);
         return this.adjacencies[node.id] = adj;
     },
     
@@ -747,13 +750,14 @@ Graph.Node.implement(Accessors);
 */
 Graph.Adjacence = new Class({
   
-  initialize: function(nodeFrom, nodeTo, data, edge) {
+  initialize: function(nodeFrom, nodeTo, data, Edge, Label) {
     this.nodeFrom = nodeFrom;
     this.nodeTo = nodeTo;
     this.data = data || {};
     this.startData = {};
     this.endData = {};
-    this.Config = this.Edge = edge;
+    this.Config = this.Edge = Edge;
+    this.Label = Label;
   }
 });
 
