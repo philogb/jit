@@ -257,260 +257,271 @@ $jit.Graph = new Class({
 
 var Graph = $jit.Graph;
 
-var Accessors = {
+var Accessors;
+
+(function () {
+  var getDataInternal = function(prefix, prop, type, force, prefixConfig) {
+    var data;
+    type = type || 'current';
+    prefix = "$" + (prefix ? prefix + "-" : "");
+
+    if(type == 'current') {
+      data = this.data;
+    } else if(type == 'start') {
+      data = this.startData;
+    } else if(type == 'end') {
+      data = this.endData;
+    }
+
+    var dollar = prefix + prop;
+
+    if(force) {
+      return data[dollar];
+    }
+
+    if(!this.Config.overridable)
+      return prefixConfig[prop] || 0;
+
+    return (dollar in data) ?
+      data[dollar] : ((dollar in this.data) ? this.data[dollar] : (prefixConfig[prop] || 0));
+  }
+
+  var setDataInternal = function(prefix, prop, value, type) {
+    type = type || 'current';
+    prefix = '$' + (prefix ? prefix + '-' : '');
+
+    var data;
+
+    if(type == 'current') {
+      data = this.data;
+    } else if(type == 'start') {
+      data = this.startData;
+    } else if(type == 'end') {
+      data = this.endData;
+    }
+
+    data[prefix + prop] = value;
+  }
+
+  var removeDataInternal = function(prefix, properties) {
+    prefix = '$' + (prefix ? prefix + '-' : '');
+    var that = this;
+    $.each(properties, function(prop) {
+      var pref = prefix + prop;
+      delete that.data[pref];
+      delete that.endData[pref];
+      delete that.startData[pref];
+    });
+  }
+
+  Accessors = {
     /*
     Method: getData
- 
-    Returns the specified data value property. This is useful for querying special/reserved 
-    <Graph.Node> data properties (i.e dollar prefixed properties).
+
+    Returns the specified data value property.
+    This is useful for querying special/reserved <Graph.Node> data properties
+    (i.e dollar prefixed properties).
 
     Parameters:
- 
-       prop - The name of the property. The dollar sign is not necessary. For example _getData('width')_ will query 
-       _data.$width_
-       type - The type of the data property queried. Default's "current".
-       force - Whether to obtain the true value of the property (equivalent to _data.$prop_) or to check for _node.overridable=true_ first. 
-       For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
- 
+
+      prop  -  The name of the property. The dollar sign is not necessary. For
+              example _getData('width')_ will query _data.$width_
+      type  - The type of the data property queried. Default's "current".
+      force - Whether to obtain the true value of the property (equivalent to
+              _data.$prop_) or to check for _node.overridable=true_ first. For
+              more information about _node.overridable_ please check the
+              <Options.Node> and <Options.Edge> sections.
+
     Returns:
- 
-      The value of the dollar prefixed property or the global Node property value if _overridable=false_
+
+      The value of the dollar prefixed property or the global Node property
+      value if _overridable=false_
 
     Example:
     (start code js)
      node.getData('width'); //will return node.data.$width if Node.overridable=true;
     (end code)
-     */
-   getData: function(prop, type, force) {
-      type = type || 'current';
-      var data;
-      if(type == 'current') {
-        data = this.data;
-      } else if(type == 'start') {
-        data = this.startData;
-      } else if(type == 'end') {
-        data = this.endData;
-      }
-      if(force) {
-        return data['$' + prop];
-      }
-      var n = this.Config, dollar = '$' + prop;
-      if(!n.overridable) return n[prop] || 0;
-      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : (n[prop] || 0));
-   },
-    
+    */
+    getData: function(prop, type, force) {
+      return getDataInternal.call(this, "", prop, type, force, this.Config);
+    },
+
+
     /*
     Method: setData
- 
-    Sets the current data property with some specific value. 
+
+    Sets the current data property with some specific value.
     This method is only useful for (dollar prefixed) reserved properties.
-    
+
     Parameters:
- 
-       prop - The name of the property. The dollar sign is not necessary. For example _setData('width')_ will set 
-       _data.$width_.
-       value - The value to store.
-       type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
- 
+
+      prop  - The name of the property. The dollar sign is not necessary. For
+              example _setData('width')_ will set _data.$width_.
+      value - The value to store.
+      type  - The type of the data property to store. Default's "current" but
+              can also be "begin" or "end".
+
     Example:
     (start code js)
      node.setData('width', 30);
     (end code)
-     */
-   setData: function(prop, value, type) {
-      type = type || 'current';
-      var data;
-      if(type == 'current') {
-        data = this.data;
-      } else if(type == 'start') {
-        data = this.startData;
-      } else if(type == 'end') {
-        data = this.endData;
-      }
-      data['$' + prop] = value;
-   },
-   
-   /*
-   Method: setDataset
-
-   Example:
-   (start code js)
-     node.setDataset(['current', 'end'], {
-       'width': [100, 5],
-       'color': ['#fff', '#ccc']
-     });
-     //...or also
-     node.setDataset('end', {
-       'width': 5,
-       'color': '#ccc'
-     });
-   (end code)
     */
-  setDataset: function(types, obj) {
-     types = $.splat(types);
-     for(var attr in obj) {
-       for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
-         this.setData(attr, val[i], types[i]);
-       }
-     }
-  },
+    setData: function(prop, value, type) {
+      setDataInternal.call(this, "", prop, value, type);
+    },
+
+    /*
+    Method: setDataset
+
+    Convenience method to set multiple data values at once.
+
+    Example:
+    (start code js)
+      node.setDataset(['current', 'end'], {
+        'width': [100, 5],
+        'color': ['#fff', '#ccc']
+      });
+      //...or also
+      node.setDataset('end', {
+        'width': 5,
+        'color': '#ccc'
+      });
+    (end code)
+    */
+    setDataset: function(types, obj) {
+      types = $.splat(types);
+      for(var attr in obj) {
+        for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
+          this.setData(attr, val[i], types[i]);
+        }
+      }
+    },
     
     /*
     Method: removeData
 
-    Will remove that property from data.
-    
+    Remove properties from data.
+
     Parameters:
 
-       prop - The name of the property. The dollar sign is not necessary. 
+      One or more property names as arguments. The dollar sign is not necessary.
 
     Example:
     (start code js)
-     node.removeData('width'); //now the default width value is returned
+    node.removeData('width'); //now the default width value is returned
     (end code)
-     */
-   removeData: function() {
-      var that = this;
-      $.each(arguments, function(prop){
-        var pref = '$' + prop;
-        delete that.data[pref];
-        delete that.endData[pref];
-        delete that.startData[pref];
-      });
-   },
+    */
+    removeData: function() {
+      removeDataInternal.call(this, "", arguments);
+    },
+
     /*
     Method: getCanvasStyle
 
-    Returns the specified canvas style data value property. This is useful for querying special/reserved 
-    <Graph.Node> canvas style data properties (i.e dollar prefixed properties that match with $canvas-<name of canvas style>).
+    Returns the specified canvas style data value property. This is useful for
+    querying special/reserved <Graph.Node> canvas style data properties (i.e.
+    dollar prefixed properties that match with $canvas-<name of canvas style>).
 
-    Parameters:
+    See <getData> for more details.
+    */
+    getCanvasStyle: function(prop, type, force) {
+      return getDataInternal.call(
+          this, 'canvas', prop, type, force, this.Config.CanvasStyles);
+    },
 
-       prop - The name of the property. The dollar signed prefix is not required. For example _getCanvasStyle('fillStyle')_ will query 
-       _data.$canvas-fillStyle_
-       type - The type of the data property queried. Default's "current".
-       force - Whether to obtain the true value of the property (equivalent to _data.$canvas-prop_) or to check for _node.overridable=true_ first. 
-       For more information about _node.overridable_ please check the <Options.Node> and <Options.Edge> sections.
-
-    Returns:
-
-      The value of the dollar prefixed property or the global Node property value if _overridable=false_
-
-    Example:
-    (start code js)
-     node.getCanvasStyle('fillStyle'); //will return node.data.$canvas-fillStyle if Node.overridable=true;
-    (end code)
-     */
-   getCanvasStyle: function(prop, type, force) {
-      type = type || 'current';
-      var data;
-      if(type == 'current') {
-        data = this.data;
-      } else if(type == 'start') {
-        data = this.startData;
-      } else if(type == 'end') {
-        data = this.endData;
-      }
-      if(force) {
-        return data['$canvas-' + prop];
-      }
-      var c = this.Config, 
-          n = c.CanvasStyles, 
-          dollar = '$canvas-' + prop;
-      if(!c.overridable) 
-        return n[prop] || 0;
-      return (dollar in data)? data[dollar] : ((dollar in this.data)? this.data[dollar] : (n[prop] || 0));
-   },
-    
     /*
     Method: setCanvasStyle
 
-    Sets the current canvas style prefixed data property with some specific value. 
+    Sets the current canvas style prefixed data property with some specific value.
     This method is only useful for (dollar prefixed) reserved properties.
-    
-    Parameters:
 
-       prop - The name of the property. The dollar sign is not necessary. For example _setCanvasStyle('fillStyle')_ will set 
-       _data.$canvas-fillStyle_.
-       value - The value to store.
-       type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
+    See <setData> for more details.
+    */
+    setCanvasStyle: function(prop, value, type) {
+      setDataInternal.call(this, 'canvas', prop, value, type);
+    },
 
-    Example:
-    (start code js)
-     node.setCanvasStyle('fillStyle', '#ccc');
-    (end code)
-     */
-   setCanvasStyle: function(prop, value, type) {
-      type = type || 'current';
-      var data;
-      if(type == 'current') {
-        data = this.data;
-      } else if(type == 'start') {
-        data = this.startData;
-      } else if(type == 'end') {
-        data = this.endData;
+    /*
+    Method: setCanvasStyles
+
+    Convenience function to set multiple styles at once.
+
+    See <setDataset> for more details.
+    */
+    setCanvasStyles: function(types, obj) {
+      types = $.splat(types);
+      for(var attr in obj) {
+        for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
+          this.setCanvasStyle(attr, val[i], types[i]);
+        }
       }
-      data['$canvas-' + prop] = value;
-   },
+    },
 
-   /*
-   Method: setCanvasStyles
+    /*
+    Method: removeCanvasStyle
 
-   Parameters:
+    Remove canvas style properties from data.
 
-      obj - The name of the property. The dollar sign is not necessary. For example _setCanvasStyle('fillStyle')_ will set 
-      _data.$canvas-fillStyle_.
-      value - The value to store.
-      type - The type of the data property to store. Default's "current" but can also be "begin" or "end".
-
-   Example:
-   (start code js)
-     node.setCanvasStyles(['current', 'end'], {
-       'shadowBlur': [100, 5],
-       'shadowOffsetX': [100, 5],
-       'shadowOffsetY': [100, 5]
-     });
-     //...or also
-     node.setCanvasStyles('end', {
-       'shadowBlur': 5,
-       'shadowOffsetX': 5,
-       'shadowOffsetY': 5
-     });
-   (end code)
+    See <removeData> for more details.
     */
-  setCanvasStyles: function(types, obj) {
-     types = $.splat(types);
-     for(var attr in obj) {
-       for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
-         this.setCanvasStyle(attr, val[i], types[i]);
-       }
-     }
-  },
+    removeCanvasStyle: function() {
+      removeDataInternal.call(this, 'canvas', prop);
+    },
 
-  /*
-   Method: removeCanvasStyle
+    /*
+    Method: getLabelData
 
-   Will remove that canvas style property from data.
-   
-   Parameters:
+    Returns the specified label data value property. This is useful for
+    querying special/reserved <Graph.Node> label options (i.e.
+    dollar prefixed properties that match with $canvas-<name of canvas style>).
 
-      prop - The name of the property. 
-
-   Example:
-   (start code js)
-    node.removeCanvasStyle('fillStyle'); //now the default fillStyle value is returned
-   (end code)
+    See <getData> for more details.
     */
-  removeCanvasStyle: function() {
-     var that = this;
-     $.each(arguments, function(prop){
-       var pref = '$canvas-' + prop;
-       delete that.data[pref];
-       delete that.endData[pref];
-       delete that.startData[pref];
-     });
-  }
-};
+    getLabelData: function(prop, type, force) {
+      return getDataInternal.call(
+          this, 'label', prop, type, force, this.Config.Label);
+    },
+
+    /*
+    Method: setLabelData
+
+    Sets the current label prefixed data property with some specific value.
+    This method is only useful for (dollar prefixed) reserved properties.
+
+    See <setData> for more details.
+    */
+    setLabelData: function(prop, value, type) {
+      setDataInternal.call(this, 'label', prop, value, type);
+    },
+
+    /*
+    Method: setLabelDataset
+
+    Convenience function to set multiple label data at once.
+
+    See <setDataset> for more details.
+    */
+    setLabelDataset: function(types, obj) {
+      types = $.splat(types);
+      for(var attr in obj) {
+        for(var i=0, val = $.splat(obj[attr]), l=types.length; i<l; i++) {
+          this.setLabelData(attr, val[i], types[i]);
+        }
+      }
+    },
+
+    /*
+    Method: removeLabelData
+
+    Remove label properties from data.
+
+    See <removeData> for more details.
+    */
+    removeLabelData: function() {
+      removeDataInternal.call(this, 'label', arguments);
+    }
+  };
+})();
 
 /*
      Class: Graph.Node
