@@ -57,7 +57,8 @@ $jit.Graph = new Class({
     this.Edge = Edge;
     this.Label = Label;
     this.opt = $.merge(innerOptions, opt || {});
-    this.nodes= {};
+    this.nodes = {};
+    this.edges = {};
  },
 
 /*
@@ -123,18 +124,13 @@ $jit.Graph = new Class({
 
      Returns:
 
-     An Array of <Graph.Adjacence> objects. Returns *false* if there's not a <Graph.Adjacence> connecting those two nodes.
+     A <Graph.Adjacence>.
 */  
   getAdjacence: function (id, id2) {
-    var adjs = [];
-    if(this.hasNode(id) && this.hasNode(id2) 
-    && this.nodes[id].adjacentTo({ 'id':id2 }) 
-    && this.nodes[id2].adjacentTo({ 'id':id })) {
-        adjs.push(this.nodes[id].getAdjacency(id2));
-        adjs.push(this.nodes[id2].getAdjacency(id));
-        return adjs;
+    if(id in this.edges) {
+      return this.edges[id][id2];
     }
-    return false;   
+    return false;
  },
 
     /*
@@ -154,12 +150,14 @@ $jit.Graph = new Class({
     <Graph.Node>
 
   */  
-  addNode: function(obj) {
-    if(!this.nodes[obj.id]) {  
-      this.nodes[obj.id] = new Graph.Node($.extend({
+  addNode: function(obj) { 
+   if(!this.nodes[obj.id]) {  
+     var edges = this.edges[obj.id] = {}; 
+     this.nodes[obj.id] = new Graph.Node($.extend({
         'id': obj.id,
         'name': obj.name,
-        'data': obj.data
+        'data': obj.data,
+        'adjacencies': edges 
       }, this.opt.Node), 
       this.opt.complex, 
       this.Node, 
@@ -185,25 +183,13 @@ $jit.Graph = new Class({
     <Graph.Node>, <Graph.Adjacence>
     */  
   addAdjacence: function (obj, obj2, data) {
-    var adjs = [];
     if(!this.hasNode(obj.id)) { this.addNode(obj); }
     if(!this.hasNode(obj2.id)) { this.addNode(obj2); }
     obj = this.nodes[obj.id]; obj2 = this.nodes[obj2.id];
-    
-    for(var i in this.nodes) {
-        if(this.nodes[i].id == obj.id) {
-            if(!this.nodes[i].adjacentTo(obj2)) {
-                adjs.push(this.nodes[i].addAdjacency(obj2, data));
-            }
-        }
-        
-        if(this.nodes[i].id == obj2.id) {   
-            if(!this.nodes[i].adjacentTo(obj)) {
-                adjs.push(this.nodes[i].addAdjacency(obj, data));
-            }
-        }
-    }
-    return adjs;
+    var adjsObj = this.edges[obj.id] = this.edges[obj.id] || {};
+    var adjsObj2 = this.edges[obj2.id] = this.edges[obj2.id] || {};
+    adjsObj[obj2.id] = adjsObj2[obj.id] = new Graph.Adjacence(obj, obj2, data, this.Edge, this.Label);
+    return adjsObj[obj2.id];
  },
 
     /*
@@ -218,12 +204,12 @@ $jit.Graph = new Class({
     */  
   removeNode: function(id) {
     if(this.hasNode(id)) {
-        var node = this.nodes[id];
-        for(var i=0 in node.adjacencies) {
-            var adj = node.adjacencies[i];
-            this.removeAdjacence(id, adj.nodeTo.id);
-        }
-        delete this.nodes[id];
+      delete this.nodes[id];
+      var adjs = this.edges[id];
+      for(var to in adjs) {
+        delete this.edges[to][id];
+      }
+      delete this.edges[id];
     }
   },
   
@@ -238,8 +224,8 @@ $jit.Graph = new Class({
      id2 - A <Graph.Node> id.
 */  
   removeAdjacence: function(id1, id2) {
-    if(this.hasNode(id1)) this.nodes[id1].removeAdjacency(id2);
-    if(this.hasNode(id2)) this.nodes[id2].removeAdjacency(id1);
+    delete this.edges[id1][id2];
+    delete this.edges[id2][id1];
   },
 
    /*
@@ -265,7 +251,7 @@ $jit.Graph = new Class({
     Empties the Graph
 
   */
-  empty: function() { this.nodes = {}; }
+  empty: function() { this.nodes = {}; this.edges = {};}
 
 });
 
@@ -625,33 +611,6 @@ Graph.Node = new Class({
     getAdjacency: function(id) {
         return this.adjacencies[id];
     },
-    /*
-       Method: addAdjacency
-    
-       Connects the current node and the given node.
-
-       Parameters:
-    
-          node - A <Graph.Node>.
-          data - Some custom hash information.
-    */  
-    addAdjacency: function(node, data) {
-        var adj = new Graph.Adjacence(this, node, data, this.Edge, this.Label);
-        return this.adjacencies[node.id] = adj;
-    },
-    
-    /*
-       Method: removeAdjacency
-    
-       Removes a <Graph.Adjacence> by _id_.
-
-       Parameters:
-    
-          id - A node id.
-    */  
-    removeAdjacency: function(id) {
-        delete this.adjacencies[id];
-    },
 
     /*
       Method: getPos
@@ -844,8 +803,14 @@ Graph.Util = {
     eachAdjacency: function(node, action, flags) {
         var adj = node.adjacencies, filter = this.filter(flags);
         for(var id in adj) {
-          if(filter(adj[id])) {
-            action(adj[id], id);
+          var a = adj[id];
+          if(filter(a)) {
+            if(a.nodeFrom != node) {
+              var tmp = a.nodeFrom;
+              a.nodeFrom = a.nodeTo;
+              a.nodeTo = tmp;
+            }
+            action(a, id);
           }
         }
     },

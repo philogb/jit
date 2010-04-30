@@ -175,7 +175,7 @@ Graph.Op = {
         var viz = this.viz;
         var options = $.merge(this.options, viz.controller, opt);
         var v = ($.type(vertex[0]) == 'string')? [vertex] : vertex;
-        var i, that, adjs;
+        var i, that, adj;
         switch(options.type) {
             case 'nothing':
                 for(i=0; i<v.length; i++)   viz.graph.removeAdjacence(v[i][0], v[i][1]);
@@ -190,10 +190,9 @@ Graph.Op = {
                 that = this;
                 //set alpha to 0 for edges to remove.
                 for(i=0; i<v.length; i++) {
-                    adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
-                    if(adjs) {
-                        adjs[0].setData('alpha', 0,'end');
-                        adjs[1].setData('alpha', 0,'end');
+                    adj = viz.graph.getAdjacence(v[i][0], v[i][1]);
+                    if(adj) {
+                        adj.setData('alpha', 0,'end');
                     }
                 }
                 viz.fx.animate($.merge(options, {
@@ -212,12 +211,10 @@ Graph.Op = {
                 that = this;
                 //set alpha to 0 for nodes to remove. Tag them for being ignored when computing positions.
                 for(i=0; i<v.length; i++) {
-                    adjs = viz.graph.getAdjacence(v[i][0], v[i][1]);
-                    if(adjs) {
-                        adjs[0].setData('alpha',0 ,'end');
-                        adjs[0].ignore = true;
-                        adjs[1].setData('alpha',0 ,'end');
-                        adjs[1].ignore = true;
+                    adj = viz.graph.getAdjacence(v[i][0], v[i][1]);
+                    if(adj) {
+                        adj.setData('alpha',0 ,'end');
+                        adj.ignore = true;
                     }
                 }
                 viz.reposition();
@@ -434,15 +431,11 @@ Graph.Op = {
                         var nodeFrom = graph.getNode(adj.nodeFrom.id);
                         var nodeTo = graph.getNode(adj.nodeTo.id);
                         if(!nodeFrom.adjacentTo(nodeTo)) {
-                            var adjs = viz.graph.getAdjacence(nodeFrom.id, nodeTo.id);
+                            var adj = viz.graph.getAdjacence(nodeFrom.id, nodeTo.id);
                             fadeEdges = true;
-                            adjs[0].setData('alpha', 1);
-                            adjs[0].setData('alpha', 1, 'start');
-                            adjs[0].setData('alpha', 0, 'end');
-
-                            adjs[1].setData('alpha', 1);
-                            adjs[1].setData('alpha', 1, 'start');
-                            adjs[1].setData('alpha', 0, 'end');
+                            adj.setData('alpha', 1);
+                            adj.setData('alpha', 1, 'start');
+                            adj.setData('alpha', 0, 'end');
                         }
                     });
                 }); 
@@ -606,17 +599,13 @@ Graph.Op = {
                 var nodeFrom = viz.graph.getNode(adj.nodeFrom.id);
                 var nodeTo = viz.graph.getNode(adj.nodeTo.id);
                 if(!nodeFrom.adjacentTo(nodeTo)) {
-                    var adjs = viz.graph.addAdjacence(nodeFrom, nodeTo, adj.data);
+                    var adj = viz.graph.addAdjacence(nodeFrom, nodeTo, adj.data);
                     if(nodeFrom.startAlpha == nodeFrom.endAlpha 
                     && nodeTo.startAlpha == nodeTo.endAlpha) {
                         fadeEdges = true;
-                        adjs[0].setData('alpha', 0);
-                        adjs[0].setData('alpha', 0, 'start');
-                        adjs[0].setData('alpha', 1, 'end');
-
-                        adjs[1].setData('alpha', 0);
-                        adjs[1].setData('alpha', 0, 'start');
-                        adjs[1].setData('alpha', 1, 'end');
+                        adj.setData('alpha', 0);
+                        adj.setData('alpha', 0, 'start');
+                        adj.setData('alpha', 1, 'end');
                     } 
                 }
             });
