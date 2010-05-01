@@ -20,12 +20,10 @@
 Options.NodeStyles = {
   $extend: false,
   
-  attachToDOM: true,
-  attachToCanvas: false,
+  enable: false,
+  type: 'auto',
   stylesHover: false,
   stylesClick: false,
-  stylesRightClick:false,
-  onHover: $.empty,
-  onClick: $.empty,
-  onRightClick: $.empty
+  stylesRightClick: false,
+  stylesDrag: false
 };

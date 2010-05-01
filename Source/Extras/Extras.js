@@ -9,34 +9,6 @@
  *
  */
 
-/* 
- * Provides the initialization function for <NodeStyles> and <Tips> implemented 
- * by all main visualizations.
- *
- */
-var Extras = {
-  initializeExtras: function() {
-    var tips = this.config.Tips;
-    var ns = this.config.NodeStyles;
-    if(tips && tips.enable && tips.attachToCanvas 
-        || ns && ns.attachToCanvas) {
-      this.mouseEventsManager = new MouseEventsManager(this);
-    }
-    if(tips) {
-      this.tips = new Tips(this);
-      if(tips.enable && tips.attachToCanvas) {
-        this.mouseEventsManager.register(this.tips);
-      }
-    }
-    if(ns) {
-      this.nodeStyles = new NodeStyles(this);
-      if(ns.attachToCanvas) {
-        this.mouseEventsManager.register(this.nodeStyles);
-      }
-    }
-  }   
-};
-
 /*
  * Manager for mouse events (clicking and mouse moving).
  * 
@@ -46,51 +18,59 @@ var Extras = {
  * For now, <Tips> and <NodeStyles> are classes implementing these methods.
  * 
  */
+var ExtrasInitializer = {
+  initialize: function(className, viz) {
+    this.viz = viz;
+    this.canvas = viz.canvas;
+    this.config = viz.config[className];
+    this.nodeTypes = viz.fx.nodeTypes;
+    var type = this.config.type;
+    this.dom = type == 'auto'? (viz.config.Label.type != 'Native') : (type != 'Native');
+    this.postInitialize();
+  },
+  postInitialize: $.empty,
+  setAsProperty: $.lambda(false),
+  isEnabled: function() {
+    return this.config.enabled;
+  }
+};
+
+var EventsInterface = {
+  onMouseUp: $.empty,
+  onMouseDown: $.empty,
+  onMouseMove: $.empty,
+  onMouseOver: $.empty,
+  onMouseOut: $.empty
+};
+
 var MouseEventsManager = new Class({
   initialize: function(viz) {
     this.viz = viz;
-    this.canvas = viz.canvas;
-    this.nodeTypes = viz.fx.nodeTypes;
+    this.node = false;
     this.registeredObjects = [];
-
-    this.click = {
-      node: null,
-      time: $.time()
-    };
-    
-    this.rightClick = {
-        node: null,
-        time: $.time()
-    };
-
-    this.mousemove = {
-      node: null,
-      time: $.time()
-    };
-    
-    this.mintime = 10;    
     this.attachEvents();
   },
   
   attachEvents: function() {
-    var htmlCanvas = this.canvas.getElement(), that = this;
-    htmlCanvas.oncontextmenu = $.lambda(false);
-    $.addEvent(htmlCanvas, 'mouseup', function(e, win) {
-      var rightClick = (e.which == 3 || e.button == 2);
-      if (rightClick) {
-        that.handleEvent(that.rightClick, 'onRightClick', e, win);
-      } else {
-        that.handleEvent(that.click, 'onClick', e, win);
-      } 
-          
-      //prevent default 
-      if (e.preventDefault) 
-          e.preventDefault();
-      else 
-          e.returnValue = false;
-    });
-    $.addEvent(htmlCanvas, 'mousemove', function(e, win) {
-      that.handleEvent(that.mousemove, 'onMousemove', e, win);
+    var htmlCanvas = this.canvas.getElement(), 
+        that = this;
+    $.addEvents(htmlCanvas, {
+      'contextmenu': $.lambda(false),
+      'mouseup': function(e, win) {
+        that.handleEvent('MouseUp', e, win);
+      },
+      'mousedown': function(e, win) {
+        that.handleEvent('MouseDown', e, win);
+      },
+      'mousemove': function(e, win) {
+        that.handleEvent('MouseMove', e, win, that.makeEventObject(e, win));
+      },
+      'mouseover': function(e, win) {
+        that.handleEvent('MouseOver', e, win);
+      },
+      'mouseout': function(e, win) {
+        that.handleEvent('MouseOut', e, win);
+      }
     });
   },
   
@@ -98,55 +78,87 @@ var MouseEventsManager = new Class({
     this.registeredObjects.push(obj);
   },
   
-  handleEvent: function(obj, method, e, win) {
-    if($.time() - obj.time <= this.mintime) return;
-    obj.time = $.time();
-    var fx = this.viz.fx,
-        g = this.viz.graph,
-        pos = Event.getPos(e, win),
-        p = this.canvas.getPos(),
-        s = this.canvas.getSize(),
-        newpos = {
-            x: pos.x - p.x - s.width /2,
-            y: pos.y - p.y - s.height /2
-        },
-        positions = this.nodeTypes,
-        opt = {
-            'position': pos,
-            'contains': false
+  handleEvent: function(type, e, win, event) {
+    for(var i=0, regs=this.registeredObjects, l=regs.length; i<l; i++) {
+      regs[i]['on' + type](e, win, event);
+    }
+  },
+  
+  makeEventObject: function(e, win) {
+    var that = this,
+        graph = this.viz.graph,
+        fx = this.viz.fx,
+        types = fx.nodeTypes;
+    return {
+      pos: false,
+      node: false,
+      contains: false,
+      getNodeCalled: false,
+      getPos: function() {
+        if(this.pos) return this.pos;
+        var canvas = that.viz.canvas,
+            s = canvas.getSize(),
+            p = canvas.getPos(),
+            pos = $.Event.getPos(e, win);
+        this.pos = {
+          x: pos.x - p.x - s.width/2,
+          y: pos.y - p.y - s.height/2
         };
-
-    if(obj.node) {
-      var n = g.getNode(obj.node);
-      var elem = n && positions[n.getData('type')];
-      var contains = elem && elem.contains && elem.contains.call(fx, n, newpos);
-      if(contains) {
-        opt.contains = contains;
-        for(var i=0, l=this.registeredObjects.length; i<l; i++) {
-          this.registeredObjects[i][method](n, opt);
+        return this.pos;
+      },
+      getNode: function() {
+        if(this.node) return this.node;
+        this.getNodeCalled = true;
+        if(that.node) {
+          var n = graph.getNode(that.node),
+              geom = n && types[n.getData('type')],
+              contains = geom && geom.contains && geom.contains.call(fx, n, this.getPos());
+          if(contains) {
+            this.contains = contains;
+            return this.node = n;
+          }
         }
-        return;
-      }
-    }
-    for(var id in g.nodes) {
-      var n = g.nodes[id];
-      var elem = n && positions[n.getData('type')];
-      var contains = elem && elem.contains && elem.contains.call(fx, n, newpos);
-      if(contains) {
-        obj.node = id;
-        opt.contains = contains;
-        for(var i=0, l=this.registeredObjects.length; i<l; i++) {
-          this.registeredObjects[i][method](n, opt);
+        for(var id in graph.nodes) {
+          var n = graph.nodes[id],
+              geom = n && types[n.getData('type')],
+              contains = geom && geom.contains && geom.contains.call(fx, n, this.getPos());
+          if(contains) {
+            this.contains = contains;
+            return that.node = this.node = n;
+          }
         }
-        return;
+        return that.node = this.node = false;
+      },
+      getContains: function() {
+        if(this.getNodeCalled) return this.contains;
+        this.getNode();
+        return this.contains;
       }
-    }
-    for(var i=0, l=this.registeredObjects.length; i<l; i++) {
-      this.registeredObjects[i][method](false, opt);
-    }
+    };
   }
 });
 
+/* 
+ * Provides the initialization function for <NodeStyles> and <Tips> implemented 
+ * by all main visualizations.
+ *
+ */
+var Extras = {
+  initializeExtras: function() {
+    var mem = new MouseEventsManager(this);
+    for(var className in Extras.Classes) {
+      var obj = new Extras.Classes[className](className, this);
+      if(obj.isEnabled()) {
+        mem.register(obj);
+      }
+      if(obj.setAsProperty()) {
+        this[className.toLowerCase()] = obj;
+      }
+    }
+  }   
+};
+
+Extras.Classes = {};
 /*
    Class: Tips
     
@@ -161,76 +173,84 @@ var MouseEventsManager = new Class({
    <Options.Tips>
 */
 
-var Tips = new Class({
-  initialize: function(viz) {
-    this.viz = viz;
-    this.controller = this.config = viz.config;
-    //add tooltip
-    if(this.config.Tips.enable && document.body) {
-        var tip = document.getElementById('_tooltip') || document.createElement('div');
-        tip.id = '_tooltip';
-        tip.className = 'tip';
-        var style = tip.style;
-        style.position = 'absolute';
-        style.display = 'none';
-        style.zIndex = 13000;
-        document.body.appendChild(tip);
-        this.tip = tip;
-        this.node = false;
-        //hide the tip when we mouse out the canvas
-        var elem = viz.canvas.getElement();
-        $.addEvent(elem, 'mouseout', function(e) {
-          var rt = e.relatedTarget;
-          while(rt && rt.parentNode) {
-            if(elem == rt.parentNode) return;
-            rt = rt.parentNode;
-          }
-          var s = tip.style;
-          if(s.display != 'none') {
-            s.display = 'none';
-            viz.config.Tips.onHide();
-          }
-        });
-    }
-  },
+Extras.Classes['Tips'] = new Class({
+  Implements: [ExtrasInitializer, EventsInterface],
   
-  attach: function(node, elem) {
-    if(this.config.Tips.enable) {
-      var that = this, cont = this.controller;
-      $.addEvent(elem, 'mouseover', function(e){
-        cont.Tips.onShow(that.tip, node, elem);
+  initializePost: function() {
+    //add DOM tooltip
+    if(this.isEnabled() && document.body) {
+      var tip = $('_tooltip') || document.createElement('div');
+      tip.id = '_tooltip';
+      tip.className = 'tip';
+      $.extend(tip.style, {
+        position: 'absolute',
+        display: 'none',
+        zIndex: 13000
       });
-      $.addEvent(elem, 'mouseout', function(e){
-          that.tip.style.display = 'none';
-          cont.Tips.onHide();
-      });
-      //Add mousemove event handler
-      $.addEvent(elem, 'mousemove', function(e, win){
-        var pos = Event.getPos(e, win);
-        that.setTooltipPosition(pos);
-      });
-    }
-  },
-
-  onClick: $.empty,
-  onRightClick: $.empty,
-  
-  onMousemove: function(node, opt) {
-    if(!node) {
-      this.tip.style.display = 'none';
+      document.body.appendChild(tip);
+      this.tip = tip;
       this.node = false;
-      this.config.Tips.onHide();
+      this.labelContainer = this.dom && this.viz.labels.getLabelContainer();
+    }
+  },
+  
+  setAsProperty: $.lambda(true),
+  
+  isLabel: function(e) {
+    var labelContainer = this.labelContainer,
+        target = e.target;
+    if(target && target.parentNode == labelContainer)
+      return target;
+    return false;
+  },
+  
+  onMouseOut: function(e, win) {
+    //mouseout a label
+    if(this.dom && this.isLabel(e)) {
+      this.hide(true);
       return;
     }
-    if(this.config.Tips.force || !this.node || this.node.id != node.id) {
-      this.node = node;
-      this.config.Tips.onShow(this.tip, node, opt);
+    //mouseout canvas
+    var rt = e.relatedTarget,
+        canvasWidget = this.canvas.getElement();
+    while(rt && rt.parentNode) {
+      if(canvasWidget == rt.parentNode) return;
+      rt = rt.parentNode;
     }
-    this.setTooltipPosition(opt.position);
+    this.hide(false);
+  },
+  
+  onMouseOver: function(e, win) {
+    //mouseover a label
+    var label;
+    if(this.dom && (label = this.isLabel(e))) {
+      this.node = this.viz.graph.getNode(label.id);
+      this.config.onShow(this.tip, node, label);
+    }
+  },
+  
+  onMouseMove: function(e, win, opt) {
+    if(this.dom && this.isLabel(e)) {
+      this.setTooltipPosition(opt.getPos());
+    }
+    if(!this.dom) {
+      var node = opt.getNode();
+      if(!node) {
+        this.hide(true);
+        return;
+      }
+      if(this.config.force || !this.node || this.node.id != node.id) {
+        this.node = node;
+        this.config.onShow(this.tip, node, opt.getContains());
+      }
+      this.setTooltipPosition(opt.getPos());
+    }
   },
   
   setTooltipPosition: function(pos) {
-    var tip = this.tip, style = tip.style, cont = this.config;
+    var tip = this.tip, 
+        style = tip.style, 
+        cont = this.config;
     style.display = '';
     //get window dimensions
     win = {
@@ -243,15 +263,16 @@ var Tips = new Class({
       'height': tip.offsetHeight  
     };
     //set tooltip position
-    var x = cont.Tips.offsetX, y = cont.Tips.offsetY;
+    var x = cont.offsetX, y = cont.offsetY;
     style.top = ((pos.y + y + obj.height > win.height)?  
         (pos.y - obj.height - y) : pos.y + y) + 'px';
     style.left = ((pos.x + obj.width + x > win.width)? 
         (pos.x - obj.width - x) : pos.x + x) + 'px';
   },
   
-  hide: function() {
+  hide: function(triggerCallback) {
     this.tip.style.display = 'none';
+    triggerCallback && this.config.onHide();
   }
 });
 
@@ -268,7 +289,7 @@ var Tips = new Class({
   
   <Options.NodeStyles>
 */
-var NodeStyles = new Class({
+var NodeStyles = Extras.Classes['NodeStyles'] = new Class({
   initialize: function(viz) {
     this.viz = viz;
     this.fx = viz.fx;

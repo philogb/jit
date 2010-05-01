@@ -30,8 +30,7 @@ Options.Tips = {
   $extend: false,
   
   enable: false,
-  attachToDOM: true,
-  attachToCanvas: false,
+  type: 'auto',
   offsetX: 20,
   offsetY: 20,
   force: false,

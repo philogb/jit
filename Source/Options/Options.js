@@ -20,7 +20,7 @@
  *
  */
 var Options = function() {
-  var args = Array.prototype.slice.call(arguments);
+  var args = arguments;
   for(var i=0, l=args.length, ans={}; i<l; i++) {
     var opt = Options[args[i]];
     if(opt.$extend) {

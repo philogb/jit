@@ -191,7 +191,7 @@ $.destroy = function(elem) {
 };
 
 $.clean = function(elem) {
-  for ( var ch = elem.childNodes, i = 0, l = ch.length; i < l; i++) {
+  for (var ch = elem.childNodes, i = 0, l = ch.length; i < l; i++) {
     $.destroy(ch[i]);
   }
 };
@@ -201,6 +201,12 @@ $.addEvent = function(obj, type, fn) {
     obj.addEventListener(type, fn, false);
   else
     obj.attachEvent('on' + type, fn);
+};
+
+$.addEvents = function(obj, typeObj) {
+  for(var type in typeObj) {
+    $.addEvent(obj, type, typeObj[type]);
+  }
 };
 
 $.hasClass = function(obj, klass) {
@@ -355,7 +361,7 @@ Class.prototype.implement = function() {
   return this;
 };
 
-var Event = {
+$.Event = {
   getPos: function(e, win) {
     // get mouse position
     win = win || window;
