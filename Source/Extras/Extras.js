@@ -26,7 +26,7 @@ var ExtrasInitializer = {
     this.nodeTypes = viz.fx.nodeTypes;
     var type = this.config.type;
     this.dom = type == 'auto'? (viz.config.Label.type != 'Native') : (type != 'Native');
-    this.postInitialize();
+    this.isEnabled() && this.postInitialize();
   },
   postInitialize: $.empty,
   setAsProperty: $.lambda(false),
@@ -46,6 +46,7 @@ var EventsInterface = {
 var MouseEventsManager = new Class({
   initialize: function(viz) {
     this.viz = viz;
+    this.canvas = viz.canvas;
     this.node = false;
     this.registeredObjects = [];
     this.attachEvents();
@@ -178,7 +179,7 @@ Extras.Classes['Tips'] = new Class({
   
   initializePost: function() {
     //add DOM tooltip
-    if(this.isEnabled() && document.body) {
+    if(document.body) {
       var tip = $('_tooltip') || document.createElement('div');
       tip.id = '_tooltip';
       tip.className = 'tip';
@@ -253,7 +254,7 @@ Extras.Classes['Tips'] = new Class({
         cont = this.config;
     style.display = '';
     //get window dimensions
-    win = {
+    var win = {
       'height': document.body.clientHeight,
       'width': document.body.clientWidth
     };
@@ -289,8 +290,10 @@ Extras.Classes['Tips'] = new Class({
   
   <Options.NodeStyles>
 */
-var NodeStyles = Extras.Classes['NodeStyles'] = new Class({
-  initialize: function(viz) {
+Extras.Classes['NodeStyles'] = new Class({
+  Implements: [ExtrasInitializer, EventsInterface],
+  
+  initializePost: function(viz) {
     this.viz = viz;
     this.fx = viz.fx;
     this.nStyles = viz.config.NodeStyles;
