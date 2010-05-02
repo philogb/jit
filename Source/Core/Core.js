@@ -71,7 +71,9 @@ $.splat = function(obj) {
 };
 
 $.type = function(elem) {
-  return $.type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+  var type = $.type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
+  if(type != 'object') return type;
+  return (elem.nodeName && elem.nodeType == 1)? 'element' : type;
 };
 $.type.s = Object.prototype.toString;
 
