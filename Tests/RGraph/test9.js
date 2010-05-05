@@ -388,11 +388,18 @@ function init(){
       
         //Set Node and Edge colors.
         Node: {
-            color: '#ccddee'
+            color: '#ccddee',
+            dim: 10,
         },
         
         Edge: {
             color: '#772277'
+        },
+        Label: {
+          type: 'Native',
+          size:13,
+          family:'Verdana',
+          color: '#888'
         },
         Events: {
           enable: true,
@@ -422,6 +429,9 @@ function init(){
           },
           onDragEnd: function(node, eventInfo, e) {
             console.log('onDragEnd', node && node.name, eventInfo, e);
+          },
+          onMouseWheel: function(delta, e) {
+            console.log('MouseWheel', delta, e);
           }
         },
         onCreateLabel: function(domElement, node){

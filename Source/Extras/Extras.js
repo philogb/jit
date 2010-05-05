@@ -248,7 +248,6 @@ Extras.Classes['Events'] = new Class({
   
   onMouseOver: function(e, win, event) {
     //mouseover a label
-    console.log('mouseover');
     var evt = $.event.get(e, win), label;
     if(this.dom && (label = this.isLabel(e, win))) {
       this.hoveredNode = this.viz.graph.getNode(label.id);
