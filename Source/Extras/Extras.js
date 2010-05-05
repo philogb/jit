@@ -26,12 +26,13 @@ var ExtrasInitializer = {
     this.nodeTypes = viz.fx.nodeTypes;
     var type = this.config.type;
     this.dom = type == 'auto'? (viz.config.Label.type != 'Native') : (type != 'Native');
-    this.isEnabled() && this.postInitialize();
+    this.labelContainer = this.dom && viz.labels.getLabelContainer();
+    this.isEnabled() && this.initializePost();
   },
-  postInitialize: $.empty,
+  initializePost: $.empty,
   setAsProperty: $.lambda(false),
   isEnabled: function() {
-    return this.config.enabled;
+    return this.config.enable;
   },
   isLabel: function(e, win) {
     e = $.event.get(e, win);
@@ -106,7 +107,7 @@ var MouseEventsManager = new Class({
     var args = Array.prototype.slice.call(arguments),
         type = args.shift();
     for(var i=0, regs=this.registeredObjects, l=regs.length; i<l; i++) {
-      regs[i]['on' + type].apply(this, args);
+      regs[i]['on' + type].apply(regs[i], args);
     }
   },
   
@@ -196,9 +197,8 @@ Extras.Classes['Events'] = new Class({
   Implements: [ExtrasInitializer, EventsInterface],
   
   initializePost: function() {
-    this.viz = viz;
-    this.fx = viz.fx;
-    this.types = vix.fx.nodeTypes;
+    this.fx = this.viz.fx;
+    this.types = this.viz.fx.nodeTypes;
     this.hoveredNode = false;
     this.pressedNode = false;
     this.moved = false;
@@ -207,12 +207,11 @@ Extras.Classes['Events'] = new Class({
   setAsProperty: $.lambda(true),
   
   onMouseUp: function(e, win, event, isRightClick) {
-    var node = event.getNode(),
-        evt = $.event.get(e, win);
+    var evt = $.event.get(e, win);
     if(isRightClick) {
-      this.config.onRightClick(node, event, evt);
+      this.config.onRightClick(this.hoveredNode, event, evt);
     } else {
-      this.config.onClick(node, event, evt);
+      this.config.onClick(this.hoveredNode, event, evt);
     }
     if(this.pressedNode) {
       if(this.moved) {
@@ -223,23 +222,14 @@ Extras.Classes['Events'] = new Class({
       this.pressedNode = this.moved = false;
     }
   },
-  
-  onMouseMove: function(e, win, event) {
-    var node = event.getNode(),
-        evt = $.event.get(e, win);
-    this.config.onMouseMove(node, event, evt);
-    if(this.pressedNode) {
-      this.moved = true;
-      this.config.onDragMove(this.pressedNode, event, evt);
-    }
-  },
-  
+
   onMouseOut: function(e, win, event) {
    //mouseout a label
    var evt = $.event.get(e, win), label;
    if(this.dom && (label = this.isLabel(e, win))) {
      this.config.onMouseLeave(this.viz.graph.getNode(label.id),
                               event, evt);
+     this.hoveredNode = false;
      return;
    }
    //mouseout canvas
@@ -256,19 +246,21 @@ Extras.Classes['Events'] = new Class({
    }
   },
   
-  onMouseOver: function(e, win) {
+  onMouseOver: function(e, win, event) {
     //mouseover a label
+    console.log('mouseover');
     var evt = $.event.get(e, win), label;
     if(this.dom && (label = this.isLabel(e, win))) {
-      this.config.onMouseEnter(this.viz.graph.getNode(label.id),
+      this.hoveredNode = this.viz.graph.getNode(label.id);
+      this.config.onMouseEnter(this.hoveredNode,
                                event, evt);
     }
   },
   
   onMouseMove: function(e, win, event) {
    var label, evt = $.event.get(e, win);
-   if(this.dom && (label = this.isLabel(e, win))) {
-     this.config.onMouseMove(this.viz.graph.getNode(label.id),
+   if(this.dom) {
+     this.config.onMouseMove(this.hoveredNode,
          event, evt);
    }
    if(!this.dom) {
@@ -290,6 +282,10 @@ Extras.Classes['Events'] = new Class({
        this.config.onMouseMove(false, event, evt);
      }
    }
+   if(this.pressedNode) {
+     this.moved = true;
+     this.config.onDragMove(this.pressedNode, event, evt);
+   }
   },
   
   onMouseWheel: function(e, win, delta) {
@@ -297,10 +293,9 @@ Extras.Classes['Events'] = new Class({
   },
   
   onMouseDown: function(e, win, event) {
-    var evt = $.event.get(e, win),
-        node = event.getNode();
-    this.pressedNode = node;
-    this.config.onDragStart(node, event, evt);
+    var evt = $.event.get(e, win);
+    this.pressedNode = this.hoveredNode;
+    this.config.onDragStart(this.hoveredNode, event, evt);
   }
 });
 
@@ -335,7 +330,6 @@ Extras.Classes['Tips'] = new Class({
       document.body.appendChild(tip);
       this.tip = tip;
       this.node = false;
-      this.labelContainer = this.dom && this.viz.labels.getLabelContainer();
     }
   },
   
@@ -429,11 +423,10 @@ Extras.Classes['Tips'] = new Class({
 Extras.Classes['NodeStyles'] = new Class({
   Implements: [ExtrasInitializer, EventsInterface],
   
-  initializePost: function(viz) {
-    this.viz = viz;
-    this.fx = viz.fx;
-    this.types = vix.fx.nodeTypes;
-    this.nStyles = viz.config.NodeStyles;
+  initializePost: function() {
+    this.fx = this.viz.fx;
+    this.types = this.viz.fx.nodeTypes;
+    this.nStyles = this.viz.config.NodeStyles;
     this.nodeStylesOnHover = this.nStyles.stylesHover;
     this.nodeStylesOnClick = this.nStyles.stylesClick;
     this.hoveredNode = false;
