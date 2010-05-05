@@ -363,7 +363,17 @@ Class.prototype.implement = function() {
   return this;
 };
 
-$.Event = {
+$.event = {
+  get: function(e, win) {
+    win = win || window;
+    return e || win.event;
+  },
+  getWheel: function(e) {
+    return e.wheelDelta? e.wheelDelta / 120 : -(e.detail || 0) / 3;
+  },
+  isRightClick: function(e) {
+    return (e.which == 3 || e.button == 2);
+  },
   getPos: function(e, win) {
     // get mouse position
     win = win || window;

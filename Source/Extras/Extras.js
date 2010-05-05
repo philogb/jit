@@ -32,6 +32,14 @@ var ExtrasInitializer = {
   setAsProperty: $.lambda(false),
   isEnabled: function() {
     return this.config.enabled;
+  },
+  isLabel: function(e, win) {
+    e = $.event.get(e, win);
+    var labelContainer = this.labelContainer,
+        target = e.target;
+    if(target && target.parentNode == labelContainer)
+      return target;
+    return false;
   }
 };
 
@@ -40,7 +48,8 @@ var EventsInterface = {
   onMouseDown: $.empty,
   onMouseMove: $.empty,
   onMouseOver: $.empty,
-  onMouseOut: $.empty
+  onMouseOut: $.empty,
+  onMouseWheel: $.empty
 };
 
 var MouseEventsManager = new Class({
@@ -58,30 +67,46 @@ var MouseEventsManager = new Class({
     $.addEvents(htmlCanvas, {
       'contextmenu': $.lambda(false),
       'mouseup': function(e, win) {
-        that.handleEvent('MouseUp', e, win);
+        var event = $.event.get(e, win);
+        that.handleEvent('MouseUp', e, win, 
+            that.makeEventObject(e, win), 
+            $.event.isRightClick(event));
       },
       'mousedown': function(e, win) {
-        that.handleEvent('MouseDown', e, win);
+        that.handleEvent('MouseDown', e, win, that.makeEventObject(e, win));
       },
       'mousemove': function(e, win) {
         that.handleEvent('MouseMove', e, win, that.makeEventObject(e, win));
       },
       'mouseover': function(e, win) {
-        that.handleEvent('MouseOver', e, win);
+        that.handleEvent('MouseOver', e, win, that.makeEventObject(e, win));
       },
       'mouseout': function(e, win) {
-        that.handleEvent('MouseOut', e, win);
+        that.handleEvent('MouseOut', e, win, that.makeEventObject(e, win));
       }
     });
+    //attach mousewheel event
+    var handleMouseWheel = function(e, win) {
+      var event = $.event.get(e, win);
+      var wheel = $.event.getWheel(event);
+      that.handleEvent('MouseWheel', e, win, wheel);
+    };
+    if(navigator.userAgent.match(/Gecko/)) {
+      htmlCanvas.addEventListener('DOMMouseScroll', handleMouseWheel, false);
+    } else {
+      $.addEvent('mousewheel', handleMouseWheel);
+    }
   },
   
   register: function(obj) {
     this.registeredObjects.push(obj);
   },
   
-  handleEvent: function(type, e, win, event) {
+  handleEvent: function() {
+    var args = Array.prototype.slice.call(arguments),
+        type = args.shift();
     for(var i=0, regs=this.registeredObjects, l=regs.length; i<l; i++) {
-      regs[i]['on' + type](e, win, event);
+      regs[i]['on' + type].apply(this, args);
     }
   },
   
@@ -100,7 +125,7 @@ var MouseEventsManager = new Class({
         var canvas = that.viz.canvas,
             s = canvas.getSize(),
             p = canvas.getPos(),
-            pos = $.Event.getPos(e, win);
+            pos = $.event.getPos(e, win);
         this.pos = {
           x: pos.x - p.x - s.width/2,
           y: pos.y - p.y - s.height/2
@@ -108,7 +133,7 @@ var MouseEventsManager = new Class({
         return this.pos;
       },
       getNode: function() {
-        if(this.node) return this.node;
+        if(this.getNodeCalled) return this.node;
         this.getNodeCalled = true;
         if(that.node) {
           var n = graph.getNode(that.node),
@@ -161,6 +186,125 @@ var Extras = {
 
 Extras.Classes = {};
 /*
+  Class: Events
+   
+  This class defines an Event API to be accessed by the user.
+  The methods implemented are the ones defined in the <Options.Events> object.
+*/
+
+Extras.Classes['Events'] = new Class({
+  Implements: [ExtrasInitializer, EventsInterface],
+  
+  initializePost: function() {
+    this.viz = viz;
+    this.fx = viz.fx;
+    this.types = vix.fx.nodeTypes;
+    this.hoveredNode = false;
+    this.pressedNode = false;
+    this.moved = false;
+  },
+  
+  setAsProperty: $.lambda(true),
+  
+  onMouseUp: function(e, win, event, isRightClick) {
+    var node = event.getNode(),
+        evt = $.event.get(e, win);
+    if(isRightClick) {
+      this.config.onRightClick(node, event, evt);
+    } else {
+      this.config.onClick(node, event, evt);
+    }
+    if(this.pressedNode) {
+      if(this.moved) {
+        this.config.onDragEnd(this.pressedNode, event, evt);
+      } else {
+        this.config.onDragCancel(this.pressedNode, event, evt);
+      }
+      this.pressedNode = this.moved = false;
+    }
+  },
+  
+  onMouseMove: function(e, win, event) {
+    var node = event.getNode(),
+        evt = $.event.get(e, win);
+    this.config.onMouseMove(node, event, evt);
+    if(this.pressedNode) {
+      this.moved = true;
+      this.config.onDragMove(this.pressedNode, event, evt);
+    }
+  },
+  
+  onMouseOut: function(e, win, event) {
+   //mouseout a label
+   var evt = $.event.get(e, win), label;
+   if(this.dom && (label = this.isLabel(e, win))) {
+     this.config.onMouseLeave(this.viz.graph.getNode(label.id),
+                              event, evt);
+     return;
+   }
+   //mouseout canvas
+   var rt = evt.relatedTarget,
+       canvasWidget = this.canvas.getElement();
+   while(rt && rt.parentNode) {
+     if(canvasWidget == rt.parentNode) return;
+     rt = rt.parentNode;
+   }
+   if(this.hoveredNode) {
+     this.config.onMouseLeave(this.hoveredNode,
+         event, evt);
+     this.hoveredNode = false;
+   }
+  },
+  
+  onMouseOver: function(e, win) {
+    //mouseover a label
+    var evt = $.event.get(e, win), label;
+    if(this.dom && (label = this.isLabel(e, win))) {
+      this.config.onMouseEnter(this.viz.graph.getNode(label.id),
+                               event, evt);
+    }
+  },
+  
+  onMouseMove: function(e, win, event) {
+   var label, evt = $.event.get(e, win);
+   if(this.dom && (label = this.isLabel(e, win))) {
+     this.config.onMouseMove(this.viz.graph.getNode(label.id),
+         event, evt);
+   }
+   if(!this.dom) {
+     if(this.hoveredNode) {
+       var hn = this.hoveredNode;
+       var geom = this.types[hn.getData('type')];
+       var contains = geom && geom.contains 
+         && geom.contains.call(this.fx, hn, event.getPos());
+       if(contains) {
+         this.config.onMouseMove(this.hoveredNode, event, evt);
+         return;
+       } else {
+         this.config.onMouseLeave(this.hoveredNode, event, evt);
+       }
+     }
+     if(this.hoveredNode = event.getNode()) {
+       this.config.onMouseEnter(this.hoveredNode, event, evt);
+     } else {
+       this.config.onMouseMove(false, event, evt);
+     }
+   }
+  },
+  
+  onMouseWheel: function(e, win, delta) {
+    this.config.onMouseWheel(delta, $.event.get(e, win));
+  },
+  
+  onMouseDown: function(e, win, event) {
+    var evt = $.event.get(e, win),
+        node = event.getNode();
+    this.pressedNode = node;
+    this.config.onDragStart(node, event, evt);
+  }
+});
+
+/*
    Class: Tips
     
    A class containing tip related functions. This class is used internally.
@@ -197,17 +341,9 @@ Extras.Classes['Tips'] = new Class({
   
   setAsProperty: $.lambda(true),
   
-  isLabel: function(e) {
-    var labelContainer = this.labelContainer,
-        target = e.target;
-    if(target && target.parentNode == labelContainer)
-      return target;
-    return false;
-  },
-  
   onMouseOut: function(e, win) {
     //mouseout a label
-    if(this.dom && this.isLabel(e)) {
+    if(this.dom && this.isLabel(e, win)) {
       this.hide(true);
       return;
     }
@@ -224,14 +360,14 @@ Extras.Classes['Tips'] = new Class({
   onMouseOver: function(e, win) {
     //mouseover a label
     var label;
-    if(this.dom && (label = this.isLabel(e))) {
+    if(this.dom && (label = this.isLabel(e, win))) {
       this.node = this.viz.graph.getNode(label.id);
       this.config.onShow(this.tip, node, label);
     }
   },
   
   onMouseMove: function(e, win, opt) {
-    if(this.dom && this.isLabel(e)) {
+    if(this.dom && this.isLabel(e, win)) {
       this.setTooltipPosition(opt.getPos());
     }
     if(!this.dom) {
@@ -296,56 +432,68 @@ Extras.Classes['NodeStyles'] = new Class({
   initializePost: function(viz) {
     this.viz = viz;
     this.fx = viz.fx;
+    this.types = vix.fx.nodeTypes;
     this.nStyles = viz.config.NodeStyles;
     this.nodeStylesOnHover = this.nStyles.stylesHover;
     this.nodeStylesOnClick = this.nStyles.stylesClick;
-    this.nodeStylesOnRightClick = this.nStyles.stylesRightClick;
-    //hide the tip when we mouse out the canvas
-    var elem = viz.canvas.getElement(), that = this;
-    $.addEvent(elem, 'mouseout', function(e) {
-      var rt = e.relatedTarget;
-      while(rt && rt.parentNode) {
-        if(elem == rt.parentNode) return;
-        rt = rt.parentNode;
-      }
-      that.onMousemove(false);
-    });
-
+    this.hoveredNode = false;
+  },
+  
+  onMouseOut: function(e, win) {
+    if(!this.hoveredNode) return;
+    //mouseout a label
+    if(this.dom && this.isLabel(e, win)) {
+      this.toggleStylesOnHover(this.hoveredNode, false);
+    }
+    //mouseout canvas
+    var rt = e.relatedTarget,
+        canvasWidget = this.canvas.getElement();
+    while(rt && rt.parentNode) {
+      if(canvasWidget == rt.parentNode) return;
+      rt = rt.parentNode;
+    }
+    this.toggleStylesOnHover(this.hoveredNode, false);
+    this.hoveredNode = false;
+  },
+  
+  onMouseOver: function(e, win) {
+    //mouseover a label
+    var label;
+    if(this.dom && (label = this.isLabel(e, win))) {
+      var node = this.viz.graph.getNode(label.id);
+      if(node.selected) return;
+      this.hoveredNode = node;
+      this.toggleStylesOnHover(this.hoveredNode, true);
+    }
+  },
+  
+  onMouseUp: function(e, win, event, isRightClick) {
+    if(isRightClick) return;
+    this.onClick(event.getNode());
   },
   
   getRestoredStyles: function(node, type) {
-    var restoredStyles = {}, nStyles = this['nodeStylesOn' + type];
+    var restoredStyles = {}, 
+        nStyles = this['nodeStylesOn' + type];
     for(var prop in nStyles) {
       restoredStyles[prop] = node.styles['$' + prop];
     }
     return restoredStyles;
   },
   
-  toggleStylesOnHover: function(node, set, opt) {
+  toggleStylesOnHover: function(node, set) {
     if(this.nodeStylesOnHover) {
-      this.toggleStylesOn('Hover', node, set, opt);
-    } else {
-      this.nStyles.onHover(node, opt, set);
+      this.toggleStylesOn('Hover', node, set);
     }
   },
 
-  toggleStylesOnClick: function(node, set, opt) {
+  toggleStylesOnClick: function(node, set) {
     if(this.nodeStylesOnClick) {
-      this.toggleStylesOn('Click', node, set, opt);
-    } else {
-      this.nStyles.onClick(node, opt, set);
+      this.toggleStylesOn('Click', node, set);
     }
   },
   
-  toggleStylesOnRightClick: function(node, set, opt) {
-    if(this.nodeStylesOnRightClick) {
-      this.toggleStylesOn('RightClick', node, set, opt);
-    } else {
-      this.nStyles.onRightClick(node, opt, set);
-    }
-  },
-
-  toggleStylesOn: function(type, node, set, opt) {
+  toggleStylesOn: function(type, node, set) {
     var viz = this.viz;
     var nStyles = this.nStyles;
     if(set) {
@@ -366,10 +514,7 @@ Extras.Classes['NodeStyles'] = new Class({
          },
          transition: Trans.Quart.easeOut,
          duration:300,
-         fps:30,
-         onComplete: function() {
-           nStyles['on' + type](node, opt, set);
-         }
+         fps:40
       });
     } else {
       var restoredStyles = this.getRestoredStyles(node, type);
@@ -380,50 +525,22 @@ Extras.Classes['NodeStyles'] = new Class({
          },
          transition: Trans.Quart.easeOut,
          duration:300,
-         fps:30,
-         onComplete: function() {
-           nStyles['on' + type](node, opt, set);
-         }
+         fps:40
       });
     }
   },
 
-  attachOnHover: function(node, elem) {
-    var that = this, viz = this.viz;
-    var nStyles = viz.config.NodeStyles.stylesHover;
-    $.addEvent(elem, 'mouseover', function() {
-      if(!node.selected) {
-        that.toggleStylesOnHover(node, true);
-      }
-    });
-    
-    $.addEvent(elem, 'mouseout', function() {
-      !node.selected && that.toggleStylesOnHover(node, false);
-    });
-  },
-
-  attachOnClick: function(node, elem) {
-    var viz = this.viz, that = this;
-    var nStyles = viz.config.NodeStyles.stylesClick;
-    $.addEvent(elem, 'click', function() {
-      that.onClick(node);
-    });
-  },
-  
-  onClick: function(node, opt) {
+  onClick: function(node) {
     if(!node) return;
     var nStyles = this.nodeStylesOnClick;
-    if(!nStyles) {
-      this.nStyles.onClick(node, opt);
-      return;
-    }
+    if(!nStyles) return;
     //if the node is selected then unselect it
     if(node.selected) {
-      this.toggleStylesOnClick(node, false, opt);
+      this.toggleStylesOnClick(node, false);
       delete node.selected;
     } else {
       //unselect all selected nodes...
-      Graph.Util.eachNode(this.viz.graph, function(n) {
+      $jit.Graph.Util.eachNode(this.viz.graph, function(n) {
         if(n.selected) {
           for(var s in nStyles) {
             n.setData(s, n.styles['$' + s], 'end');
@@ -437,75 +554,42 @@ Extras.Classes['NodeStyles'] = new Class({
     }
   },
   
-  onRightClick: function(node, opt) {
-    var nStyles = this.nodeStylesOnRightClick;
-    if(!node || !nStyles) {
-      this.nStyles.onRightClick(node, opt);
-      return;
-    }
-    //if the node is selected then unselect it
-    if(node.rightClickSelected) {
-      this.toggleStylesOnRightClick(node, false, opt);
-      delete node.rightClickSelected;
-    } else {
-      //unselect all selected nodes...
-      Graph.Util.eachNode(this.viz.graph, function(n) {
-        if(n.rightClickSelected) {
+  onMouseMove: function(e, win, event) {
+    //already handled by mouseover/out
+    if(this.dom && this.isLabel(e, win)) return;
+    if(!this.dom) {
+      if(this.hoveredNode) {
+        var geom = this.types[this.hoveredNode.getData('type')];
+        var contains = geom && geom.contains && geom.contains.call(this.fx, 
+            this.hoveredNode, event.getPos());
+        if(contains) return;
+      }
+      var node = event.getNode();
+      //if the node is hovered then exit
+      if(node.hovered) return;
+      //check if an animation is running and exit
+      //if it's a nodefx one.
+      var anim = this.fx.animation;
+      if(anim.timer) {
+        if(anim.opt.type 
+            && anim.opt.type == 'nodefx') {
+          anim.stopTimer();
+        } else {
+          return;
+        }
+      }
+      //unselect all hovered nodes...
+      GUtil.eachNode(this.viz.graph, function(n) {
+        if(n.hovered && !n.selected) {
           for(var s in nStyles) {
             n.setData(s, n.styles['$' + s], 'end');
           }
-          delete n.rightClickSelected;
-        }
-      });
-      //select clicked node
-      this.toggleStylesOnRightClick(node, true, opt);
-      node.rightClickSelected = true;
-    }
-  },
-  
-  onMousemove: function(node, opt) {
-    var GUtil = Graph.Util, that = this;
-    var nStyles = this.nodeStylesOnHover;
-    if(!nStyles) {
-//      this.nStyles.onHover(node);
-      return;
-    }
-    
-    if(!node || node.selected) {
-      GUtil.eachNode(this.viz.graph, function(n) {
-        if(n.hovered && !n.selected) {
-          that.toggleStylesOnHover(n, false, opt);
           delete n.hovered;
         }
       });
-      return;
+      //select hovered node
+      this.toggleStylesOnHover(node, true, opt);
+      node.hovered = true;
     }
-    //if the node is hovered then exit
-    if(node.hovered) return;
-
-    //check if an animation is running and exit
-    //if it's a nodefx one.
-    var anim = this.fx.animation;
-    if(anim.timer) {
-      if(anim.opt.type 
-          && anim.opt.type == 'nodefx') {
-        anim.stopTimer();
-      } else {
-        return;
-      }
-    }
-
-    //unselect all hovered nodes...
-    GUtil.eachNode(this.viz.graph, function(n) {
-      if(n.hovered && !n.selected) {
-        for(var s in nStyles) {
-          n.setData(s, n.styles['$' + s], 'end');
-        }
-        delete n.hovered;
-      }
-    });
-    //select hovered node
-    this.toggleStylesOnHover(node, true, opt);
-    node.hovered = true;
   }
 });
