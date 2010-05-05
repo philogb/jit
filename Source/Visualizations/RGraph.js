@@ -149,7 +149,7 @@ $jit.RGraph = new Class( {
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Controller", "Tips", "NodeStyles", "Label"), config, controller);
+        "Fx", "Controller", "Tips", "NodeStyles", "Events", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {
