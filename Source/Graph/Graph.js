@@ -479,7 +479,7 @@ var Accessors;
     */
     getLabelData: function(prop, type, force) {
       return getDataInternal.call(
-          this, 'label', prop, type, force, this.Config.Label);
+          this, 'label', prop, type, force, this.Label);
     },
 
     /*
