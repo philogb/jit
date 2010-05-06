@@ -391,7 +391,6 @@ function init(){
             color: '#ccddee',
             dim: 10,
         },
-        
         Edge: {
             color: '#772277'
         },
@@ -404,34 +403,50 @@ function init(){
         Events: {
           enable: true,
           onClick: function(node, eventInfo, e) {
-            console.log('onClick', node && node.name);
+            false && console.log('onClick', node && node.name);
           },
           onRightClick: function(node, eventInfo, e) {
-            console.log('onRightClick', node && node.name);
+            false && console.log('onRightClick', node && node.name);
           },
           onMouseEnter: function(node, eventInfo, e) {
-            console.log('onMouseEnter', node && node.name);
+            false && console.log('onMouseEnter', node && node.name);
           },
           onMouseLeave: function(node, eventInfo, e) {
-            console.log('onMouseLeave', node && node.name);
+            false && console.log('onMouseLeave', node && node.name);
           },
           onMouseMove: function(node, eventInfo, e) {
             false && console.log('onMouseMove', node && node.name, eventInfo, e);
           },
           onDragStart: function(node, eventInfo, e) {
-            console.log('onDragStart', node && node.name, eventInfo, e);
+            false && console.log('onDragStart', node && node.name, eventInfo, e);
           },
           onDragMove: function(node, eventInfo, e) {
-            console.log('onDragMove', node && node.name, eventInfo, e);
+            var pos = eventInfo.getPos();
+            node.pos.setc(pos.x, pos.y);
+            rgraph.plot();
+            false && console.log('onDragMove', node && node.name, eventInfo, e);
           },
           onDragCancel: function(node, eventInfo, e) {
-            console.log('onDragCancel', node && node.name, eventInfo, e);
+            false && console.log('onDragCancel', node && node.name, eventInfo, e);
           },
           onDragEnd: function(node, eventInfo, e) {
-            console.log('onDragEnd', node && node.name, eventInfo, e);
+            rgraph.compute('end');
+            rgraph.fx.animate({
+              modes: ['linear'],
+              duration: 700,
+              transition: $jit.Trans.Elastic.easeOut
+            });
+            false && console.log('onDragEnd', node && node.name, eventInfo, e);
           },
           onMouseWheel: function(delta, e) {
-            console.log('MouseWheel', delta, e);
+            false && console.log('MouseWheel', delta, e);
+          }
+        },
+        NodeStyles: {
+          enable:true,
+          stylesHover: {
+            dim:30,
+            color:'#f00'
           }
         },
         onCreateLabel: function(domElement, node){

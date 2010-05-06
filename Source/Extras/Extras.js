@@ -95,7 +95,7 @@ var MouseEventsManager = new Class({
     if(navigator.userAgent.match(/Gecko/)) {
       htmlCanvas.addEventListener('DOMMouseScroll', handleMouseWheel, false);
     } else {
-      $.addEvent('mousewheel', handleMouseWheel);
+      $.addEvent(htmlCanvas, 'mousewheel', handleMouseWheel);
     }
   },
   
@@ -263,16 +263,22 @@ Extras.Classes['Events'] = new Class({
          event, evt);
    }
    if(!this.dom) {
+     if(this.pressedNode) {
+       this.moved = true;
+       this.config.onDragMove(this.pressedNode, event, evt);
+       return;
+     }
      if(this.hoveredNode) {
        var hn = this.hoveredNode;
        var geom = this.types[hn.getData('type')];
        var contains = geom && geom.contains 
          && geom.contains.call(this.fx, hn, event.getPos());
        if(contains) {
-         this.config.onMouseMove(this.hoveredNode, event, evt);
+         this.config.onMouseMove(hn, event, evt);
          return;
        } else {
-         this.config.onMouseLeave(this.hoveredNode, event, evt);
+         this.config.onMouseLeave(hn, event, evt);
+         this.hoveredNode = false;
        }
      }
      if(this.hoveredNode = event.getNode()) {
@@ -280,10 +286,6 @@ Extras.Classes['Events'] = new Class({
      } else {
        this.config.onMouseMove(false, event, evt);
      }
-   }
-   if(this.pressedNode) {
-     this.moved = true;
-     this.config.onDragMove(this.pressedNode, event, evt);
    }
   },
   
@@ -541,7 +543,7 @@ Extras.Classes['NodeStyles'] = new Class({
         }
       });
       //select clicked node
-      this.toggleStylesOnClick(node, true, opt);
+      this.toggleStylesOnClick(node, true);
       node.selected = true;
     }
   },
@@ -557,6 +559,8 @@ Extras.Classes['NodeStyles'] = new Class({
         if(contains) return;
       }
       var node = event.getNode();
+      //if no node is being hovered then just exit
+      if(!this.hoveredNode && !node) return;
       //if the node is hovered then exit
       if(node.hovered) return;
       //check if an animation is running and exit
@@ -570,18 +574,26 @@ Extras.Classes['NodeStyles'] = new Class({
           return;
         }
       }
-      //unselect all hovered nodes...
-      GUtil.eachNode(this.viz.graph, function(n) {
-        if(n.hovered && !n.selected) {
-          for(var s in nStyles) {
-            n.setData(s, n.styles['$' + s], 'end');
+      if(node) {
+        //unselect all hovered nodes...
+        $jit.Graph.Util.eachNode(this.viz.graph, function(n) {
+          if(n.hovered && !n.selected) {
+            for(var s in nStyles) {
+              n.setData(s, n.styles['$' + s], 'end');
+            }
+            delete n.hovered;
           }
-          delete n.hovered;
-        }
-      });
-      //select hovered node
-      this.toggleStylesOnHover(node, true, opt);
-      node.hovered = true;
+        });
+        //select hovered node
+        this.toggleStylesOnHover(node, true);
+        node.hovered = true;
+        this.hoveredNode = node;
+      } else if(this.hoveredNode) {
+        //select hovered node
+        this.toggleStylesOnHover(this.hoveredNode, false);
+        delete this.hoveredNode.hovered;
+        this.hoveredNode = false;
+      }
     }
   }
 });
