@@ -65,8 +65,8 @@ var MouseEventsManager = new Class({
   attachEvents: function() {
     var htmlCanvas = this.canvas.getElement(), 
         that = this;
+    htmlCanvas.oncontextmenu = $.lambda(false);
     $.addEvents(htmlCanvas, {
-      'contextmenu': $.lambda(false),
       'mouseup': function(e, win) {
         var event = $.event.get(e, win);
         that.handleEvent('MouseUp', e, win, 
@@ -361,7 +361,7 @@ Extras.Classes['Tips'] = new Class({
   
   onMouseMove: function(e, win, opt) {
     if(this.dom && this.isLabel(e, win)) {
-      this.setTooltipPosition(opt.getPos());
+      this.setTooltipPosition($.event.getPos(e, win));
     }
     if(!this.dom) {
       var node = opt.getNode();
@@ -373,7 +373,7 @@ Extras.Classes['Tips'] = new Class({
         this.node = node;
         this.config.onShow(this.tip, node, opt.getContains());
       }
-      this.setTooltipPosition(opt.getPos());
+      this.setTooltipPosition($.event.getPos(e, win));
     }
   },
   

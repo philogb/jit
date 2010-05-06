@@ -148,6 +148,9 @@ $jit.AreaChart = new Class({
       subtreeOffset: 0,
       useCanvas: config.useCanvas,
       withLabels: false,
+      Label: {
+        type: 'Native'
+      },
       Node: {
         overridable: true,
         type: 'areachart-' + nodeType,
@@ -160,11 +163,9 @@ $jit.AreaChart = new Class({
       },
       Tips: {
         enable: config.Tips.enable,
-        attachToDOM: false,
-        attachToCanvas: true,
         force: true,
-        onShow: function(tip, node, opt) {
-          var elem = opt.contains;
+        onShow: function(tip, node, contains) {
+          var elem = contains;
           config.Tips.onShow(tip, elem, node);
           that.select(node.id, elem.name, elem.index);
         },
@@ -172,15 +173,14 @@ $jit.AreaChart = new Class({
           that.select(false, false, false);
         }
       },
-      NodeStyles: {
-        attachToDOM: false,
-        attachToCanvas: true,
-        onClick: function(node, opt, set) {
+      Events: {
+        enable: true,
+        onClick: function(node, eventInfo, evt) {
           if(!config.filterOnClick) return;
-          var elem = opt.contains;
-          that.filter(elem.name);
+          var elem = eventInfo.getContains();
+          if(elem) that.filter(elem.name);
         },
-        onRightClick: function(node, opt, set) {
+        onRightClick: function(node, eventInfo, evt) {
           if(!config.restoreOnRightClick) return;
           that.restore();
         }

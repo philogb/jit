@@ -218,7 +218,7 @@ $jit.ST= (function() {
             
             this.controller = this.config = $.merge(
                 Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", 
-                    "Tips", "NodeStyles", "Label"), config, controller);
+                    "Tips", "NodeStyles", "Events", "Label"), config, controller);
 
             var canvasConfig = this.config;
             if(canvasConfig.useCanvas) {

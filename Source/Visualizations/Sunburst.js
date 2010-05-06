@@ -156,7 +156,7 @@ $jit.Sunburst = new Class({
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Tips", "NodeStyles", "Controller", "Label"), config, controller);
+        "Fx", "Tips", "NodeStyles", "Events", "Controller", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {

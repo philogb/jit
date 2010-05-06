@@ -141,6 +141,9 @@ $jit.PieChart = new Class({
       injectInto: config.injectInto,
       useCanvas: config.useCanvas,
       withLabels: false,
+      Label: {
+        type: 'Native'
+      },
       Node: {
         overridable: true,
         type: 'piechart-' + nodeType,
@@ -152,11 +155,9 @@ $jit.PieChart = new Class({
       },
       Tips: {
         enable: config.Tips.enable,
-        attachToDOM: false,
-        attachToCanvas: true,
         force: true,
-        onShow: function(tip, node, opt) {
-          var elem = opt.contains;
+        onShow: function(tip, node, contains) {
+          var elem = contains;
           config.Tips.onShow(tip, elem, node);
           that.select(node.id, elem.name, elem.index);
         },

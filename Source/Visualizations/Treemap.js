@@ -40,7 +40,7 @@ TM.Base = {
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Controller", "Tips", "NodeStyles", "Label"), config, controller);
+        "Fx", "Controller", "Tips", "NodeStyles", "Events", "Label"), config, controller);
     this.layout.orientation = this.config.orientation;
 
     var canvasConfig = this.config;
