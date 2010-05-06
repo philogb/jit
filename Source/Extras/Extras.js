@@ -258,16 +258,15 @@ Extras.Classes['Events'] = new Class({
   
   onMouseMove: function(e, win, event) {
    var label, evt = $.event.get(e, win);
+   if(this.pressedNode) {
+     this.moved = true;
+     this.config.onDragMove(this.pressedNode, event, evt);
+     return;
+   }
    if(this.dom) {
      this.config.onMouseMove(this.hoveredNode,
          event, evt);
-   }
-   if(!this.dom) {
-     if(this.pressedNode) {
-       this.moved = true;
-       this.config.onDragMove(this.pressedNode, event, evt);
-       return;
-     }
+   } else {
      if(this.hoveredNode) {
        var hn = this.hoveredNode;
        var geom = this.types[hn.getData('type')];
@@ -357,7 +356,7 @@ Extras.Classes['Tips'] = new Class({
     var label;
     if(this.dom && (label = this.isLabel(e, win))) {
       this.node = this.viz.graph.getNode(label.id);
-      this.config.onShow(this.tip, node, label);
+      this.config.onShow(this.tip, this.node, label);
     }
   },
   
@@ -427,7 +426,7 @@ Extras.Classes['NodeStyles'] = new Class({
   initializePost: function() {
     this.fx = this.viz.fx;
     this.types = this.viz.fx.nodeTypes;
-    this.nStyles = this.viz.config.NodeStyles;
+    this.nStyles = this.config;
     this.nodeStylesOnHover = this.nStyles.stylesHover;
     this.nodeStylesOnClick = this.nStyles.stylesClick;
     this.hoveredNode = false;
@@ -545,12 +544,17 @@ Extras.Classes['NodeStyles'] = new Class({
       //select clicked node
       this.toggleStylesOnClick(node, true);
       node.selected = true;
+      delete node.hovered;
+      this.hoveredNode = false;
     }
   },
   
   onMouseMove: function(e, win, event) {
     //already handled by mouseover/out
     if(this.dom && this.isLabel(e, win)) return;
+    var nStyles = this.nodeStylesOnHover;
+    if(!nStyles) return;
+    
     if(!this.dom) {
       if(this.hoveredNode) {
         var geom = this.types[this.hoveredNode.getData('type')];
@@ -574,7 +578,7 @@ Extras.Classes['NodeStyles'] = new Class({
           return;
         }
       }
-      if(node) {
+      if(node && !node.selected) {
         //unselect all hovered nodes...
         $jit.Graph.Util.eachNode(this.viz.graph, function(n) {
           if(n.hovered && !n.selected) {
@@ -588,7 +592,7 @@ Extras.Classes['NodeStyles'] = new Class({
         this.toggleStylesOnHover(node, true);
         node.hovered = true;
         this.hoveredNode = node;
-      } else if(this.hoveredNode) {
+      } else if(this.hoveredNode && !this.hoveredNode.selected) {
         //select hovered node
         this.toggleStylesOnHover(this.hoveredNode, false);
         delete this.hoveredNode.hovered;

@@ -73,16 +73,15 @@ function init(){
 
         Tips: {
           enable: true,
-          attachToDOM: false,
-          attachToCanvas: true,
+          type: 'Native',
           onShow: function(tip, node, elem) {
             tip.innerHTML = node.name + " - " + Math.round(node.getData('angularWidth')) + "%";
           }
         },
         
         NodeStyles: {
-          attachToDOM: false,
-          attachToCanvas: true,
+          enable: true,
+          type: 'Native',
           stylesHover: {
             'color': '#dddd33'
            }

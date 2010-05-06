@@ -363,8 +363,7 @@ function init(){
     //init RGraph
     var rgraph = new $jit.RGraph({
         //Where to append the visualization
-        'injectInto': 'infovis',
-        
+        'injectInto': 'infovis',        
         //Optional: create a background canvas and plot
         //concentric circles in it.
         'backgroundCanvas': {
@@ -385,20 +384,37 @@ function init(){
                 }
             }
         },
-      
         //Set Node and Edge colors.
         Node: {
-            color: '#ccddee',
-            dim: 10,
+          overridable:true,
+          color: '#ccddee',
+          dim: 10,
         },
         Edge: {
-            color: '#772277'
+          color: '#772277'
         },
         Label: {
           type: 'Native',
           size:13,
           family:'Verdana',
           color: '#888'
+        },
+        NodeStyles: {
+          enable:true,
+          stylesHover: {
+            dim:20,
+            color:'#f00'
+          },
+          stylesClick: {
+            dim:30,
+            color:'#ff0'
+          }
+        },
+        Tips: {
+          enable: true,
+          onShow: function(tip, elem, contains) {
+            tip.innerHTML = elem.name;
+          }
         },
         Events: {
           enable: true,
@@ -440,13 +456,6 @@ function init(){
           },
           onMouseWheel: function(delta, e) {
             false && console.log('MouseWheel', delta, e);
-          }
-        },
-        NodeStyles: {
-          enable:true,
-          stylesHover: {
-            dim:30,
-            color:'#f00'
           }
         },
         onCreateLabel: function(domElement, node){

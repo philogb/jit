@@ -23,7 +23,5 @@ Options.NodeStyles = {
   enable: false,
   type: 'auto',
   stylesHover: false,
-  stylesClick: false,
-  stylesRightClick: false,
-  stylesDrag: false
+  stylesClick: false
 };

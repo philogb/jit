@@ -409,7 +409,7 @@ Graph.Plot = {
    nodeFx: function(opt) {
      var viz = this.viz,
      graph  = viz.graph,
-     GUtil = Graph.Util,
+     GUtil = $jit.Graph.Util,
      options = $.merge(this.viz.config, {
        'elements': {
          'id': false,

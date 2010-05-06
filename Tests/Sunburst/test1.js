@@ -344,22 +344,23 @@ function init(){
 
         Tips: {
           enable: true,
-          attachToDOM: false,
-          attachToCanvas: true,
           onShow: function(tip, node, elem) {
             tip.innerHTML = node.name;
           }
         },
         
         NodeStyles: {
-          attachToDOM: false,
-          attachToCanvas: true,
+          enable: true,
           stylesHover: {
             'color': '#dd3333'
           },
           stylesClick: {
             'color': '#33dddd'
-          },
+          }
+        },
+        
+        Events: {
+          enable: true,
           onClick: function(node) {
             //Build the right column relations list.
             //This is done by collecting the information (stored in the data property) 
@@ -377,12 +378,13 @@ function init(){
             document.getElementById('inner-details').innerHTML = html;
             //hide tip
             sb.tips.tip.style.display = 'none';
-            
             //rotate
-            sb.rotate(node, 'animate', {
-              'duration': 1500,
-              'transition': $jit.Trans.Quart.easeInOut
-            });
+            setTimeout(function() {
+              sb.rotate(node, 'animate', {
+                'duration': 1500,
+                'transition': $jit.Trans.Quart.easeInOut
+              });
+            }, 500);
           },
           onRightClick: function(node) {
             if(node.collapsed) {
