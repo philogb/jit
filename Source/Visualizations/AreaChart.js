@@ -304,7 +304,7 @@ $jit.AreaChart = new Class({
           dimArray = n.getData('dimArray'),
           stringArray = n.getData('stringArray');
       n.setData('dimArray', $.map(dimArray, function(d, i) {
-        return (args.indexOf(stringArray[i]) > -1)? d:[0, 0];
+        return ($.indexOf(args, stringArray[i]) > -1)? d:[0, 0];
       }), 'end');
     });
     this.st.fx.animate({

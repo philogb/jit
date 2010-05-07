@@ -88,6 +88,14 @@ $.each = function(iterable, fn) {
   }
 };
 
+$.indexOf = function(array, item) {
+  if(Array.indexOf) return array.indexOf(item);
+  for(var i=0,l=array.length; i<l; i++) {
+    if(array[i] === item) return i;
+  }
+  return -1;
+};
+
 $.map = function(array, f) {
   var ans = [];
   $.each(array, function(elem, i) {
