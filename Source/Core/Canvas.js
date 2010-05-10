@@ -172,6 +172,9 @@
       this.canvases.push(new Canvas.Base({
         config: $.extend({idSuffix: '-canvas'}, canvasOptions),
         paint: function(ctx, opt, canvas) {
+          viz.fx.plot();
+        },
+        resize: function() {
           viz.refresh();
         }
       }));
@@ -315,6 +318,28 @@
       }
     },
     /*
+      Method: scale
+      
+      Scales the canvas(ses)
+      
+      Parameters:
+      
+      x - value.
+      y - value.
+      
+      Example:
+      
+      (start code js)
+       canvas.scale(0.5, 0.5);
+      (end code)
+    
+    */
+    scale: function(x, y) {
+      for(var i=0, l=this.canvases.length; i<l; i++) {
+        this.canvases[i].scale(x, y);
+      }
+    },
+    /*
       Method: getPos
       
       Returns canvas position vector.
@@ -447,6 +472,10 @@
     },
     translate: function(x, y) {
       this.getCtx().translate(x, y);
+      this.paint();
+    },
+    scale: function(x, y) {
+      this.getCtx().scale(x, y);
       this.paint();
     },
     clear: function(){
