@@ -193,7 +193,7 @@ Extras.Classes = {};
   The methods implemented are the ones defined in the <Options.Events> object.
 */
 
-Extras.Classes['Events'] = new Class({
+Extras.Classes.Events = new Class({
   Implements: [ExtrasInitializer, EventsInterface],
   
   initializePost: function() {
@@ -313,7 +313,7 @@ Extras.Classes['Events'] = new Class({
    <Options.Tips>
 */
 
-Extras.Classes['Tips'] = new Class({
+Extras.Classes.Tips = new Class({
   Implements: [ExtrasInitializer, EventsInterface],
   
   initializePost: function() {
@@ -420,7 +420,7 @@ Extras.Classes['Tips'] = new Class({
   
   <Options.NodeStyles>
 */
-Extras.Classes['NodeStyles'] = new Class({
+Extras.Classes.NodeStyles = new Class({
   Implements: [ExtrasInitializer, EventsInterface],
   
   initializePost: function() {
@@ -599,5 +599,39 @@ Extras.Classes['NodeStyles'] = new Class({
         this.hoveredNode = false;
       }
     }
+  }
+});
+
+Extras.Classes.Navigation = new Class({
+  Implements: [ExtrasInitializer, EventsInterface],
+  
+  initializePost: function() {
+    this.pos = false;
+    this.pressed = false;
+  },
+  
+  onMouseWheel: function(e, win, scroll) {
+    if(!this.config.zooming) return;
+    var val = this.config.zooming;
+    this.canvas.scale(val, val);
+  },
+  
+  onMouseDown: function(e, win, eventInfo) {
+    this.pressed = true;
+    this.pos = eventInfo.getPos();
+  },
+  
+  onMouseMove: function(e, win, eventInfo) {
+    if(!this.pressed) return;
+    var thispos = this.pos, 
+        currentPos = eventInfo.getPos(),
+        x = currentPos.x - thispos.x,
+        y = currentPos.y - thispos.y;
+    this.pos = currentPos;
+    this.canvas.translate(x, y);
+  },
+  
+  onMouseUp: function(e, win, eventInfo, isRightClick) {
+    this.pressed = false;
   }
 });

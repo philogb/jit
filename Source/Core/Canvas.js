@@ -116,309 +116,429 @@
  The _init_ method is only called once, at the instanciation of the background canvas.
  The _plot_ method is called for plotting a Canvas image.
  */
-var Canvas = (function(){
-    function hasCanvas(){
-        hasCanvas.t = hasCanvas.t || typeof(HTMLCanvasElement);
-        return "function" == hasCanvas.t || "object" == hasCanvas.t;
-    };
+(function() {
+  //check for native canvas support
+  var canvasType = typeof HTMLCanvasElement,
+      supportsCanvas = (canvasType == 'object' || canvasType == 'function');
+  //create element function
+  function $E(tag, props) {
+    var elem = document.createElement(tag);
+    for(var p in props) {
+      if(typeof props[p] == "object") {
+        $.extend(elem[p], props[p]);
+      } else {
+        elem[p] = props[p];
+      }
+    }
+    if (tag == "canvas" && !supportsCanvas && G_vmlCanvasManager) {
+      elem = G_vmlCanvasManager.initElement(document.body.appendChild(elem));
+    }
+  }
+  //canvas widget which we will call just Canvas
+  var Canvas = new Class({
+    canvases: [],
+    pos: false,
+    element: false,
+    labelContainer: false,
     
-    function create(tag, prop, styles){
-        var elem = document.createElement(tag);
-        (function(obj, prop){
-            if (prop) {
-              for (var p in prop) {
-                obj[p] = prop[p];
-              }  
-            }
-            return arguments.callee;
-        })(elem, prop)(elem.style, styles);
-        //feature check
-        if (tag == "canvas" && !hasCanvas() && G_vmlCanvasManager) {
-            elem = G_vmlCanvasManager.initElement(document.body.appendChild(elem));
+    initialize: function(viz, opt) {
+      this.viz = viz;
+      this.opt = options;
+      var id = $.type(opt.injectInto) == 'string'? 
+          opt.injectInto:opt.injectInto.id,
+          idLabel = id + "-label", 
+          wrapper = $(id),
+          width = opt.width || wrapper.offsetWidth,
+          height = opt.height || wrapper.offsetHeight;
+      //canvas options
+      var canvasOptions = {
+        injectInto: id,
+        width: width,
+        height: height
+      };
+      //create main wrapper
+      this.element = $E('div', {
+        'id': id + '-canvaswidget',
+        'style': {
+          'position': 'relative',
+          'width': width + 'px',
+          'height': height + 'px'
         }
-        return elem;
-    };
+      });
+      //create label container
+      this.labelContainer = createLabelContainer(opt.Label.type, 
+          idLabel, canvasOptions);
+      //create primary canvas
+      this.canvases.push(new Canvas.Base({
+        config: $.extend({idSuffix: '-canvas'}, canvasOptions),
+        paint: function(ctx, opt, canvas) {
+          viz.refresh();
+        }
+      }));
+      //create secondary canvas
+      var background = opt.background;
+      if(background) {
+        var backgroundCanvas = new Canvas
+          .Background($.extend(background, canvasOptions));
+        this.canvases.push(new Canvas.Base(backgroundCanvas));
+      }
+      //insert canvases
+      var len = this.canvases.length;
+      while(len--) {
+        this.element.appendChild(this.canvases[len]);
+        if(len > 0) {
+          this.canvases[len].paint();
+        }
+      }
+      this.element.appendChild(this.labelContainer);
+      wrapper.appendChild(this.element);
+    },
+    /*
+      Method: getCtx
+      
+      Returns the main canvas context object
+      
+      Returns:
+      
+      Main canvas context
+      
+      Example:
+      
+      (start code js)
+       var ctx = canvas.getCtx();
+       //Now I can use the native canvas context
+       //and for example change some canvas styles
+       ctx.globalAlpha = 1;
+      (end code)
+    */
+    getCtx: function(i) {
+      return this.canvases[i || 0].getCtx();
+    },
+    /*
+      Method: getConfig
+      
+      Returns the current Configuration for this Canvas Widget.
+      
+      Returns:
+      
+      Canvas Widget Configuration
+      
+      Example:
+      
+      (start code js)
+       var config = canvas.getConfig();
+      (end code)
+    */
+    getConfig: function() {
+      return this.opt;
+    },
+    /*
+      Method: getElement
 
-    function createLabelContainer(labels, idLabel, dim) {
+      Returns the main Canvas DOM wrapper
+      
+      Returns:
+      
+      DOM canvas wrapper generated, (i.e the div wrapper element with id _mycanvas_)
+      
+      Example:
+      
+      (start code js)
+       var wrapper = canvas.getElement();
+       //Returns <div id="mycanvas" ... >...</div> as element
+      (end code)
+    */
+    getElement: function() {
+      return this.element;
+    },
+    /*
+      Method: getSize
+      
+      Returns canvas dimensions.
+      
+      Returns:
+      
+      An object with _width_ and _height_ properties.
+      Example:
+      (start code js)
+      canvas.getSize(); //returns { width: 900, height: 500 }
+      (end code)
+    */
+    getSize: function(i) {
+      return this.canvases[i || 0].getSize();
+    },
+    /*
+      Method: resize
+      
+      Resizes the canvas.
+      
+      Parameters:
+      
+      width - New canvas width.
+      height - New canvas height.
+      
+      This method can be used with the <ST>, <Hypertree> or <RGraph> visualizations to resize
+      the visualizations
+      
+      Example:
+      
+      (start code js)
+       canvas.resize(width, height);
+      (end code)
+    
+    */
+    resize: function(width, height) {
+      for(var i=0, l=this.canvases.length; i<l; i++) {
+        this.canvases[i].resize(width, height);
+      }
+    },
+    /*
+      Method: translate
+      
+      Applies a translation to canvases.
+      
+      Parameters:
+      
+      x - pos.
+      y - pos.
+      
+      Example:
+      
+      (start code js)
+       canvas.translate(30, 30);
+      (end code)
+    
+    */
+    translate: function(x, y) {
+      for(var i=0, l=this.canvases.length; i<l; i++) {
+        this.canvases[i].translate(x, y);
+      }
+    },
+    /*
+      Method: getPos
+      
+      Returns canvas position vector.
+      
+      Returns:
+      
+      An object with _x_ and _y_ properties.
+      Example:
+      (start code js)
+      canvas.getPos(); //returns { x: 900, y: 500 }
+      (end code)
+    */
+    getPos: function(force){
+      if(force || !this.pos) {
+        return this.pos = $.getPos(this.getElement());
+      }
+      return this.pos;
+    },
+    /*
+       Method: clear
+       
+       Clears the canvas object.
+    */
+    clear: function(i){
+      var size = this.getSize(i || 0);
+      this.canvases[i || 0].getCtx().clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
+    },
+    
+    path: function(type, action){
+      var ctx = this.canvases[0].getCtx();
+      ctx.beginPath();
+      action(ctx);
+      ctx[type]();
+      ctx.closePath();
+    },
+    
+    createLabelContainer: function(type, idLabel, dim) {
       var NS = 'http://www.w3.org/2000/svg';
-
-      if(labels == 'HTML' || labels == 'Native') {
-        return create("div", {
-            'id': idLabel
-        }, {
+      if(type == 'HTML' || type == 'Native') {
+        return $E('div', {
+          'id': idLabel,
+          'style': {
             'overflow': 'visible',
             'position': 'absolute',
             'top': 0,
             'left': 0,
             'width': dim.width + 'px',
             'height': 0
+          }
         });
-
-      } else if(labels == 'SVG') {
+      } else if(type == 'SVG') {
         var svgContainer = document.createElementNS(NS, 'svg:svg');
         svgContainer.setAttribute("width", dim.width);
         svgContainer.setAttribute('height', dim.height);
         var style = svgContainer.style;
         style.position = 'absolute';
         style.left = style.top = '0px';
-    
         var labelContainer = document.createElementNS(NS, 'svg:g');
         labelContainer.setAttribute('width', dim.width);
         labelContainer.setAttribute('height', dim.height);
         labelContainer.setAttribute('x', 0);
         labelContainer.setAttribute('y', 0);
         labelContainer.setAttribute('id', idLabel);
-
         svgContainer.appendChild(labelContainer);
-
         return svgContainer;
       }
-    }; 
-    
-    function translateToCenter(canvas, ctx, w, h){
-        var width = w ? (canvas.width - w) : canvas.width;
-        var height = h ? (canvas.height - h) : canvas.height;
-        ctx.translate(width / 2, height / 2);
-    };
-    
-    return function(opt){
-        var id = opt.injectInto, ctx, bkctx, mainContainer, labelContainer, canvas, bkcanvas;
-        var idLabel = id + "-label", idCanvas = id + "-canvas", idBCanvas = id + "-bkcanvas";
-        var wrapper = $(id);
-        //create elements
-        var dim = {
-            'width': opt.width || wrapper.offsetWidth || 200,
-            'height': opt.height || wrapper.offsetHeight || 200
-        };
-        mainContainer = create("div", {
-            'id': id + '-canvaswidget'
-        }, $.merge(dim, {
-            'position': 'relative'
-        }));
-        labelContainer =  createLabelContainer(opt.Label.type, idLabel, dim);       
-        var dimPos = {
-            'position': 'absolute',
-            'top': 0,
-            'left': 0,
-            'width': dim.width + 'px',
-            'height': dim.height + 'px'
-        };
-        canvas = create("canvas", $.merge({
-            'id': idCanvas
-        }, dim), dimPos);
-        var bc = opt.backgroundCanvas;
-        if (bc) {
-            bkcanvas = create("canvas", $.merge({
-                'id': idBCanvas
-            }, dim), dimPos);
-            //append elements
-            mainContainer.appendChild(bkcanvas);
+    }
+  });
+  //base canvas wrapper
+  Canvas.Base = new Class({
+    initialize: function(viz) {
+      this.viz = viz;
+      this.opt = viz.config;
+      this.size = false;
+      this.createCanvas();
+      this.translateToCenter();
+    },
+    createCanvas: function() {
+      var opt = this.opt,
+          width = opt.width,
+          height = opt.height;
+      this.canvas = $E('canvas', {
+        'id': opt.injectInto + opt.idSuffix,
+        'width': width,
+        'height': height,
+        'style': {
+          'position': 'absolute',
+          'top': 0,
+          'left': 0,
+          'width': width + 'px',
+          'height': height + 'px'
         }
-        mainContainer.appendChild(canvas);
-        mainContainer.appendChild(labelContainer);
-        wrapper.appendChild(mainContainer);
-        
-        //create contexts
-        ctx = canvas.getContext('2d');
-        translateToCenter(canvas, ctx);
-        var st = opt.styles;
-        var s;
-        for (s in st) 
-            ctx[s] = st[s];
-        if (bc) {
-            bkctx = bkcanvas.getContext('2d');
-            st = bc.styles;
-            for (s in st) {
-              bkctx[s] = st[s];
-            }
-            translateToCenter(bkcanvas, bkctx);
-            bc.impl.init(bkcanvas, bkctx);
-            bc.impl.plot(bkcanvas, bkctx);
+      });
+    },
+    getCtx: function() {
+      if(!this.ctx) 
+        return this.ctx = this.canvas.getContext('2d');
+      return this.ctx;
+    },
+    getSize: function() {
+      if(this.size) return this.size;
+      var canvas = this.canvas;
+      return this.size = {
+        width: canvas.width,
+        height: canvas.height
+      };
+    },
+    translateToCenter: function(ps) {
+      var size = this.getSize(),
+          width = ps? (size.width - size.width) : canvas.width;
+          height = ps? (canvas.height - h) : canvas.height;
+      this.getCtx().translate(size.width/2, size.height/2);
+    },
+    resize: function(width, height) {
+      var size = this.getSize(),
+          canvas = this.canvas,
+          styles = canvas.style;
+      this.size = false;
+      canvas.width = width;
+      canvas.height = height;
+      styles.width = width + "px";
+      styles.height = height + "px";
+      //small ExCanvas fix
+      if(!supportsCanvas) {
+        this.translateToCenter(size);
+      } else {
+        this.translateToCenter();
+      }
+      this.viz.resize(width, height, this.getCtx(), this.opt);
+    },
+    translate: function(x, y) {
+      this.getCtx().translate(x, y);
+      this.paint();
+    },
+    clear: function(){
+      var size = this.getSize();
+      ctx.clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
+    },
+    paint: function() {
+      this.viz.paint(this.getCtx(), this.opt);
+    }
+  });
+  //background canvases
+  Canvas.Background.Grid = new Class({
+    intialize: function(options) {
+      this.config = $.merge({
+        idSuffix: '-bkcanvas',
+        XAxis: {
+          show: false,
+          showLabels: false,
+          CanvasStyles: {},
+          offset: 0,
+          getXRange: $.lambda([]),
+          getXLabels: $.lambda([])
+        },
+        YAxis: {
+          show: false,
+          showLabels: false,
+          CanvasStyles: {},
+          offset: 0,
+          getYRange: $.lambda([]),
+          getYLabels: $.lambda([])
         }
-        //create methods
-        return {
-            'id': id,
-            
-            'pos': null,
-            /*
-             Method: getCtx
-             
-             Returns the main canvas context object
-             
-             Returns:
-             
-             Main canvas context
-             
-             Example:
-             
-             (start code js)
-             	var ctx = canvas.getCtx();
-             	//Now I can use the native canvas context
-             	//and for example change some canvas styles
-             	ctx.globalAlpha = 1;
-             (end code)
-             */
-            getCtx: function(){
-                return ctx;
-            },
-            
-            /*
-             Method: getConfig
-             
-             Returns the current Configuration for this Canvas Widget.
-             
-             Returns:
-             
-             Canvas Widget Configuration
-             
-             Example:
-             
-             (start code js)
-             	var config = canvas.getConfig();
-             (end code)
-             */
-            getConfig: function(){
-                return opt;
-            },
-            /*
-             Method: getElement
-             Returns the main Canvas DOM wrapper
-             
-             Returns:
-             DOM canvas wrapper generated, (i.e the div wrapper element with id _mycanvas_)
-             
-             Example:
-             (start code js)
-             	var wrapper = canvas.getElement();
-             	//Returns <div id="mycanvas" ... >...</div> as element
-             (end code)
-             */
-            getElement: function(){
-                return mainContainer;
-            },
-            
-            /*
-             Method: resize
-             
-             Resizes the canvas.
-             
-             Parameters:
-             
-             width - New canvas width.
-             height - New canvas height.
-             
-             This method can be used with the <ST>, <Hypertree> or <RGraph> visualizations to resize
-             the visualizations
-             
-             Example:
-             
-             (start code js)
-             	function resizeViz(width, height) {
-             		canvas.resize(width, height);
-             		rgraph.refresh(); //ht.refresh or st.refresh() also work.
-             		rgraph.onAfterCompute();
-             	}
-             (end code)
-             
-             */
-            resize: function(width, height){
-                var pwidth = canvas.width, pheight = canvas.height;
-            	canvas.width = width;
-                canvas.height = height;
-                canvas.style.width = width + "px";
-                canvas.style.height = height + "px";
-                if (bc) {
-                    bkcanvas.width = width;
-                    bkcanvas.height = height;
-                    bkcanvas.style.width = width + "px";
-                    bkcanvas.style.height = height + "px";
-                }
-                //small ExCanvas fix
-                if(!hasCanvas()) {
-                	translateToCenter(canvas, ctx, pwidth, pheight);
-                } else {
-                	translateToCenter(canvas, ctx);
-                }
-                
-                var st = opt.styles;
-                var s;
-                for (s in st) {
-                  ctx[s] = st[s];
-                }
-                if (bc) {
-                    st = bc.styles;
-                    for (s in st) 
-                        bkctx[s] = st[s];
-                    //same ExCanvas fix here
-                    if(!hasCanvas()) {
-                    	translateToCenter(bkcanvas, bkctx, pwidth, pheight);
-                    } else {
-                    	translateToCenter(bkcanvas, bkctx);	
-                    }
-                    
-                    bc.impl.init(bkcanvas, bkctx);
-                    bc.impl.plot(bkcanvas, bkctx);
-                }
-            },
-            
-            /*
-             Method: getSize
-             
-             Returns canvas dimensions.
-             
-             Returns:
-             
-             An object with _width_ and _height_ properties.
-             Example:
-             (start code js)
-             canvas.getSize(); //returns { width: 900, height: 500 }
-             (end code)
-             */
-            getSize: function(){
-                return {
-                    'width': canvas.width,
-                    'height': canvas.height
-                };
-            },
-            
-            /*
-            Method: getPos
-            
-            Returns canvas position vector.
-            
-            Returns:
-            
-            An object with _x_ and _y_ properties.
-            Example:
-            (start code js)
-            canvas.getPos(); //returns { x: 900, y: 500 }
-            (end code)
-            */
-           getPos: function(force){
-              if(force || !this.pos) {
-                return this.pos = $.getPos(this.getElement());
-              }
-              return this.pos;
-           },
-
-           path: function(type, action){
-                ctx.beginPath();
-                action(ctx);
-                ctx[type]();
-                ctx.closePath();
-            },
-            
-            /*
-             Method: clear
-             
-             Clears the canvas object.
-             */
-            clear: function(){
-                var size = this.getSize();
-                ctx.clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
-            }
-        };
-    };
-    
+      }, options);
+    },
+    paint: function(ctx, opt, canvas) {
+      var xconf = this.config.XAxis,
+          yconf = this.config.YAxis;
+      if(xconf.show) {
+        var xs = xconf.getXRange(),
+            ls = xconf.getXLabels(),
+            offset = xconf.offset,
+            styles = xconf.CanvasStyles;
+        //set canvas styles
+        for(var s in styles) ctx[s] = styles[s];
+        //print lines
+        for(var i=0, l=xs.length; i<l; i++) {
+          ctx.moveTo(xs[i], -canvas.height/2 + offset);
+          ctx.lineTo(x[i], canvas.height/2 - offset);
+        }
+      }
+      if(yconf.show) {
+        var ys = yconf.getYRange(),
+            ls = yconf.getYLabels(),
+            offset = yconf.offset,
+            styles = yconf.CanvasStyles;
+        //set canvas styles
+        for(var s in styles) ctx[s] = styles[s];
+        //print lines
+        for(var i=0, l=xs.length; i<l; i++) {
+          ctx.moveTo(-canvas.width/2 + offset, ys[i]);
+          ctx.lineTo(canvas.width/2 - offset, ys[i]);
+        }
+      }
+      //TODO(nico): print labels too!
+    }
+  });
+  Canvas.Background.Circles = new Class({
+    intialize: function(options) {
+      this.config = $.merge({
+        idSuffix: '-bkcanvas',
+        show: false,
+        showLabels: false,
+        CanvasStyles: {},
+        offset: 0,
+        getRange: $.lambda([]),
+        getLabels: $.lambda([])
+      }, options);
+    },
+    paint: function(ctx, opt, canvas) {
+      var conf = this.config;
+      if(conf.show) {
+        var rs = conf.getRange(),
+            ls = conf.getLabels(),
+            offset = conf.offset,
+            styles = conf.CanvasStyles;
+        //set canvas styles
+        for(var s in styles) ctx[s] = styles[s];
+        //print lines
+        for(var i=0, l=xs.length; i<l; i++) {
+          ctx.arc(0, 0, rs[i], 0, 2 * Math.PI, false);
+        }
+      }
+      //TODO(nico): print labels too!
+    }
+  });
 })();
-
