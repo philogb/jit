@@ -41,7 +41,6 @@ window.$jit = function(w) {
   }
 };
 
-//TODO(nico) add these methods to $jit.util
 var $ = function(d) {
   return document.getElementById(d);
 };
@@ -281,6 +280,33 @@ $.getPos = function(elem) {
   }
 };
 
+$.event = {
+  get: function(e, win) {
+    win = win || window;
+    return e || win.event;
+  },
+  getWheel: function(e) {
+    return e.wheelDelta? e.wheelDelta / 120 : -(e.detail || 0) / 3;
+  },
+  isRightClick: function(e) {
+    return (e.which == 3 || e.button == 2);
+  },
+  getPos: function(e, win) {
+    // get mouse position
+    win = win || window;
+    e = e || win.event;
+    var doc = win.document;
+    doc = doc.html || doc.body;
+    var page = {
+      x: e.pageX || e.clientX + doc.scrollLeft,
+      y: e.pageY || e.clientY + doc.scrollTop
+    };
+    return page;
+  }
+};
+
+$jit.util = $jit.id = $;
+
 var Class = function(properties) {
   properties = properties || {};
   var klass = function() {
@@ -371,34 +397,9 @@ Class.prototype.implement = function() {
   return this;
 };
 
-$.event = {
-  get: function(e, win) {
-    win = win || window;
-    return e || win.event;
-  },
-  getWheel: function(e) {
-    return e.wheelDelta? e.wheelDelta / 120 : -(e.detail || 0) / 3;
-  },
-  isRightClick: function(e) {
-    return (e.which == 3 || e.button == 2);
-  },
-  getPos: function(e, win) {
-    // get mouse position
-    win = win || window;
-    e = e || win.event;
-    var doc = win.document;
-    doc = doc.html || doc.body;
-    var page = {
-      x: e.pageX || e.clientX + doc.scrollLeft,
-      y: e.pageY || e.clientY + doc.scrollTop
-    };
-    return page;
-  }
-};
+$jit.Class = Class;
 
-//common json manipulation methods
 $jit.json = {
-
   /*
      Method: prune
   
@@ -418,7 +419,6 @@ $jit.json = {
       }
     });
   },
-
   /*
      Method: getParent
   
@@ -451,7 +451,6 @@ $jit.json = {
     }
     return false;
   },
-
   /*
      Method: getSubtree
   
@@ -477,7 +476,6 @@ $jit.json = {
     }
     return null;
   },
-
   /*
      Method: getLeaves
   
@@ -508,7 +506,6 @@ $jit.json = {
     });
     return leaves;
   },
-
   /*
      Method: eachLevel
   
@@ -536,7 +533,6 @@ $jit.json = {
       }
     }
   },
-
   /*
      Method: each
   
@@ -558,7 +554,6 @@ $jit.json = {
   each: function(tree, action) {
     this.eachLevel(tree, 0, Number.MAX_VALUE, action);
   },
-
   /*
      Method: loadSubtrees
   

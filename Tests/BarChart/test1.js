@@ -53,8 +53,8 @@ function init(){
 
     var infovis = document.getElementById('infovis');
     
-    //init ForceDirected
-    var bc = new $jit.BarChart({
+    //init BarChart
+    var barChart = new $jit.BarChart({
         injectInto: 'infovis',
         animate: true,
         orientation: 'vertical',
@@ -70,17 +70,60 @@ function init(){
           color: 'white'
         },
         Tips: {
-          'enable': true,
-          'onShow': function(tip, elem) {
-             tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
+          enable: true,
+          onShow: function(tip, elem) {
+            tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
           }
         }
     });
-    
     //load JSON data.
-    bc.loadJSON(json);
-    
-    setTimeout(function() {
-      bc.updateJSON(json2);
-    }, 3000);
+    barChart.loadJSON(json);
+    //end
+    var list = $jit.id('id-list'),
+        button = $jit.id('update'),
+        orn = $jit.id('switch-orientation');
+    //update json on click 'Update Data'
+    $jit.util.addEvent(button, 'click', function() {
+      var util = $jit.util;
+      if(util.hasClass(button, 'gray')) return;
+      util.removeClass(button, 'white');
+      util.addClass(button, 'gray');
+      barChart.updateJSON(json2);
+    });
+    //switch orientation on click 'Switch Side'
+    $jit.util.addEvent(orn, 'click', function() {
+      if(barChart.busy) return;
+      var orn = barChart.config.orientation == 'horizontal'? 'vertical' : 'horizontal',
+          canvas = barChart.canvas;
+      barChart = new $jit.BarChart({
+        useCanvas: canvas,
+        orientation: orn,
+        barsOffset: 20,
+        offset:10,
+        labelOffset:5,
+        type:'stacked:gradient',
+        showAggregates:true,
+        showLabels:true,
+        Label: {
+          size: 13,
+          family: 'Arial',
+          color: 'white'
+        },
+        Tips: {
+          enable: true,
+          onShow: function(tip, elem) {
+            tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
+          }
+        }
+      });
+      barChart.loadJSON(json);
+    });
+    //dynamically add legend to list
+    var legend = barChart.getLegend(),
+        listItems = [];
+    for(var name in legend) {
+      listItems.push('<div class=\'query-color\' style=\'background-color:'
+          + legend[name] +'\'>&nbsp;</div>' + name);
+    }
+    list.innerHTML = '<li>' + listItems.join('</li><li>') + '</li>';
 }

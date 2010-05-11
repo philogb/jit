@@ -52,31 +52,49 @@ function init(){
     //end
     var infovis = document.getElementById('infovis');
     //init ForceDirected
-    pie = new $jit.PieChart({
-        'injectInto': 'infovis',
-        'animate': true,
-        'offset': 30,
-        'sliceOffset': 0,
-        'labelOffset': 20,
-        'type':'stacked:gradient',
+    var pieChart = new $jit.PieChart({
+        injectInto: 'infovis',
+        animate: true,
+        //offsets
+        offset: 30,
+        sliceOffset: 0,
+        labelOffset: 20,
+        //can also be 'stacked'
+        type:'stacked:gradient',
         showLabels:true,
+        //label styling
         Label: {
           size: 13,
           family: 'Arial',
           color: 'white'
         },
+        //enable tips
         Tips: {
-          'enable': true,
-          'onShow': function(tip, elem) {
+          enable: true,
+          onShow: function(tip, elem) {
              tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
           }
         }
     });
-    
     //load JSON data.
-    pie.loadJSON(json);
-    
-    setTimeout(function() {
-      pie.updateJSON(json2);
-    }, 3000);
+    pieChart.loadJSON(json);
+    //end
+    var list = $jit.id('id-list'),
+        button = $jit.id('update');
+    //update json on click
+    $jit.util.addEvent(button, 'click', function() {
+      var util = $jit.util;
+      if(util.hasClass(button, 'gray')) return;
+      util.removeClass(button, 'white');
+      util.addClass(button, 'gray');
+      pieChart.updateJSON(json2);
+    });
+    //dynamically add legend to list
+    var legend = pieChart.getLegend(),
+        listItems = [];
+    for(var name in legend) {
+      listItems.push('<div class=\'query-color\' style=\'background-color:'
+          + legend[name] +'\'>&nbsp;</div>' + name);
+    }
+    list.innerHTML = '<li>' + listItems.join('</li><li>') + '</li>';
 }

@@ -209,6 +209,9 @@ $jit.BarChart = new Class({
   },
   
   loadJSON: function(json) {
+    if(this.busy) return;
+    this.busy = true;
+    
     var prefix = $.time(), 
         ch = [], 
         st = this.st,
@@ -217,7 +220,8 @@ $jit.BarChart = new Class({
         config = this.config,
         gradient = !!config.type.split(":")[1],
         animate = config.animate,
-        horz = config.orientation == 'horizontal';
+        horz = config.orientation == 'horizontal',
+        that = this;
     
     for(var i=0, values=json.values, l=values.length; i<l; i++) {
       var val = values[i]
@@ -256,14 +260,22 @@ $jit.BarChart = new Class({
       if(horz) {
         st.fx.animate({
           modes: ['node-property:width:dimArray'],
-          duration:1500
+          duration:1500,
+          onComplete: function() {
+            that.busy = false;
+          }
         });
       } else {
         st.fx.animate({
           modes: ['node-property:height:dimArray'],
-          duration:1500
+          duration:1500,
+          onComplete: function() {
+            that.busy = false;
+          }
         });
       }
+    } else {
+      this.busy = false;
     }
   },
   
