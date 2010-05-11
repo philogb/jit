@@ -51,34 +51,57 @@ function init(){
     };
     //end
     var infovis = document.getElementById('infovis');
-    //init ForceDirected
-    ac = new $jit.AreaChart({
-        'injectInto': 'infovis',
-        'animate': true,
-        'offset': 5,
-        labelOffset:10,
-        showAggregates:true,
-        showLabels:true,
-        type:'stacked:gradient',
-        Label: {
-          size: 13,
-          family: 'Arial',
-          color: 'white'
-        },
-        Tips: {
-          'enable': true,
-          'onShow': function(tip, elem) {
-             tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
-          }
-        },
-        filterOnClick: true,
-        restoreOnRightClick:true
+    //init AreaChart
+    var areaChart = new $jit.AreaChart({
+      //where to put the visualization
+      injectInto: 'infovis',
+      //add animations
+      animate: true,
+      //separation offsets
+      offset: 5,
+      labelOffset:10,
+      //whether to display sums
+      showAggregates:true,
+      //whether to display labels at all
+      showLabels:true,
+      //could also be 'stacked'
+      type:'stacked:gradient',
+      //label styling
+      Label: {
+        size: 13,
+        family: 'Arial',
+        color: 'white'
+      },
+      //enable tips
+      Tips: {
+        enable: true,
+        onShow: function(tip, elem) {
+          tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
+        }
+      },
+      //add left and right click handlers
+      filterOnClick: true,
+      restoreOnRightClick:true
     });
-    
     //load JSON data.
-    ac.loadJSON(json);
-    
-    setTimeout(function() {
-      ac.updateJSON(json2);
-    }, 3000);
+    areaChart.loadJSON(json);
+    //end
+    var list = $jit.id('id-list'),
+        button = $jit.id('update');
+    //update json on click
+    $jit.util.addEvent(button, 'click', function() {
+      var util = $jit.util;
+      if(util.hasClass(button, 'gray')) return;
+      util.removeClass(button, 'white');
+      util.addClass(button, 'gray');
+      areaChart.updateJSON(json2);
+    });
+    //dynamically add legend to list
+    var legend = areaChart.getLegend(),
+        listItems = [];
+    for(var name in legend) {
+      listItems.push('<div class=\'query-color\' style=\'background-color:'
+          + legend[name] +'\'>&nbsp;</div>' + name);
+    }
+    list.innerHTML = '<li>' + listItems.join('</li><li>') + '</li>';
 }

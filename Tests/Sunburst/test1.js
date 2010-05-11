@@ -377,14 +377,14 @@ function init(){
             html += "</ul>";
             document.getElementById('inner-details').innerHTML = html;
             //hide tip
-            sb.tips.tip.style.display = 'none';
+            sb.tips.hide();
             //rotate
             setTimeout(function() {
               sb.rotate(node, 'animate', {
                 'duration': 1500,
                 'transition': $jit.Trans.Quart.easeInOut
               });
-            }, 500);
+            }, 300);
           },
           onRightClick: function(node) {
             if(node.collapsed) {
