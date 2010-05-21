@@ -218,14 +218,19 @@ $jit.ST= (function() {
             
             this.controller = this.config = $.merge(
                 Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", 
-                    "Tips", "NodeStyles", "Events", "Label"), config, controller);
+                    "Tips", "NodeStyles", "Events", "Navigation", "Label"), config, controller);
 
             var canvasConfig = this.config;
             if(canvasConfig.useCanvas) {
               this.canvas = canvasConfig.useCanvas;
               this.config.labelContainer = this.canvas.id + '-label';
             } else {
-              this.canvas = new Canvas(canvasConfig);
+              if(canvasConfig.background) {
+                canvasConfig.background = $.merge({
+                  type: 'Circles',
+                }, canvasConfig.background);
+              }
+              this.canvas = new Canvas(this, canvasConfig);
               this.config.labelContainer = canvasConfig.injectInto + '-label';
             }
 
@@ -1169,7 +1174,7 @@ $jit.ST.Geom = new Class({
        level - The depth of the subtree to be considered.
     */  
     treeFitsInCanvas: function(node, canvas, level) {
-        var csize = canvas.getSize(node);
+        var csize = canvas.getSize();
         var s = (this.config.multitree 
         		&& ('$orn' in node.data) 
         		&& node.data.$orn) || this.config.orientation;
@@ -1382,41 +1387,51 @@ $jit.ST.Label.DOM = new Class({
      
     */
     placeLabel: function(tag, node, controller) {
-        var pos = node.pos.getc(true), config = this.viz.config, 
-        dim = config.Node, canvas = this.viz.canvas;
-        var w = node.getData('width');
-        var h = node.getData('height');
-        var radius = canvas.getSize();
-        var labelPos, orn;
+        var pos = node.pos.getc(true), 
+            config = this.viz.config, 
+            dim = config.Node, 
+            canvas = this.viz.canvas,
+            w = node.getData('width'),
+            h = node.getData('height'),
+            radius = canvas.getSize(),
+            labelPos, orn;
+        
+        var ox = canvas.translateOffsetX,
+            oy = canvas.translateOffsetY,
+            sx = canvas.scaleOffsetX,
+            sy = canvas.scaleOffsetY,
+            posx = pos.x * sx + ox,
+            posy = pos.y * sy + oy;
+
         if(dim.align == "center") {
             labelPos= {
-                x: Math.round(pos.x - w / 2 + radius.width/2),
-                y: Math.round(pos.y - h / 2 + radius.height/2)
+                x: Math.round(posx - w / 2 + radius.width/2),
+                y: Math.round(posy - h / 2 + radius.height/2)
             };
         } else if (dim.align == "left") {
             orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
-                    x: Math.round(pos.x - w / 2 + radius.width/2),
-                    y: Math.round(pos.y + radius.height/2)
+                    x: Math.round(posx - w / 2 + radius.width/2),
+                    y: Math.round(posy + radius.height/2)
                 };
             } else {
                 labelPos= {
-                    x: Math.round(pos.x + radius.width/2),
-                    y: Math.round(pos.y - h / 2 + radius.height/2)
+                    x: Math.round(posx + radius.width/2),
+                    y: Math.round(posy - h / 2 + radius.height/2)
                 };
             }
         } else if(dim.align == "right") {
             orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
-                    x: Math.round(pos.x - w / 2 + radius.width/2),
-                    y: Math.round(pos.y - h + radius.height/2)
+                    x: Math.round(posx - w / 2 + radius.width/2),
+                    y: Math.round(posy - h + radius.height/2)
                 };
             } else {
                 labelPos= {
-                    x: Math.round(pos.x - w + radius.width/2),
-                    y: Math.round(pos.y - h / 2 + radius.height/2)
+                    x: Math.round(posx - w + radius.width/2),
+                    y: Math.round(posy - h / 2 + radius.height/2)
                 };
             }
         } else throw "align: not implemented";

@@ -302,6 +302,12 @@ $.event = {
       y: e.pageY || e.clientY + doc.scrollTop
     };
     return page;
+  },
+  stop: function(e) {
+    if (e.stopPropagation) e.stopPropagation();
+    e.cancelBubble = true;
+    if (e.preventDefault) e.preventDefault();
+    else e.returnValue = false;
   }
 };
 

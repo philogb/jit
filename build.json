@@ -96,6 +96,9 @@
     "Options.Events": [
       "Options"
     ],
+    "Options.Navigation": [
+      "Options"
+    ],
     "Options.Tree": [
       "Options"
     ],
@@ -121,6 +124,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Events",
+        "Options.Navigation",
         "Options.Controller",
         "Extras",
         "Canvas",
@@ -144,6 +148,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Events",
+        "Options.Navigation",
         "Options.Controller",
         "Extras",
         "Canvas",
@@ -167,6 +172,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Events",
+        "Options.Navigation",
         "Options.Controller",
         "Extras",
         "Canvas",
@@ -190,6 +196,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Events",
+        "Options.Navigation",
         "Options.Controller",
         "Extras",
         "Canvas",
@@ -214,6 +221,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Events",
+        "Options.Navigation",
         "Options.Controller",
         "Extras",
         "Canvas",
@@ -238,6 +246,7 @@
         "Options.Tips",
         "Options.NodeStyles",
         "Options.Events",
+        "Options.Navigation",
         "Options.Controller",
         "Extras",
         "Canvas",

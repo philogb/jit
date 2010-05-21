@@ -261,33 +261,6 @@ Graph.Label.DOM = new Class({
     },
 
     /*
-      Method: attachExtras
-
-      Called only when a label is created to attach <Extras> like <Tips> or <NodeStyles> to labels
-
-      Parameters:
-
-      node - A <Graph.Node>.
-      tag - A DOM element.
-
-   */
-    attachExtras: function(node, tag) {
-      var viz = this.viz, config = viz.config;
-      var tips = config.Tips, nodeStyles = config.NodeStyles;
-      if(tips && tips.enable && tips.attachToDOM) {
-        viz.tips.attach(node, tag);
-      }
-      if(nodeStyles && nodeStyles.attachToDOM) {
-        if(nodeStyles.stylesHover) {
-          viz.nodeStyles.attachOnHover(node, tag);
-        }
-        if(nodeStyles.stylesClick) {
-          viz.nodeStyles.attachOnClick(node, tag);
-        }
-      }
-    },
-
-    /*
        Method: fitsInCanvas
 
        Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.
@@ -351,7 +324,6 @@ Graph.Label.HTML = new Class({
         controller.onCreateLabel(tag, node);
         container.appendChild(tag);
         this.labels[node.id] = tag;
-        this.attachExtras(node, tag);
       }
 
       this.placeLabel(tag, node, controller);
@@ -400,7 +372,6 @@ Graph.Label.SVG = new Class({
         container.appendChild(tag);
         controller.onCreateLabel(tag, node);
         this.labels[node.id] = tag;
-        this.attachExtras(node, tag);
       }
       this.placeLabel(tag, node, controller);
     }

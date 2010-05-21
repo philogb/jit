@@ -140,14 +140,19 @@ $jit.ForceDirected = new Class( {
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Tips", "NodeStyles", "Events", "Controller", "Label"), config, controller);
+        "Fx", "Tips", "NodeStyles", "Events", "Navigation", "Controller", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {
       this.canvas = canvasConfig.useCanvas;
       this.config.labelContainer = this.canvas.id + '-label';
     } else {
-      this.canvas = new Canvas(canvasConfig);
+      if(canvasConfig.background) {
+        canvasConfig.background = $.merge({
+          type: 'Circles',
+        }, canvasConfig.background);
+      }
+      this.canvas = new Canvas(this, canvasConfig);
       this.config.labelContainer = canvasConfig.injectInto + '-label';
     }
 
@@ -432,11 +437,16 @@ $jit.ForceDirected.$extend = true;
       
      */
     placeLabel: function(tag, node, controller) {
-      var pos = node.pos.getc(true), canvas = this.viz.canvas;
-      var radius = canvas.getSize();
+      var pos = node.pos.getc(true), 
+          canvas = this.viz.canvas,
+          ox = canvas.translateOffsetX,
+          oy = canvas.translateOffsetY,
+          sx = canvas.scaleOffsetX,
+          sy = canvas.scaleOffsetY,
+          radius = canvas.getSize();
       var labelPos = {
-        x: Math.round(pos.x + radius.width / 2),
-        y: Math.round(pos.y + radius.height / 2)
+        x: Math.round(pos.x * sx + ox + radius.width / 2),
+        y: Math.round(pos.y * sy + oy + radius.height / 2)
       };
       tag.setAttribute('x', labelPos.x);
       tag.setAttribute('y', labelPos.y);
@@ -478,13 +488,17 @@ $jit.ForceDirected.$extend = true;
       
      */
     placeLabel: function(tag, node, controller) {
-      var pos = node.pos.getc(true), canvas = this.viz.canvas;
-      var radius = canvas.getSize();
+      var pos = node.pos.getc(true), 
+          canvas = this.viz.canvas,
+          ox = canvas.translateOffsetX,
+          oy = canvas.translateOffsetY,
+          sx = canvas.scaleOffsetX,
+          sy = canvas.scaleOffsetY,
+          radius = canvas.getSize();
       var labelPos = {
-        x: Math.round(pos.x + radius.width / 2),
-        y: Math.round(pos.y + radius.height / 2)
+        x: Math.round(pos.x * sx + ox + radius.width / 2),
+        y: Math.round(pos.y * sy + oy + radius.height / 2)
       };
-
       var style = tag.style;
       style.left = labelPos.x + 'px';
       style.top = labelPos.y + 'px';

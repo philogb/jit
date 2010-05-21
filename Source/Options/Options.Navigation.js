@@ -1,6 +1,8 @@
 Options.Navigation = {
-  enable:false,
+  $extend: false,
   
+  enable: false,
+  type: 'auto',
   panning: false,
   zooming: false
 };

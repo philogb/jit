@@ -156,14 +156,19 @@ $jit.Sunburst = new Class({
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Tips", "NodeStyles", "Events", "Controller", "Label"), config, controller);
+        "Fx", "Tips", "NodeStyles", "Events", "Navigation", "Controller", "Label"), config, controller);
 
     var canvasConfig = this.config;
     if(canvasConfig.useCanvas) {
       this.canvas = canvasConfig.useCanvas;
       this.config.labelContainer = this.canvas.id + '-label';
     } else {
-      this.canvas = new Canvas(canvasConfig);
+      if(canvasConfig.background) {
+        canvasConfig.background = $.merge({
+          type: 'Circles',
+        }, canvasConfig.background);
+      }
+      this.canvas = new Canvas(this, canvasConfig);
       this.config.labelContainer = canvasConfig.injectInto + '-label';
     }
 

@@ -92,10 +92,11 @@ var MouseEventsManager = new Class({
       var wheel = $.event.getWheel(event);
       that.handleEvent('MouseWheel', e, win, wheel);
     };
-    if(navigator.userAgent.match(/Gecko/)) {
-      htmlCanvas.addEventListener('DOMMouseScroll', handleMouseWheel, false);
-    } else {
+    //TODO(nico): this is a horrible check for non-gecko browsers!
+    if(!document.getBoxObjectFor && window.mozInnerScreenX == null) {
       $.addEvent(htmlCanvas, 'mousewheel', handleMouseWheel);
+    } else {
+      htmlCanvas.addEventListener('DOMMouseScroll', handleMouseWheel, false);
     }
   },
   
@@ -126,10 +127,14 @@ var MouseEventsManager = new Class({
         var canvas = that.viz.canvas,
             s = canvas.getSize(),
             p = canvas.getPos(),
+            ox = canvas.translateOffsetX,
+            oy = canvas.translateOffsetY,
+            sx = canvas.scaleOffsetX,
+            sy = canvas.scaleOffsetY,
             pos = $.event.getPos(e, win);
         this.pos = {
-          x: pos.x - p.x - s.width/2,
-          y: pos.y - p.y - s.height/2
+          x: (pos.x - p.x - s.width/2 - ox) * 1/sx,
+          y: (pos.y - p.y - s.height/2 - oy) * 1/sy
         };
         return this.pos;
       },
@@ -612,23 +617,43 @@ Extras.Classes.Navigation = new Class({
   
   onMouseWheel: function(e, win, scroll) {
     if(!this.config.zooming) return;
-    var val = this.config.zooming;
-    this.canvas.scale(val, val);
+    $.event.stop($.event.get(e, win));
+    var val = this.config.zooming,
+        ans = 1 + scroll * val;
+    this.canvas.scale(ans, ans);
   },
   
   onMouseDown: function(e, win, eventInfo) {
     this.pressed = true;
     this.pos = eventInfo.getPos();
+    var canvas = this.canvas,
+        ox = canvas.translateOffsetX,
+        oy = canvas.translateOffsetY,
+        sx = canvas.scaleOffsetX,
+        sy = canvas.scaleOffsetY;
+    this.pos.x *= sx;
+    this.pos.x += ox;
+    this.pos.y *= sy;
+    this.pos.y += oy;
   },
   
   onMouseMove: function(e, win, eventInfo) {
     if(!this.pressed) return;
     var thispos = this.pos, 
         currentPos = eventInfo.getPos(),
-        x = currentPos.x - thispos.x,
+        canvas = this.canvas,
+        ox = canvas.translateOffsetX,
+        oy = canvas.translateOffsetY,
+        sx = canvas.scaleOffsetX,
+        sy = canvas.scaleOffsetY;
+    currentPos.x *= sx;
+    currentPos.y *= sy;
+    currentPos.x += ox;
+    currentPos.y += oy;
+    var x = currentPos.x - thispos.x,
         y = currentPos.y - thispos.y;
     this.pos = currentPos;
-    this.canvas.translate(x, y);
+    this.canvas.translate(x * 1/sx, y * 1/sy);
   },
   
   onMouseUp: function(e, win, eventInfo, isRightClick) {

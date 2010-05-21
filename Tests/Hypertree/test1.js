@@ -327,6 +327,11 @@ function init(){
         'injectInto': 'infovis',
         'width': w,
         'height': h,
+        Navigation: {
+          enable:true,
+          panning:true,
+          zooming:0.05
+        },
         //Change node and edge styles such as
         //color, width and dimensions.
         Node: {

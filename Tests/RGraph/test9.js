@@ -366,23 +366,12 @@ function init(){
         'injectInto': 'infovis',        
         //Optional: create a background canvas and plot
         //concentric circles in it.
-        'backgroundCanvas': {
-            'styles': {
-                'strokeStyle': '#555'
-            },
-            'impl': {
-                'init': function(){},
-                'plot': function(canvas, ctx){
-                    var times = 6, d = 100;
-                    var pi2 = Math.PI * 2;
-                    for (var i = 1; i <= times; i++) {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, i * d, 0, pi2, true);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-                }
-            }
+        'background': {
+          'CanvasStyles': {
+            'strokeStyle': '#555',
+            'shadowBlur': 50,
+            'shadowColor': '#ccc'
+          }
         },
         //Set Node and Edge colors.
         Node: {
@@ -415,6 +404,11 @@ function init(){
           onShow: function(tip, elem, contains) {
             tip.innerHTML = elem.name;
           }
+        },
+        Navigation: {
+          enable:true,
+          panning:true,
+          zooming:0.05
         },
         Events: {
           enable: true,

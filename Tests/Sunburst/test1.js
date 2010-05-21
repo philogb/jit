@@ -331,6 +331,11 @@ function init(){
         'height': h,
         //Change node and edge styles such as
         //color, width and dimensions.
+        Navigation: {
+          enable:true,
+          panning:true,
+          zooming:0.05
+        },
         Node: {
             dim: 9,
             type:'gradient-multipie',

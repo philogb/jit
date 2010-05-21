@@ -116,6 +116,8 @@
  The _init_ method is only called once, at the instanciation of the background canvas.
  The _plot_ method is called for plotting a Canvas image.
  */
+
+var Canvas;
 (function() {
   //check for native canvas support
   var canvasType = typeof HTMLCanvasElement,
@@ -133,23 +135,29 @@
     if (tag == "canvas" && !supportsCanvas && G_vmlCanvasManager) {
       elem = G_vmlCanvasManager.initElement(document.body.appendChild(elem));
     }
+    return elem;
   }
   //canvas widget which we will call just Canvas
-  var Canvas = new Class({
+  $jit.Canvas = Canvas = new Class({
     canvases: [],
     pos: false,
     element: false,
     labelContainer: false,
+    translateOffsetX: 0,
+    translateOffsetY: 0,
+    scaleOffsetX: 1,
+    scaleOffsetY: 1,
     
     initialize: function(viz, opt) {
       this.viz = viz;
-      this.opt = options;
+      this.opt = opt;
       var id = $.type(opt.injectInto) == 'string'? 
           opt.injectInto:opt.injectInto.id,
           idLabel = id + "-label", 
           wrapper = $(id),
           width = opt.width || wrapper.offsetWidth,
           height = opt.height || wrapper.offsetHeight;
+      this.id = id;
       //canvas options
       var canvasOptions = {
         injectInto: id,
@@ -166,12 +174,12 @@
         }
       });
       //create label container
-      this.labelContainer = createLabelContainer(opt.Label.type, 
+      this.labelContainer = this.createLabelContainer(opt.Label.type, 
           idLabel, canvasOptions);
       //create primary canvas
       this.canvases.push(new Canvas.Base({
         config: $.extend({idSuffix: '-canvas'}, canvasOptions),
-        paint: function(ctx, opt, canvas) {
+        plot: function(base) {
           viz.fx.plot();
         },
         resize: function() {
@@ -179,18 +187,17 @@
         }
       }));
       //create secondary canvas
-      var background = opt.background;
-      if(background) {
-        var backgroundCanvas = new Canvas
-          .Background($.extend(background, canvasOptions));
-        this.canvases.push(new Canvas.Base(backgroundCanvas));
+      var back = opt.background;
+      if(back) {
+        var backCanvas = new Canvas.Background[back.type](viz, $.extend(back, canvasOptions));
+        this.canvases.push(new Canvas.Base(backCanvas));
       }
       //insert canvases
       var len = this.canvases.length;
       while(len--) {
-        this.element.appendChild(this.canvases[len]);
+        this.element.appendChild(this.canvases[len].canvas);
         if(len > 0) {
-          this.canvases[len].paint();
+          this.canvases[len].plot();
         }
       }
       this.element.appendChild(this.labelContainer);
@@ -313,6 +320,8 @@
     
     */
     translate: function(x, y) {
+      this.translateOffsetX += x*this.scaleOffsetX;
+      this.translateOffsetY += y*this.scaleOffsetY;
       for(var i=0, l=this.canvases.length; i<l; i++) {
         this.canvases[i].translate(x, y);
       }
@@ -335,6 +344,8 @@
     
     */
     scale: function(x, y) {
+      this.scaleOffsetX *= x;
+      this.scaleOffsetY *= y;
       for(var i=0, l=this.canvases.length; i<l; i++) {
         this.canvases[i].scale(x, y);
       }
@@ -364,8 +375,7 @@
        Clears the canvas object.
     */
     clear: function(i){
-      var size = this.getSize(i || 0);
-      this.canvases[i || 0].getCtx().clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
+      this.canvases[i||0].clear();
     },
     
     path: function(type, action){
@@ -410,6 +420,11 @@
   });
   //base canvas wrapper
   Canvas.Base = new Class({
+    translateOffsetX: 0,
+    translateOffsetY: 0,
+    scaleOffsetX: 1,
+    scaleOffsetY: 1,
+
     initialize: function(viz) {
       this.viz = viz;
       this.opt = viz.config;
@@ -449,9 +464,9 @@
     },
     translateToCenter: function(ps) {
       var size = this.getSize(),
-          width = ps? (size.width - size.width) : canvas.width;
-          height = ps? (canvas.height - h) : canvas.height;
-      this.getCtx().translate(size.width/2, size.height/2);
+          width = ps? (size.width - ps.width) : size.width;
+          height = ps? (size.height - ps.height) : size.height;
+      this.getCtx().translate(width/2, height/2);
     },
     resize: function(width, height) {
       var size = this.getSize(),
@@ -468,104 +483,68 @@
       } else {
         this.translateToCenter();
       }
-      this.viz.resize(width, height, this.getCtx(), this.opt);
+      this.clear();
+      this.viz.resize(width, height, this);
     },
     translate: function(x, y) {
+      var sx = this.scaleOffsetX,
+          sy = this.scaleOffsetY;
+      this.translateOffsetX += x*sx;
+      this.translateOffsetY += y*sy;
       this.getCtx().translate(x, y);
-      this.paint();
+      this.plot();
     },
     scale: function(x, y) {
+      this.scaleOffsetX *= x;
+      this.scaleOffsetY *= y;
       this.getCtx().scale(x, y);
-      this.paint();
+      this.plot();
     },
     clear: function(){
-      var size = this.getSize();
-      ctx.clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
+      var size = this.getSize(),
+          ox = this.translateOffsetX,
+          oy = this.translateOffsetY,
+          sx = this.scaleOffsetX,
+          sy = this.scaleOffsetY;
+      this.getCtx().clearRect((-size.width / 2 - ox) * 1/sx, 
+                              (-size.height / 2 - oy) * 1/sy, 
+                              size.width * 1/sx, size.height * 1/sy);
     },
-    paint: function() {
-      this.viz.paint(this.getCtx(), this.opt);
+    plot: function() {
+      this.clear();
+      this.viz.plot(this);
     }
   });
   //background canvases
-  Canvas.Background.Grid = new Class({
-    intialize: function(options) {
-      this.config = $.merge({
-        idSuffix: '-bkcanvas',
-        XAxis: {
-          show: false,
-          showLabels: false,
-          CanvasStyles: {},
-          offset: 0,
-          getXRange: $.lambda([]),
-          getXLabels: $.lambda([])
-        },
-        YAxis: {
-          show: false,
-          showLabels: false,
-          CanvasStyles: {},
-          offset: 0,
-          getYRange: $.lambda([]),
-          getYLabels: $.lambda([])
-        }
-      }, options);
-    },
-    paint: function(ctx, opt, canvas) {
-      var xconf = this.config.XAxis,
-          yconf = this.config.YAxis;
-      if(xconf.show) {
-        var xs = xconf.getXRange(),
-            ls = xconf.getXLabels(),
-            offset = xconf.offset,
-            styles = xconf.CanvasStyles;
-        //set canvas styles
-        for(var s in styles) ctx[s] = styles[s];
-        //print lines
-        for(var i=0, l=xs.length; i<l; i++) {
-          ctx.moveTo(xs[i], -canvas.height/2 + offset);
-          ctx.lineTo(x[i], canvas.height/2 - offset);
-        }
-      }
-      if(yconf.show) {
-        var ys = yconf.getYRange(),
-            ls = yconf.getYLabels(),
-            offset = yconf.offset,
-            styles = yconf.CanvasStyles;
-        //set canvas styles
-        for(var s in styles) ctx[s] = styles[s];
-        //print lines
-        for(var i=0, l=xs.length; i<l; i++) {
-          ctx.moveTo(-canvas.width/2 + offset, ys[i]);
-          ctx.lineTo(canvas.width/2 - offset, ys[i]);
-        }
-      }
-      //TODO(nico): print labels too!
-    }
-  });
+  Canvas.Background = {};
   Canvas.Background.Circles = new Class({
-    intialize: function(options) {
+    initialize: function(viz, options) {
+      this.viz = viz;
       this.config = $.merge({
         idSuffix: '-bkcanvas',
-        show: false,
-        showLabels: false,
+        levelDistance: 100,
+        numberOfCircles: 6,
         CanvasStyles: {},
-        offset: 0,
-        getRange: $.lambda([]),
-        getLabels: $.lambda([])
+        offset: 0
       }, options);
     },
-    paint: function(ctx, opt, canvas) {
-      var conf = this.config;
-      if(conf.show) {
-        var rs = conf.getRange(),
-            ls = conf.getLabels(),
-            offset = conf.offset,
-            styles = conf.CanvasStyles;
-        //set canvas styles
-        for(var s in styles) ctx[s] = styles[s];
-        //print lines
-        for(var i=0, l=xs.length; i<l; i++) {
-          ctx.arc(0, 0, rs[i], 0, 2 * Math.PI, false);
-        }
+    resize: function(width, height, base) {
+      this.plot(base);
+    },
+    plot: function(base) {
+      var canvas = base.canvas,
+          ctx = base.getCtx(),
+          conf = this.config,
+          styles = conf.CanvasStyles;
+      //set canvas styles
+      for(var s in styles) ctx[s] = styles[s];
+      var n = conf.numberOfCircles,
+          rho = conf.levelDistance;
+      for(var i=1; i<=n; i++) {
+        ctx.beginPath();
+        ctx.arc(0, 0, rho * i, 0, 2 * Math.PI, false);
+        ctx.stroke();
+        ctx.closePath();
       }
       //TODO(nico): print labels too!
     }

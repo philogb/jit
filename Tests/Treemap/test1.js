@@ -19,7 +19,14 @@ function init(){
     // orientation: "v",
     titleHeight: 10,
     offset: 1,
-    
+    Navigation: {
+      enable:true,
+      panning:true,
+      zooming:0.05
+    },
+    Label: {
+      type: 'Native'
+    },
     //Allow tips
     Tips: {
       enable: true,

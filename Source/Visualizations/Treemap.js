@@ -40,7 +40,7 @@ TM.Base = {
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
-        "Fx", "Controller", "Tips", "NodeStyles", "Events", "Label"), config, controller);
+        "Fx", "Controller", "Tips", "NodeStyles", "Events", "Navigation", "Label"), config, controller);
     this.layout.orientation = this.config.orientation;
 
     var canvasConfig = this.config;
@@ -48,7 +48,12 @@ TM.Base = {
       this.canvas = canvasConfig.useCanvas;
       this.config.labelContainer = this.canvas.id + '-label';
     } else {
-      this.canvas = new Canvas(canvasConfig);
+      if(canvasConfig.background) {
+        canvasConfig.background = $.merge({
+          type: 'Circles',
+        }, canvasConfig.background);
+      }
+      this.canvas = new Canvas(this, canvasConfig);
       this.config.labelContainer = canvasConfig.injectInto + '-label';
     }
 
@@ -77,7 +82,7 @@ TM.Base = {
   },
 
   plot: function(){
-    this.fx.plot(this.config);
+    this.fx.plot();
   },
 
   leaf: function(n){
@@ -237,7 +242,7 @@ TM.Plot = new Class( {
 
   plot: function(opt, animating){
     var viz = this.viz, graph = viz.graph;
-    this.plotTree(graph.getNode(viz.root), $.merge(opt, {
+    this.plotTree(graph.getNode(viz.root), $.merge(viz.config, opt || {}, {
       'withLabels': true,
       'hideLabels': !!animating,
       'plotSubtree': function(n, ch){
