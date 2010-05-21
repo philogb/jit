@@ -24,9 +24,9 @@ function init(){
       panning:true,
       zooming:0.05
     },
-    Label: {
-      type: 'Native'
-    },
+//    Label: {
+//      type: 'Native'
+//    },
     //Allow tips
     Tips: {
       enable: true,
