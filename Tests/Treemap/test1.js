@@ -3,7 +3,7 @@ function init(){
     return document.getElementById(id);
   };
 
-  var json = Feeder.makeTree( {
+  var json = Feeder.makeTree({
     idPrefix: "node",
     levelStart: 0,
     levelEnd: 3,
@@ -24,9 +24,9 @@ function init(){
       panning:true,
       zooming:0.05
     },
-//    Label: {
-//      type: 'Native'
-//    },
+    Label: {
+      type: 'Native'
+    },
     //Allow tips
     Tips: {
       enable: true,
@@ -57,19 +57,7 @@ function init(){
         domElement.onmouseout = function() {
           style.border = '1px solid transparent';
         };
-    },
-    //Change some label dom properties.
-    //This method is called each time a label is plotted.
-    onPlaceLabel: function(domElement, node){
-        var style = domElement.style;
-        style.width = node.getData('width') -2 + 'px';
-        if($jit.Graph.Util.getSubnodes(node, [1, 1], "ignore") == 0) {
-          style.height = node.getData('height') -2 + 'px';
-        } else {
-          style.height = '10px';          
-        }
     }
-
   });
 
   tm.loadJSON(json);

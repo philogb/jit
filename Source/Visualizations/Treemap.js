@@ -30,7 +30,14 @@ TM.Base = {
       selectPathOnHover: false,
       Node: {
         type: 'rectangle',
-        overridable: true
+        overridable: true,
+        CanvasStyles: {
+          globalCompositeOperation: "lighter"
+        }
+      },
+      Label: {
+        textAlign: 'center',
+        textBaseline: 'top'
       },
       Edge: {
         type: 'none'
@@ -278,13 +285,18 @@ TM.Label = {};
  <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
 
 */
-TM.Label.Native = new Class( {
+TM.Label.Native = new Class({
   Implements: Graph.Label.Native,
 
   renderLabel: function(canvas, node, controller){
-    var ctx = canvas.getCtx();
-    var coord = node.pos.getc(true);
-    ctx.fillText(node.name, coord.x, coord.y);
+  var pos = node.pos.getc(true), 
+      ctx = canvas.getCtx(),
+      width = node.getData('width'),
+      height = node.getData('height'),
+      x = pos.x + width/2,
+      y = pos.y;
+        
+    ctx.fillText(node.name, x, y, width);
   }
 });
 
@@ -322,11 +334,16 @@ TM.Label.SVG = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
-    var pos = node.pos.getc(true), canvas = this.viz.canvas;
-    var radius = canvas.getSize();
+    var pos = node.pos.getc(true), 
+        canvas = this.viz.canvas,
+        ox = canvas.translateOffsetX,
+        oy = canvas.translateOffsetY,
+        sx = canvas.scaleOffsetX,
+        sy = canvas.scaleOffsetY,
+        radius = canvas.getSize();
     var labelPos = {
-      x: Math.round(pos.x + radius.width / 2),
-      y: Math.round(pos.y + radius.height / 2)
+      x: Math.round(pos.x * sx + ox + radius.width / 2),
+      y: Math.round(pos.y * sy + oy + radius.height / 2)
     };
     tag.setAttribute('x', labelPos.x);
     tag.setAttribute('y', labelPos.y);
@@ -369,16 +386,24 @@ TM.Label.HTML = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
-    var pos = node.pos.getc(true), canvas = this.viz.canvas;
-    var radius = canvas.getSize();
+    var pos = node.pos.getc(true), 
+        canvas = this.viz.canvas,
+        ox = canvas.translateOffsetX,
+        oy = canvas.translateOffsetY,
+        sx = canvas.scaleOffsetX,
+        sy = canvas.scaleOffsetY,
+        radius = canvas.getSize();
     var labelPos = {
-      x: Math.round(pos.x + radius.width / 2),
-      y: Math.round(pos.y + radius.height / 2)
+      x: Math.round(pos.x * sx + ox + radius.width / 2),
+      y: Math.round(pos.y * sy + oy + radius.height / 2)
     };
 
     var style = tag.style;
     style.left = labelPos.x + 'px';
     style.top = labelPos.y + 'px';
+    style.width = node.getData('width') * sx + 'px';
+    style.height = node.getData('height') * sy + 'px';
+    style.zIndex = node._depth * 100;
     style.display = '';
 
     controller.onPlaceLabel(tag, node);
@@ -386,7 +411,7 @@ TM.Label.HTML = new Class( {
 });
 
 /*
-Class: ST.Plot.NodeTypes
+Class: TM.Plot.NodeTypes
 
 Here are implemented all kinds of node rendering functions. 
 Rendering functions implemented are 'none', 'circle', 'ellipse', 'rectangle' and 'square'.
