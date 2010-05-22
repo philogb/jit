@@ -368,9 +368,7 @@ function init(){
         //concentric circles in it.
         'background': {
           'CanvasStyles': {
-            'strokeStyle': '#555',
-            'shadowBlur': 50,
-            'shadowColor': '#ccc'
+            'strokeStyle': '#555'
           }
         },
         //Set Node and Edge colors.
@@ -389,7 +387,7 @@ function init(){
           color: '#888'
         },
         NodeStyles: {
-          enable:true,
+          enable:false,
           stylesHover: {
             dim:20,
             color:'#f00'
@@ -406,7 +404,7 @@ function init(){
           }
         },
         Navigation: {
-          enable:true,
+          enable:false,
           panning:true,
           zooming:0.05
         },
