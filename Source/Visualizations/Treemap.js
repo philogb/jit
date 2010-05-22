@@ -437,7 +437,7 @@ TM.Plot.NodeTypes = new Class( {
   'rectangle': {
     'render': function(node, canvas){
       var leaf = this.viz.leaf(node);
-      var config = this.viz.config;
+      var config = this.config;
       var offst = config.offset;
       var titleHeight = config.titleHeight;
       var pos = node.pos.getc(true);
@@ -462,7 +462,13 @@ TM.Plot.NodeTypes = new Class( {
             titleHeight);
       }
     },
-    'contains': $.lambda(false)
+    'contains': function(node, pos) {
+      var npos = node.pos.getc(true),
+          width = node.getData('width'), 
+          leaf = this.viz.leaf(node),
+          height = leaf? node.getData('height') : this.config.titleHeight;
+      return this.nodeHelper.rectangle.contains({x: npos.x + width/2, y: npos.y + height/2}, pos, width, height);
+    }
   }
 });
 
