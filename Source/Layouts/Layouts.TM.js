@@ -261,7 +261,7 @@ Layouts.TM.Squarified = new Class({
          'top': chipos.y + config.titleHeight,
          'left': chipos.x
        };
-       this.computePositions(chi, coord);
+       this.computePositions(chi, coord, prop);
      }
    }
  },
