@@ -7,7 +7,7 @@ function init(){
     idPrefix: "node",
     levelStart: 0,
     levelEnd: 3,
-    maxChildrenPerNode: 40,
+    maxChildrenPerNode: 20,
     minChildrenPerNode: 1,
     counter: 0,
     color: false,
@@ -17,7 +17,7 @@ function init(){
   tm = new $jit.TM.Squarified( {
     'injectInto': 'infovis',
     // orientation: "v",
-    titleHeight: 10,
+    titleHeight: 13,
     offset: 1,
     Navigation: {
       enable:true,
@@ -61,5 +61,17 @@ function init(){
   });
 
   tm.loadJSON(json);
-  tm.refresh();
+  tm.compute('end');
+  $jit.Graph.Util.eachNode(tm.graph, function(n) {
+    n.setDataset('current', {
+      'width': 0,
+      'height': 0
+    });
+    n.pos.x = n.endPos.x;
+    n.pos.y = n.endPos.y;
+  });
+  tm.fx.animate({
+    duration:1700,
+    modes:['node-property:width:height']
+  });
 }

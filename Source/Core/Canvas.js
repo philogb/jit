@@ -319,11 +319,11 @@ var Canvas;
       (end code)
     
     */
-    translate: function(x, y) {
+    translate: function(x, y, disablePlot) {
       this.translateOffsetX += x*this.scaleOffsetX;
       this.translateOffsetY += y*this.scaleOffsetY;
       for(var i=0, l=this.canvases.length; i<l; i++) {
-        this.canvases[i].translate(x, y);
+        this.canvases[i].translate(x, y, disablePlot);
       }
     },
     /*
@@ -343,12 +343,17 @@ var Canvas;
       (end code)
     
     */
-    scale: function(x, y) {
-      this.scaleOffsetX *= x;
-      this.scaleOffsetY *= y;
+    scale: function(x, y, disablePlot) {
+      var px = this.scaleOffsetX * x,
+          py = this.scaleOffsetY * y;
+      var dx = this.translateOffsetX * (x -1) / px,
+          dy = this.translateOffsetY * (y -1) / py;
+      this.scaleOffsetX = px;
+      this.scaleOffsetY = py;
       for(var i=0, l=this.canvases.length; i<l; i++) {
-        this.canvases[i].scale(x, y);
+        this.canvases[i].scale(x, y, true);
       }
+      this.translate(dx, dy, false);
     },
     /*
       Method: getPos
@@ -486,19 +491,19 @@ var Canvas;
       this.clear();
       this.viz.resize(width, height, this);
     },
-    translate: function(x, y) {
+    translate: function(x, y, disablePlot) {
       var sx = this.scaleOffsetX,
           sy = this.scaleOffsetY;
       this.translateOffsetX += x*sx;
       this.translateOffsetY += y*sy;
       this.getCtx().translate(x, y);
-      this.plot();
+      !disablePlot && this.plot();
     },
-    scale: function(x, y) {
+    scale: function(x, y, disablePlot) {
       this.scaleOffsetX *= x;
       this.scaleOffsetY *= y;
       this.getCtx().scale(x, y);
-      this.plot();
+      !disablePlot && this.plot();
     },
     clear: function(){
       var size = this.getSize(),

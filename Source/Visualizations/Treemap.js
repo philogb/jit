@@ -32,7 +32,7 @@ TM.Base = {
         type: 'rectangle',
         overridable: true,
         CanvasStyles: {
-          globalCompositeOperation: "lighter"
+          //globalCompositeOperation: "lighter"
         }
       },
       Label: {
@@ -249,9 +249,10 @@ TM.Plot = new Class( {
 
   plot: function(opt, animating){
     var viz = this.viz, graph = viz.graph;
+    viz.canvas.clear();
     this.plotTree(graph.getNode(viz.root), $.merge(viz.config, opt || {}, {
       'withLabels': true,
-      'hideLabels': !!animating,
+      'hideLabels': false,
       'plotSubtree': function(n, ch){
         return true;
       }
@@ -288,13 +289,19 @@ TM.Label = {};
 TM.Label.Native = new Class({
   Implements: Graph.Label.Native,
 
+  initialize: function(viz) {
+    this.config = viz.config;
+    this.leaf = viz.leaf;
+  },
+  
   renderLabel: function(canvas, node, controller){
-  var pos = node.pos.getc(true), 
-      ctx = canvas.getCtx(),
-      width = node.getData('width'),
-      height = node.getData('height'),
-      x = pos.x + width/2,
-      y = pos.y;
+    if(!this.leaf(node) && !this.config.titleHeight) return;
+    var pos = node.pos.getc(true), 
+        ctx = canvas.getCtx(),
+        width = node.getData('width', 'end'),
+        height = node.getData('height', 'end'),
+        x = pos.x + width/2,
+        y = pos.y;
         
     ctx.fillText(node.name, x, y, width);
   }
@@ -435,7 +442,7 @@ TM.Plot.NodeTypes = new Class( {
   },
 
   'rectangle': {
-    'render': function(node, canvas){
+    'render': function(node, canvas, animating){
       var leaf = this.viz.leaf(node);
       var config = this.config;
       var offst = config.offset;
@@ -446,20 +453,10 @@ TM.Plot.NodeTypes = new Class( {
       var ctx = canvas.getCtx();
       var posx = pos.x + offst / 2, posy = pos.y + offst / 2;
       if (leaf) {
-        var lg = ctx.createLinearGradient(posx, posy, posx + width - offst,
-            posy + height - offst);
-        lg.addColorStop(0, '#555');
-        lg.addColorStop(1, '#ccc');
-        ctx.fillStyle = lg;
         ctx.fillRect(posx, posy, width - offst, height - offst);
-      } else {
-        var lg = ctx.createLinearGradient(posx, posy, posx + width - offst,
-            posy + titleHeight);
-        lg.addColorStop(0, '#111');
-        lg.addColorStop(1, '#444');
-        ctx.fillStyle = lg;
+      } else if(titleHeight > 0){
         ctx.fillRect(pos.x + offst / 2, pos.y + offst / 2, width - offst,
-            titleHeight);
+            titleHeight - offst);
       }
     },
     'contains': function(node, pos) {
