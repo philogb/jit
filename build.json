@@ -31,6 +31,9 @@
     "Graph.Op": [
         "Core", "Graph"
     ],
+    "Graph.Geom": [
+        "Core", "Graph"
+    ],
     "Graph.Plot": [
         "Core", "Graph", "Helpers"
     ],
@@ -230,6 +233,7 @@
         "Graph.Op",
         "Graph.Plot",
         "Graph.Label",
+        "Graph.Geom",
         "Loader",
         "Layouts.Tree",
         "Fx"
@@ -255,6 +259,7 @@
         "Graph.Op",
         "Graph.Plot",
         "Graph.Label",
+        "Graph.Geom",
         "Loader",
         "Layouts.TM",
         "Fx"

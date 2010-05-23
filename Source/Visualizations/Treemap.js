@@ -25,15 +25,14 @@ TM.Base = {
       offset: 2,
       levelsToShow: 3,
       constrained: false,
-      addLeftClickHandler: false,
-      addRightClickHandler: false,
+      animate: false,
       selectPathOnHover: false,
       Node: {
         type: 'rectangle',
         overridable: true,
-        CanvasStyles: {
-          //globalCompositeOperation: "lighter"
-        }
+        width: 1,
+        height: 1,
+        color: '#444'
       },
       Label: {
         textAlign: 'center',
@@ -78,14 +77,30 @@ TM.Base = {
     this.fx = new TM.Plot(this);
     this.op = new TM.Op(this);
     this.group = new TM.Group(this);
+    this.geom = new TM.Geom(this);
     this.clickedNode = null;
+    this.busy = false;
     // initialize extras
     this.initializeExtras();
   },
 
   refresh: function(){
-    this.compute();
-    this.plot();
+    if(this.busy) return;
+    this.busy = true;
+    var that = this;
+    if(this.config.animate) {
+      this.compute('end');
+      this.fx.animate($.merge(this.config, {
+        modes: ['linear', 'node-property:width:height'],
+        onComplete: function() {
+          that.busy = false;
+        }
+      }));
+    } else {
+      this.busy = false;
+      this.compute();
+      this.plot();
+    }
   },
 
   plot: function(){
@@ -97,57 +112,148 @@ TM.Base = {
         1, 1
     ], "ignore").length == 0;
   },
-
+  
   enter: function(n){
-    this.view(n.id);
-  },
+    if(this.busy) return;
+    this.busy = true;
+    
+    var that = this,
+        GUtil = Graph.Util,
+        config = this.config,
+        graph = this.graph,
+        clickedNode = n,
+        previousClickedNode = this.clickedNode;
 
-  onLeftClick: function(n){
-    this.enter(n);
-  },
-
-  out: function(){
-    var GUtil = Graph.Util, parents = GUtil.getParents(this.graph
-        .getNode(this.root));
-    if (parents.length > 0) {
-      var parent = parents[0];
-      if (this.controller.request)
-        this.op.prune(parent, this.config.levelsToShow);
-      this.view(parent.id);
+    var callback = {
+      onComplete: function() {
+        //compute positions of newly inserted nodes
+        if(config.request) that.compute();
+        if(config.animate) {
+          //fade nodes
+          graph.nodeList.setDataset(['current', 'end'], {
+            'alpha': [1, 0]
+          });
+          GUtil.eachSubgraph(n, function(n) {
+            n.setData('alpha', 1, 'end');
+          }, "ignore");
+          that.fx.animate({
+            duration: 500,
+            modes:['node-property:alpha'],
+            onComplete: function() {
+              //compute end positions
+              that.clickedNode = clickedNode;
+              that.compute('end');
+              //animate positions
+              that.clickedNode = previousClickedNode;
+              that.fx.animate({
+                modes:['linear', 'node-property:width:height'],
+                duration: 1000,
+                onComplete: function() {
+                  that.busy = false;
+                  that.clickedNode = clickedNode;
+                }
+              });
+            }
+          });
+        } else {
+          this.clickedNode = n;
+          this.refresh();
+        }
+      }
+    };
+    if(config.request) {
+      this.requestNodes(clickedNode, callback);
+    } else {
+      callback.onComplete();
     }
   },
 
-  onRightClick: function(){
-    this.out();
-  },
-
-  view: function(id){
-    var config = this.config, that = this;
-    var rootNode = this.graph.getNode(this.root);
-    var clickedNode = this.graph.getNode(id);
-    var post = {
-      onComplete: function(){
-        that.root = rootNode;
-        that.clickedNode = clickedNode;
-        that.plot();
+  out: function(){
+    if(this.busy) return;
+    this.busy = true;
+    this.events.hoveredNode = false;
+    var that = this,
+        GUtil = Graph.Util,
+        config = this.config,
+        graph = this.graph,
+        parents = GUtil.getParents(graph
+        .getNode(this.clickedNode 
+            && this.clickedNode.id || this.root)),
+        parent = parents[0],
+        clickedNode = parent,
+        previousClickedNode = this.clickedNode;
+    
+    //if no parents return
+    if(!parent) {
+      this.busy = false;
+      return;
+    }
+    //final plot callback
+    callback = {
+      onComplete: function() {
+        that.clickedNode = parent;
+        if(config.request) {
+          that.requestNodes(parent, {
+            onComplete: function() {
+              that.compute();
+              that.plot();
+              that.busy = false;
+            }
+          });
+        } else {
+          that.compute();
+          that.plot();
+          that.busy = false;
+        }
       }
     };
-
-    if (this.controller.request) {
-      this.requestNodes(clickedNode, post);
+    //prune tree
+    if (config.request)
+      this.geom.setRightLevelToShow(parent);
+    //animate node positions
+    if(config.animate) {
+      this.clickedNode = clickedNode;
+      this.compute('end');
+      //animate the visible subtree only
+      this.clickedNode = previousClickedNode;
+      this.fx.animate({
+        modes:['linear', 'node-property:width:height'],
+        duration: 1000,
+        onComplete: function() {
+          //animate the parent subtree
+          that.clickedNode = clickedNode;
+          //change nodes alpha
+          graph.nodeList.setDataset(['current', 'end'], {
+            'alpha': [0, 1]
+          });
+          GUtil.eachSubgraph(previousClickedNode, function(node) {
+            node.setData('alpha', 1);
+          }, "ignore");
+          that.fx.animate({
+            duration: 500,
+            modes:['node-property:alpha'],
+            onComplete: function() {
+              callback.onComplete();
+            }
+          });
+        }
+      });
     } else {
-      post.onComplete();
+      callback.onComplete();
     }
   },
 
   requestNodes: function(node, onComplete){
-    var handler = $.merge(this.controller, onComplete), lev = this.config.levelsToShow, GUtil = Graph.Util;
+    var handler = $.merge(this.controller, onComplete), 
+        lev = this.config.levelsToShow, 
+        GUtil = Graph.Util;
     if (handler.request) {
       var leaves = [], d = node._depth;
       GUtil.eachLevel(node, 0, lev, function(n){
-        if (n.drawn && !GUtil.anySubnode(n)) {
+        var nodeLevel = lev - (n._depth - d);
+        if (n.drawn && !GUtil.anySubnode(n) && nodeLevel > 0) {
           leaves.push(n);
-          n._level = lev - (n._depth - d);
+          n._level = nodeLevel;
         }
       });
       this.group.requestNodes(leaves, handler);
@@ -179,11 +285,32 @@ TM.Base = {
   }
 };
 
-TM.Op = new Class( {
+TM.Op = new Class({
   Implements: Graph.Op,
 
   initialize: function(viz){
     this.viz = viz;
+  }
+});
+
+TM.Geom = new Class({
+  Implements: Graph.Geom,
+  
+  getRightLevelToShow: function() {
+    return this.viz.config.levelsToShow;
+  },
+  
+  setRightLevelToShow: function(node) {
+    var level = this.getRightLevelToShow(), 
+        fx = this.viz.labels,
+        op = this.viz.op;
+    Graph.Util.eachLevel(node, 0, this.config.levelsToShow+1, function(n) {
+      var d = n._depth - node._depth;
+      if(d > level) {
+        op.removeNode(n.id, { type:'nothing' });
+        fx.hideLabel(n, false);
+      }
+    });
   }
 });
 
@@ -248,13 +375,14 @@ TM.Plot = new Class( {
   },
 
   plot: function(opt, animating){
-    var viz = this.viz, graph = viz.graph;
+    var viz = this.viz, 
+        graph = viz.graph;
     viz.canvas.clear();
-    this.plotTree(graph.getNode(viz.root), $.merge(viz.config, opt || {}, {
+    this.plotTree(graph.getNode(viz.clickedNode && viz.clickedNode.id || viz.root), $.merge(viz.config, opt || {}, {
       'withLabels': true,
       'hideLabels': false,
       'plotSubtree': function(n, ch){
-        return true;
+        return Graph.Util.anySubnode(n, "exist");
       }
     }), animating);
   }
@@ -298,8 +426,8 @@ TM.Label.Native = new Class({
     if(!this.leaf(node) && !this.config.titleHeight) return;
     var pos = node.pos.getc(true), 
         ctx = canvas.getCtx(),
-        width = node.getData('width', 'end'),
-        height = node.getData('height', 'end'),
+        width = node.getData('width'),
+        height = node.getData('height'),
         x = pos.x + width/2,
         y = pos.y;
         
@@ -326,6 +454,8 @@ TM.Label.SVG = new Class( {
 
   initialize: function(viz){
     this.viz = viz;
+    this.leaf = viz.leaf;
+    this.config = viz.config;
   },
 
   /* 
@@ -355,6 +485,9 @@ TM.Label.SVG = new Class( {
     tag.setAttribute('x', labelPos.x);
     tag.setAttribute('y', labelPos.y);
 
+    if(!this.leaf(node) && !this.config.titleHeight) {
+      tag.style.display = 'none';
+    }
     controller.onPlaceLabel(tag, node);
   }
 });
@@ -378,6 +511,8 @@ TM.Label.HTML = new Class( {
 
   initialize: function(viz){
     this.viz = viz;
+    this.leaf = viz.leaf;
+    this.config = viz.config;
   },
 
   /* 
@@ -413,6 +548,9 @@ TM.Label.HTML = new Class( {
     style.zIndex = node._depth * 100;
     style.display = '';
 
+    if(!this.leaf(node) && !this.config.titleHeight) {
+      tag.style.display = 'none';
+    }
     controller.onPlaceLabel(tag, node);
   }
 });
@@ -443,23 +581,49 @@ TM.Plot.NodeTypes = new Class( {
 
   'rectangle': {
     'render': function(node, canvas, animating){
-      var leaf = this.viz.leaf(node);
-      var config = this.config;
-      var offst = config.offset;
-      var titleHeight = config.titleHeight;
-      var pos = node.pos.getc(true);
-      var width = node.getData('width');
-      var height = node.getData('height');
-      var ctx = canvas.getCtx();
-      var posx = pos.x + offst / 2, posy = pos.y + offst / 2;
+      var leaf = this.viz.leaf(node),
+          config = this.config,
+          offst = config.offset,
+          titleHeight = config.titleHeight,
+          pos = node.pos.getc(true),
+          width = node.getData('width'),
+          height = node.getData('height'),
+          border = node.getData('border'),
+          ctx = canvas.getCtx(),
+          posx = pos.x + offst / 2, 
+          posy = pos.y + offst / 2;
       if (leaf) {
+        if(config.cushion) {
+          var lg = ctx.createRadialGradient(posx + (width-offst)/2, posy + (height-offst)/2, 1, 
+              posx + (width-offst)/2, posy + (height-offst)/2, width < height? height : width);
+          var color = node.getData('color');
+          var colorGrad = $.rgbToHex($.map($.hexToRgb(color), 
+              function(r) { return r * 0.2 >> 0; }));
+          lg.addColorStop(0, color);
+          lg.addColorStop(1, colorGrad);
+          ctx.fillStyle = lg;
+        }
         ctx.fillRect(posx, posy, width - offst, height - offst);
+        if(border) {
+          ctx.save();
+          ctx.strokeStyle = border;
+          ctx.strokeRect(posx, posy, width - offst, height - offst);
+          ctx.restore();
+        }
       } else if(titleHeight > 0){
         ctx.fillRect(pos.x + offst / 2, pos.y + offst / 2, width - offst,
             titleHeight - offst);
+        if(border) {
+          ctx.save();
+          ctx.strokeStyle = border;
+          ctx.strokeRect(pos.x + offst / 2, pos.y + offst / 2, width - offst,
+              height - offst);
+          ctx.restore();
+        }
       }
     },
     'contains': function(node, pos) {
+      if(this.viz.clickedNode && !$jit.Graph.Util.isDescendantOf(node, this.viz.clickedNode.id)) return false;
       var npos = node.pos.getc(true),
           width = node.getData('width'), 
           leaf = this.viz.leaf(node),

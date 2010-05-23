@@ -14,6 +14,13 @@
   color:#fff;
   font-size:9px;
   overflow:hidden;
+  cursor:pointer;
+/*  
+  text-shadow:2px 2px 5px #000;
+  -o-text-shadow:2px 2px 5px #000;
+  -webkit-text-shadow:2px 2px 5px #000;
+  -moz-text-shadow:2px 2px 5px #000;
+*/
 }
 
 /*TOOLTIPS*/
@@ -26,4 +33,22 @@
     font-size:10px;
     font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
     padding:7px;
+}
+
+.album {
+    width:100px;
+    margin:3px;
+}
+
+#id-list {
+	background-color:#EEEEEE;
+	border:1px solid #CCCCCC;
+	margin:10px 20px 0 20px;
+	padding:5px;
+	text-align:left;
+	text-indent:2px;
+}
+
+#id-list table {
+  margin-top:2px;
 }

@@ -82,7 +82,7 @@ $.each = function(iterable, fn) {
     for ( var key in iterable)
       fn(iterable[key], key);
   } else {
-    for ( var i = 0; i < iterable.length; i++)
+    for ( var i = 0, l = iterable.length; i < l; i++)
       fn(iterable[i], i);
   }
 };

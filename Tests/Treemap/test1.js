@@ -1,13 +1,9 @@
 function init(){
-  var get = function(id){
-    return document.getElementById(id);
-  };
-
   var json = Feeder.makeTree({
     idPrefix: "node",
     levelStart: 0,
     levelEnd: 3,
-    maxChildrenPerNode: 20,
+    maxChildrenPerNode: 10,
     minChildrenPerNode: 1,
     counter: 0,
     color: false,
@@ -18,14 +14,35 @@ function init(){
     'injectInto': 'infovis',
     // orientation: "v",
     titleHeight: 13,
+    animate: true,
+    duration: 1500,
     offset: 1,
+    Label: {
+      type: 'Native'
+    },
+    Events: {
+      enable: true,
+      onMouseEnter: function(node, eventInfo, e) {
+        node.setData('border', '#9FD4FF');
+        tm.plot();
+      },
+      onMouseLeave: function(node, eventInfo, e) {
+        node.removeData('border');
+        tm.plot();
+      },
+      onClick: function(node, eventInfo, e) {
+        if(node) {
+          tm.enter(node);
+        }
+      },
+      onRightClick: function(node, eventInfo, e) {
+        tm.out();
+      }
+    },
     Navigation: {
       enable:true,
       panning:true,
-      zooming:0.05
-    },
-    Label: {
-      type: 'Native'
+      zooming:0.01
     },
     //Allow tips
     Tips: {
@@ -61,17 +78,5 @@ function init(){
   });
 
   tm.loadJSON(json);
-  tm.compute('end');
-  $jit.Graph.Util.eachNode(tm.graph, function(n) {
-    n.setDataset('current', {
-      'width': 0,
-      'height': 0
-    });
-    n.pos.x = n.endPos.x;
-    n.pos.y = n.endPos.y;
-  });
-  tm.fx.animate({
-    duration:1700,
-    modes:['node-property:width:height']
-  });
+  tm.refresh();
 }

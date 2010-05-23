@@ -10,9 +10,9 @@
  */
 Layouts.TM = {};
 
-Layouts.TM.SliceAndDice = {
+Layouts.TM.SliceAndDice = new Class({
   compute: function(prop) {
-    var root = this.graph.getNode(this.root);
+    var root = this.graph.getNode(this.clickedNode && this.clickedNode.id || this.root);
     this.controller.onBeforeCompute(root);
     var size = this.canvas.getSize(),
         config = this.config,
@@ -23,22 +23,22 @@ Layouts.TM.SliceAndDice = {
     root.getPos(prop).setc(-width/2, -height/2);
     root.setData('width', width, prop);
     root.setData('height', height + config.titleHeight, prop);
-    this.computePositions(root, root, this.layout.orientation, prop, root.getData('area', prop));
+    this.computePositions(root, root, this.layout.orientation, prop);
     this.controller.onAfterCompute(root);
   },
   
-  computePositions: function(par, ch, orn, prop, totalArea) {
+  computePositions: function(par, ch, orn, prop) {
+    //compute children areas
+    var totalArea = 0;
+    Graph.Util.eachSubnode(par, function(n) {
+      totalArea += n.getData('area', prop);
+    });
+    
     var config = this.config, GUtil = Graph.Util,
         offst = config.offset,
         width  = par.getData('width', prop),
         height = par.getData('height', prop) - config.titleHeight,
-        fact = ch.getData('area', prop) / totalArea;
-    
-    //compute children areas
-    totalArea = 0;
-    GUtil.eachSubnode(ch, function(n) {
-      totalArea += n.getData('area', prop);
-    });
+        fact = par == ch? 1: (ch.getData('area', prop) / totalArea);
     
     var otherSize, size, dim, pos, pos2, posth, pos2th;
     var horizontal = (orn == "h");
@@ -69,12 +69,12 @@ Layouts.TM.SliceAndDice = {
       var p = n.getPos(prop);
       p[pos] = offsetSize + cpos[pos] + posth;
       p[pos2] = cpos[pos2] + pos2th;
-      tm.computePositions(ch, n, orn, prop, totalArea);
+      tm.computePositions(ch, n, orn, prop);
       offsetSize += n.getData(dim, prop);
     });
   }
 
-};
+});
 
 Layouts.TM.Area = {
  /*
@@ -89,7 +89,7 @@ Layouts.TM.Area = {
  */
  compute: function(prop) {
     prop = prop || "current";
-    var root = this.graph.getNode(this.root);
+    var root = this.graph.getNode(this.clickedNode && this.clickedNode.id || this.root);
     this.controller.onBeforeCompute(root);
     var config = this.config,
         size = this.canvas.getSize(),

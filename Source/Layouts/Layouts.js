@@ -15,7 +15,7 @@
  * Parent object for common layouts.
  *
  */
-var Layouts = {};
+var Layouts = $jit.Layouts = {};
 
 
 //Some util shared layout functions are defined here.

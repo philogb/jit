@@ -48,7 +48,7 @@
 
 $jit.Graph = new Class({
 
- initialize: function(opt, Node, Edge, Label) {
+  initialize: function(opt, Node, Edge, Label) {
     var innerOptions = {
     'complex': false,
     'Node': {}
@@ -59,6 +59,21 @@ $jit.Graph = new Class({
     this.opt = $.merge(innerOptions, opt || {});
     this.nodes = {};
     this.edges = {};
+    
+    //add nodeList methods
+    var that = this;
+    this.nodeList = {};
+    for(var p in Accessors) {
+      that.nodeList[p] = (function(p) {
+        return function() {
+          var args = Array.prototype.slice.call(arguments);
+          $jit.Graph.Util.eachNode(that, function(n) {
+            n[p].apply(n, args);
+          });
+        };
+      })(p);
+    }
+
  },
 
 /*
@@ -465,7 +480,7 @@ var Accessors;
     See <removeData> for more details.
     */
     removeCanvasStyle: function() {
-      removeDataInternal.call(this, 'canvas', prop);
+      removeDataInternal.call(this, 'canvas', Array.prototype.slice.call(arguments));
     },
 
     /*

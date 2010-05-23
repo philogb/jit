@@ -348,15 +348,50 @@ tests_model = {
    
     'Treemap': [
         {
-            'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree.',
+            'Title': 'Test Squarified, SliceAndDice and Strip Treemap with random Tree',
             'Description': 
             """
             Loads a random generated weighted tree and renders it as Squarified Tree by default.<br> 
-            Treemap nodes should have colors by default. <br>
-            You can toggle nodes' color, title display, offset and layout (for SliceAndDice and Strip).<br> 
-            Each time an option is changed, a new random tree is generated and rendered.
             """,
             'Extras': ['generators.js']
+        },
+        {
+            'Title': 'Animated Squarified, SliceAndDice and Strip TreeMaps',
+            'Description': 
+            """
+            In this example a static JSON tree is loaded into a Squarified Treemap.<br /><br />
+            <b>Left click</b> to set a node as root for the visualization.<br /><br />
+            <b>Right click</b> to set the parent node as root for the visualization.<br /><br />
+            You can <b>choose a different tiling algorithm</b> below:
+            
+            """,
+            'Extras': ['generators.js'],
+            'Example': True
+        },
+        {
+            'Title': 'TreeMap with on-demand nodes',
+            'Description': 
+            """
+            This example shows how you can use the <b>request</b> controller method to create a TreeMap with on demand nodes<br /><br />
+            This example makes use of native Canvas text and shadows, but can be easily adapted to use HTML like the other examples.<br /><br />
+            There should be only one level shown at a time.<br /><br /> 
+            Clicking on a band should show a new TreeMap with its most listened albums.<br /><br />            
+            """,
+            'Extras': ['generators.js'],
+            'Example': True
+        },
+        {
+            'Title': 'Cushion TreeMaps',
+            'Description': 
+            """
+            In this example a static JSON tree is loaded into a Cushion Treemap.<br /><br />
+            <b>Left click</b> to set a node as root for the visualization.<br /><br />
+            <b>Right click</b> to set the parent node as root for the visualization.<br /><br />
+            You can <b>choose a different tiling algorithm</b> below:
+            
+            """,
+            'Extras': ['generators.js'],
+            'Example': True
         },
    ],
 
