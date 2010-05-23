@@ -412,7 +412,7 @@ var Accessors;
     (end code)
     */
     removeData: function() {
-      removeDataInternal.call(this, "", arguments);
+      removeDataInternal.call(this, "", Array.prototype.slice.call(arguments));
     },
 
     /*
@@ -518,7 +518,7 @@ var Accessors;
     See <removeData> for more details.
     */
     removeLabelData: function() {
-      removeDataInternal.call(this, 'label', arguments);
+      removeDataInternal.call(this, 'label', Array.prototype.slice.call(arguments));
     }
   };
 })();
