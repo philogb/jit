@@ -435,7 +435,7 @@ $jit.Sunburst.$extend = true;
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(thetap);
-      ctx.fillText(node.name, 0, 0, ld);
+      ctx.fillText(node.name, 0, 0);
       ctx.restore();
     }
   });

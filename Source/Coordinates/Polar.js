@@ -277,23 +277,30 @@ Polar.prototype = {
     interpolate: function(elem, delta) {
         var pi = Math.PI, pi2 = pi * 2;
         var ch = function(t) {
-            return (t < 0)? (t % pi2) + pi2 : t % pi2;
+            var a =  (t < 0)? (t % pi2) + pi2 : t % pi2;
+            return a;
         };
         var tt = this.theta, et = elem.theta;
-        var sum;
-        if(Math.abs(tt - et) > pi) {
-            if(tt > et) {
-                sum =ch((et + ((tt - pi2) - et) * delta)) ;
-            } else {
-                sum =ch((et - pi2 + (tt - (et - pi2)) * delta));
-            }
-        } else {
-            sum =ch((et + (tt - et) * delta)) ;
+        var sum, diff = Math.abs(tt - et);
+        if(diff == pi) {
+          if(tt > et) {
+            sum = ch((et + ((tt - pi2) - et) * delta)) ;
+          } else {
+            sum = ch((et - pi2 + (tt - (et)) * delta));
+          }
+        } else if(diff >= pi) {
+          if(tt > et) {
+            sum = ch((et + ((tt - pi2) - et) * delta)) ;
+          } else {
+            sum = ch((et - pi2 + (tt - (et - pi2)) * delta));
+          }
+        } else {  
+          sum = ch((et + (tt - et) * delta)) ;
         }
         var r = (this.rho - elem.rho) * delta + elem.rho;
         return {
-            'theta': sum,
-            'rho': r
+          'theta': sum,
+          'rho': r
         };
     }
 };
