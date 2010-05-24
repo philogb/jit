@@ -334,7 +334,7 @@ function init(){
         Navigation: {
           enable:true,
           panning:true,
-          zooming:0.05
+          zooming:0.5
         },
         Node: {
             dim: 9,

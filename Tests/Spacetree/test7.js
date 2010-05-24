@@ -745,6 +745,11 @@ function init(){
         transition: $jit.Trans.Quart.easeInOut,
         //set distance between node and its children
         levelDistance: 50,
+        //enable panning
+        Navigation: {
+          enable:true,
+          panning:true
+        },
         //set node and edge styles
         //set overridable=true for styling individual
         //nodes or edges
