@@ -19,6 +19,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
           border = node.getData('border'),
           config = node.getData('config'),
           showLabels = config.showLabels,
+          resizeLabels = config.resizeLabels,
           label = config.Label;
 
       var xpos = config.sliceOffset * Math.cos((begin + end) /2);
@@ -67,6 +68,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
         }
         if(border) {
           ctx.save();
+          ctx.globalCompositeOperation = "source-over";
           ctx.lineWidth = 2;
           ctx.strokeStyle = border.color;
           var s = begin < end? 1 : -1;
@@ -81,7 +83,11 @@ $jit.Sunburst.Plot.NodeTypes.implement({
         if(showLabels) {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
-          ctx.font = label.size + 'px ' + label.family;
+          var scale = resizeLabels? node.getData('normalizedDim') : 1,
+              fontSize = (label.size * scale) >> 0;
+          fontSize = fontSize < +resizeLabels? +resizeLabels : fontSize;
+          
+          ctx.font = fontSize + 'px ' + label.family;
           ctx.textBaseline = 'middle';
           ctx.textAlign = 'center';
           
@@ -337,6 +343,7 @@ $jit.PieChart = new Class({
           return stat? rho : (n * rho / maxValue); 
         }));
       }
+      n.setData('normalizedDim', acum / maxValue);
     });
   }
 });
