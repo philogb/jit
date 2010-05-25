@@ -624,6 +624,8 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseDown: function(e, win, eventInfo) {
+    if(!this.config.panning) return;
+    if(this.config.panning == 'avoid nodes' && eventInfo.getNode()) return;
     this.pressed = true;
     this.pos = eventInfo.getPos();
     var canvas = this.canvas,
@@ -638,7 +640,9 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseMove: function(e, win, eventInfo) {
+    if(!this.config.panning) return;
     if(!this.pressed) return;
+    if(this.config.panning == 'avoid nodes' && eventInfo.getNode()) return;
     var thispos = this.pos, 
         currentPos = eventInfo.getPos(),
         canvas = this.canvas,
@@ -657,6 +661,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseUp: function(e, win, eventInfo, isRightClick) {
+    if(!this.config.panning) return;
     this.pressed = false;
   }
 });

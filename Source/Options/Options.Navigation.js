@@ -3,6 +3,6 @@ Options.Navigation = {
   
   enable: false,
   type: 'auto',
-  panning: false,
+  panning: false, //true | 'avoid nodes'
   zooming: false
 };
