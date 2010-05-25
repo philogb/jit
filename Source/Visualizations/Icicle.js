@@ -19,7 +19,7 @@ $jit.Icicle = new Class({
       orientation: "h",
       titleHeight: 13,
       offset: 2,
-      levelsToShow: 3,
+      levelsToShow: Number.MAX_VALUE,
       constrained: false,
       withLabels: true,
       clearCanvas: true,
@@ -183,11 +183,12 @@ $jit.Icicle.Plot = new Class({
   plot: function(opt, animating){
     var viz = this.viz, graph = viz.graph;
     var root = graph.getNode(viz.clickedNode && viz.clickedNode.id || viz.root);
+    var initialDepth = root._depth;
     this.plotTree(root, $.merge(opt, {
       'withLabels': true,
       'hideLabels': !!animating,
-      'plotSubtree': function(n, ch) {
-        return true;
+      'plotSubtree': function(root, node) {
+        return (node._depth - initialDepth < viz.config.levelsToShow);
       }
     }), animating);
   }
