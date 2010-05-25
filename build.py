@@ -21,7 +21,7 @@ class Build():
                 }
     
     def build(self, args=[]):
-        if len(args) == 0: args = [viz for viz in self.build_model['Visualizations']]
+        if not args: args = [viz for viz in self.build_model['Visualizations']]
         self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model['Visualizations']])
         return '(function () { \n\n' + self.script + '\n\n })();'
     
@@ -38,6 +38,6 @@ class Build():
 
 def main():
     ans = Build().build(sys.argv[1:])
-    print ans
+    print open('LICENSE').read() + ans
     
 if __name__ == "__main__": main()

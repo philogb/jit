@@ -1,7 +1,6 @@
 from os import system, walk
 from shutil import copy
-import sys
-import re
+import sys, re
 
 from tests import tests_model
 from serve import render
