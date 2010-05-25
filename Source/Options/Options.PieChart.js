@@ -13,6 +13,7 @@ Options.PieChart = {
     onHide: $.empty
   },
   showLabels: true,
+  resizeLabels: false,
   
   //only valid for mono-valued datasets
   updateHeights: false
