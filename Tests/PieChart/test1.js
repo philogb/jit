@@ -62,9 +62,13 @@ function init(){
         //can also be 'stacked'
         type:'stacked:gradient',
         showLabels:true,
+        //resize labels according to
+        //pie slices values set 7px as
+        //min label size
+        resizeLabels: 7,
         //label styling
         Label: {
-          size: 13,
+          size: 20,
           family: 'Arial',
           color: 'white'
         },

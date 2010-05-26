@@ -329,17 +329,17 @@ Graph.Plot = {
     animate: function(opt, versor) {
       opt = $.merge(this.viz.config, opt || {});
       var that = this,
-      viz = this.viz,
-      graph  = viz.graph,
-      GUtil = Graph.Util,
-      interp = this.Interpolator;
-      
+          viz = this.viz,
+          graph  = viz.graph,
+          GUtil = Graph.Util,
+          interp = this.Interpolator,
+          animation =  opt.type === 'nodefx'? this.nodeFxAnimation : this.animation;
       //prepare graph values
       var m = this.prepare(opt.modes);
       
       //animate
       if(opt.hideLabels) this.labels.hideLabels(true);
-      this.animation.setOptions($.merge(opt, {
+      animation.setOptions($.merge(opt, {
         $animating: false,
         compute: function(delta) {
           GUtil.eachNode(graph, function(node) { 
@@ -408,30 +408,22 @@ Graph.Plot = {
    */
    nodeFx: function(opt) {
      var viz = this.viz,
-     graph  = viz.graph,
-     GUtil = $jit.Graph.Util,
-     options = $.merge(this.viz.config, {
-       'elements': {
-         'id': false,
-         'properties': {}
-       },
-       'reposition': false
-     });
+         graph  = viz.graph,
+         GUtil = $jit.Graph.Util,
+         animation = this.nodeFxAnimation,
+         options = $.merge(this.viz.config, {
+           'elements': {
+             'id': false,
+             'properties': {}
+           },
+           'reposition': false
+         });
      opt = $.merge(options, opt || {}, {
        onBeforeCompute: $.empty,
        onAfterCompute: $.empty
      });
-     //check if an animation is running and exit
-     //if it's not a nodefx one.
-     var anim = this.animation;
-     if(anim.timer) {
-       if(anim.opt.type 
-           && anim.opt.type == 'nodefx') {
-         anim.stopTimer();
-       } else {
-         return;
-       }
-     }
+     //check if an animation is running
+     animation.stopTimer();
      var props = opt.elements.properties;
      //set end values for nodes
      if(!opt.elements.id) {
@@ -464,7 +456,7 @@ Graph.Plot = {
      //animate
      this.animate($.merge(opt, {
        modes: modes,
-       type:'nodefx'
+       type: 'nodefx'
      }));
    },
 

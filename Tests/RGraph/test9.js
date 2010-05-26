@@ -387,7 +387,7 @@ function init(){
           color: '#888'
         },
         NodeStyles: {
-          enable:false,
+          enable:true,
           stylesHover: {
             dim:20,
             color:'#f00'

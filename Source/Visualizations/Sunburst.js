@@ -151,7 +151,8 @@ $jit.Sunburst = new Class({
         'type': 'none'
       },
       Label: {
-        textAlign: 'start'
+        textAlign: 'start',
+        textBaseline: 'middle'
       }
     };
 
@@ -275,8 +276,15 @@ $jit.Sunburst = new Class({
   
   */
   rotateAngle: function(theta, method, opt) {
-    opt = $.merge(this.config, opt || {}, {
-      modes: [ 'polar' ]
+    if(this.busy) return;
+    this.busy = true;
+    var that = this;
+    var options = $.merge(this.config, opt || {}, {
+      modes: [ 'polar' ],
+      onComplete: function() {
+        if(opt.onComplete) opt.onComplete();
+        that.busy = false;
+      }
     });
     var prop = opt.property || (method === "animate" ? 'end' : 'current');
     Graph.Util.eachNode(this.graph, function(n) {
@@ -287,9 +295,10 @@ $jit.Sunburst = new Class({
       }
     });
     if (method === "animate") {
-      this.fx.animate(opt);
+      this.fx.animate(options);
     } else if (method === "replot") {
       this.fx.plot();
+      this.busy = false;
     }
   },
 
@@ -405,9 +414,16 @@ $jit.Sunburst.$extend = true;
 
     initialize: function(viz) {
       this.viz = viz;
+      this.label = viz.config.Label;
+      this.config = viz.config;
     },
 
     renderLabel: function(canvas, node, controller) {
+      var span = node.getData('span');
+      if(span < Math.PI /2 && Math.tan(span) * 
+          this.config.levelDistance * node._depth < 10) {
+        return;
+      }
       var ctx = canvas.getCtx();
       var measure = ctx.measureText(node.name);
       if (node.id == this.viz.root) {

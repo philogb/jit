@@ -216,7 +216,7 @@ Extras.Classes.Events = new Class({
     if(isRightClick) {
       this.config.onRightClick(this.hoveredNode, event, evt);
     } else {
-      this.config.onClick(this.hoveredNode, event, evt);
+      this.config.onClick(this.pressedNode, event, evt);
     }
     if(this.pressedNode) {
       if(this.moved) {
@@ -299,8 +299,8 @@ Extras.Classes.Events = new Class({
   
   onMouseDown: function(e, win, event) {
     var evt = $.event.get(e, win);
-    this.pressedNode = this.hoveredNode;
-    this.config.onDragStart(this.hoveredNode, event, evt);
+    this.pressedNode = event.getNode();
+    this.config.onDragStart(this.pressedNode, event, evt);
   }
 });
 
@@ -435,6 +435,7 @@ Extras.Classes.NodeStyles = new Class({
     this.nodeStylesOnHover = this.nStyles.stylesHover;
     this.nodeStylesOnClick = this.nStyles.stylesClick;
     this.hoveredNode = false;
+    this.fx.nodeFxAnimation = new Animation();
   },
   
   onMouseOut: function(e, win) {
@@ -505,7 +506,7 @@ Extras.Classes.NodeStyles = new Class({
             node.styles[$s] = node.getData(s); 
         }
       }
-      viz.fx.nodeFx({
+      viz.fx.nodeFx($.extend({
         'elements': {
           'id': node.id,
           'properties': that['nodeStylesOn' + type]
@@ -513,10 +514,10 @@ Extras.Classes.NodeStyles = new Class({
          transition: Trans.Quart.easeOut,
          duration:300,
          fps:40
-      });
+      }, this.config));
     } else {
       var restoredStyles = this.getRestoredStyles(node, type);
-      viz.fx.nodeFx({
+      viz.fx.nodeFx($.extend({
         'elements': {
           'id': node.id,
           'properties': restoredStyles
@@ -524,7 +525,7 @@ Extras.Classes.NodeStyles = new Class({
          transition: Trans.Quart.easeOut,
          duration:300,
          fps:40
-      });
+      }, this.config));
     }
   },
 
@@ -572,18 +573,10 @@ Extras.Classes.NodeStyles = new Class({
       if(!this.hoveredNode && !node) return;
       //if the node is hovered then exit
       if(node.hovered) return;
-      //check if an animation is running and exit
-      //if it's a nodefx one.
-      var anim = this.fx.animation;
-      if(anim.timer) {
-        if(anim.opt.type 
-            && anim.opt.type == 'nodefx') {
-          anim.stopTimer();
-        } else {
-          return;
-        }
-      }
+      //select hovered node
       if(node && !node.selected) {
+        //check if an animation is running and exit it
+        this.fx.nodeFxAnimation.stopTimer();
         //unselect all hovered nodes...
         $jit.Graph.Util.eachNode(this.viz.graph, function(n) {
           if(n.hovered && !n.selected) {
@@ -594,11 +587,13 @@ Extras.Classes.NodeStyles = new Class({
           }
         });
         //select hovered node
-        this.toggleStylesOnHover(node, true);
         node.hovered = true;
         this.hoveredNode = node;
+        this.toggleStylesOnHover(node, true);
       } else if(this.hoveredNode && !this.hoveredNode.selected) {
-        //select hovered node
+        //check if an animation is running and exit it
+        this.fx.nodeFxAnimation.stopTimer();
+        //unselect hovered node
         this.toggleStylesOnHover(this.hoveredNode, false);
         delete this.hoveredNode.hovered;
         this.hoveredNode = false;

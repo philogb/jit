@@ -504,7 +504,7 @@ tests_model = {
             Right clicking will collapse/expand nodes.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
         },
         {
             'Title': 'Rose Diagrams',
@@ -524,7 +524,20 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':False
-        }
+        },
+                {
+            'Title': 'Sunburst of a Directory Tree',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this visualization.<br /><br />
+            Tips are used to describe the file size and its last modified date.<br /><br />
+            <b>Left click</b> to rotate the Sunburst and leave the clicked node horizontal.<br /><br />
+            <b>Right click</b> to collapse/expand nodes.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        },
+
   ],
 
    'AreaChart': [
