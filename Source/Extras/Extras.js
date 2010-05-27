@@ -613,7 +613,7 @@ Extras.Classes.Navigation = new Class({
   onMouseWheel: function(e, win, scroll) {
     if(!this.config.zooming) return;
     $.event.stop($.event.get(e, win));
-    var val = this.config.zooming / 100,
+    var val = this.config.zooming / 1000,
         ans = 1 + scroll * val;
     this.canvas.scale(ans, ans);
   },

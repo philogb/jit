@@ -520,10 +520,13 @@ tests_model = {
             'Title': 'Connected Sunburst',
             'Description': 
             """
-            A static JSON Graph structure is used as input for this animation that represents a connected sunburst.<br />
+            A static JSON Graph structure is used as input for this visualization.<br /><br />
+            This example shows how properties such as color, height, angular width and line width  
+            can be customized per node and per edge in the JSON structure.<br /><br />
+            <b>Left click</b> to select a node and show its relations. 
             """,
             'Extras': ['excanvas.js'],
-            'Example':False
+            'Example':True
         },
                 {
             'Title': 'Sunburst of a Directory Tree',
@@ -531,8 +534,7 @@ tests_model = {
             """
             A static JSON Tree structure is used as input for this visualization.<br /><br />
             Tips are used to describe the file size and its last modified date.<br /><br />
-            <b>Left click</b> to rotate the Sunburst and leave the clicked node horizontal.<br /><br />
-            <b>Right click</b> to collapse/expand nodes.
+            <b>Left click</b> to rotate the Sunburst to the selected node and see its details.
             """,
             'Extras': ['excanvas.js'],
             'Example':True

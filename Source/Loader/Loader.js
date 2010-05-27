@@ -53,7 +53,7 @@ var Loader = {
                 for(var i=0; i<json.length; i++) {
                     ans.addNode(json[i]);
                     for(var j=0, adj = json[i].adjacencies; j<adj.length; j++) {
-                        var node = adj[j], data;
+                        var node = adj[j], data = {};
                         if(typeof adj[j] != 'string') {
                             data = node.data;
                             node = node.nodeTo;

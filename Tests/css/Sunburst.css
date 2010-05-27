@@ -1,4 +1,8 @@
 /*TOOLTIPS*/
+#inner-details {
+  font-size:12px;
+}
+
 .tip {
 	 text-align: left;
 	 width:auto;

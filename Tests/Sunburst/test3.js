@@ -1,194 +1,303 @@
 function init(){
-    //init data
-  var json = [{
-    "id": "node0",
-    "name": "node0 name",
-    "data": {
-      "$angularWidth": 13.077119090372014,
-    },
-    "adjacencies": [{
-        "nodeTo": "node3",
-        "data": {}
-    }, {
-        "nodeTo": "node4",
-        "data": {
-            "$type":"arrow",
-            "$color":"#dd99dd",
-            "$dim":25
-        }
-    }]
-  }, {
-    "id": "node1",
-    "name": "",
-    "data": {
-      "$type": "none"
-    },
-    "adjacencies": [{
-        "nodeTo": "node0",
-        "data": {
-          '$type': 'none'
-        }
-    }, {
-        "nodeTo": "node2",
-        "data": {
-          '$type': 'none'
-        }
-    }, {
-        "nodeTo": "node3",
-        "data": {
-          '$type': 'none'
-        }
-    }, {
-        "nodeTo": "node4",
+  //init data
+  var json = [
+      //"root" node is invisible
+      {
+        "id": "node0",
+        "name": "",
         "data": {
           "$type": "none"
-        }
-    }, {
-        "nodeTo": "node5",
-        "data": {
-          "$type": "none"
-        }
-    }]
-  }, {
-    "id": "node2",
-    "name": "node2 name",
-    "data": {
-        "$angularWidth": 24.937383149648717,
-        "some other key": "some other value"
-    },
-    "adjacencies": [{
-        "nodeTo": "node4",
-        "data": {}
-    }, {
-        "nodeTo": "node5",
-        "data": {}
-    }]
-  }, {
-    "id": "node3",
-    "name": "node3 name",
-    "data": {
-        "$angularWidth": 10.53272740718869,
-        "some other key": "some other value"
-    },
-    "adjacencies": [{
-        "nodeTo": "node0",
-        "data": {}
-    }, {
-        "nodeTo": "node4",
-        "data": {
-            "$type":"arrow",
-            "$direction": ["node4", "node3"],
-            "$dim":25,
-            "$color":"#dd99dd"
-        }
-    }]
-  }, {
-    "id": "node4",
-    "name": "node4 name",
-    "data": {
-        "$angularWidth": 5.3754347037767345
-    },
-    "adjacencies": []
-  }, {
-    "id": "node5",
-    "name": "node5 name",
-    "data": {
-        "$angularWidth": 32.26403873194912
-    },
-    "adjacencies": []
-  }];
-    //end
-    var infovis = document.getElementById('infovis');
-    var w = infovis.offsetWidth - 50, h = infovis.offsetHeight - 50;
-    //init Sunburst
-    var sb = new $jit.Sunburst({
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        //Change node and edge styles such as
-        //color, width and dimensions.
-        Node: {
-            dim: 9,
-            type:'gradient-multipie',
-            color: "#55c",
-            overridable: true
         },
-        
-        Edge: {
-          overridable: true,
-          type: 'hyperline',
-          lineWidth: 3
-        },
-        
-        Label: {
-          type: 'Native'
-        },
-
-        Tips: {
-          enable: true,
-          onShow: function(tip, node, elem) {
-            tip.innerHTML = node.name + " - " + Math.round(node.getData('angularWidth')) + "%";
-          }
-        },
-        
-        NodeStyles: {
-          enable: true,
-          stylesHover: {
-            'color': '#dddd33'
-           }
-        },
-        
-        levelDistance: 110,
-        
-        //Attach event handlers and add text to the
-        //labels. This method is only triggered on label
-        //creation
-        onCreateLabel: function(domElement, node){
-          if(labels === 'HTML') {
-            domElement.innerHTML = node.name;
-          } else if (labels === 'SVG') {
-            domElement.firstChild
-            .appendChild(document
-              .createTextNode(node.name));
-          } 
-        },
-        //Change node styles when labels are placed
-        //or moved.
-        onPlaceLabel: function(domElement, node){
-          if(labels === 'SVG') {
-            var fch = domElement.firstChild;
-            var style = fch.style;
-            style.display = '';
-            style.cursor = 'pointer';
-            style.fontSize = "0.8em";
-            fch.setAttribute('fill', "#fff");
-          } else if(labels === 'HTML') {
-            var style = domElement.style;
-            style.display = '';
-            style.cursor = 'pointer';
-            if (node._depth <= 1) {
-                style.fontSize = "0.8em";
-                style.color = "#ddd";
-
-            } else if(node._depth == 2){
-                style.fontSize = "0.7em";
-                style.color = "#555";
-
-            } else {
-                style.display = 'none';
+        "adjacencies": [
+            {
+              "nodeTo": "node1",
+              "data": {
+                '$type': 'none'
+              }
+            }, {
+              "nodeTo": "node2",
+              "data": {
+                '$type': 'none'
+              }
+            }, {
+              "nodeTo": "node3",
+              "data": {
+                '$type': 'none'
+              }
+            }, {
+              "nodeTo": "node4",
+              "data": {
+                "$type": "none"
+              }
+            }, {
+              "nodeTo": "node5",
+              "data": {
+                "$type": "none"
+              }
+            }, {
+              "nodeTo": "node6",
+              "data": {
+                "$type": "none"
+              }
+            }, {
+              "nodeTo": "node7",
+              "data": {
+                "$type": "none"
+              }
+            }, {
+              "nodeTo": "node8",
+              "data": {
+                "$type": "none"
+              }
+            }, {
+              "nodeTo": "node9",
+              "data": {
+                "$type": "none"
+              }
+            }, {
+              "nodeTo": "node10",
+              "data": {
+                "$type": "none"
+              }
             }
-
-            var left = parseInt(style.left);
-            var w = domElement.offsetWidth;
-            style.left = (left - w / 2) + 'px';
-          }
+        ]
+      }, {
+        "id": "node1",
+        "name": "node 1",
+        "data": {
+          "$angularWidth": 13.00,
+          "$color": "#33a",
+          "$height": 70
+        },
+        "adjacencies": [
+            {
+              "nodeTo": "node3",
+              "data": {
+                "$color": "#ddaacc",
+                "$lineWidth": 4
+              }
+            }, {
+              "nodeTo": "node5",
+              "data": {
+                "$color": "#ccffdd",
+                "$lineWidth": 4
+              }
+            }, {
+              "nodeTo": "node7",
+              "data": {
+                "$color": "#dd99dd",
+                "$lineWidth": 4
+              }
+            }, {
+              "nodeTo": "node8",
+              "data": {
+                "$color": "#dd99dd",
+                "$lineWidth": 4
+              }
+            }, {
+              "nodeTo": "node10",
+              "data": {
+                "$color": "#ddaacc",
+                "$lineWidth": 4
+              }
+            }
+        ]
+      }, {
+        "id": "node2",
+        "name": "node 2",
+        "data": {
+          "$angularWidth": 24.90,
+          "$color": "#55b",
+          "$height": 73
+        },
+        "adjacencies": [
+            "node8", "node9", "node10"
+        ]
+      }, {
+        "id": "node3",
+        "name": "node 3",
+        "data": {
+          "$angularWidth": 10.50,
+          "$color": "#77c",
+          "$height": 75
+        },
+        "adjacencies": [
+            "node8", "node9", "node10"
+        ]
+      }, {
+        "id": "node4",
+        "name": "node 4",
+        "data": {
+          "$angularWidth": 5.40,
+          "$color": "#99d",
+          "$height": 75
+        },
+        "adjacencies": [
+            "node8", "node9", "node10"
+        ]
+      }, {
+        "id": "node5",
+        "name": "node 5",
+        "data": {
+          "$angularWidth": 32.26,
+          "$color": "#aae",
+          "$height": 80
+        },
+        "adjacencies": [
+            "node8", "node9", "node10"
+        ]
+      }, {
+        "id": "node6",
+        "name": "node 6",
+        "data": {
+          "$angularWidth": 24.90,
+          "$color": "#bf0",
+          "$height": 85
+        },
+        "adjacencies": [
+            "node8", "node9", "node10"
+        ]
+      }, {
+        "id": "node7",
+        "name": "node 7",
+        "data": {
+          "$angularWidth": 14.90,
+          "$color": "#cf5",
+          "$height": 85
+        },
+        "adjacencies": [
+            "node8", "node9", "node10"
+        ]
+      }, {
+        "id": "node8",
+        "name": "node 8",
+        "data": {
+          "$angularWidth": 34.90,
+          "$color": "#dfa",
+          "$height": 80
+        },
+        "adjacencies": [
+            "node9", "node10"
+        ]
+      }, {
+        "id": "node9",
+        "name": "node 9",
+        "data": {
+          "$angularWidth": 42.90,
+          "$color": "#CCC",
+          "$height": 75
+        },
+        "adjacencies": [
+          "node10"
+        ]
+      }, {
+        "id": "node10",
+        "name": "node 10",
+        "data": {
+          "$angularWidth": 100.90,
+          "$color": "#C37",
+          "$height": 70
+        },
+        "adjacencies": []
+      }
+  ];
+  //end
+  //init Sunburst
+  var sb = new $jit.Sunburst({
+    //id container for the visualization
+    injectInto: 'infovis',
+    //Change node and edge styles such as
+    //color, width and dimensions.
+    Node: {
+      overridable: true,
+      type: 'gradient-multipie'
+    },
+    Edge: {
+      overridable: true,
+      type: 'hyperline',
+      lineWidth: 2,
+      color: '#777'
+    },
+    //Draw canvas text. Can also be
+    //'HTML' or 'SVG' to draw DOM labels
+    Label: {
+      type: 'Native'
+    },
+    //Add animations when hovering and clicking nodes
+    NodeStyles: {
+      enable: true,
+      type: 'Native',
+      stylesClick: {
+        'color': '#33dddd'
+      },
+      stylesHover: {
+        'color': '#dd3333'
+      },
+      duration: 700
+    },
+    Events: {
+      enable: true,
+      type: 'Native',
+      onClick: function(node, eventInfo, e){
+        if (!node)
+          return;
+        var html = "<h4>" + node.name + " connections</h4><ul><li>", ans = [];
+        $jit.Graph.Util.eachAdjacency(node, function(adj){
+          // if on the same level i.e siblings
+            if (adj.nodeTo._depth == node._depth) {
+              ans.push(adj.nodeTo.name);
+            }
+          });
+        $jit.id('inner-details').innerHTML = html + ans.join("</li><li>")
+            + "</li></ul>";
+      }
+    },
+    levelDistance: 190,
+    // Only used when Label type is 'HTML' or 'SVG'
+    // Add text to the labels. 
+    // This method is only triggered on label creation
+    onCreateLabel: function(domElement, node){
+      var labels = sb.config.Label.type;
+      if (labels === 'HTML') {
+        domElement.innerHTML = node.name;
+      } else if (labels === 'SVG') {
+        domElement.firstChild.appendChild(document.createTextNode(node.name));
+      }
+    },
+    // Only used when Label type is 'HTML' or 'SVG'
+    // Change node styles when labels are placed
+    // or moved.
+    onPlaceLabel: function(domElement, node){
+      var labels = sb.config.Label.type;
+      if (labels === 'SVG') {
+        var fch = domElement.firstChild;
+        var style = fch.style;
+        style.display = '';
+        style.cursor = 'pointer';
+        style.fontSize = "0.8em";
+        fch.setAttribute('fill', "#fff");
+      } else if (labels === 'HTML') {
+        var style = domElement.style;
+        style.display = '';
+        style.cursor = 'pointer';
+        if (node._depth <= 1) {
+          style.fontSize = "0.8em";
+          style.color = "#ddd";
+        } else if (node._depth == 2) {
+          style.fontSize = "0.7em";
+          style.color = "#555";
+        } else {
+          style.display = 'none';
         }
-    });
-    
-    //load JSON data.
-    sb.loadJSON(json, 1);
-    //compute positions and plot.
-    sb.refresh();
-    //end
-   // sb.config.NodeStyles.onClick(sb.graph.getNode(sb.root));
+        var left = parseInt(style.left);
+        var w = domElement.offsetWidth;
+        style.left = (left - w / 2) + 'px';
+      }
+    }
+  });
+  // load JSON data.
+  sb.loadJSON(json);
+  // compute positions and plot.
+  sb.refresh();
+  //end
 }

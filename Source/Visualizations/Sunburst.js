@@ -145,7 +145,8 @@ $jit.Sunburst = new Class({
       interpolation: 'linear',
       levelDistance: 100,
       Node: {
-        'type': 'multipie'
+        'type': 'multipie',
+        'height':0
       },
       Edge: {
         'type': 'none'
@@ -276,17 +277,14 @@ $jit.Sunburst = new Class({
   
   */
   rotateAngle: function(theta, method, opt) {
-    if(this.busy) return;
-    this.busy = true;
     var that = this;
     var options = $.merge(this.config, opt || {}, {
-      modes: [ 'polar' ],
-      onComplete: function() {
-        if(opt.onComplete) opt.onComplete();
-        that.busy = false;
-      }
+      modes: [ 'polar' ]
     });
     var prop = opt.property || (method === "animate" ? 'end' : 'current');
+    if(method === 'animate') {
+      this.fx.animation.pause();
+    }
     Graph.Util.eachNode(this.graph, function(n) {
       var p = n.getPos(prop);
       p.theta += theta;
@@ -294,9 +292,9 @@ $jit.Sunburst = new Class({
         p.theta += Math.PI * 2;
       }
     });
-    if (method === "animate") {
+    if (method == 'animate') {
       this.fx.animate(options);
-    } else if (method === "replot") {
+    } else if (method == ' replot') {
       this.fx.plot();
       this.busy = false;
     }
@@ -652,7 +650,8 @@ $jit.Sunburst.$extend = true;
     },
     'multipie': {
       'render': function(node, canvas) {
-        var ldist = this.config.levelDistance;
+        var height = node.getData('height');
+        var ldist = height? height : this.config.levelDistance;
         var span = node.getData('span') / 2, theta = node.pos.theta;
         var begin = theta - span, end = theta + span;
         var polarNode = node.pos.getp(true);
@@ -694,8 +693,10 @@ $jit.Sunburst.$extend = true;
       'contains': function(node, pos) {
         if (this.nodeTypes['none'].anglecontains.call(this, node, pos)) {
           var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
+          var height = node.getData('height');
+          var ldist = height? height : this.config.levelDistance;
           var ld = this.config.levelDistance, d = node._depth;
-          return (rho >= ld * d) && (rho <= ld * (d + 1));
+          return (rho >= ld * d) && (rho <= (ld * d + ldist));
         }
         return false;
       }
@@ -704,8 +705,10 @@ $jit.Sunburst.$extend = true;
     'gradient-multipie': {
       'render': function(node, canvas) {
         var ctx = canvas.getCtx();
+        var height = node.getData('height');
+        var ldist = height? height : this.config.levelDistance;
         var radialGradient = ctx.createRadialGradient(0, 0, node.getPos().rho,
-            0, 0, node.getPos().rho + this.config.levelDistance);
+            0, 0, node.getPos().rho + ldist);
 
         var colorArray = $.hexToRgb(node.getData('color')), ans = [];
         $.each(colorArray, function(i) {
