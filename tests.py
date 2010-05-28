@@ -397,11 +397,14 @@ tests_model = {
 
     'ForceDirected': [
         {
-            'Title': 'Tree Animation',
+            'Title': 'Force Directed Static Graph',
             'Description': 
             """
-            A static JSON Tree structure is used as input for this animation.<br /><br />
-            The centered node's children are displayed in a relations list in the right column.
+            A static JSON Graph structure is used as input for this visualization.<br /><br />
+            You can <b>zoom</b> and <b>pan</b> the visualization by <b>scrolling</b> and <b>dragging</b>.<br /><br />
+            You can <b>change node positions</b> by <b>dragging the nodes around</b>.<br /><br />
+            The clicked node's connections are displayed in a relations list in the right column.<br /><br />
+            The JSON static data is customized to provide different node types, colors and widths.
             """,
             'Extras': ['excanvas.js'],
             'Example':True
