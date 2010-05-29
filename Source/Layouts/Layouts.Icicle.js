@@ -52,8 +52,8 @@ Layouts.Icicle = new Class({
     if(root._depth-initialDepth > maxDepth)
       return;
     root.getPos(posType).setc(x, y);
-    root.setData('width', width);
-    root.setData('height', height);
+    root.setData('width', width, posType);
+    root.setData('height', height, posType);
 
     var nodeLength, prevNodeLength = 0, totalDim = 0;
     var children = Graph.Util.getSubnodes(root, [1, 1]); // next level from this node
