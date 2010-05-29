@@ -298,7 +298,7 @@ $jit.Icicle.Plot = new Class({
     viz.canvas.clear();
     this.plotTree(root, $.merge(opt, {
       'withLabels': true,
-      'hideLabels': !!animating,
+      'hideLabels': false,
       'plotSubtree': function(root, node) {
         return (node._depth - initialDepth < viz.config.levelsToShow);
       }
