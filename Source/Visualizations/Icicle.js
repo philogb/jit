@@ -141,16 +141,6 @@ $jit.Icicle = new Class({
     }
   },
 
-  out1: function () {
-    if (this.clickedNode) {
-      var parent = $jit.Graph.Util.getParents(icicle.clickedNode)[0];
-      if (parent) {
-        this.clickedNode = parent;
-        this.enter(parent);
-      }
-    }
-  },
-
   out: function(){
     if(this.busy) return;
     this.busy = true;
@@ -188,9 +178,6 @@ $jit.Icicle = new Class({
         }
       }
     };
-    //prune tree
-    if (config.request)
-      this.geom.setRightLevelToShow(parent);
     //animate node positions
     if(config.animate) {
       this.clickedNode = clickedNode;
