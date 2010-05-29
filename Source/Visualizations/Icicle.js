@@ -16,6 +16,7 @@ $jit.Icicle = new Class({
 
   initialize: function(controller) {
     var config = {
+      animate: false,
       orientation: "h",
       titleHeight: 13,
       offset: 2,
@@ -73,7 +74,6 @@ $jit.Icicle = new Class({
   },
 
   refresh: function(){
-    this.canvas.clear();
     this.compute();
     this.plot();
   },
@@ -87,18 +87,142 @@ $jit.Icicle = new Class({
   },
 
   enter: function (node) {
-    this.clickedNode = node;
-    this.refresh();
-  },
+    if (this.busy) return;
+    this.busy = true;
 
-  out: function () {
-    if (this.clickedNode) {
-      var parent = $jit.Graph.Util.getParents(icicle.clickedNode)[0];
-      if (parent)
-        this.enter(parent);
+    var that = this,
+        config = this.config,
+        clickedNode = node,
+        previousClickedNode = this.clickedNode;
+
+    var callback = {
+      onComplete: function() {
+        //compute positions of newly inserted nodes
+        if(config.request) that.compute();
+        if(config.animate) {
+          //fade nodes
+          that.graph.nodeList.setDataset(['current', 'end'], {
+            'alpha': [1, 0]
+          });
+          Graph.Util.eachSubgraph(node, function(n) {
+            n.setData('alpha', 1, 'end');
+          }, "ignore");
+          that.fx.animate({
+            duration: 500,
+            modes:['node-property:alpha'],
+            onComplete: function() {
+              //compute end positions
+              that.clickedNode = clickedNode;
+              that.compute('end');
+              //animate positions
+              that.clickedNode = previousClickedNode;
+              that.fx.animate({
+                modes:['linear', 'node-property:width:height'],
+                duration: 1000,
+                onComplete: function() {
+                  that.busy = false;
+                  that.clickedNode = clickedNode;
+                }
+              });
+            }
+          });
+        } else {
+          that.clickedNode = node;
+          that.refresh();
+          that.busy = false;
+        }
+      }
+    };
+
+    if(config.request) {
+      this.requestNodes(clickedNode, callback);
+    } else {
+      callback.onComplete();
     }
   },
 
+  out1: function () {
+    if (this.clickedNode) {
+      var parent = $jit.Graph.Util.getParents(icicle.clickedNode)[0];
+      if (parent) {
+        this.clickedNode = parent;
+        this.enter(parent);
+      }
+    }
+  },
+
+  out: function(){
+    if(this.busy) return;
+    this.busy = true;
+    this.events.hoveredNode = false;
+    var that = this,
+        GUtil = Graph.Util,
+        config = this.config,
+        graph = this.graph,
+        parents = GUtil.getParents(graph.getNode(this.clickedNode && this.clickedNode.id || this.root)),
+        parent = parents[0],
+        clickedNode = parent,
+        previousClickedNode = this.clickedNode;
+
+    //if no parents return
+    if(!parent) {
+      this.busy = false;
+      return;
+    }
+    //final plot callback
+    callback = {
+      onComplete: function() {
+        that.clickedNode = parent;
+        if(config.request) {
+          that.requestNodes(parent, {
+            onComplete: function() {
+              that.compute();
+              that.plot();
+              that.busy = false;
+            }
+          });
+        } else {
+          that.compute();
+          that.plot();
+          that.busy = false;
+        }
+      }
+    };
+    //prune tree
+    if (config.request)
+      this.geom.setRightLevelToShow(parent);
+    //animate node positions
+    if(config.animate) {
+      this.clickedNode = clickedNode;
+      this.compute('end');
+      //animate the visible subtree only
+      this.clickedNode = previousClickedNode;
+      this.fx.animate({
+        modes:['linear', 'node-property:width:height'],
+        duration: 1000,
+        onComplete: function() {
+          //animate the parent subtree
+          that.clickedNode = clickedNode;
+          //change nodes alpha
+          graph.nodeList.setDataset(['current', 'end'], {
+            'alpha': [0, 1]
+          });
+          GUtil.eachSubgraph(previousClickedNode, function(node) {
+            node.setData('alpha', 1);
+          }, "ignore");
+          that.fx.animate({
+            duration: 500,
+            modes:['node-property:alpha'],
+            onComplete: function() {
+              callback.onComplete();
+            }
+          });
+        }
+      });
+    } else {
+      callback.onComplete();
+    }
+  },
   requestNodes: function(node, onComplete){
     var handler = $.merge(this.controller, onComplete), lev = this.config.levelsToShow;
     if (handler.request) {
@@ -184,6 +308,7 @@ $jit.Icicle.Plot = new Class({
     var viz = this.viz, graph = viz.graph;
     var root = graph.getNode(viz.clickedNode && viz.clickedNode.id || viz.root);
     var initialDepth = root._depth;
+    viz.canvas.clear();
     this.plotTree(root, $.merge(opt, {
       'withLabels': true,
       'hideLabels': !!animating,

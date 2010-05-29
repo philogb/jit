@@ -876,6 +876,7 @@ function init(){
   icicle  = new $jit.Icicle( {
     'injectInto': 'infovis',
     //orientation: "v",
+    animate: true,
     titleHeight: 10,
     offset: 1,
 
