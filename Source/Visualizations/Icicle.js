@@ -260,7 +260,7 @@ $jit.Icicle.Group = new Class({
   },
 
   /*
-   * Calls the request method on the controller to request a subtree for each node. 
+   * Calls the request method on the controller to request a subtree for each node.
    */
   requestNodes: function(nodes, controller){
     var counter = 0, len = nodes.length, nodeSelected = {};
@@ -371,13 +371,13 @@ $jit.Icicle.Label.SVG = new Class( {
     this.viz = viz;
   },
 
-  /* 
+  /*
    * Method: placeLabel
-   * 
+   *
    * Overrides abstract method placeLabel in <Graph.Plot>.
-   * 
+   *
    * Parameters:
-   * 
+   *
    * tag - A DOM label element.
    * node - A <Graph.Node>.
    * controller - A configuration/controller object passed to the visualization.
@@ -417,7 +417,7 @@ $jit.Icicle.Label.HTML = new Class( {
     this.viz = viz;
   },
 
-  /* 
+  /*
    * Method: placeLabel
    *
    * Overrides abstract method placeLabel in <Graph.Plot>.
@@ -447,14 +447,14 @@ $jit.Icicle.Label.HTML = new Class( {
 
 /*
  * Class: Icicle.Plot.NodeTypes
- * 
- * Here are implemented all kinds of node rendering functions. 
+ *
+ * Here are implemented all kinds of node rendering functions.
  * Rendering functions implemented are 'none' and 'rectangle'
- * 
+ *
  * You can add new Node types by implementing a new method in this class
- * 
+ *
  * Example:
- * 
+ *
  * (start code js)
  *   Icicle.Plot.NodeTypes.implement({
  *     'newnodetypename': function(node, canvas) {
@@ -493,7 +493,7 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
     'contains': function(node, pos) {
       if(this.viz.clickedNode && !$jit.Graph.Util.isDescendantOf(node, this.viz.clickedNode.id)) return false;
       var npos = node.pos.getc(true),
-          width = node.getData('width'), 
+          width = node.getData('width'),
           height = node.getData('height');
       return this.nodeHelper.rectangle.contains({x: npos.x + width/2, y: npos.y + height/2}, pos, width, height);
     }
