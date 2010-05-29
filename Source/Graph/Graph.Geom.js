@@ -24,7 +24,7 @@ Graph.Geom = new Class({
   */  
   translate: function(pos, prop) {
      prop = $.splat(prop);
-     Graph.Util.eachNode(this.viz.graph, function(elem) {
+     this.viz.graph.eachNode(function(elem) {
          $.each(prop, function(p) { elem[p].$add(pos); });
      });
   },
@@ -33,7 +33,7 @@ Graph.Geom = new Class({
   */  
   setRightLevelToShow: function(node, canvas) {
      var level = this.getRightLevelToShow(node, canvas), fx = this.viz.labels;
-     Graph.Util.eachLevel(node, 0, this.config.levelsToShow, function(n) {
+     node.eachLevel(0, this.config.levelsToShow, function(n) {
          var d = n._depth - node._depth;
          if(d > level) {
              n.drawn = false; 

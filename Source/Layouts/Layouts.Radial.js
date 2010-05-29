@@ -24,7 +24,7 @@ Layouts.Radial = new Class({
   compute : function(property) {
     var prop = $.splat(property || [ 'current', 'start', 'end' ]);
     NodeDim.compute(this.graph, prop, this.config);
-    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+    this.graph.computeLevels(this.root, 0, "ignore");
     var lengthFunc = this.createLevelDistanceFunc(); 
     this.computeAngularWidths(prop);
     this.computePositions(prop, lengthFunc);
@@ -37,8 +37,8 @@ Layouts.Radial = new Class({
    */
   computePositions : function(property, getLength) {
     var propArray = property;
-    var GUtil = Graph.Util;
-    var root = this.graph.getNode(this.root);
+    var graph = this.graph;
+    var root = graph.getNode(this.root);
     var parent = this.parent;
     var config = this.config;
 
@@ -53,13 +53,13 @@ Layouts.Radial = new Class({
       end : 2 * Math.PI
     };
 
-    GUtil.eachBFS(this.graph, this.root, function(elem) {
+    graph.eachBFS(this.root, function(elem) {
       var angleSpan = elem.angleSpan.end - elem.angleSpan.begin;
       var angleInit = elem.angleSpan.begin;
       var len = getLength(elem);
       //Calculate the sum of all angular widths
       var totalAngularWidths = 0, subnodes = [], maxDim = {};
-      GUtil.eachSubnode(elem, function(sib) {
+      elem.eachSubnode(function(sib) {
         totalAngularWidths += sib._treeAngularWidth;
         //get max dim
         for ( var i=0, l=propArray.length; i < l; i++) {
@@ -106,7 +106,7 @@ Layouts.Radial = new Class({
    * Sets nodes angular widths.
    */
   setAngularWidthForNodes : function(prop) {
-    Graph.Util.eachBFS(this.graph, this.root, function(elem, i) {
+    this.graph.eachBFS(this.root, function(elem, i) {
       var diamValue = elem.getData('angularWidth', prop[0]);
       elem._angularWidth = diamValue / i;
     }, "ignore");
@@ -119,7 +119,7 @@ Layouts.Radial = new Class({
    */
   setSubtreesAngularWidth : function() {
     var that = this;
-    Graph.Util.eachNode(this.graph, function(elem) {
+    this.graph.eachNode(function(elem) {
       that.setSubtreeAngularWidth(elem);
     }, "ignore");
   },
@@ -131,7 +131,7 @@ Layouts.Radial = new Class({
    */
   setSubtreeAngularWidth : function(elem) {
     var that = this, nodeAW = elem._angularWidth, sumAW = 0;
-    Graph.Util.eachSubnode(elem, function(child) {
+    elem.eachSubnode(function(child) {
       that.setSubtreeAngularWidth(child);
       sumAW += child._treeAngularWidth;
     }, "ignore");

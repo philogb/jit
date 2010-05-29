@@ -285,7 +285,7 @@ $jit.Sunburst = new Class({
     if(method === 'animate') {
       this.fx.animation.pause();
     }
-    Graph.Util.eachNode(this.graph, function(n) {
+    this.graph.eachNode(function(n) {
       var p = n.getPos(prop);
       p.theta += theta;
       if (p.theta < 0) {

@@ -371,8 +371,8 @@ function init(){
         
         onAfterCompute: function(){
             Log.write("done");
-            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
-            $jit.Graph.Util.eachNode(ht.graph, function(n){
+            var node = ht.graph.getClosestNodeToOrigin("pos");
+            ht.graph.eachNode(function(n){
                 var domNode = (n.id in nodesCache) ? nodesCache[n.id] : nodesCache[n.id] = document.getElementById(n.id);
                 if (node.adjacentTo(n) || node.id == n.id) {
                     domNode.style.display = "";
@@ -384,7 +384,7 @@ function init(){
             
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(node, function(adj){
+            node.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -392,7 +392,7 @@ function init(){
                 }
             });
             html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+            $jit.id('inner-details').innerHTML = html;
         }
         
     });

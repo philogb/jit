@@ -448,7 +448,7 @@ function init(){
       //Enable panning events only if we're dragging the empty
       //canvas (and not a node).
       panning: 'avoid nodes',
-      zooming: 0.5 //zoom speed. higher is faster
+      zooming: 0.5 //zoom speed. higher is more sensible
     },
     // Change node and edge styles such as
     // color and width.
@@ -463,15 +463,15 @@ function init(){
       color: '#23A4FF',
       lineWidth: 0.4
     },
+    //Native canvas text styling
     Label: {
       type:'Native',
       size: 10,
       style: 'bold'
     },
-    // Add node DnD events
+    // Add node events
     Events: {
       enable: true,
-      type:'Native',
       onDragMove: function(node, eventInfo, e) {
         var pos = eventInfo.getPos();
         node.pos.setc(pos.x, pos.y);
@@ -489,7 +489,7 @@ function init(){
         // This is done by traversing the clicked node connections.
         var html = "<h4>" + node.name + "</h4><b> connections:</b><ul><li>",
             list = [];
-        $jit.Graph.Util.eachAdjacency(node, function(adj){
+        node.eachAdjacency(function(adj){
           list.push(adj.nodeTo.name);
         });
         //append connections information
@@ -501,14 +501,14 @@ function init(){
     //Edge length
     levelDistance: 130,
     // Add text to the labels. This method is only triggered
-    // on label creation.
+    // on label creation and only for DOM labels (not native canvas ones).
     onCreateLabel: function(domElement, node){
       domElement.innerHTML = node.name;
       var style = domElement.style;
       style.fontSize = "0.8em";
       style.color = "#ddd";
     },
-    // Change node styles when labels are placed
+    // Change node styles when DOM labels are placed
     // or moved.
     onPlaceLabel: function(domElement, node){
       var style = domElement.style;

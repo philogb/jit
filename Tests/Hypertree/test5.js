@@ -436,8 +436,8 @@ function init(){
         //Take the left style property and substract half of the label actual width.
         onPlaceLabel: function(tag, node){
             if (N == null) 
-                N = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
-            $jit.Graph.Util.eachNode(ht.graph, function(n){
+                N = ht.graph.getClosestNodeToOrigin("pos");
+            ht.graph.eachNode(function(n){
                 if (N.adjacentTo(node) || N.id == node.id) {
                     tag.style.display = "";
                 }
@@ -453,10 +453,10 @@ function init(){
         
         onAfterCompute: function(){
             Log.write("done");
-            N = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            N = ht.graph.getClosestNodeToOrigin("pos");
             var html = "<h4>" + N.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(N, function(adj){
+            N.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == N.name) ? child.data.relation : N.data.relation;

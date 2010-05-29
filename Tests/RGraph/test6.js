@@ -273,12 +273,12 @@ function init(){
             //Make right column relations list.
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(node, function(adj){
+            node.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 html += "<li>" + child.name + "</li>";
             });
             html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+            $jit.id('inner-details').innerHTML = html;
         },
         
         //Add node click handler and some styles.

@@ -19,7 +19,7 @@ Layouts.ForceDirected = new Class({
     var w = s.width, h = s.height;
     //count nodes
     var count = 0;
-    Graph.Util.eachNode(this.graph, function(n) { 
+    this.graph.eachNode(function(n) { 
       count++;
     });
     var k2 = w * h / count, k = Math.sqrt(k2);
@@ -38,8 +38,8 @@ Layouts.ForceDirected = new Class({
     var prop = $.splat(property || ['current', 'start', 'end']);
     var opt = this.getOptions();
     NodeDim.compute(this.graph, prop, this.config);
-    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
-    Graph.Util.eachNode(this.graph, function(n) {
+    this.graph.computeLevels(this.root, 0, "ignore");
+    this.graph.eachNode(function(n) {
       $.each(prop, function(p) {
         var pos = n.getPos(p);
         if(pos.equals(Complex.KER)) {
@@ -80,16 +80,16 @@ Layouts.ForceDirected = new Class({
   },
   
   computePositionStep: function(property, opt) {
-    var graph = this.graph, GUtil = Graph.Util;
+    var graph = this.graph;
     var min = Math.min, max = Math.max;
     var dpos = $C(0, 0);
     //calculate repulsive forces
-    GUtil.eachNode(graph, function(v) {
+    graph.eachNode(function(v) {
       //initialize disp
       $.each(property, function(p) {
         v.disp[p].x = 0; v.disp[p].y = 0;
       });
-      GUtil.eachNode(graph, function(u) {
+      graph.eachNode(function(u) {
         if(u.id != v.id) {
           $.each(property, function(p) {
             var vp = v.getPos(p), up = u.getPos(p);
@@ -104,8 +104,8 @@ Layouts.ForceDirected = new Class({
     });
     //calculate attractive forces
     var T = !!graph.getNode(this.root).visited;
-    GUtil.eachNode(graph, function(node) {
-      GUtil.eachAdjacency(node, function(adj) {
+    graph.eachNode(function(node) {
+      node.eachAdjacency(function(adj) {
         var nodeTo = adj.nodeTo;
         if(!!nodeTo.visited === T) {
           $.each(property, function(p) {
@@ -122,7 +122,7 @@ Layouts.ForceDirected = new Class({
     });
     //arrange positions to fit the canvas
     var t = opt.t, w2 = opt.width / 2, h2 = opt.height / 2;
-    GUtil.eachNode(graph, function(u) {
+    graph.eachNode(function(u) {
       $.each(property, function(p) {
         var disp = u.disp[p];
         var norm = disp.norm() || 1;

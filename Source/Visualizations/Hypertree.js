@@ -48,56 +48,6 @@ Complex.prototype.moebiusTransformation = function(c) {
 };
 
 /* 
-   Method: getClosestNodeToOrigin 
- 
-   Extends <Graph.Util>. Returns the closest node to the center of canvas.
-
-   Parameters:
-  
-    graph - A <Graph> instance.
-    prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
-
-   Returns:
-
-    Closest node to origin. Returns *null* otherwise.
-  
-*/
-Graph.Util.getClosestNodeToOrigin = function(graph, prop, flags) {
-  return this.getClosestNodeToPos(graph, Polar.KER, prop, flags);
-};
-
-/* 
-   Method: getClosestNodeToPos
- 
-   Extends <Graph.Util>. Returns the closest node to the given position.
-
-   Parameters:
-  
-    graph - A <Graph> instance.
-    pos - A <Complex> or <Polar> instance.
-    prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
-
-   Returns:
-
-    Closest node to the given position. Returns *null* otherwise.
-  
-*/
-Graph.Util.getClosestNodeToPos = function(graph, pos, prop, flags) {
-  var node = null;
-  prop = prop || 'pos';
-  pos = pos && pos.getc(true) || Complex.KER;
-  var distance = function(a, b) {
-    var d1 = a.x - b.x, d2 = a.y - b.y;
-    return d1 * d1 + d2 * d2;
-  };
-  this.eachNode(graph, function(elem) {
-    node = (node == null || distance(elem[prop].getc(true), pos) < distance(
-        node[prop].getc(true), pos)) ? elem : node;
-  }, flags);
-  return node;
-};
-
-/* 
     moebiusTransformation 
      
     Calculates a moebius transformation for the hyperbolic tree. 
@@ -303,7 +253,7 @@ $jit.Hypertree = new Class( {
     var r = this.getRadius();
     // get max depth.
     var depth = 0, max = Math.max;
-    Graph.Util.eachNode(this.graph, function(node) {
+    this.graph.eachNode(function(node) {
       depth = max(node._depth, depth);
     }, "ignore");
     depth++;
@@ -362,7 +312,7 @@ $jit.Hypertree = new Class( {
   refresh: function(reposition) {
     if (reposition) {
       this.reposition();
-      Graph.Util.eachNode(this.graph, function(node) {
+      this.graph.eachNode(function(node) {
         node.startPos.rho = node.pos.rho = node.endPos.rho;
         node.startPos.theta = node.pos.theta = node.endPos.theta;
       });
@@ -386,7 +336,7 @@ $jit.Hypertree = new Class( {
     var vector = this.graph.getNode(this.root).pos.getc().scale(-1);
     Graph.Util.moebiusTransformation(this.graph, [ vector ], [ 'endPos' ],
         'endPos', "ignore");
-    Graph.Util.eachNode(this.graph, function(node) {
+    this.graph.eachNode(function(node) {
       if (node.ignore) {
         node.endPos.rho = node.pos.rho;
         node.endPos.theta = node.pos.theta;
@@ -447,10 +397,9 @@ $jit.Hypertree = new Class( {
   move: function(pos, opt) {
     var versor = $C(pos.x, pos.y);
     if (this.busy === false && versor.norm() < 1) {
-      var GUtil = Graph.Util;
       this.busy = true;
-      var root = GUtil.getClosestNodeToPos(this.graph, versor), that = this;
-      GUtil.computeLevels(this.graph, root.id, 0);
+      var root = this.graph.getClosestNodeToPos(versor), that = this;
+      this.graph.computeLevels(root.id, 0);
       this.controller.onBeforeCompute(root);
       opt = $.merge( {
         onComplete: $.empty

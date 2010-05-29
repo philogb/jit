@@ -213,7 +213,7 @@ var Loader = {
           ans.name = node.name;
           ans.data = node.data;
           var ch =[];
-          Graph.Util.eachSubnode(node, function(n) {
+          node.eachSubnode(function(n) {
             ch.push(recTree(n));
           });
           ans.children = ch;
@@ -221,15 +221,15 @@ var Loader = {
         })(rootNode);
         return ans;
       } else {
-        var ans = [], GUtil = Graph.Util;
+        var ans = [];
         var T = !!this.graph.getNode(this.root).visited;
-        GUtil.eachNode(this.graph, function(node) {
+        this.graph.eachNode(function(node) {
           var ansNode = {};
           ansNode.id = node.id;
           ansNode.name = node.name;
           ansNode.data = node.data;
           var adjs = [];
-          GUtil.eachAdjacency(node, function(adj) {
+          node.eachAdjacency(function(adj) {
             var nodeTo = adj.nodeTo;
             if(!!nodeTo.visited === T) {
               var ansAdj = {};

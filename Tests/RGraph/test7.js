@@ -451,7 +451,7 @@ function init(){
             var _self = this;
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(node, function(adj){
+            node.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -459,7 +459,7 @@ function init(){
                 }
             });
             html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+            $jit.id('inner-details').innerHTML = html;
         },
         
         onCreateLabel: function(domElement, node){

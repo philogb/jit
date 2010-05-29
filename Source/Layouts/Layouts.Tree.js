@@ -20,11 +20,11 @@ Layouts.Tree = (function() {
      Calculates the max width and height nodes for a tree level
   */  
   function getBoundaries(graph, config, level, orn, prop) {
-    var dim = config.Node, GUtil = Graph.Util;
+    var dim = config.Node;
     var multitree = config.multitree;
     if (dim.overridable) {
       var w = -1, h = -1;
-      GUtil.eachNode(graph, function(n) {
+      graph.eachNode(function(n) {
         if (n._depth == level
             && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
           var dw = n.getData('width', prop);
@@ -145,8 +145,6 @@ Layouts.Tree = (function() {
     var subtreeOffset = config.subtreeOffset;
     var align = config.align;
 
-    var GUtil = Graph.Util;
-
     function $design(node, maxsize, acum) {
       var sval = node.getData(s, prop);
       var notsval = maxsize
@@ -154,8 +152,7 @@ Layouts.Tree = (function() {
 
       var trees = [], extents = [], chmaxsize = false;
       var chacum = notsval + config.levelDistance;
-      GUtil.eachSubnode(node,
-          function(n) {
+      node.eachSubnode(function(n) {
             if (n.exist
                 && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
 
@@ -209,7 +206,7 @@ Layouts.Tree = (function() {
       });
       NodeDim.compute(this.graph, prop, this.config);
       if (!!computeLevels || !("_depth" in node)) {
-        Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+        this.graph.computeLevels(this.root, 0, "ignore");
       }
       
       this.computePositions(node, prop);
@@ -229,7 +226,7 @@ Layouts.Tree = (function() {
           var i = [ 'x', 'y' ][+(orn == "left" || orn == "right")];
           //absolutize
           (function red(node) {
-            Graph.Util.eachSubnode(node, function(n) {
+            node.eachSubnode(function(n) {
               if (n.exist
                   && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
 

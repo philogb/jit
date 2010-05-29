@@ -539,7 +539,7 @@ Extras.Classes.NodeStyles = new Class({
       delete node.selected;
     } else {
       //unselect all selected nodes...
-      $jit.Graph.Util.eachNode(this.viz.graph, function(n) {
+      this.viz.graph.eachNode(function(n) {
         if(n.selected) {
           for(var s in nStyles) {
             n.setData(s, n.styles['$' + s], 'end');
@@ -578,7 +578,7 @@ Extras.Classes.NodeStyles = new Class({
         //check if an animation is running and exit it
         this.fx.nodeFxAnimation.stopTimer();
         //unselect all hovered nodes...
-        $jit.Graph.Util.eachNode(this.viz.graph, function(n) {
+        this.viz.graph.eachNode(function(n) {
           if(n.hovered && !n.selected) {
             for(var s in nStyles) {
               n.setData(s, n.styles['$' + s], 'end');

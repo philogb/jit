@@ -444,10 +444,10 @@ function init(){
         
         onAfterCompute: function(){
             Log.write("done");
-            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = ht.graph.getClosestNodeToOrigin("pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(node, function(adj){
+            node.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -455,7 +455,7 @@ function init(){
                 }
             });
             html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+            $jit.id('inner-details').innerHTML = html;
         }
     });
     //load tree from tree data.
@@ -493,7 +493,7 @@ function init(){
         
         var hideLabels = !!document.getElementById('hide-labels').checked;
 
-        var subnodes = $jit.Graph.Util.getSubnodes(ht.graph.getNode('236585_30'), 0);
+        var subnodes = ht.graph.getNode('236585_30').getSubnodes(0);
         var map = [];
         for (var i = 0; i < subnodes.length; i++) {
             map.push(subnodes[i].id);
@@ -504,7 +504,7 @@ function init(){
             fps: fps,
             hideLabels:hideLabels,
             onComplete: function(){
-                N = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, 'pos');
+                N = ht.graph.getClosestNodeToOrigin('pos');
             }
         });
         ht.controller.onAfterCompute();

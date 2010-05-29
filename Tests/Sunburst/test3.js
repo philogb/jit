@@ -242,7 +242,7 @@ function init(){
         if (!node)
           return;
         var html = "<h4>" + node.name + " connections</h4><ul><li>", ans = [];
-        $jit.Graph.Util.eachAdjacency(node, function(adj){
+        node.eachAdjacency(function(adj){
           // if on the same level i.e siblings
             if (adj.nodeTo._depth == node._depth) {
               ans.push(adj.nodeTo.name);

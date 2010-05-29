@@ -25,7 +25,7 @@ var NodeDim = {
   compute: function(graph, prop, opt) {
     this.initializeLabel(opt);
     var label = this.label, style = label.style;
-    Graph.Util.eachNode(graph, function(n) {
+    graph.eachNode(function(n) {
       var autoWidth  = n.getData('autoWidth'),
           autoHeight = n.getData('autoHeight');
       if(autoWidth || autoHeight) {
@@ -73,8 +73,7 @@ var NodeDim = {
       'visibility': 'hidden',
       'position': 'absolute',
       'width': 'auto',
-      'height': 'auto',
-      'padding': opt.Node.labelPadding + 'px'
+      'height': 'auto'
     });
     this.label.className = 'jit-autoadjust-label';
   }

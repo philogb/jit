@@ -807,12 +807,11 @@ function init(){
             }
             else {
                 delete node.data.$color;
-                var GUtil = $jit.Graph.Util;
                 //if the node belongs to the last plotted level
-                if(!GUtil.anySubnode(node, "exist")) {
+                if(!node.anySubnode("exist")) {
                     //count children number
                     var count = 0;
-                    GUtil.eachSubnode(node, function(n) { count++; });
+                    node.eachSubnode(function(n) { count++; });
                     //assign a node color based on
                     //how many children it has
                     node.data.$color = ['#aaa', '#baa', '#caa', '#daa', '#eaa', '#faa'][count];                    

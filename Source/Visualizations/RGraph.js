@@ -245,7 +245,7 @@ $jit.RGraph = new Class( {
   getNodeAndParentAngle: function(id){
     var theta = false;
     var n = this.graph.getNode(id);
-    var ps = Graph.Util.getParents(n);
+    var ps = n.getParents();
     var p = (ps.length > 0)? ps[0] : false;
     if (p) {
       var posParent = p.pos.getc(), posChild = n.pos.getc();
@@ -268,7 +268,7 @@ $jit.RGraph = new Class( {
   tagChildren: function(par, id){
     if (par.angleSpan) {
       var adjs = [];
-      Graph.Util.eachAdjacency(par, function(elem){
+      par.eachAdjacency(function(elem){
         adjs.push(elem.nodeTo);
       }, "ignore");
       var len = adjs.length;
@@ -318,7 +318,7 @@ $jit.RGraph = new Class( {
 
       // first constraint
       var thetaDiff = obj.theta - obj.parent.endPos.theta;
-      Graph.Util.eachNode(this.graph, function(elem){
+      this.graph.eachNode(function(elem){
         elem.endPos.set(elem.endPos.getp().add($P(thetaDiff, 0)));
       });
 

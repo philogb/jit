@@ -329,7 +329,7 @@ $jit.BarChart = new Class({
       s.id = id;
       s.name = name;
       s.color = this.config.hoveredColor;
-      $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+      this.st.graph.eachNode(function(n) {
         if(id == n.id) {
           n.setData('border', s);
         } else {
@@ -343,7 +343,7 @@ $jit.BarChart = new Class({
   getLegend: function() {
     var legend = {};
     var n;
-    $jit.Graph.Util.eachAdjacency(this.st.graph.getNode(this.st.root), function(adj) {
+    this.st.graph.getNode(this.st.root).eachAdjacency(function(adj) {
       n = adj.nodeTo;
     });
     var colors = n.getData('colorArray'),
@@ -356,7 +356,7 @@ $jit.BarChart = new Class({
   
   getMaxValue: function() {
     var maxValue = 0;
-    $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+    this.st.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acum = 0;
       $.each(valArray, function(v) { 
@@ -370,7 +370,7 @@ $jit.BarChart = new Class({
   normalizeDims: function() {
     //number of elements
     var root = this.st.graph.getNode(this.st.root), l=0;
-    $jit.Graph.Util.eachAdjacency(root, function() {
+    root.eachAdjacency(function() {
       l++;
     });
     var maxValue = this.getMaxValue(),
@@ -385,7 +385,7 @@ $jit.BarChart = new Class({
           - (config.showLabels && (config.Label.size + config.labelOffset)),
         dim1 = horz? 'height':'width',
         dim2 = horz? 'width':'height';
-    $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+    this.st.graph.eachNode(function(n) {
       var acum = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acum += +v;
