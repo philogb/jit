@@ -90,6 +90,7 @@ TM.Base = {
     var that = this;
     if(this.config.animate) {
       this.compute('end');
+      this.geom.setRightLevelToShow(this.graph.getNode(this.root));
       this.fx.animate($.merge(this.config, {
         modes: ['linear', 'node-property:width:height'],
         onComplete: function() {
@@ -125,6 +126,10 @@ TM.Base = {
 
     var callback = {
       onComplete: function() {
+        //ensure that nodes are shown for that level
+        if(config.levelsToShow > 0) {
+          that.geom.setRightLevelToShow(n);
+        }
         //compute positions of newly inserted nodes
         if(config.request) that.compute();
         if(config.animate) {
@@ -205,7 +210,7 @@ TM.Base = {
       }
     };
     //prune tree
-    if (config.request)
+    if (config.levelsToShow > 0)
       this.geom.setRightLevelToShow(parent);
     //animate node positions
     if(config.animate) {
@@ -256,28 +261,6 @@ TM.Base = {
     } else {
       handler.onComplete();
     }
-  },
-
-  selectPath: function(node){
-    var that = this;
-    this.graph.eachNode(function(n){
-      n.selected = false;
-    });
-    function path(node){
-      if (node == null || node.selected)
-        return;
-      node.selected = true;
-      $.each(that.group.getSiblings([
-        node
-      ])[node.id], function(n){
-        n.exist = true;
-        n.drawn = true;
-      });
-      var parents = node.getParents();
-      parents = (parents.length > 0)? parents[0] : null;
-      path(parents);
-    }
-    path(node);
   }
 };
 
@@ -298,15 +281,22 @@ TM.Geom = new Class({
   
   setRightLevelToShow: function(node) {
     var level = this.getRightLevelToShow(), 
-        fx = this.viz.labels,
-        op = this.viz.op;
-    node.eachLevel(0, this.config.levelsToShow+1, function(n) {
+        fx = this.viz.labels;
+    node.eachLevel(0, level+1, function(n) {
       var d = n._depth - node._depth;
       if(d > level) {
-        op.removeNode(n.id, { type:'nothing' });
+        n.drawn = false; 
+        n.exist = false;
+        n.ignore = true;
         fx.hideLabel(n, false);
+      } else {
+        n.drawn = true;
+        n.exist = true;
+        delete n.ignore;
       }
     });
+    node.drawn = true;
+    delete node.ignore;
   }
 });
 
