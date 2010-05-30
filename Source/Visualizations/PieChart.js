@@ -327,7 +327,7 @@ $jit.PieChart = new Class({
       var acum = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acum += +v;
-        animateValue.push(0);
+        animateValue.push(1);
       });
       var stat = (animateValue.length == 1) && !config.updateHeights;
       if(animate) {
