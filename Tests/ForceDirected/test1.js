@@ -469,6 +469,18 @@ function init(){
       size: 10,
       style: 'bold'
     },
+    //Add Tips
+    Tips: {
+      enable: true,
+      onShow: function(tip, node) {
+        //count connections
+        var count = 0;
+        node.eachAdjacency(function() { count++; });
+        //display node info in tooltip
+        tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>"
+          + "<div class=\"tip-text\"><b>connections:</b> " + count + "</div>";
+      }
+    },
     // Add node events
     Events: {
       enable: true,

@@ -15,13 +15,13 @@ span.name {
 
 /*TOOLTIPS*/
 .tip {
-    color: #fff;
-    width: 139px;
-    background-color: #99c;
-    border:1px solid #555;
-    opacity:0.9;
-    filter:alpha(opacity=90);
-    font-size:10px;
-    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
-    padding:7px;
+   text-align: left;
+   width:auto;
+   max-width:500px;
+}
+
+.tip-title {
+  font-size: 11px;
+  text-align:center;
+  margin-bottom:2px;
 }
