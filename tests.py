@@ -419,7 +419,7 @@ tests_model = {
             An <b>Elastic</b> transition is used instead of the linear transition for the animation.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
         },
         {
             'Title': 'Graph Operations',
@@ -430,6 +430,21 @@ tests_model = {
             2.- Removing edges<br /><br />
             3.- Adding another graph, also called sum<br /><br />
             4.- Morphing (or transforming) the graph into another one<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':False
+        }, 
+        {
+            'Title': 'Graph Operations',
+            'Description': 
+            """
+            In this (advanced) example a static graph is fed into the visualization.<br /><br />
+            Custom Animations are triggered when clicking on a node's label or when deleting a node.<br /><br />
+            <b>Click on a node's label</b> to select a node and its connections.<br /><br />
+            <b>Click on the 'x' link</b> to delete a node.<br /><br />
+            You can <b>drag nodes</b> around and <b>zoom</b> and <b>pan</b>, just like you did in the previous 
+            example.
+            
             """,
             'Extras': ['excanvas.js'],
             'Example':True

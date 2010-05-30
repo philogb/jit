@@ -2,6 +2,17 @@
   font-size:12px;
 }
 
+span.close {
+	color:#FF5555;
+	cursor:pointer;
+	font-weight:bold;
+	margin-left:3px;
+}
+
+span.name {
+  cursor: pointer;
+}
+
 /*TOOLTIPS*/
 .tip {
     color: #fff;

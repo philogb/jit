@@ -424,16 +424,16 @@ function init(){
             color:'#23A4FF',
             overridable:true
         },
-        
         iterations: 100,
         levelDistance: 70,
         transition: $jit.Trans.Quart.easeOut,
-        
-        nodeStylesOnHover: {
-          'color': '#faa',
-          'dim': 7
+        NodeStyles: {
+          enable: true,
+          stylesHover: {
+            'color': '#faa',
+            'dim': 7
+          }
         },
-        
         //Add the node's name into the label
         //This method is called only once, on label creation.
         onCreateLabel: function(domElement, node){
