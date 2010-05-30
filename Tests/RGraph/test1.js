@@ -372,9 +372,9 @@ function init(){
           }
         },
         Navigation: {
-          enable:true,
-          panning:true,
-          zooming:0.5
+          enable: true,
+          panning: true,
+          zooming: 4
         },
         //Set Node and Edge colors.
         Node: {
@@ -389,7 +389,7 @@ function init(){
             Log.write("centering " + node.name + "...");
             //Add the relation list in the right column.
             //This list is taken from the data property of each JSON node.
-            document.getElementById('inner-details').innerHTML = node.data.relation;
+            $jit.id('inner-details').innerHTML = node.data.relation;
         },
         
         onAfterCompute: function(){
@@ -431,9 +431,17 @@ function init(){
     
     //load JSON data
     rgraph.loadJSON(json);
-    //compute positions and make the first plot
-    rgraph.refresh();
+    //trigger small animation
+    rgraph.graph.eachNode(function(n) {
+      var pos = n.getPos();
+      pos.setc(-200, -200);
+    });
+    rgraph.compute('end');
+    rgraph.fx.animate({
+      modes:['polar'],
+      duration: 2000
+    });
     //end
     //append information about the root relations in the right column
-    document.getElementById('inner-details').innerHTML = rgraph.graph.getNode(rgraph.root).data.relation;
+    $jit.id('inner-details').innerHTML = rgraph.graph.getNode(rgraph.root).data.relation;
 }
