@@ -397,11 +397,14 @@ tests_model = {
 
     'ForceDirected': [
         {
-            'Title': 'Tree Animation',
+            'Title': 'Force Directed Static Graph',
             'Description': 
             """
-            A static JSON Tree structure is used as input for this animation.<br /><br />
-            The centered node's children are displayed in a relations list in the right column.
+            A static JSON Graph structure is used as input for this visualization.<br /><br />
+            You can <b>zoom</b> and <b>pan</b> the visualization by <b>scrolling</b> and <b>dragging</b>.<br /><br />
+            You can <b>change node positions</b> by <b>dragging the nodes around</b>.<br /><br />
+            The clicked node's connections are displayed in a relations list in the right column.<br /><br />
+            The JSON static data is customized to provide different node types, colors and widths.
             """,
             'Extras': ['excanvas.js'],
             'Example':True
@@ -416,7 +419,7 @@ tests_model = {
             An <b>Elastic</b> transition is used instead of the linear transition for the animation.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
         },
         {
             'Title': 'Graph Operations',
@@ -427,6 +430,21 @@ tests_model = {
             2.- Removing edges<br /><br />
             3.- Adding another graph, also called sum<br /><br />
             4.- Morphing (or transforming) the graph into another one<br />
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':False
+        }, 
+        {
+            'Title': 'Graph Operations',
+            'Description': 
+            """
+            In this (advanced) example a static graph is fed into the visualization.<br /><br />
+            Custom Animations are triggered when clicking on a node's label or when deleting a node.<br /><br />
+            <b>Click on a node's label</b> to select a node and its connections.<br /><br />
+            <b>Click on the 'x' link</b> to delete a node.<br /><br />
+            You can <b>drag nodes</b> around and <b>zoom</b> and <b>pan</b>, just like you did in the previous 
+            example.
+            
             """,
             'Extras': ['excanvas.js'],
             'Example':True
@@ -504,7 +522,7 @@ tests_model = {
             Right clicking will collapse/expand nodes.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
         },
         {
             'Title': 'Rose Diagrams',
@@ -520,11 +538,26 @@ tests_model = {
             'Title': 'Connected Sunburst',
             'Description': 
             """
-            A static JSON Graph structure is used as input for this animation that represents a connected sunburst.<br />
+            A static JSON Graph structure is used as input for this visualization.<br /><br />
+            This example shows how properties such as color, height, angular width and line width  
+            can be customized per node and per edge in the JSON structure.<br /><br />
+            <b>Left click</b> to select a node and show its relations. 
             """,
             'Extras': ['excanvas.js'],
-            'Example':False
-        }
+            'Example':True
+        },
+                {
+            'Title': 'Sunburst of a Directory Tree',
+            'Description': 
+            """
+            A static JSON Tree structure is used as input for this visualization.<br /><br />
+            Tips are used to describe the file size and its last modified date.<br /><br />
+            <b>Left click</b> to rotate the Sunburst to the selected node and see its details.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        },
+
   ],
 
    'AreaChart': [

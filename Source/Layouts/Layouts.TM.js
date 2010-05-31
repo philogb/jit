@@ -18,7 +18,7 @@ Layouts.TM.SliceAndDice = new Class({
         config = this.config,
         width = size.width,
         height = size.height;
-    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+    this.graph.computeLevels(this.root, 0, "ignore");
     //set root position and dimensions
     root.getPos(prop).setc(-width/2, -height/2);
     root.setData('width', width, prop);
@@ -30,11 +30,11 @@ Layouts.TM.SliceAndDice = new Class({
   computePositions: function(par, ch, orn, prop) {
     //compute children areas
     var totalArea = 0;
-    Graph.Util.eachSubnode(par, function(n) {
+    par.eachSubnode(function(n) {
       totalArea += n.getData('area', prop);
     });
     
-    var config = this.config, GUtil = Graph.Util,
+    var config = this.config,
         offst = config.offset,
         width  = par.getData('width', prop),
         height = par.getData('height', prop) - config.titleHeight,
@@ -65,7 +65,7 @@ Layouts.TM.SliceAndDice = new Class({
     ch.setData('width', size, prop);
     ch.setData('height', otherSize, prop);
     var offsetSize = 0, tm = this;
-    GUtil.eachSubnode(ch, function(n) {
+    ch.eachSubnode(function(n) {
       var p = n.getPos(prop);
       p[pos] = offsetSize + cpos[pos] + posth;
       p[pos2] = cpos[pos2] + pos2th;
@@ -98,7 +98,7 @@ Layouts.TM.Area = {
         offst = config.offset,
         offwdth = width - offst,
         offhght = height - offst;
-    Graph.Util.computeLevels(this.graph, this.root, 0, "ignore");
+    this.graph.computeLevels(this.root, 0, "ignore");
     //set root position and dimensions
     root.getPos(prop).setc(-width/2, -height/2);
     root.setData('width', width, prop);
@@ -240,13 +240,13 @@ Layouts.TM.Squarified = new Class({
  Implements: Layouts.TM.Area,
  
  computePositions: function(node, coord, prop) {
-   var GUtil = Graph.Util, config = this.config;
+   var config = this.config;
    
    if (!(coord.width >= coord.height 
        && this.layout.horizontal())) 
      this.layout.change();
    
-   var ch = GUtil.getSubnodes(node, [1, 1], "ignore");
+   var ch = node.getSubnodes([1, 1], "ignore");
    if(ch.length > 0) {
      this.processChildrenLayout(node, ch, coord, prop);
      for(var i=0, l=ch.length; i<l; i++) {
@@ -395,7 +395,7 @@ Layouts.TM.Strip = new Class({
        coord - A coordinates object specifying width, height, left and top style properties.
     */
     computePositions: function(node, coord, prop) {
-     var ch = Graph.Util.getSubnodes(node, [1, 1], "ignore"), config = this.config;
+     var ch = node.getSubnodes([1, 1], "ignore"), config = this.config;
      if(ch.length > 0) {
        this.processChildrenLayout(node, ch, coord, prop);
        for(var i=0, l=ch.length; i<l; i++) {

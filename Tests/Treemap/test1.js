@@ -21,7 +21,7 @@ function init(){
       type: 'Native'
     },
     Events: {
-      enable: true,
+      enable: false,
       onMouseEnter: function(node, eventInfo, e) {
         node.setData('border', '#9FD4FF');
         tm.plot();
@@ -42,7 +42,7 @@ function init(){
     Navigation: {
       enable:true,
       panning:true,
-      zooming:0.01
+      zooming:0.5
     },
     //Allow tips
     Tips: {

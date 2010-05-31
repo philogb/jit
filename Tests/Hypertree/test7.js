@@ -264,15 +264,15 @@ function init(){
             Log.write("done");
 
             //Make the relations list shown in the right column.
-            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = ht.graph.getClosestNodeToOrigin("pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(node, function(adj){
+            node.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 html += "<li>" + child.name + "</li>";
             });
             html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+            $jit.id('inner-details').innerHTML = html;
         }
     });
     //load JSON graph.
@@ -280,6 +280,6 @@ function init(){
     //compute positions and plot
     ht.refresh();
     //end
-    ht.controller.onBeforeCompute($jit.Graph.Util.getNode(ht.graph, ht.root));
+    ht.controller.onBeforeCompute(ht.graph.getNode(ht.root));
     ht.controller.onAfterCompute();
 }

@@ -3,6 +3,7 @@ Options.Label = {
   
   overridable: false,
   type: 'HTML', //'SVG', 'Native'
+  style: ' ',
   size: 10,
   family: 'sans-serif',
   textAlign: 'center',

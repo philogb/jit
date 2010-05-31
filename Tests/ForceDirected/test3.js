@@ -424,16 +424,16 @@ function init(){
             color:'#23A4FF',
             overridable:true
         },
-        
         iterations: 100,
         levelDistance: 70,
         transition: $jit.Trans.Quart.easeOut,
-        
-        nodeStylesOnHover: {
-          'color': '#faa',
-          'dim': 7
+        NodeStyles: {
+          enable: true,
+          stylesHover: {
+            'color': '#faa',
+            'dim': 7
+          }
         },
-        
         //Add the node's name into the label
         //This method is called only once, on label creation.
         onCreateLabel: function(domElement, node){
@@ -515,7 +515,7 @@ function init(){
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //get node ids to be removed.
-        var subnodes = $jit.Graph.Util.getSubnodes(fd.graph.getNode('236797_5'), 0);
+        var subnodes = fd.graph.getNode('236797_5').getSubnodes(0);
         var map = [];
         for (var i = 0; i < subnodes.length; i++) {
             map.push(subnodes[i].id);

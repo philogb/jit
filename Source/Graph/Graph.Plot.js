@@ -235,8 +235,7 @@ Graph.Plot = {
 
     */
     prepare: function(modes) {
-      var GUtil = Graph.Util, 
-          graph = this.viz.graph,
+      var graph = this.viz.graph,
           accessors = {
             'node-property': {
               'getter': 'getData',
@@ -263,7 +262,7 @@ Graph.Plot = {
         m[elems.shift()] = elems;
       }
       
-      GUtil.eachNode(graph, function(node) { 
+      graph.eachNode(function(node) { 
         node.startPos.set(node.pos);
         $.each(['node-property', 'node-style'], function(p) {
           if(p in m) {
@@ -276,7 +275,7 @@ Graph.Plot = {
         $.each(['edge-property', 'edge-style'], function(p) {
           if(p in m) {
             var prop = m[p];
-            GUtil.eachAdjacency(node, function(adj) {
+            node.eachAdjacency(function(adj) {
               for(var i=0, l=prop.length; i < l; i++) {
                 adj[accessors[p].setter](prop[i], adj[accessors[p].getter](prop[i]), 'start');
               }
@@ -329,20 +328,19 @@ Graph.Plot = {
     animate: function(opt, versor) {
       opt = $.merge(this.viz.config, opt || {});
       var that = this,
-      viz = this.viz,
-      graph  = viz.graph,
-      GUtil = Graph.Util,
-      interp = this.Interpolator;
-      
+          viz = this.viz,
+          graph  = viz.graph,
+          interp = this.Interpolator,
+          animation =  opt.type === 'nodefx'? this.nodeFxAnimation : this.animation;
       //prepare graph values
       var m = this.prepare(opt.modes);
       
       //animate
       if(opt.hideLabels) this.labels.hideLabels(true);
-      this.animation.setOptions($.merge(opt, {
+      animation.setOptions($.merge(opt, {
         $animating: false,
         compute: function(delta) {
-          GUtil.eachNode(graph, function(node) { 
+          graph.eachNode(function(node) { 
             for(var p in m) {
               interp[p](node, m[p], delta, versor);
             }
@@ -408,34 +406,25 @@ Graph.Plot = {
    */
    nodeFx: function(opt) {
      var viz = this.viz,
-     graph  = viz.graph,
-     GUtil = $jit.Graph.Util,
-     options = $.merge(this.viz.config, {
-       'elements': {
-         'id': false,
-         'properties': {}
-       },
-       'reposition': false
-     });
+         graph  = viz.graph,
+         animation = this.nodeFxAnimation,
+         options = $.merge(this.viz.config, {
+           'elements': {
+             'id': false,
+             'properties': {}
+           },
+           'reposition': false
+         });
      opt = $.merge(options, opt || {}, {
        onBeforeCompute: $.empty,
        onAfterCompute: $.empty
      });
-     //check if an animation is running and exit
-     //if it's not a nodefx one.
-     var anim = this.animation;
-     if(anim.timer) {
-       if(anim.opt.type 
-           && anim.opt.type == 'nodefx') {
-         anim.stopTimer();
-       } else {
-         return;
-       }
-     }
+     //check if an animation is running
+     animation.stopTimer();
      var props = opt.elements.properties;
      //set end values for nodes
      if(!opt.elements.id) {
-       GUtil.eachNode(graph, function(n) {
+       graph.eachNode(function(n) {
          for(var prop in props) {
            n.setData(prop, props[prop], 'end');
          }
@@ -464,7 +453,7 @@ Graph.Plot = {
      //animate
      this.animate($.merge(opt, {
        modes: modes,
-       type:'nodefx'
+       type: 'nodefx'
      }));
    },
 
@@ -494,14 +483,13 @@ Graph.Plot = {
       that = this, 
       ctx = canvas.getCtx(), 
       min = Math.min,
-      GUtil = Graph.Util;
       opt = opt || this.viz.controller;
       opt.clearCanvas && canvas.clear();
         
       var T = !!aGraph.getNode(id).visited;
-      GUtil.eachNode(aGraph, function(node) {
+      aGraph.eachNode(function(node) {
         var nodeAlpha = node.getData('alpha');
-        GUtil.eachAdjacency(node, function(adj) {
+        node.eachAdjacency(function(adj) {
           var nodeTo = adj.nodeTo;
           if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
             !animating && opt.onBeforePlotLine(adj);
@@ -542,7 +530,7 @@ Graph.Plot = {
        config = this.config,
        ctx = canvas.getCtx();
        var nodeAlpha = node.getData('alpha');
-       Graph.Util.eachSubnode(node, function(elem) {
+       node.eachSubnode(function(elem) {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
              var adj = node.getAdjacency(elem.id);
              !animating && opt.onBeforePlotLine(adj);

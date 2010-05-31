@@ -237,7 +237,7 @@ var Trans = $jit.Trans;
 
 var Animation = new Class( {
 
-  initalize: function(options){
+  initialize: function(options){
     this.setOptions(options);
   },
 

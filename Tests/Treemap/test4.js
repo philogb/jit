@@ -906,8 +906,8 @@ function init(){
      "id": "root", 
      "name": "Top Albums"
    };
-
-
+  //end
+  //init TreeMap
   var tm = new $jit.TM.Squarified({
     //where to inject the visualization
     injectInto: 'infovis',
@@ -919,17 +919,8 @@ function init(){
     offset: 0,
     //add cushion gradients
     cushion: true,
-    //Attach left and right click events
-    Events: {
-      enable: true,
-      onClick: function(node) {
-        if(node) tm.enter(node);
-      },
-      onRightClick: function() {
-        tm.out();
-      }
-    },
-    duration: 1000,
+    //duration of the animation
+    duration: 1500,
     //Enable tips
     Tips: {
       enable: true,
@@ -973,6 +964,7 @@ function init(){
 
   tm.loadJSON(json);
   tm.refresh();
+  //end
   //add events to radio buttons
   var sq = $jit.id('r-sq'),
       st = $jit.id('r-st'),

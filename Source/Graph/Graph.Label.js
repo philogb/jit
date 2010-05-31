@@ -56,7 +56,7 @@ Graph.Label.Native = new Class({
       var ctx = canvas.getCtx();
       var pos = node.pos.getc(true);
 
-      ctx.font = node.getLabelData('size') + 'px ' + node.getLabelData('family');
+      ctx.font = node.getLabelData('style') + ' ' + node.getLabelData('size') + 'px ' + node.getLabelData('family');
       ctx.textAlign = node.getLabelData('textAlign');
       ctx.fillStyle = ctx.strokeStyle = node.getLabelData('color');
       ctx.textBaseline = node.getLabelData('textBaseline');

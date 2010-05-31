@@ -299,7 +299,7 @@ $jit.AreaChart = new Class({
     var args = Array.prototype.slice.call(arguments);
     var rt = this.st.graph.getNode(this.st.root);
     var that = this;
-    $jit.Graph.Util.eachAdjacency(rt, function(adj) {
+    rt.eachAdjacency(function(adj) {
       var n = adj.nodeTo, 
           dimArray = n.getData('dimArray'),
           stringArray = n.getData('stringArray');
@@ -340,7 +340,7 @@ $jit.AreaChart = new Class({
       s.id = id;
       s.name = name;
       s.index = index;
-      $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+      this.st.graph.eachNode(function(n) {
         n.setData('border', false);
       });
       if(id) {
@@ -365,7 +365,7 @@ $jit.AreaChart = new Class({
   getLegend: function() {
     var legend = {};
     var n;
-    $jit.Graph.Util.eachAdjacency(this.st.graph.getNode(this.st.root), function(adj) {
+    this.st.graph.getNode(this.st.root).eachAdjacency(function(adj) {
       n = adj.nodeTo;
     });
     var colors = n.getData('colorArray'),
@@ -378,7 +378,7 @@ $jit.AreaChart = new Class({
   
   getMaxValue: function() {
     var maxValue = 0;
-    $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+    this.st.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acumLeft = 0, acumRight = 0;
       $.each(valArray, function(v) { 
@@ -394,7 +394,7 @@ $jit.AreaChart = new Class({
   normalizeDims: function() {
     //number of elements
     var root = this.st.graph.getNode(this.st.root), l=0;
-    $jit.Graph.Util.eachAdjacency(root, function() {
+    root.eachAdjacency(function() {
       l++;
     });
     var maxValue = this.getMaxValue(),
@@ -406,7 +406,7 @@ $jit.AreaChart = new Class({
         animate = config.animate,
         height = size.height - 2 * offset - (config.showAggregates && labelOffset) 
           - (config.showLabels && labelOffset);
-    $jit.Graph.Util.eachNode(this.st.graph, function(n) {
+    this.st.graph.eachNode(function(n) {
       var acumLeft = 0, acumRight = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acumLeft += +v[0];

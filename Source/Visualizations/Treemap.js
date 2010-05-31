@@ -90,6 +90,7 @@ TM.Base = {
     var that = this;
     if(this.config.animate) {
       this.compute('end');
+      this.geom.setRightLevelToShow(this.graph.getNode(this.root));
       this.fx.animate($.merge(this.config, {
         modes: ['linear', 'node-property:width:height'],
         onComplete: function() {
@@ -108,7 +109,7 @@ TM.Base = {
   },
 
   leaf: function(n){
-    return Graph.Util.getSubnodes(n, [
+    return n.getSubnodes([
         1, 1
     ], "ignore").length == 0;
   },
@@ -118,7 +119,6 @@ TM.Base = {
     this.busy = true;
     
     var that = this,
-        GUtil = Graph.Util,
         config = this.config,
         graph = this.graph,
         clickedNode = n,
@@ -126,6 +126,10 @@ TM.Base = {
 
     var callback = {
       onComplete: function() {
+        //ensure that nodes are shown for that level
+        if(config.levelsToShow > 0) {
+          that.geom.setRightLevelToShow(n);
+        }
         //compute positions of newly inserted nodes
         if(config.request) that.compute();
         if(config.animate) {
@@ -133,7 +137,7 @@ TM.Base = {
           graph.nodeList.setDataset(['current', 'end'], {
             'alpha': [1, 0]
           });
-          GUtil.eachSubgraph(n, function(n) {
+          n.eachSubgraph(function(n) {
             n.setData('alpha', 1, 'end');
           }, "ignore");
           that.fx.animate({
@@ -173,12 +177,10 @@ TM.Base = {
     this.busy = true;
     this.events.hoveredNode = false;
     var that = this,
-        GUtil = Graph.Util,
         config = this.config,
         graph = this.graph,
-        parents = GUtil.getParents(graph
-        .getNode(this.clickedNode 
-            && this.clickedNode.id || this.root)),
+        parents = graph.getNode(this.clickedNode 
+            && this.clickedNode.id || this.root).getParents(),
         parent = parents[0],
         clickedNode = parent,
         previousClickedNode = this.clickedNode;
@@ -208,7 +210,7 @@ TM.Base = {
       }
     };
     //prune tree
-    if (config.request)
+    if (config.levelsToShow > 0)
       this.geom.setRightLevelToShow(parent);
     //animate node positions
     if(config.animate) {
@@ -226,7 +228,7 @@ TM.Base = {
           graph.nodeList.setDataset(['current', 'end'], {
             'alpha': [0, 1]
           });
-          GUtil.eachSubgraph(previousClickedNode, function(node) {
+          previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
           that.fx.animate({
@@ -245,13 +247,12 @@ TM.Base = {
 
   requestNodes: function(node, onComplete){
     var handler = $.merge(this.controller, onComplete), 
-        lev = this.config.levelsToShow, 
-        GUtil = Graph.Util;
+        lev = this.config.levelsToShow;
     if (handler.request) {
       var leaves = [], d = node._depth;
-      GUtil.eachLevel(node, 0, lev, function(n){
+      node.eachLevel(0, lev, function(n){
         var nodeLevel = lev - (n._depth - d);
-        if (n.drawn && !GUtil.anySubnode(n) && nodeLevel > 0) {
+        if (n.drawn && !n.anySubnode() && nodeLevel > 0) {
           leaves.push(n);
           n._level = nodeLevel;
         }
@@ -260,28 +261,6 @@ TM.Base = {
     } else {
       handler.onComplete();
     }
-  },
-
-  selectPath: function(node){
-    var GUtil = Graph.Util, that = this;
-    GUtil.eachNode(this.graph, function(n){
-      n.selected = false;
-    });
-    function path(node){
-      if (node == null || node.selected)
-        return;
-      node.selected = true;
-      $.each(that.group.getSiblings( [
-        node
-      ])[node.id], function(n){
-        n.exist = true;
-        n.drawn = true;
-      });
-      var parents = GUtil.getParents(node);
-      parents = (parents.length > 0)? parents[0] : null;
-      path(parents);
-    }
-    path(node);
   }
 };
 
@@ -302,15 +281,22 @@ TM.Geom = new Class({
   
   setRightLevelToShow: function(node) {
     var level = this.getRightLevelToShow(), 
-        fx = this.viz.labels,
-        op = this.viz.op;
-    Graph.Util.eachLevel(node, 0, this.config.levelsToShow+1, function(n) {
+        fx = this.viz.labels;
+    node.eachLevel(0, level+1, function(n) {
       var d = n._depth - node._depth;
       if(d > level) {
-        op.removeNode(n.id, { type:'nothing' });
+        n.drawn = false; 
+        n.exist = false;
+        n.ignore = true;
         fx.hideLabel(n, false);
+      } else {
+        n.drawn = true;
+        n.exist = true;
+        delete n.ignore;
       }
     });
+    node.drawn = true;
+    delete node.ignore;
   }
 });
 
@@ -350,7 +336,7 @@ TM.Group = new Class( {
             });
           }
           if (++counter == len) {
-            Graph.Util.computeLevels(viz.graph, viz.root, 0);
+            viz.graph.computeLevels(viz.root, 0);
             complete();
           }
         }
@@ -382,7 +368,7 @@ TM.Plot = new Class( {
       'withLabels': true,
       'hideLabels': false,
       'plotSubtree': function(n, ch){
-        return Graph.Util.anySubnode(n, "exist");
+        return n.anySubnode("exist");
       }
     }), animating);
   }
@@ -623,7 +609,7 @@ TM.Plot.NodeTypes = new Class( {
       }
     },
     'contains': function(node, pos) {
-      if(this.viz.clickedNode && !$jit.Graph.Util.isDescendantOf(node, this.viz.clickedNode.id)) return false;
+      if(this.viz.clickedNode && !node.isDescendantOf(this.viz.clickedNode.id)) return false;
       var npos = node.pos.getc(true),
           width = node.getData('width'), 
           leaf = this.viz.leaf(node),

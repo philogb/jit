@@ -275,7 +275,7 @@ $jit.PieChart = new Class({
       s.id = id;
       s.name = name;
       s.color = this.config.hoveredColor;
-      $jit.Graph.Util.eachNode(this.sb.graph, function(n) {
+      this.sb.graph.eachNode(function(n) {
         if(id == n.id) {
           n.setData('border', s);
         } else {
@@ -289,7 +289,7 @@ $jit.PieChart = new Class({
   getLegend: function() {
     var legend = {};
     var n;
-    $jit.Graph.Util.eachAdjacency(this.sb.graph.getNode(this.sb.root), function(adj) {
+    this.sb.graph.getNode(this.sb.root).eachAdjacency(function(adj) {
       n = adj.nodeTo;
     });
     var colors = n.getData('colorArray'),
@@ -302,7 +302,7 @@ $jit.PieChart = new Class({
   
   getMaxValue: function() {
     var maxValue = 0;
-    $jit.Graph.Util.eachNode(this.sb.graph, function(n) {
+    this.sb.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acum = 0;
       $.each(valArray, function(v) { 
@@ -316,14 +316,14 @@ $jit.PieChart = new Class({
   normalizeDims: function() {
     //number of elements
     var root = this.sb.graph.getNode(this.sb.root), l=0;
-    $jit.Graph.Util.eachAdjacency(root, function() {
+    root.eachAdjacency(function() {
       l++;
     });
     var maxValue = this.getMaxValue(),
         config = this.config,
         animate = config.animate,
         rho = this.sb.config.levelDistance;
-    $jit.Graph.Util.eachNode(this.sb.graph, function(n) {
+    this.sb.graph.eachNode(function(n) {
       var acum = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acum += +v;

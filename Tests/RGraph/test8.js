@@ -511,7 +511,7 @@ function init(){
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //get node ids to be removed.
-        var subnodes = $jit.Graph.Util.getSubnodes(rgraph.graph.getNode('236797_5'), 0);
+        var subnodes = rgraph.graph.getNode('236797_5').getSubnodes(0);
         var map = [];
         for (var i = 0; i < subnodes.length; i++) {
             map.push(subnodes[i].id);

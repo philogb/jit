@@ -330,7 +330,7 @@ function init(){
         Navigation: {
           enable:true,
           panning:true,
-          zooming:0.05
+          zooming:0.5
         },
         //Change node and edge styles such as
         //color, width and dimensions.
@@ -385,10 +385,10 @@ function init(){
             //Build the right column relations list.
             //This is done by collecting the information (stored in the data property) 
             //for all the nodes adjacent to the centered node.
-            var node = $jit.Graph.Util.getClosestNodeToOrigin(ht.graph, "pos");
+            var node = ht.graph.getClosestNodeToOrigin("pos");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
-            $jit.Graph.Util.eachAdjacency(node, function(adj){
+            node.eachAdjacency(function(adj){
                 var child = adj.nodeTo;
                 if (child.data) {
                     var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
@@ -396,7 +396,7 @@ function init(){
                 }
             });
             html += "</ul>";
-            document.getElementById('inner-details').innerHTML = html;
+            $jit.id('inner-details').innerHTML = html;
         }
     });
     //load JSON data.

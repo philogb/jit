@@ -145,13 +145,15 @@ $jit.Sunburst = new Class({
       interpolation: 'linear',
       levelDistance: 100,
       Node: {
-        'type': 'multipie'
+        'type': 'multipie',
+        'height':0
       },
       Edge: {
         'type': 'none'
       },
       Label: {
-        textAlign: 'start'
+        textAlign: 'start',
+        textBaseline: 'middle'
       }
     };
 
@@ -275,21 +277,26 @@ $jit.Sunburst = new Class({
   
   */
   rotateAngle: function(theta, method, opt) {
-    opt = $.merge(this.config, opt || {}, {
+    var that = this;
+    var options = $.merge(this.config, opt || {}, {
       modes: [ 'polar' ]
     });
     var prop = opt.property || (method === "animate" ? 'end' : 'current');
-    Graph.Util.eachNode(this.graph, function(n) {
+    if(method === 'animate') {
+      this.fx.animation.pause();
+    }
+    this.graph.eachNode(function(n) {
       var p = n.getPos(prop);
       p.theta += theta;
       if (p.theta < 0) {
         p.theta += Math.PI * 2;
       }
     });
-    if (method === "animate") {
-      this.fx.animate(opt);
-    } else if (method === "replot") {
+    if (method == 'animate') {
+      this.fx.animate(options);
+    } else if (method == ' replot') {
       this.fx.plot();
+      this.busy = false;
     }
   },
 
@@ -405,9 +412,16 @@ $jit.Sunburst.$extend = true;
 
     initialize: function(viz) {
       this.viz = viz;
+      this.label = viz.config.Label;
+      this.config = viz.config;
     },
 
     renderLabel: function(canvas, node, controller) {
+      var span = node.getData('span');
+      if(span < Math.PI /2 && Math.tan(span) * 
+          this.config.levelDistance * node._depth < 10) {
+        return;
+      }
       var ctx = canvas.getCtx();
       var measure = ctx.measureText(node.name);
       if (node.id == this.viz.root) {
@@ -435,7 +449,7 @@ $jit.Sunburst.$extend = true;
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(thetap);
-      ctx.fillText(node.name, 0, 0, ld);
+      ctx.fillText(node.name, 0, 0);
       ctx.restore();
     }
   });
@@ -636,7 +650,8 @@ $jit.Sunburst.$extend = true;
     },
     'multipie': {
       'render': function(node, canvas) {
-        var ldist = this.config.levelDistance;
+        var height = node.getData('height');
+        var ldist = height? height : this.config.levelDistance;
         var span = node.getData('span') / 2, theta = node.pos.theta;
         var begin = theta - span, end = theta + span;
         var polarNode = node.pos.getp(true);
@@ -678,8 +693,10 @@ $jit.Sunburst.$extend = true;
       'contains': function(node, pos) {
         if (this.nodeTypes['none'].anglecontains.call(this, node, pos)) {
           var rho = Math.sqrt(pos.x * pos.x + pos.y * pos.y);
+          var height = node.getData('height');
+          var ldist = height? height : this.config.levelDistance;
           var ld = this.config.levelDistance, d = node._depth;
-          return (rho >= ld * d) && (rho <= ld * (d + 1));
+          return (rho >= ld * d) && (rho <= (ld * d + ldist));
         }
         return false;
       }
@@ -688,8 +705,10 @@ $jit.Sunburst.$extend = true;
     'gradient-multipie': {
       'render': function(node, canvas) {
         var ctx = canvas.getCtx();
+        var height = node.getData('height');
+        var ldist = height? height : this.config.levelDistance;
         var radialGradient = ctx.createRadialGradient(0, 0, node.getPos().rho,
-            0, 0, node.getPos().rho + this.config.levelDistance);
+            0, 0, node.getPos().rho + ldist);
 
         var colorArray = $.hexToRgb(node.getData('color')), ans = [];
         $.each(colorArray, function(i) {

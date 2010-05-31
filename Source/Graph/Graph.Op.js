@@ -283,14 +283,13 @@ Graph.Op = {
     sum: function(json, opt) {
         var viz = this.viz;
         var options = $.merge(this.options, viz.controller, opt), root = viz.root;
-        var GUtil, graph;
+        var graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
                 graph = viz.construct(json);
-                GUtil = Graph.Util;
-                GUtil.eachNode(graph, function(elem) {
-                    GUtil.eachAdjacency(elem, function(adj) {
+                graph.eachNode(function(elem) {
+                    elem.eachAdjacency(function(adj) {
                         viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
                     });
                 });
@@ -303,7 +302,6 @@ Graph.Op = {
                 break;
             
             case 'fade:seq': case 'fade': case 'fade:con':
-                GUtil = Graph.Util;
                 that = this;
                 graph = viz.construct(json);
 
@@ -324,7 +322,7 @@ Graph.Op = {
                         }
                     }));
                 } else {
-                    GUtil.eachNode(viz.graph, function(elem) {
+                    viz.graph.eachNode(function(elem) {
                         if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
                           elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
                         }
@@ -380,19 +378,18 @@ Graph.Op = {
     morph: function(json, opt) {
         var viz = this.viz;
         var options = $.merge(this.options, viz.controller, opt), root = viz.root;
-        var GUtil, graph;
+        var graph;
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
                 graph = viz.construct(json);
-                GUtil = Graph.Util;
-                GUtil.eachNode(graph, function(elem) {
-                    GUtil.eachAdjacency(elem, function(adj) {
+                graph.eachNode(function(elem) {
+                    elem.eachAdjacency(function(adj) {
                         viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
                     });
                 });
-                GUtil.eachNode(viz.graph, function(elem) {
-                    GUtil.eachAdjacency(elem, function(adj) {
+                graph.eachNode(function(elem) {
+                    elem.eachAdjacency(function(adj) {
                         if(!graph.getAdjacence(adj.nodeFrom.id, adj.nodeTo.id)) {
                             viz.graph.removeAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
                         }
@@ -410,13 +407,12 @@ Graph.Op = {
                 break;
                 
             case 'fade:seq': case 'fade': case 'fade:con':
-                GUtil = Graph.Util;
                 that = this;
                 graph = viz.construct(json);
                 //preprocessing for adding nodes.
                 var fadeEdges = this.preprocessSum(graph);
                 //preprocessing for nodes to delete.
-                GUtil.eachNode(viz.graph, function(elem) {
+                viz.graph.eachNode(function(elem) {
                     if(!graph.hasNode(elem.id)) {
                       elem.setData('alpha', 1);
                       elem.setData('alpha', 1, 'start');
@@ -424,9 +420,9 @@ Graph.Op = {
                       elem.ignore = true;
                     }
                 }); 
-                GUtil.eachNode(viz.graph, function(elem) {
+                viz.graph.eachNode(function(elem) {
                     if(elem.ignore) return;
-                    GUtil.eachAdjacency(elem, function(adj) {
+                    elem.eachAdjacency(function(adj) {
                         if(adj.nodeFrom.ignore || adj.nodeTo.ignore) return;
                         var nodeFrom = graph.getNode(adj.nodeFrom.id);
                         var nodeTo = graph.getNode(adj.nodeTo.id);
@@ -441,7 +437,7 @@ Graph.Op = {
                 }); 
                 var modes = !fadeEdges? ['node-property:alpha'] : ['node-property:alpha', 'edge-property:alpha'];
                 viz.reposition();
-                GUtil.eachNode(viz.graph, function(elem) {
+                viz.graph.eachNode(function(elem) {
                     if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
                       elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
                     }
@@ -449,11 +445,11 @@ Graph.Op = {
                 viz.fx.animate($.merge(options, {
                     modes: ['polar'].concat(modes),
                     onComplete: function() {
-                        GUtil.eachNode(viz.graph, function(elem) {
+                        viz.graph.eachNode(function(elem) {
                             if(elem.ignore) viz.graph.removeNode(elem.id);
                         });
-                        GUtil.eachNode(viz.graph, function(elem) {
-                            GUtil.eachAdjacency(elem, function(adj) {
+                        viz.graph.eachNode(function(elem) {
+                            elem.eachAdjacency(function(adj) {
                                 if(adj.ignore) viz.graph.removeAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
                             });
                         });
@@ -462,7 +458,7 @@ Graph.Op = {
                 }));
                 break;
 
-            default: this.doError();
+            default:;
         }
     },
 
@@ -494,15 +490,14 @@ Graph.Op = {
  
    */
     contract: function(node, opt) {
-      var GUtil = Graph.Util;
       var viz = this.viz;
-      if(node.collapsed || !GUtil.anySubnode(node, $.lambda(true))) return;
+      if(node.collapsed || !node.anySubnode($.lambda(true))) return;
       opt = $.merge(this.options, viz.config, opt || {}, {
         'modes': ['node-property:alpha:span', 'linear']
       });
       node.collapsed = true;
       (function subn(n) {
-        GUtil.eachSubnode(n, function(ch) {
+        n.eachSubnode(function(ch) {
           ch.ignore = true;
           ch.setData('alpha', 0, opt.type == 'animate'? 'end' : 'current');
           subn(ch);
@@ -516,7 +511,7 @@ Graph.Op = {
           });
         }
         (function subn(n) {
-          GUtil.eachSubnode(n, function(ch) {
+          n.eachSubnode(function(ch) {
             ch.setPos(node.getPos('end'), 'end');
             subn(ch);
           });
@@ -555,14 +550,13 @@ Graph.Op = {
    */
     expand: function(node, opt) {
       if(!('collapsed' in node)) return;
-      var GUtil = Graph.Util;
       var viz = this.viz;
       opt = $.merge(this.options, viz.config, opt || {}, {
         'modes': ['node-property:alpha:span', 'linear']
       });
       delete node.collapsed;
       (function subn(n) {
-        GUtil.eachSubnode(n, function(ch) {
+        n.eachSubnode(function(ch) {
           delete ch.ignore;
           ch.setData('alpha', 1, opt.type == 'animate'? 'end' : 'current');
           subn(ch);
@@ -583,8 +577,7 @@ Graph.Op = {
 
     preprocessSum: function(graph) {
         var viz = this.viz;
-        var GUtil = Graph.Util;
-        GUtil.eachNode(graph, function(elem) {
+        graph.eachNode(function(elem) {
             if(!viz.graph.hasNode(elem.id)) {
                 viz.graph.addNode(elem);
                 var n = viz.graph.getNode(elem.id);
@@ -594,8 +587,8 @@ Graph.Op = {
             }
         }); 
         var fadeEdges = false;
-        GUtil.eachNode(graph, function(elem) {
-            GUtil.eachAdjacency(elem, function(adj) {
+        graph.eachNode(function(elem) {
+            elem.eachAdjacency(function(adj) {
                 var nodeFrom = viz.graph.getNode(adj.nodeFrom.id);
                 var nodeTo = viz.graph.getNode(adj.nodeTo.id);
                 if(!nodeFrom.adjacentTo(nodeTo)) {

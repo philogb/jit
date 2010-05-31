@@ -67,7 +67,7 @@ $jit.Graph = new Class({
       that.nodeList[p] = (function(p) {
         return function() {
           var args = Array.prototype.slice.call(arguments);
-          $jit.Graph.Util.eachNode(that, function(n) {
+          that.eachNode(function(n) {
             n[p].apply(n, args);
           });
         };
@@ -782,7 +782,7 @@ Graph.Util = {
        (end code)
     */
     getNode: function(graph, id) {
-        return graph.getNode(id);
+        return graph.nodes[id];
     },
     
     /*
@@ -1103,6 +1103,69 @@ Graph.Util = {
      Parameters:
      graph - A <Graph> instance.
   */
-  clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); }
+  clean: function(graph) { this.eachNode(graph, function(elem) { elem._flag = false; }); },
+  
+  /* 
+    Method: getClosestNodeToOrigin 
+  
+    Extends <Graph.Util>. Returns the closest node to the center of canvas.
+  
+    Parameters:
+   
+     graph - A <Graph> instance.
+     prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
+  
+    Returns:
+  
+     Closest node to origin. Returns *null* otherwise.
+   
+  */
+  getClosestNodeToOrigin: function(graph, prop, flags) {
+   return this.getClosestNodeToPos(graph, Polar.KER, prop, flags);
+  },
+  
+  /* 
+    Method: getClosestNodeToPos
+  
+    Extends <Graph.Util>. Returns the closest node to the given position.
+  
+    Parameters:
+   
+     graph - A <Graph> instance.
+     pos - A <Complex> or <Polar> instance.
+     prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
+  
+    Returns:
+  
+     Closest node to the given position. Returns *null* otherwise.
+   
+  */
+  getClosestNodeToPos: function(graph, pos, prop, flags) {
+   var node = null;
+   prop = prop || 'pos';
+   pos = pos && pos.getc(true) || Complex.KER;
+   var distance = function(a, b) {
+     var d1 = a.x - b.x, d2 = a.y - b.y;
+     return d1 * d1 + d2 * d2;
+   };
+   this.eachNode(graph, function(elem) {
+     node = (node == null || distance(elem[prop].getc(true), pos) < distance(
+         node[prop].getc(true), pos)) ? elem : node;
+   }, flags);
+   return node;
+  } 
 };
 
+//Append graph methods to <Graph>
+$.each(['getNode', 'eachNode', 'computeLevels', 'eachBFS', 'clean', 'getClosestNodeToPos', 'getClosestNodeToOrigin'], function(m) {
+  Graph.prototype[m] = function() {
+    return Graph.Util[m].apply(Graph.Util, [this].concat(Array.prototype.slice.call(arguments)));
+  };
+});
+
+//Append node methods to <Graph.Node>
+$.each(['eachAdjacency', 'eachLevel', 'eachSubgraph', 'eachSubnode', 'anySubnode', 'getSubnodes', 'getParents', 'isDescendantOf'], function(m) {
+  Graph.Node.prototype[m] = function() {
+    return Graph.Util[m].apply(Graph.Util, [this].concat(Array.prototype.slice.call(arguments)));
+  };
+});

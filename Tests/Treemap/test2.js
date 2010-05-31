@@ -1,4 +1,5 @@
 function init(){
+  //init data
   var json = {
     "children": [
      {
@@ -856,7 +857,8 @@ function init(){
    "id": "root", 
    "name": "Top Albums"
    };
-
+  //end
+  //init TreeMap
   var tm = new $jit.TM.Squarified({
     //where to inject the visualization
     injectInto: 'infovis',
@@ -914,9 +916,9 @@ function init(){
         };
     }
   });
-
   tm.loadJSON(json);
   tm.refresh();
+  //end
   //add events to radio buttons
   var sq = $jit.id('r-sq'),
       st = $jit.id('r-st'),

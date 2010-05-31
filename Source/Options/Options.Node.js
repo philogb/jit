@@ -44,7 +44,6 @@ Options.Node = {
   width: 90,
   autoHeight: false,
   autoWidth: false,
-  labelPadding: 0,
   lineWidth: 1,
   transform: true,
   align: "center",
