@@ -115,7 +115,7 @@ $jit.Icicle = new Class({
               that.clickedNode = clickedNode;
               that.compute('end');
               //animate positions
-              that.clickedNode = previousClickedNode;
+
               that.fx.animate({
                 modes:['linear', 'node-property:width:height'],
                 duration: 1000,

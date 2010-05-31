@@ -49,8 +49,6 @@ Layouts.Icicle = new Class({
   },
 
   computeSubtree: function (root, x, y, width, height, initialDepth, maxDepth, posType) {
-    if(root._depth-initialDepth > maxDepth)
-      return;
     root.getPos(posType).setc(x, y);
     root.setData('width', width, posType);
     root.setData('height', height, posType);
