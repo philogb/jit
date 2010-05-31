@@ -363,52 +363,93 @@ function init(){
     //init RGraph
     var rgraph = new $jit.RGraph({
         //Where to append the visualization
-        injectInto: 'infovis',
-        //Optional: create a background canvas that plots
-        //concentric circles.
+        injectInto: 'infovis',        
+        //Optional: create a background canvas and plot
+        //concentric circles in it.
         background: {
           CanvasStyles: {
             strokeStyle: '#555'
           }
         },
-        //Add navigation capabilities:
-        //zooming by scrolling and panning.
-        Navigation: {
-          enable: true,
-          panning: true,
-          zooming: 4
-        },
-        //Set Node and Edge styles.
+        //Set Edge and Node styles
         Node: {
-            color: '#ddeeff'
+            color: '#ddeeff',
+            overridable:true
         },
-        
         Edge: {
-          color: '#C17878',
-          lineWidth:1.5
+            overridable:true,
+            color: '#C17878',
+            lineWidth:1.5
         },
-
-        onBeforeCompute: function(node){
-            Log.write("centering " + node.name + "...");
-            //Add the relation list in the right column.
-            //This list is taken from the data property of each JSON node.
-            $jit.id('inner-details').innerHTML = node.data.relation;
+        //Use native canvas text
+        Label: {
+          type: 'Native',
+          size: 11,
+          family: 'Verdana',
+          color: '#fff'
         },
-        
-        onAfterCompute: function(){
-            Log.write("done");
+        NodeStyles: {
+          enable:true,
+          stylesHover: {
+            dim:20,
+            color:'#f00'
+          },
+          stylesClick: {
+            dim:30,
+            color:'#ff0'
+          }
         },
-        //Add the name of the node in the correponding label
-        //and a click handler to move the graph.
-        //This method is called once, on label creation.
+        Tips: {
+          enable: true,
+          onShow: function(tip, elem, contains) {
+            tip.innerHTML = elem.name;
+          }
+        },
+        Events: {
+          enable: true,
+          onClick: function(node, eventInfo, e) {
+            false && console.log('onClick', node && node.name);
+          },
+          onRightClick: function(node, eventInfo, e) {
+            false && console.log('onRightClick', node && node.name);
+          },
+          onMouseEnter: function(node, eventInfo, e) {
+            false && console.log('onMouseEnter', node && node.name);
+          },
+          onMouseLeave: function(node, eventInfo, e) {
+            false && console.log('onMouseLeave', node && node.name);
+          },
+          onMouseMove: function(node, eventInfo, e) {
+            false && console.log('onMouseMove', node && node.name, eventInfo, e);
+          },
+          onDragStart: function(node, eventInfo, e) {
+            false && console.log('onDragStart', node && node.name, eventInfo, e);
+          },
+          onDragMove: function(node, eventInfo, e) {
+            var pos = eventInfo.getPos();
+            node.pos.setc(pos.x, pos.y);
+            rgraph.plot();
+            false && console.log('onDragMove', node && node.name, eventInfo, e);
+          },
+          onDragCancel: function(node, eventInfo, e) {
+            false && console.log('onDragCancel', node && node.name, eventInfo, e);
+          },
+          onDragEnd: function(node, eventInfo, e) {
+            rgraph.compute('end');
+            rgraph.fx.animate({
+              modes: ['linear'],
+              duration: 700,
+              transition: $jit.Trans.Elastic.easeOut
+            });
+            false && console.log('onDragEnd', node && node.name, eventInfo, e);
+          },
+          onMouseWheel: function(delta, e) {
+            false && console.log('MouseWheel', delta, e);
+          }
+        },
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
-            domElement.onclick = function(){
-                rgraph.onClick(node.id);
-            };
         },
-        //Change some label dom properties.
-        //This method is called each time a label is plotted.
         onPlaceLabel: function(domElement, node){
             var style = domElement.style;
             style.display = '';
@@ -431,19 +472,10 @@ function init(){
             style.left = (left - w / 2) + 'px';
         }
     });
+    
     //load JSON data
     rgraph.loadJSON(json);
-    //trigger small animation
-    rgraph.graph.eachNode(function(n) {
-      var pos = n.getPos();
-      pos.setc(-200, -200);
-    });
-    rgraph.compute('end');
-    rgraph.fx.animate({
-      modes:['polar'],
-      duration: 2000
-    });
+    //compute positions and make the first plot
+    rgraph.refresh();
     //end
-    //append information about the root relations in the right column
-    $jit.id('inner-details').innerHTML = rgraph.graph.getNode(rgraph.root).data.relation;
 }

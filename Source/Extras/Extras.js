@@ -74,7 +74,9 @@ var MouseEventsManager = new Class({
             $.event.isRightClick(event));
       },
       'mousedown': function(e, win) {
-        that.handleEvent('MouseDown', e, win, that.makeEventObject(e, win));
+        var event = $.event.get(e, win);
+        that.handleEvent('MouseDown', e, win, that.makeEventObject(e, win), 
+            $.event.isRightClick(event));
       },
       'mousemove': function(e, win) {
         that.handleEvent('MouseMove', e, win, that.makeEventObject(e, win));
@@ -436,9 +438,13 @@ Extras.Classes.NodeStyles = new Class({
     this.nodeStylesOnClick = this.nStyles.stylesClick;
     this.hoveredNode = false;
     this.fx.nodeFxAnimation = new Animation();
+    
+    this.down = false;
+    this.move = false;
   },
   
   onMouseOut: function(e, win) {
+    this.down = this.move = false;
     if(!this.hoveredNode) return;
     //mouseout a label
     if(this.dom && this.isLabel(e, win)) {
@@ -466,9 +472,23 @@ Extras.Classes.NodeStyles = new Class({
     }
   },
   
+  onMouseDown: function(e, win, event, isRightClick) {
+    if(isRightClick) return;
+    var label;
+    if(this.dom && (label = this.isLabel(e, win))) {
+      this.down = this.viz.graph.getNode(label.id);
+    } else if(!this.dom) {
+      this.down = event.getNode();
+    }
+    this.move = false;
+  },
+  
   onMouseUp: function(e, win, event, isRightClick) {
     if(isRightClick) return;
-    this.onClick(event.getNode());
+    if(!this.move) {
+      this.onClick(event.getNode());
+    }
+    this.down = this.move = false;
   },
   
   getRestoredStyles: function(node, type) {
@@ -556,6 +576,8 @@ Extras.Classes.NodeStyles = new Class({
   },
   
   onMouseMove: function(e, win, event) {
+    //if mouse button is down and moving set move=true
+    if(this.down) this.move = true;
     //already handled by mouseover/out
     if(this.dom && this.isLabel(e, win)) return;
     var nStyles = this.nodeStylesOnHover;
