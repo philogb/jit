@@ -148,12 +148,14 @@ TM.Base = {
               that.clickedNode = clickedNode;
               that.compute('end');
               //animate positions
+              //TODO(nico) commenting this line didn't seem to throw errors...
               that.clickedNode = previousClickedNode;
               that.fx.animate({
                 modes:['linear', 'node-property:width:height'],
                 duration: 1000,
-                onComplete: function() {
+                onComplete: function() { 
                   that.busy = false;
+                  //TODO(nico) check comment above
                   that.clickedNode = clickedNode;
                 }
               });
