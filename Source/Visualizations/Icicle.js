@@ -87,48 +87,47 @@ $jit.Icicle = new Class({
   },
 
   enter: function (node) {
-    if (this.busy) return;
+    if (this.busy)
+      return;
     this.busy = true;
 
     var that = this,
-        config = this.config,
-        clickedNode = node,
-        previousClickedNode = this.clickedNode;
+        config = this.config;
 
     var callback = {
       onComplete: function() {
         //compute positions of newly inserted nodes
-        if(config.request) that.compute();
+        if(config.request)
+          that.compute();
+
         if(config.animate) {
-          //fade nodes
           that.graph.nodeList.setDataset(['current', 'end'], {
-            'alpha': [1, 0]
+            'alpha': [1, 0] //fade nodes
           });
+
           Graph.Util.eachSubgraph(node, function(n) {
             n.setData('alpha', 1, 'end');
           }, "ignore");
+
           that.fx.animate({
             duration: 500,
             modes:['node-property:alpha'],
             onComplete: function() {
-              //compute end positions
-              that.clickedNode = clickedNode;
+              that.clickedNode = node;
               that.compute('end');
-              //animate positions
 
               that.fx.animate({
                 modes:['linear', 'node-property:width:height'],
                 duration: 1000,
                 onComplete: function() {
                   that.busy = false;
-                  that.clickedNode = clickedNode;
+                  that.clickedNode = node;
                 }
               });
             }
           });
         } else {
           that.clickedNode = node;
-          that.refresh();
           that.busy = false;
         }
       }
@@ -142,9 +141,9 @@ $jit.Icicle = new Class({
   },
 
   out: function(){
-    if(this.busy) return;
-    this.busy = true;
-    this.events.hoveredNode = false;
+    if(this.busy)
+      return;
+
     var that = this,
         GUtil = Graph.Util,
         config = this.config,
@@ -154,11 +153,14 @@ $jit.Icicle = new Class({
         clickedNode = parent,
         previousClickedNode = this.clickedNode;
 
-    //if no parents return
+    this.busy = true;
+    this.events.hoveredNode = false;
+
     if(!parent) {
       this.busy = false;
       return;
     }
+
     //final plot callback
     callback = {
       onComplete: function() {
@@ -178,6 +180,7 @@ $jit.Icicle = new Class({
         }
       }
     };
+
     //animate node positions
     if(config.animate) {
       this.clickedNode = clickedNode;
