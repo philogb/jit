@@ -435,6 +435,13 @@ tests_model = {
             """,
             'Extras': ['generators.js']
         },
+        {
+            'Title': 'Icicle tree 2',
+            'Description': 
+            """
+            """,
+            'Extras': ['generators.js']
+        },
    ],
 
     'ForceDirected': [
