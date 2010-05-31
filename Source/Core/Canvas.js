@@ -298,9 +298,17 @@ var Canvas;
     
     */
     resize: function(width, height) {
+      this.getPos(true);
+      this.translateOffsetX = this.translateOffsetY = 0;
+      this.scaleOffsetX = this.scaleOffsetY = 1;
       for(var i=0, l=this.canvases.length; i<l; i++) {
         this.canvases[i].resize(width, height);
       }
+      var style = this.element.style;
+      style.width = width + 'px';
+      style.height = height + 'px';
+      if(this.labelContainer)
+        this.labelContainer.style.width = width + 'px';
     },
     /*
       Method: translate
@@ -488,6 +496,10 @@ var Canvas;
       } else {
         this.translateToCenter();
       }
+      this.translateOffsetX =
+        this.translateOffsetY = 0;
+      this.scaleOffsetX = 
+        this.scaleOffsetY = 1;
       this.clear();
       this.viz.resize(width, height, this);
     },
