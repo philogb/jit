@@ -6,9 +6,10 @@ tests_model = {
             'Title': 'Tree Animation',
             'Description': 
             """
-            A static JSON Tree structure is used as input for this animation.<br /><br />
-            Clicking on a node should move the tree and center that node.<br /><br />
-            The centered node's children are displayed in a relations list in the right column.
+            A static JSON Tree structure is used as input for this visualization.<br /><br />
+            <b>Click</b> on a node to move the tree and center that node.<br /><br />
+            The centered node's children are displayed in a relations list in the right column.<br /><br />
+            <b>Use the mouse wheel</b> to zoom and <b>drag and drop the canvas</b> to pan.
             """,
             'Extras': ['excanvas.js'],
             'Example': True
@@ -94,6 +95,18 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example':True
         }, 
+        {
+            'Title': 'Node Events',
+            'Description': 
+            """
+            This example shows how to add node events to the visualization.<br /><br />
+            This example uses native canvas text for drawing the labels.<br /><br />
+            <b>Drag and drop</b> nodes around.
+            
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':True
+        },
         {
             'Title': 'Node Events',
             'Description': 
