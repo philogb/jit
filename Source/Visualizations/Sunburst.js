@@ -167,7 +167,7 @@ $jit.Sunburst = new Class({
     } else {
       if(canvasConfig.background) {
         canvasConfig.background = $.merge({
-          type: 'Circles',
+          type: 'Circles'
         }, canvasConfig.background);
       }
       this.canvas = new Canvas(this, canvasConfig);

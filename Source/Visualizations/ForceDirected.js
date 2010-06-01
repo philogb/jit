@@ -149,7 +149,7 @@ $jit.ForceDirected = new Class( {
     } else {
       if(canvasConfig.background) {
         canvasConfig.background = $.merge({
-          type: 'Circles',
+          type: 'Circles'
         }, canvasConfig.background);
       }
       this.canvas = new Canvas(this, canvasConfig);
@@ -400,7 +400,7 @@ $jit.ForceDirected.$extend = true;
 
   */
   ForceDirected.Label.Native = new Class( {
-    Implements: Graph.Label.Native,
+    Implements: Graph.Label.Native
   });
 
   /*
