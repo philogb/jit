@@ -37,7 +37,7 @@ var ExtrasInitializer = {
   isLabel: function(e, win) {
     e = $.event.get(e, win);
     var labelContainer = this.labelContainer,
-        target = e.target;
+        target = e.target || e.srcElement;
     if(target && target.parentNode == labelContainer)
       return target;
     return false;
