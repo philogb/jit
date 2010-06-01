@@ -366,7 +366,7 @@ tests_model = {
             """
             Loads a random generated weighted tree and renders it as Squarified Tree by default.<br> 
             """,
-            'Extras': ['generators.js']
+            'Extras': ['generators.js', 'excanvas.js']
         },
         {
             'Title': 'Animated Squarified, SliceAndDice and Strip TreeMaps',
@@ -378,7 +378,7 @@ tests_model = {
             You can <b>choose a different tiling algorithm</b> below:
             
             """,
-            'Extras': ['generators.js'],
+            'Extras': ['generators.js', 'excanvas.js'],
             'Example': True
         },
         {
@@ -390,7 +390,7 @@ tests_model = {
             There should be only one level shown at a time.<br /><br /> 
             Clicking on a band should show a new TreeMap with its most listened albums.<br /><br />            
             """,
-            'Extras': ['generators.js'],
+            'Extras': ['generators.js', 'excanvas.js'],
             'Example': True
         },
         {
@@ -403,7 +403,7 @@ tests_model = {
             You can <b>choose a different tiling algorithm</b> below:
             
             """,
-            'Extras': ['generators.js'],
+            'Extras': ['generators.js', 'excanvas.js'],
             'Example': True
         },
    ],

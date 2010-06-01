@@ -477,9 +477,11 @@ var Canvas;
     },
     translateToCenter: function(ps) {
       var size = this.getSize(),
-          width = ps? (size.width - ps.width) : size.width;
-          height = ps? (size.height - ps.height) : size.height;
-      this.getCtx().translate(width/2, height/2);
+          width = ps? (size.width - ps.width - this.translateOffsetX*2) : size.width;
+          height = ps? (size.height - ps.height - this.translateOffsetY*2) : size.height;
+      var ctx = this.getCtx();
+      ps && ctx.scale(1/this.scaleOffsetX, 1/this.scaleOffsetY);
+      ctx.translate(width/2, height/2);
     },
     resize: function(width, height) {
       var size = this.getSize(),
