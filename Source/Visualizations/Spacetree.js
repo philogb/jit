@@ -501,6 +501,10 @@ $jit.ST= (function() {
             	this.root = id;
             	this.clickedNode = clickedNode;
             	this.graph.computeLevels(this.root, 0, "ignore");
+  	        	this.geom.setRightLevelToShow(clickedNode, canvas);
+            	if (onComplete != undefined) {
+            		onComplete.onComplete();
+            	}
         	}
 
         	// delete previous orientations (if any)
@@ -508,7 +512,7 @@ $jit.ST= (function() {
 
         	if(method == 'animate') {
         		this.onClick(id, {
-        			onBeforeMove: function() {
+        			onBeforeCompute: function() {
         				$setRoot.call(that);
         				that.selectPath(clickedNode);
         			}
@@ -677,10 +681,10 @@ $jit.ST= (function() {
         var complete = $.merge(this.controller, innerController, options);
         
         if(!this.busy) {
-            this.busy= true;
-            var node=  this.graph.getNode(id);
+            this.busy = true;
+            var node = this.graph.getNode(id);
             this.selectPath(node, this.clickedNode);
-            this.clickedNode= node;
+           	this.clickedNode = node;
             complete.onBeforeCompute(node);
             complete.onBeforeRequest(node);
             this.requestNodes(node, {

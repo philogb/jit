@@ -41,24 +41,35 @@ var Loader = {
         else
             //make graph
             (function (ans, json) {
-                var getNode = function(id) {
+                var getNode = function(id, baseData) {
                     for(var w=0; w<json.length; w++) { 
                       if(json[w].id == id) {
                         return json[w];
                       }
                     }
-                    return undefined;
+                    
+                    // The node was not defined in the JSON
+                    // Let's create it
+                    var newNode = {
+                    		"id" : id,
+                    		"name" : id,
+                    		"data" : baseData
+                    	};
+                    return ans.addNode(newNode);
                 };
 
                 for(var i=0; i<json.length; i++) {
                     ans.addNode(json[i]);
-                    for(var j=0, adj = json[i].adjacencies; j<adj.length; j++) {
-                        var node = adj[j], data = {};
-                        if(typeof adj[j] != 'string') {
-                            data = node.data;
-                            node = node.nodeTo;
-                        }
-                        ans.addAdjacence(json[i], getNode(node), data);
+                    var adj = json[i].adjacencies;
+                    if (adj != undefined) {
+	                    for(var j=0; j<adj.length; j++) {
+	                        var node = adj[j], data = {};
+	                        if(typeof adj[j] != 'string') {
+	                            data = node.data;
+	                            node = node.nodeTo;
+	                        }
+	                        ans.addAdjacence(json[i], getNode(node, json[i].data), data);
+	                    }
                     }
                 }
             })(ans, json);
@@ -74,12 +85,12 @@ var Loader = {
         A JSON tree or graph structure consists of nodes, each having as properties
        - _id_ A unique identifier for the node
        - _name_ A node's name
-       - _data_ The data property contains a hash (i.e {}) where you can store all 
+       - _data_ The data optional property contains a hash (i.e {}) where you can store all 
        the information you want about this node.
         
         Hash keys prefixed with a dollar sign (i.e $) have special meaning. I will detail those properties below.
       
-        For JSON tree structures, there's an extra property _children_ of type Array which contains the node's children.
+        For JSON tree structures, there's an extra optional property _children_ of type Array which contains the node's children.
       
       Example:
 

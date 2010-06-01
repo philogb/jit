@@ -167,7 +167,13 @@ $jit.Graph = new Class({
   */  
   addNode: function(obj) { 
    if(!this.nodes[obj.id]) {  
-     var edges = this.edges[obj.id] = {}; 
+     var edges = this.edges[obj.id] = {};
+     if (obj.data == undefined) {
+    	 obj.data = {};
+     }
+     if (obj.children == undefined) {
+    	 obj.children = [];
+     }
      this.nodes[obj.id] = new Graph.Node($.extend({
         'id': obj.id,
         'name': obj.name,

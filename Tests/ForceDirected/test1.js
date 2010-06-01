@@ -3,6 +3,7 @@ function init(){
   var json = [
       {
         "adjacencies": [
+            "graphnode21", 
             {
               "nodeTo": "graphnode1",
               "nodeFrom": "graphnode0",

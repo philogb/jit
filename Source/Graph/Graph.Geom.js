@@ -40,6 +40,7 @@ Graph.Geom = new Class({
              n.exist = false;
              fx.hideLabel(n, false);
          } else {
+             n.drawn = false;
              n.exist = true;
          }
      });
