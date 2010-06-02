@@ -68,6 +68,7 @@ function init(){
       type:'stacked:gradient',
       //label styling
       Label: {
+        type: 'HTML',
         size: 13,
         family: 'Arial',
         color: 'white'

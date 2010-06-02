@@ -71,7 +71,7 @@ $jit.ST.Plot.NodeTypes.implement({
           if(dimArray[i][0] > 0)
             valAcum += (valArray[i][0] || 0);
         }
-        if(prev) {
+        if(prev && label.type == 'Native') {
           ctx.save();
           ctx.beginPath();
           ctx.fillStyle = ctx.strokeStyle = label.color;
@@ -148,7 +148,6 @@ $jit.AreaChart = new Class({
       siblingOffset: 0,
       subtreeOffset: 0,
       useCanvas: config.useCanvas,
-      withLabels: false,
       Label: {
         type: config.Label.type
       },
@@ -190,7 +189,7 @@ $jit.AreaChart = new Class({
       },
       onCreateLabel: function(domElement, node) {
         var labelConf = config.Label;
-        if(config.showLabels) {
+        if(config.showLabels && node.getData('prev')) {
           var nlbs = {
             wrapper: document.createElement('div'),
             aggregate: document.createElement('div'),
@@ -210,17 +209,48 @@ $jit.AreaChart = new Class({
             wrapper.appendChild(aggregate);
           }
           wrapperStyle.position = 'relative';
+          wrapperStyle.overflow = 'visible';
+          wrapperStyle.fontSize = labelConf.size + 'px';
+          wrapperStyle.fontFamily = labelConf.family;
+          wrapperStyle.color = labelConf.color;
+          wrapperStyle.textAlign = 'center';
           aggregateStyle.position = labelStyle.position = 'absolute';
-          aggregateStyle.fontSize = labelStyle.fontSize = labelConf.size + 'px';
+          
+          domElement.style.width = node.getData('width') + 'px';
+          domElement.style.height = node.getData('height') + 'px';
+          label.innerHTML = node.name;
+          
           domElement.appendChild(wrapper);
         }
       },
       onPlaceLabel: function(domElement, node) {
-        var wrapperStyle = ,
-            labelStyle = label.style,
-            aggregateStyle = aggregate.style;
-        wrapperStyle.width = aggregateStyle.width = labelStyle.width = domElement.width;
+        if(!node.getData('prev')) return;
+        var labels = nodeLabels[node.id],
+            wrapperStyle = labels.wrapper.style,
+            labelStyle = labels.label.style,
+            aggregateStyle = labels.aggregate.style,
+            width = node.getData('width'),
+            height = node.getData('height'),
+            dimArray = node.getData('dimArray'),
+            valArray = node.getData('valueArray'),
+            font = parseInt(wrapperStyle.fontSize, 10),
+            domStyle = domElement.style;
         
+        if(dimArray && valArray) {
+          wrapperStyle.width = aggregateStyle.width = labelStyle.width = domElement.style.width = width + 'px';
+          aggregateStyle.left = labelStyle.left = -width/2 + 'px';
+          for(var i=0, l=valArray.length, acum=0, leftAcum=0; i<l; i++) {
+            if(dimArray[i][0] > 0) {
+              acum+= valArray[i][0];
+              leftAcum+= dimArray[i][0];
+            }
+          }
+          aggregateStyle.top = (-font - config.labelOffset) + 'px';
+          labelStyle.top = (config.labelOffset + leftAcum) + 'px';
+          domElement.style.top = parseInt(domElement.style.top, 10) - leftAcum + 'px';
+          domElement.style.height = wrapperStyle.height = leftAcum + 'px';
+          labels.aggregate.innerHTML = acum;
+        }
       }
     });
     
