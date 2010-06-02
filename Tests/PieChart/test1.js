@@ -68,6 +68,7 @@ function init(){
         resizeLabels: 7,
         //label styling
         Label: {
+          type: 'HTML',
           size: 20,
           family: 'Arial',
           color: 'white'

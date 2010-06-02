@@ -80,7 +80,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
           ctx.stroke();
           ctx.restore();
         }
-        if(showLabels) {
+        if(showLabels && label.type == 'Native') {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
           var scale = resizeLabels? node.getData('normalizedDim') : 1,
@@ -146,9 +146,9 @@ $jit.PieChart = new Class({
     var sb = new $jit.Sunburst({
       injectInto: config.injectInto,
       useCanvas: config.useCanvas,
-      withLabels: false,
+      withLabels: config.Label.type != 'Native',
       Label: {
-        type: 'Native'
+        type: config.Label.type
       },
       Node: {
         overridable: true,
@@ -161,6 +161,7 @@ $jit.PieChart = new Class({
       },
       Tips: {
         enable: config.Tips.enable,
+        type: 'Native',
         force: true,
         onShow: function(tip, node, contains) {
           var elem = contains;
@@ -169,6 +170,51 @@ $jit.PieChart = new Class({
         },
         onHide: function() {
           that.select(false, false, false);
+        }
+      },
+      onCreateLabel: function(domElement, node) {
+        var labelConf = config.Label;
+        if(config.showLabels) {
+          var style = domElement.style;
+          style.fontSize = labelConf.size + 'px';
+          style.fontFamily = labelConf.family;
+          style.color = labelConf.color;
+          style.textAlign = 'center';
+          domElement.innerHTML = node.name;
+        }
+      },
+      onPlaceLabel: function(domElement, node) {
+        if(!config.showLabels) return;
+        var pos = node.pos.getp(true),
+            dimArray = node.getData('dimArray'),
+            span = node.getData('span') / 2,
+            theta = node.pos.theta,
+            begin = theta - span,
+            end = theta + span,
+            polar = new Polar;
+      
+        var showLabels = config.showLabels,
+            resizeLabels = config.resizeLabels,
+            label = config.Label;
+        
+        if (dimArray) {
+          for (var i=0, l=dimArray.length, acum=0; i<l; i++) {
+            acum += dimArray[i];
+          }
+          var scale = resizeLabels? node.getData('normalizedDim') : 1,
+              fontSize = (label.size * scale) >> 0;
+          fontSize = fontSize < +resizeLabels? +resizeLabels : fontSize;
+          domElement.style.fontSize = fontSize + 'px';
+          polar.rho = acum + config.labelOffset + config.sliceOffset;
+          polar.theta = (begin + end) / 2;
+          var pos = polar.getc(true);
+          var radius = that.canvas.getSize();
+          var labelPos = {
+            x: Math.round(pos.x + radius.width / 2),
+            y: Math.round(pos.y + radius.height / 2)
+          };
+          domElement.style.left = labelPos.x + 'px';
+          domElement.style.top = labelPos.y + 'px';
         }
       }
     });

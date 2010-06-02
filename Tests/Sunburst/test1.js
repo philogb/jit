@@ -1815,6 +1815,7 @@ function init(){
     var infovis = document.getElementById('infovis');
     var w = infovis.offsetWidth, h = infovis.offsetHeight;
     var colors = ['#33a', '#55b', '#77c', '#99d', '#aae', '#bf0', '#cf5', '#dfa', '#faccff', '#ffccff', '#CCC', '#C37'];
+    var labels = 'Native';
     //init Sunburst
     var sb = new $jit.Sunburst({
         'injectInto': 'infovis',
@@ -1834,7 +1835,7 @@ function init(){
           overridable: true
         },
         Label: {
-          type: 'Native'
+          type: labels
         },
 
         Tips: {
