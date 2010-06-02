@@ -138,7 +138,8 @@ $jit.AreaChart = new Class({
   initializeViz: function() {
     var config = this.config,
         that = this,
-        nodeType = config.type.split(":")[0];
+        nodeType = config.type.split(":")[0],
+        nodeLabels = {};
 
     var st = new $jit.ST({
       injectInto: config.injectInto,
@@ -149,7 +150,7 @@ $jit.AreaChart = new Class({
       useCanvas: config.useCanvas,
       withLabels: false,
       Label: {
-        type: 'Native'
+        type: config.Label.type
       },
       Node: {
         overridable: true,
@@ -163,6 +164,7 @@ $jit.AreaChart = new Class({
       },
       Tips: {
         enable: config.Tips.enable,
+        type: 'Native',
         force: true,
         onShow: function(tip, node, contains) {
           var elem = contains;
@@ -175,6 +177,7 @@ $jit.AreaChart = new Class({
       },
       Events: {
         enable: true,
+        type: 'Native',
         onClick: function(node, eventInfo, evt) {
           if(!config.filterOnClick) return;
           var elem = eventInfo.getContains();
@@ -184,6 +187,40 @@ $jit.AreaChart = new Class({
           if(!config.restoreOnRightClick) return;
           that.restore();
         }
+      },
+      onCreateLabel: function(domElement, node) {
+        var labelConf = config.Label;
+        if(config.showLabels) {
+          var nlbs = {
+            wrapper: document.createElement('div'),
+            aggregate: document.createElement('div'),
+            label: document.createElement('div')
+          };
+          var wrapper = nlbs.wrapper,
+              label = nlbs.label,
+              aggregate = nlbs.aggregate,
+              wrapperStyle = wrapper.style,
+              labelStyle = label.style,
+              aggregateStyle = aggregate.style;
+          //store node labels
+          nodeLabels[node.id] = nlbs;
+          //append labels
+          wrapper.appendChild(label);
+          if(config.showAggregates) {
+            wrapper.appendChild(aggregate);
+          }
+          wrapperStyle.position = 'relative';
+          aggregateStyle.position = labelStyle.position = 'absolute';
+          aggregateStyle.fontSize = labelStyle.fontSize = labelConf.size + 'px';
+          domElement.appendChild(wrapper);
+        }
+      },
+      onPlaceLabel: function(domElement, node) {
+        var wrapperStyle = ,
+            labelStyle = label.style,
+            aggregateStyle = aggregate.style;
+        wrapperStyle.width = aggregateStyle.width = labelStyle.width = domElement.width;
+        
       }
     });
     
