@@ -375,20 +375,38 @@ Graph.Op = {
       (end code)
     
     */
-    morph: function(json, opt) {
+    morph: function(json, opt, extraModes) {
         var viz = this.viz;
         var options = $.merge(this.options, viz.controller, opt), root = viz.root;
         var graph;
+        //TODO(nico) this hack makes morphing work with the Hypertree. 
+        //Need to check if it has been solved and this can be removed.
         viz.root = opt.id || viz.root;
         switch(options.type) {
             case 'nothing':
                 graph = viz.construct(json);
                 graph.eachNode(function(elem) {
-                    elem.eachAdjacency(function(adj) {
-                        viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
-                    });
+                  var nodeExists = viz.graph.hasNode(elem.id);  
+                  elem.eachAdjacency(function(adj) {
+                    var adjExists = !!viz.graph.getAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
+                    viz.graph.addAdjacence(adj.nodeFrom, adj.nodeTo, adj.data);
+                    //Update data properties if the node existed
+                    if(adjExists) {
+                      var addedAdj = viz.graph.getAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
+                      for(var prop in (adj.data || {})) {
+                        addedAdj.data[prop] = adj.data[prop];
+                      }
+                    }
+                  });
+                  //Update data properties if the node existed
+                  if(nodeExists) {
+                    var addedNode = viz.graph.getNode(elem.id);
+                    for(var prop in (elem.data || {})) {
+                      addedNode.data[prop] = elem.data[prop];
+                    }
+                  }
                 });
-                graph.eachNode(function(elem) {
+                viz.graph.eachNode(function(elem) {
                     elem.eachAdjacency(function(adj) {
                         if(!graph.getAdjacence(adj.nodeFrom.id, adj.nodeTo.id)) {
                             viz.graph.removeAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
@@ -409,15 +427,24 @@ Graph.Op = {
             case 'fade:seq': case 'fade': case 'fade:con':
                 that = this;
                 graph = viz.construct(json);
-                //preprocessing for adding nodes.
-                var fadeEdges = this.preprocessSum(graph);
                 //preprocessing for nodes to delete.
                 viz.graph.eachNode(function(elem) {
-                    if(!graph.hasNode(elem.id)) {
+                  var graphNode = graph.getNode(elem.id);   
+                  if(!graphNode) {
                       elem.setData('alpha', 1);
                       elem.setData('alpha', 1, 'start');
                       elem.setData('alpha', 0, 'end');
                       elem.ignore = true;
+                    } else {
+                      //Update node data information
+                      var graphNodeData = graphNode.data;
+                      for(var prop in graphNodeData) {
+                        if(prop[0] == '$' && prop != '$type') {
+                          elem.endData[prop] = graphNodeData[prop];
+                        } else {
+                          elem.data[prop] = graphNodeData[prop];
+                        }
+                      }
                     }
                 }); 
                 viz.graph.eachNode(function(elem) {
@@ -435,7 +462,22 @@ Graph.Op = {
                         }
                     });
                 }); 
-                var modes = !fadeEdges? ['node-property:alpha'] : ['node-property:alpha', 'edge-property:alpha'];
+                //preprocessing for adding nodes.
+                var fadeEdges = this.preprocessSum(graph);
+
+                var modes = !fadeEdges? ['node-property:alpha'] : 
+                                        ['node-property:alpha', 
+                                         'edge-property:alpha'];
+                //Append extra node-property animations (if any)
+                modes[0] = modes[0] + ((extraModes && ('node-property' in extraModes))? 
+                    $.splat(extraModes['node-property']).join(':') : '');
+                //Append extra edge-property animations (if any)
+                modes[1] = (modes[1] || 'edge-property:alpha') + ((extraModes && ('edge-property' in extraModes))? 
+                    $.splat(extraModes['edge-property']).join(':') : '');
+                //Add label-property animations (if any)
+                if(extraModes && ('label-property' in extraModes)) {
+                  modes.push('label-property' + extraModes['label-property'].join(':'))
+                }
                 viz.reposition();
                 viz.graph.eachNode(function(elem) {
                     if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {

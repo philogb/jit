@@ -63,7 +63,8 @@ Graph.Plot = {
   
         //label parsers
         'label': {
-          'size': 'number'
+          'size': 'number',
+          'color': 'color'
         },
   
         //Number interpolator
@@ -161,6 +162,10 @@ Graph.Plot = {
           this['edge'](elem, props, delta, 'map', 'getData', 'setData');  
         },
 
+        'label-property': function(elem, props, delta) {
+          this['node'](elem, props, delta, 'label', 'getLabelData', 'setLabelData');
+        },
+        
         'node-style': function(elem, props, delta) {
           this['node'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');
         },
