@@ -71,6 +71,7 @@ $jit.ST.Plot.NodeTypes.implement({
           if(dimArray[i][0] > 0)
             valAcum += (valArray[i][0] || 0);
         }
+        console.log(label.type);
         if(prev && label.type == 'Native') {
           ctx.save();
           ctx.beginPath();
@@ -147,6 +148,7 @@ $jit.AreaChart = new Class({
       levelDistance: 0,
       siblingOffset: 0,
       subtreeOffset: 0,
+      withLabels: config.Label.type != 'Native',
       useCanvas: config.useCanvas,
       Label: {
         type: config.Label.type

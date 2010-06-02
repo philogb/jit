@@ -64,7 +64,7 @@ $jit.ST.Plot.NodeTypes.implement({
           }
           ctx.restore();
         }
-        if(aggregates || showLabels) {
+        if(label.type == 'Native' && (aggregates || showLabels)) {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
           ctx.font = label.size + 'px ' + label.family;
@@ -160,17 +160,19 @@ $jit.BarChart = new Class({
   initializeViz: function() {
     var config = this.config, that = this;
     var nodeType = config.type.split(":")[0],
-        horz = config.orientation == 'horizontal';
+        horz = config.orientation == 'horizontal',
+        nodeLabels = {};
+    
     var st = new $jit.ST({
       injectInto: config.injectInto,
       orientation: horz? 'left' : 'bottom',
       levelDistance: 0,
       siblingOffset: config.barsOffset,
       subtreeOffset: 0,
+      withLabels: config.Label.type != 'Native',      
       useCanvas: config.useCanvas,
-      withLabels: false,
       Label: {
-        type: 'Native'
+        type: config.Label.type
       },
       Node: {
         overridable: true,
@@ -184,6 +186,7 @@ $jit.BarChart = new Class({
       },
       Tips: {
         enable: config.Tips.enable,
+        type: 'Native',
         force: true,
         onShow: function(tip, node, contains) {
           var elem = contains;
@@ -192,6 +195,70 @@ $jit.BarChart = new Class({
         },
         onHide: function() {
           that.select(false, false, false);
+        }
+      },
+      onCreateLabel: function(domElement, node) {
+        var labelConf = config.Label;
+        if(config.showLabels) {
+          var nlbs = {
+            wrapper: document.createElement('div'),
+            aggregate: document.createElement('div'),
+            label: document.createElement('div')
+          };
+          var wrapper = nlbs.wrapper,
+              label = nlbs.label,
+              aggregate = nlbs.aggregate,
+              wrapperStyle = wrapper.style,
+              labelStyle = label.style,
+              aggregateStyle = aggregate.style;
+          //store node labels
+          nodeLabels[node.id] = nlbs;
+          //append labels
+          wrapper.appendChild(label);
+          if(config.showAggregates) {
+            wrapper.appendChild(aggregate);
+          }
+          wrapperStyle.position = 'relative';
+          wrapperStyle.overflow = 'visible';
+          wrapperStyle.fontSize = labelConf.size + 'px';
+          wrapperStyle.fontFamily = labelConf.family;
+          wrapperStyle.color = labelConf.color;
+          wrapperStyle.textAlign = 'center';
+          aggregateStyle.position = labelStyle.position = 'absolute';
+          
+          domElement.style.width = node.getData('width') + 'px';
+          domElement.style.height = node.getData('height') + 'px';
+          aggregateStyle.left = labelStyle.left =  + '0px';
+
+          label.innerHTML = node.name;
+          
+          domElement.appendChild(wrapper);
+        }
+      },
+      onPlaceLabel: function(domElement, node) {
+        var labels = nodeLabels[node.id],
+            wrapperStyle = labels.wrapper.style,
+            labelStyle = labels.label.style,
+            aggregateStyle = labels.aggregate.style,
+            width = node.getData('width'),
+            height = node.getData('height'),
+            dimArray = node.getData('dimArray'),
+            valArray = node.getData('valueArray'),
+            font = parseInt(wrapperStyle.fontSize, 10),
+            domStyle = domElement.style;
+        
+        if(dimArray && valArray) {
+          wrapperStyle.width = aggregateStyle.width = labelStyle.width = domElement.style.width = width + 'px';
+          for(var i=0, l=valArray.length, acum=0; i<l; i++) {
+            if(dimArray[i] > 0) {
+              acum+= valArray[i];
+            }
+          }
+          aggregateStyle.top = (-font - config.labelOffset) + 'px';
+          labelStyle.top = (config.labelOffset + height) + 'px';
+          domElement.style.top = parseInt(domElement.style.top, 10) - height + 'px';
+          domElement.style.height = wrapperStyle.height = height + 'px';
+          labels.aggregate.innerHTML = acum;
         }
       }
     });

@@ -68,7 +68,7 @@ function init(){
       type:'stacked:gradient',
       //label styling
       Label: {
-        type: 'HTML',
+        type: 'Native',
         size: 13,
         family: 'Arial',
         color: 'white'

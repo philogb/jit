@@ -65,6 +65,7 @@ function init(){
         showAggregates:true,
         showLabels:true,
         Label: {
+          type:'Native',
           size: 13,
           family: 'Arial',
           color: 'white'
