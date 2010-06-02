@@ -39,7 +39,6 @@ function init(){
     },
 
     Label: {
-      //type: "HTML"
       type: "Native"
     },
 

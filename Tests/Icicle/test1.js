@@ -47,8 +47,7 @@ function init(){
     },
 
     Label: {
-      //type: "HTML"
-      type: "Native"
+      type: "HTML"
     },
 
     //Add the name of the node in the correponding label
@@ -81,3 +80,4 @@ function init(){
   icicle.loadJSON(json);
   icicle.refresh();
 }
+

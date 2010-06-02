@@ -1,16 +1,47 @@
 $def with (model, type, number, max)
 
-$if number > 1:
-    <a href="/testcase/$type/${number -1}/" title="previous">previous</a>
-$if number < max:
-    <a href="/testcase/$type/${number +1}/" title="next">next</a>
-
-
 <div class="text">
-<h4>
-$model['Title']
-</h4>
-$:model['Description']
+  $if number > 1:
+      <a href="/testcase/$type/${number -1}/" title="previous">previous</a>
+  $if number < max:
+      <a href="/testcase/$type/${number +1}/" title="next">next</a>
+
+  <h4>
+    $model['Title']
+  </h4>
+  $:model['Description']
+
+  <div>
+    <label for="s-orientation">Orientation: </label>
+    <select name="s-orientation" id="s-orientation">
+      <option value="h" selected>horizontal</option>
+      <option value="v">vertical</option>
+    </select>
+    <br>
+    <label for="i-levels-to-show">Max levels: </label>
+    <input value="-1" id="i-levels-to-show" name="i-levels-to-show" style="width: 30px">
+  </div>
+  <p>
+    Click on a node to make it the root node, right click to make the parent of
+    the current node the root.
+  </p>
 </div>
 
 <div id="id-list"></div>
+
+<script>
+  var jit = $$jit
+  var select = jit.id('s-orientation');
+  jit.util.addEvent(select, 'change', function () {
+    icicle.layout.orientation = select[select.selectedIndex].value;
+    icicle.refresh();
+  });
+
+  var levelsToShowInput = jit.id('i-levels-to-show');
+  jit.util.addEvent(levelsToShowInput, 'change', function () {
+    try {
+      icicle.config.levelsToShow = parseInt(levelsToShowInput.value);
+      icicle.refresh();
+    } catch(e) {}
+  });
+</script>
