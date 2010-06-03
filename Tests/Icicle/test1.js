@@ -14,6 +14,24 @@ function init(){
     dim: true
   });
 
+  var startColor = [Math.floor(Math.random()*360), 80, 100]; // HSV
+  function setDepthColors(json, depth, area) {
+    var color = startColor.slice(0);
+    // some rainbowy color according to depth
+    color[0] = (color[0] + 30 * depth) % 360;
+    // different saturation according to area percentage
+    color[1] = area / 2 + 50;
+    json.data["$color"] = $jit.util.hsvToHex(color);
+
+    var totalArea = 0;
+    for (var i=0; i < json.children.length; i++)
+      totalArea += json.children[i].data["$area"];
+
+    for (var i=0; i < json.children.length; i++)
+      setDepthColors(json.children[i], depth+1, json.children[i].data["$area"] / totalArea * 100);
+  }
+  setDepthColors(json, 0, 100);
+
   icicle  = new $jit.Icicle( {
     'injectInto': 'infovis',
     //orientation: "v",
@@ -47,7 +65,7 @@ function init(){
     },
 
     Label: {
-      type: "HTML"
+      type: labelType // "Native" or "HTML"
     },
 
     //Add the name of the node in the correponding label
@@ -57,17 +75,19 @@ function init(){
       if (this.orientation == "h" && node.getData('height') > 15 || this.orientation == "v" && node.getData('width') > 30)
         domElement.innerHTML = node.name;
       var style = domElement.style;
+      style.fontSize = '0.9em';
       style.display = '';
-      //style.cursor = 'pointer';
+      style.cursor = 'pointer';
       style.color = '#333';
       style.border = '1px solid transparent';
       domElement.onmouseover = function() {
-        style.border = '2px solid #9FD4FF';
+        style.border = '1px solid #fff';
       };
       domElement.onmouseout = function() {
-        style.border = 'none';
+        style.border = '1px solid transparent';
       };
     },
+
     //Change some label dom properties.
     //This method is called each time a label is plotted.
     onPlaceLabel: function(domElement, node){

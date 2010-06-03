@@ -334,10 +334,11 @@ $jit.Icicle.Label.Native = new Class({
 
     var pos = node.pos.getc(true);
 
+    ctx.fillStyle = node.getLabelData('color') || "#333";
     ctx.fillText(node.name,
                  pos.x + node.getData("width") / 2,
                  pos.y + node.getData("height") / 2);
-  },
+  }
 });
 
 /*
@@ -467,16 +468,13 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
       var posx = pos.x + offset / 2, posy = pos.y + offset / 2;
       var ctx = canvas.getCtx();
 
-      var startColor = [15, 100, 100]; // HSV
-      var color = startColor.slice(0);
+      var color, borderColor;
+      if (color = node.getData('color'))
+        ctx.fillStyle = color;
+      if (borderColor = node.getData('borderColor'))
+        ctx.strokeStyle = borderColor;
 
-      color[0] = (color[0] + 30 * node._depth) % 360;
-      color[1] = ((color[1] - (1 - node.getData('height') / this.viz.canvas.getSize().height)*100/4) + 100) % 101;
-
-      ctx.fillStyle = $.hsvToHex(color);
       ctx.fillRect(posx, posy, Math.max(0, width - offset), Math.max(0, height - offset));
-      color[2] = 40;
-      ctx.strokeStyle = $.hsvToHex(color);
       ctx.strokeRect(pos.x, pos.y, width, height);
     },
 
