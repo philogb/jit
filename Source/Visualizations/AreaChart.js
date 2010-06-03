@@ -71,7 +71,6 @@ $jit.ST.Plot.NodeTypes.implement({
           if(dimArray[i][0] > 0)
             valAcum += (valArray[i][0] || 0);
         }
-        console.log(label.type);
         if(prev && label.type == 'Native') {
           ctx.save();
           ctx.beginPath();
