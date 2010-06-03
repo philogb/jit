@@ -228,7 +228,7 @@ $jit.BarChart = new Class({
           
           domElement.style.width = node.getData('width') + 'px';
           domElement.style.height = node.getData('height') + 'px';
-          aggregateStyle.left = labelStyle.left =  + '0px';
+          aggregateStyle.left = labelStyle.left =  '0px';
 
           label.innerHTML = node.name;
           
@@ -254,10 +254,18 @@ $jit.BarChart = new Class({
               acum+= valArray[i];
             }
           }
-          aggregateStyle.top = (-font - config.labelOffset) + 'px';
-          labelStyle.top = (config.labelOffset + height) + 'px';
-          domElement.style.top = parseInt(domElement.style.top, 10) - height + 'px';
-          domElement.style.height = wrapperStyle.height = height + 'px';
+          if(config.orientation == 'horizontal') {
+            aggregateStyle.textAlign = 'right';
+            labelStyle.textAlign = 'left';
+            labelStyle.textIndex = aggregateStyle.textIndent = config.labelOffset + 'px';
+            aggregateStyle.top = labelStyle.top = (height-font)/2 + 'px';
+            domElement.style.height = wrapperStyle.height = height + 'px';
+          } else {
+            aggregateStyle.top = (-font - config.labelOffset) + 'px';
+            labelStyle.top = (config.labelOffset + height) + 'px';
+            domElement.style.top = parseInt(domElement.style.top, 10) - height + 'px';
+            domElement.style.height = wrapperStyle.height = height + 'px';
+          }
           labels.aggregate.innerHTML = acum;
         }
       }
