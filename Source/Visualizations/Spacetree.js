@@ -190,7 +190,8 @@ $jit.ST= (function() {
             if(config.multitree && !('$orn' in n.data) 
             		&& n.anySubnode(function(ch){ return ch.exist && !ch.drawn; })) {
             	nodeArray.push(n);
-            } else if(n.drawn && !n.anySubnode("drawn")) {
+            	//TODO(nico): double check that !n.drawn && n.exist condition
+            } else if((n.drawn && !n.anySubnode("drawn")) || (!n.drawn && n.exist)) {
               nodeArray.push(n);
             }
         });
@@ -502,9 +503,7 @@ $jit.ST= (function() {
             	this.clickedNode = clickedNode;
             	this.graph.computeLevels(this.root, 0, "ignore");
   	        	this.geom.setRightLevelToShow(clickedNode, canvas);
-            	if (onComplete != undefined) {
-            		onComplete.onComplete();
-            	}
+            	onComplete && onComplete.onComplete();
         	}
 
         	// delete previous orientations (if any)
@@ -512,10 +511,10 @@ $jit.ST= (function() {
 
         	if(method == 'animate') {
         		this.onClick(id, {
-        			onBeforeCompute: function() {
-        				$setRoot.call(that);
-        				that.selectPath(clickedNode);
-        			}
+        			onBeforeCompute: function(node) {
+                $setRoot.call(that);
+                that.selectPath(clickedNode);
+        		  }
         		});
         	} else if(method == 'replot') {
         		$setRoot.call(this);
