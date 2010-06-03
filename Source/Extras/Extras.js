@@ -50,7 +50,10 @@ var EventsInterface = {
   onMouseMove: $.empty,
   onMouseOver: $.empty,
   onMouseOut: $.empty,
-  onMouseWheel: $.empty
+  onMouseWheel: $.empty,
+  onTouchStart: $.empty,
+  onTouchMove: $.empty,
+  onTouchEnd: $.empty
 };
 
 var MouseEventsManager = new Class({
@@ -86,6 +89,15 @@ var MouseEventsManager = new Class({
       },
       'mouseout': function(e, win) {
         that.handleEvent('MouseOut', e, win, that.makeEventObject(e, win));
+      },
+      'touchstart': function(e, win) {
+        that.handleEvent('TouchStart', e, win, that.makeEventObject(e, win));
+      },
+      'touchmove': function(e, win) {
+        that.handleEvent('TouchMove', e, win, that.makeEventObject(e, win));
+      },
+      'touchend': function(e, win) {
+        that.handleEvent('TouchEnd', e, win, that.makeEventObject(e, win));
       }
     });
     //attach mousewheel event
@@ -208,6 +220,8 @@ Extras.Classes.Events = new Class({
     this.types = this.viz.fx.nodeTypes;
     this.hoveredNode = false;
     this.pressedNode = false;
+    this.touchedNode = false;
+    this.touchMoved = false;
     this.moved = false;
   },
   
@@ -303,6 +317,32 @@ Extras.Classes.Events = new Class({
     var evt = $.event.get(e, win);
     this.pressedNode = event.getNode();
     this.config.onDragStart(this.pressedNode, event, evt);
+  },
+  
+  onTouchStart: function(e, win, event) {
+    var evt = $.event.get(e, win);
+    this.touchedNode = event.getNode();
+    this.config.onTouchStart(this.touchedNode, event, evt);
+  },
+  
+  onTouchMove: function(e, win, event) {
+    var evt = $.event.get(e, win);
+    if(this.touchedNode) {
+      this.touchMoved = true;
+      this.config.onTouchMove(this.touchedNode, event, evt);
+    }
+  },
+  
+  onTouchEnd: function(e, win, event) {
+    var evt = $.event.get(e, win);
+    if(this.touchedNode) {
+      if(this.touchMoved) {
+        this.config.onDragEnd(this.touchedNode, event, evt);
+      } else {
+        this.config.onDragCancel(this.touchedNode, event, evt);
+      }
+      this.touchedNode = this.touchMoved = false;
+    }
   }
 });
 

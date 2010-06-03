@@ -376,7 +376,7 @@ function init(){
         Navigation: {
           enable: true,
           panning: true,
-          zooming: 4
+          zooming: 10
         },
         //Set Node and Edge styles.
         Node: {

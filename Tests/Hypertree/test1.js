@@ -324,13 +324,15 @@ function init(){
     
     //init Hypertree
     var ht = new $jit.Hypertree({
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
+        injectInto: 'infovis',
+        width: w,
+        height: h,
+        //Add navigation capabilities:
+        //zooming by scrolling and panning.
         Navigation: {
-          enable:true,
-          panning:true,
-          zooming:0.5
+          enable: true,
+          panning: true,
+          zooming: 10
         },
         //Change node and edge styles such as
         //color, width and dimensions.
@@ -338,12 +340,10 @@ function init(){
             dim: 9,
             color: "#f00"
         },
-        
         Edge: {
             lineWidth: 2,
             color: "#088"
         },
-        
         onBeforeCompute: function(node){
             Log.write("centering");
         },

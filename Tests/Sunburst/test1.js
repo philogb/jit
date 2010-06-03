@@ -1824,9 +1824,9 @@ function init(){
         //Change node and edge styles such as
         //color, width and dimensions.
         Navigation: {
-          enable:false,
-          panning:true,
-          zooming:0.5
+          enable: false,
+          panning: true,
+          zooming: 10
         },
         Node: {
           dim: 9,

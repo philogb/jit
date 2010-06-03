@@ -11,11 +11,6 @@ function init(){
         subtreeOffset: 8,
         siblingOffset: 5,
         levelDistance: 50,
-        Navigation: {
-          enable:true,
-          panning:true,
-          zooming:0.05
-        },
         Node: {
             overridable: true,
             height: 20,

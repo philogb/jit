@@ -459,7 +459,7 @@ function init(){
       //Enable panning events only if we're dragging the empty
       //canvas (and not a node).
       panning: 'avoid nodes',
-      zooming: 2 //zoom speed. higher is more sensible
+      zooming: 10 //zoom speed. higher is more sensible
     },
     // Change node and edge styles such as
     // color and width.

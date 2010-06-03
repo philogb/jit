@@ -202,6 +202,14 @@ var Canvas;
       }
       this.element.appendChild(this.labelContainer);
       wrapper.appendChild(this.element);
+      //Update canvas position when the page is scrolled.
+      var timer = null, that = this;
+      $.addEvent(window, 'scroll', function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+          that.getPos(true); //update canvas position
+        }, 500);
+      });
     },
     /*
       Method: getCtx

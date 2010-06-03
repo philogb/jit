@@ -42,7 +42,7 @@ function init(){
     Navigation: {
       enable:true,
       panning:true,
-      zooming:0.5
+      zooming:10
     },
     //Allow tips
     Tips: {

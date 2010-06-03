@@ -12,5 +12,8 @@ Options.Events = {
   onDragMove: $.empty,
   onDragCancel: $.empty,
   onDragEnd: $.empty,
+  onTouchStart: $.empty,
+  onTouchMove: $.empty,
+  onTouchEnd: $.empty,
   onMouseWheel: $.empty
 };
