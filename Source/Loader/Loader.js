@@ -33,44 +33,44 @@ var Loader = {
             //make tree
             (function (ans, json) {
                 ans.addNode(json);
-                for(var i=0, ch = json.children; i<ch.length; i++) {
+                if(json.children) {
+                  for(var i=0, ch = json.children; i<ch.length; i++) {
                     ans.addAdjacence(json, ch[i]);
                     arguments.callee(ans, ch[i]);
+                  }
                 }
             })(ans, json);
         else
             //make graph
             (function (ans, json) {
-                var getNode = function(id, baseData) {
-                    for(var w=0; w<json.length; w++) { 
-                      if(json[w].id == id) {
-                        return json[w];
-                      }
+                var getNode = function(id) {
+                  for(var i=0, l=json.length; i<l; i++) {
+                    if(json[i].id == id) {
+                      return json[i];
                     }
-                    
-                    // The node was not defined in the JSON
-                    // Let's create it
-                    var newNode = {
-                    		"id" : id,
-                    		"name" : id,
-                    		"data" : baseData
-                    	};
-                    return ans.addNode(newNode);
+                  }
+                  // The node was not defined in the JSON
+                  // Let's create it
+                  var newNode = {
+                		"id" : id,
+                		"name" : id
+                	};
+                  return ans.addNode(newNode);
                 };
 
-                for(var i=0; i<json.length; i++) {
-                    ans.addNode(json[i]);
-                    var adj = json[i].adjacencies;
-                    if (adj != undefined) {
-	                    for(var j=0; j<adj.length; j++) {
-	                        var node = adj[j], data = {};
-	                        if(typeof adj[j] != 'string') {
-	                            data = node.data;
-	                            node = node.nodeTo;
-	                        }
-	                        ans.addAdjacence(json[i], getNode(node, json[i].data), data);
-	                    }
+                for(var i=0, l=json.length; i<l; i++) {
+                  ans.addNode(json[i]);
+                  var adj = json[i].adjacencies;
+                  if (adj) {
+                    for(var j=0, lj=adj.length; j<lj; j++) {
+                      var node = adj[j], data = {};
+                      if(typeof adj[j] != 'string') {
+                        data = node.data;
+                        node = node.nodeTo;
+                      }
+                      ans.addAdjacence(json[i], getNode(node), data);
                     }
+                  }
                 }
             })(ans, json);
 

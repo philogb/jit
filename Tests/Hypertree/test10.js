@@ -352,7 +352,7 @@ function init(){
         
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
-            addEvent(domElement, 'click', function(){
+            $jit.util.addEvent(domElement, 'click', function(){
                 ht.onClick(node.id);
             });
         },
@@ -443,7 +443,7 @@ function init(){
         transitions = document.getElementById('transitions'), 
         easing = document.getElementById('easing');
     
-    addEvent(nodeTypes, 'change', function(){
+    $jit.util.addEvent(nodeTypes, 'change', function(){
         var nodeOpt = nodeOptions[nodeTypes.selectedIndex];
         for (var prop in nodeOpt) {
             ht.config.Node[prop] = nodeOpt[prop];
@@ -452,7 +452,7 @@ function init(){
         ht.controller.onAfterCompute();
     });
     
-    addEvent(edgeTypes, 'change', function(){
+    $jit.util.addEvent(edgeTypes, 'change', function(){
         var edgeOpt = edgeOptions[edgeTypes.selectedIndex];
         ht.config.Edge.type = edgeOpt;
         ht.refresh();

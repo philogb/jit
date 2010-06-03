@@ -450,7 +450,7 @@ function init(){
   // end
   // init ForceDirected
   var fd = new $jit.ForceDirected({
-    //id of the div visualization container
+    //id of the visualization container
     injectInto: 'infovis',
     //Enable zooming and panning
     //with scrolling and DnD
@@ -479,16 +479,23 @@ function init(){
     Events: {
       enable: true,
       type: 'Native',
-      onDragMove: function(node, eventInfo, e) {
-        var pos = eventInfo.getPos();
-        node.pos.setc(pos.x, pos.y);
-        fd.plot();
-      },
+      //Change cursor style when hovering a node
       onMouseEnter: function() {
         fd.canvas.getElement().style.cursor = 'move';
       },
       onMouseLeave: function() {
         fd.canvas.getElement().style.cursor = '';
+      },
+      //Update node positions when dragged
+      onDragMove: function(node, eventInfo, e) {
+        var pos = eventInfo.getPos();
+        node.pos.setc(pos.x, pos.y);
+        fd.plot();
+      },
+      //Implement the same handler for touchscreens
+      onTouchMove: function(node, eventInfo, e) {
+        $jit.util.event.stop(e); //stop default touchmove event
+        this.onDragMove(node, eventInfo, e);
       }
     },
     //Number of iterations for the FD algorithm
@@ -498,8 +505,8 @@ function init(){
     // This method is only triggered
     // on label creation and only for DOM labels (not native canvas ones).
     onCreateLabel: function(domElement, node){
-      // Create a name and close button divs and add them
-      // to the main node div
+      // Create a 'name' and 'close' buttons and add them
+      // to the main node label
       var nameContainer = document.createElement('span'),
           closeButton = document.createElement('span'),
           style = nameContainer.style;
@@ -512,7 +519,7 @@ function init(){
       style.fontSize = "0.8em";
       style.color = "#ddd";
       //Fade the node and its connections when
-      //clicking the cross button
+      //clicking the close button
       closeButton.onclick = function() {
         node.setData('alpha', 0, 'end');
         node.eachAdjacency(function(adj) {
@@ -529,7 +536,7 @@ function init(){
       //node styles like its dimension and the color
       //and lineWidth of its adjacencies.
       nameContainer.onclick = function() {
-        //set end styles
+        //set final styles
         fd.graph.eachNode(function(n) {
           if(n.id != node.id) delete n.selected;
           n.setData('dim', 7, 'end');
@@ -552,7 +559,7 @@ function init(){
         } else {
           delete node.selected;
         }
-        //trigger animation
+        //trigger animation to final styles
         fd.fx.animate({
           modes: ['node-property:dim',
                   'edge-property:lineWidth:color'],

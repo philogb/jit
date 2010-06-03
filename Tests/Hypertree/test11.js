@@ -415,10 +415,12 @@ function init(){
     
     //init Hypertree
     var ht = new $jit.Hypertree({
-        'injectInto': 'infovis',
-        'width': w,
-        'height': h,
-        //Change node and Edge styles and colors.
+        //id of the visualization container
+        injectInto: 'infovis',
+        //canvas width and height
+        width: w,
+        height: h,
+        //Change Node and Edge styles and colors.
         Node: {
             dim: 9,
             color: "#f00",
@@ -510,10 +512,10 @@ function init(){
     //Add event handlers to the right column controls.
     
     //Remove Nodes
-    var button = document.getElementById('remove-nodes');
+    var button = $jit.id('remove-nodes');
     button.onclick = function() {
         //get animation type.
-        var stype = document.getElementById('select-type-remove-nodes');
+        var stype = $jit.id('select-type-remove-nodes');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //get node ids to be removed.
@@ -534,10 +536,10 @@ function init(){
     };
 
     //Remove edges
-    button = document.getElementById('remove-edges');
+    button = $jit.id('remove-edges');
     button.onclick = function() {
         //get animation type.
-        var stype = document.getElementById('select-type-remove-edges');
+        var stype = $jit.id('select-type-remove-edges');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //perform edge removing animation.
@@ -550,12 +552,12 @@ function init(){
     };
 
     //Add a Graph (Sum)
-    button = document.getElementById('sum');
+    button = $jit.id('sum');
     button.onclick = function(){
-        //get graph to add.
+        //create json graph to add.
         var trueGraph = eval('(' + graph + ')');        
         //get animation type.
-        var stype = document.getElementById('select-type-sum');
+        var stype = $jit.id('select-type-sum');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //perform sum animation.
@@ -571,12 +573,12 @@ function init(){
     };
 
     //Morph
-    button = document.getElementById('morph');
+    button = $jit.id('morph');
     button.onclick = function(){
-        //get graph to morph to.
+        //create json graph to morph to.
         var trueGraph = eval('(' + graph + ')');        
         //get animation type.
-        var stype = document.getElementById('select-type-morph');
+        var stype = $jit.id('select-type-morph');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //perform morphing animation.

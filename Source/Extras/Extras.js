@@ -53,7 +53,8 @@ var EventsInterface = {
   onMouseWheel: $.empty,
   onTouchStart: $.empty,
   onTouchMove: $.empty,
-  onTouchEnd: $.empty
+  onTouchEnd: $.empty,
+  onTouchCancel: $.empty
 };
 
 var MouseEventsManager = new Class({
@@ -337,9 +338,9 @@ Extras.Classes.Events = new Class({
     var evt = $.event.get(e, win);
     if(this.touchedNode) {
       if(this.touchMoved) {
-        this.config.onDragEnd(this.touchedNode, event, evt);
+        this.config.onTouchEnd(this.touchedNode, event, evt);
       } else {
-        this.config.onDragCancel(this.touchedNode, event, evt);
+        this.config.onTouchCancel(this.touchedNode, event, evt);
       }
       this.touchedNode = this.touchMoved = false;
     }

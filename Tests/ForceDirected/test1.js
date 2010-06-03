@@ -440,10 +440,10 @@ function init(){
   // end
   // init ForceDirected
   var fd = new $jit.ForceDirected({
-    //id of the div visualization container
+    //id of the visualization container
     injectInto: 'infovis',
     //Enable zooming and panning
-    //with scrolling and DnD
+    //by scrolling and DnD
     Navigation: {
       enable: true,
       //Enable panning events only if we're dragging the empty
@@ -466,7 +466,7 @@ function init(){
     },
     //Native canvas text styling
     Label: {
-      type:'Native',
+      type: labelType, //Native or HTML
       size: 10,
       style: 'bold'
     },
@@ -485,17 +485,25 @@ function init(){
     // Add node events
     Events: {
       enable: true,
-      onDragMove: function(node, eventInfo, e) {
-        var pos = eventInfo.getPos();
-        node.pos.setc(pos.x, pos.y);
-        fd.plot();
-      },
+      //Change cursor style when hovering a node
       onMouseEnter: function() {
         fd.canvas.getElement().style.cursor = 'move';
       },
       onMouseLeave: function() {
         fd.canvas.getElement().style.cursor = '';
       },
+      //Update node positions when dragged
+      onDragMove: function(node, eventInfo, e) {
+        var pos = eventInfo.getPos();
+        node.pos.setc(pos.x, pos.y);
+        fd.plot();
+      },
+      //Implement the same handler for touchscreens
+      onTouchMove: function(node, eventInfo, e) {
+        $jit.util.event.stop(e); //stop default touchmove event
+        this.onDragMove(node, eventInfo, e);
+      },
+      //Add also a click handler to nodes
       onClick: function(node) {
         if(!node) return;
         // Build the right column relations list.

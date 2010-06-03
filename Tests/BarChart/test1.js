@@ -29,6 +29,7 @@ function init(){
       }]
       
   };
+  //end
   var json2 = {
       'values': [
       {
@@ -49,33 +50,40 @@ function init(){
       }],
       
   };
-  //end
-
-    var infovis = document.getElementById('infovis');
-    
     //init BarChart
     var barChart = new $jit.BarChart({
-        injectInto: 'infovis',
-        animate: true,
-        orientation: 'vertical',
-        barsOffset: 20,
-        offset:10,
-        labelOffset:5,
-        type:'stacked:gradient',
-        showAggregates:true,
-        showLabels:true,
-        Label: {
-          type:'Native',
-          size: 13,
-          family: 'Arial',
-          color: 'white'
-        },
-        Tips: {
-          enable: true,
-          onShow: function(tip, elem) {
-            tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
-          }
+      //id of the visualization container
+      injectInto: 'infovis',
+      //whether to add animations
+      animate: true,
+      //horizontal or vertical barcharts
+      orientation: 'vertical',
+      //bars separation
+      barsOffset: 20,
+      //visualization offset
+      offset: 10,
+      //labels offset position
+      labelOffset: 5,
+      //bars style
+      type: useGradients? 'stacked:gradient' : 'stacked',
+      //whether to show the aggregation of the values
+      showAggregates:true,
+      //whether to show the labels for the bars
+      showLabels:true,
+      //labels style
+      Label: {
+        type: labelType, //Native or HTML
+        size: 13,
+        family: 'Arial',
+        color: 'white'
+      },
+      //add tooltips
+      Tips: {
+        enable: true,
+        onShow: function(tip, elem) {
+          tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
         }
+      }
     });
     //load JSON data.
     barChart.loadJSON(json);

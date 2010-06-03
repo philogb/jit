@@ -40,7 +40,6 @@ Graph.Geom = new Class({
              n.exist = false;
              fx.hideLabel(n, false);
          } else {
-             n.drawn = false;
              n.exist = true;
          }
      });
@@ -51,8 +50,8 @@ Graph.Geom = new Class({
   */  
   getRightLevelToShow: function(node, canvas) {
      var config = this.config;
-   var level = config.levelsToShow;
-   var constrained = config.constrained;
+     var level = config.levelsToShow;
+     var constrained = config.constrained;
      if(!constrained) return level;
      while(!this.treeFitsInCanvas(node, canvas, level) && level > 1) { level-- ; }
      return level;

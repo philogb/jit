@@ -72,6 +72,7 @@ $.splat = function(obj) {
 $.type = function(elem) {
   var type = $.type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
   if(type != 'object') return type;
+  if(elem && elem.$family) return elem.$family;
   return (elem && elem.nodeName && elem.nodeType == 1)? 'element' : type;
 };
 $.type.s = Object.prototype.toString;
@@ -297,6 +298,10 @@ $.event = {
     e = e || win.event;
     var doc = win.document;
     doc = doc.html || doc.body;
+    //TODO(nico): make touch event handling better
+    if(e.touches && e.touches.length) {
+      e = e.touches[0];
+    }
     var page = {
       x: e.pageX || e.clientX + doc.scrollLeft,
       y: e.pageY || e.clientY + doc.scrollTop
@@ -325,6 +330,8 @@ var Class = function(properties) {
       return this;
     var instance = this.initialize ? this.initialize.apply(this, arguments)
         : this;
+    //typize
+    this.$family = 'class';
     return instance;
   };
 

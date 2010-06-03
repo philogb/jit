@@ -29,6 +29,7 @@ function init(){
         }],
         
     };
+    //end
     var json2 = {
         'values': [
         {
@@ -49,37 +50,38 @@ function init(){
         }],
         
     };
-    //end
-    var infovis = document.getElementById('infovis');
-    //init ForceDirected
+    //init PieChart
     var pieChart = new $jit.PieChart({
-        injectInto: 'infovis',
-        animate: true,
-        //offsets
-        offset: 30,
-        sliceOffset: 0,
-        labelOffset: 20,
-        //can also be 'stacked'
-        type:'stacked:gradient',
-        showLabels:true,
-        //resize labels according to
-        //pie slices values set 7px as
-        //min label size
-        resizeLabels: 7,
-        //label styling
-        Label: {
-          type: 'HTML',
-          size: 20,
-          family: 'Arial',
-          color: 'white'
-        },
-        //enable tips
-        Tips: {
-          enable: true,
-          onShow: function(tip, elem) {
-             tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
-          }
+      //id of the visualization container
+      injectInto: 'infovis',
+      //whether to add animations
+      animate: true,
+      //offsets
+      offset: 30,
+      sliceOffset: 0,
+      labelOffset: 20,
+      //slice style
+      type: useGradients? 'stacked:gradient' : 'stacked',
+      //whether to show the labels for the slices
+      showLabels:true,
+      //resize labels according to
+      //pie slices values set 7px as
+      //min label size
+      resizeLabels: 7,
+      //label styling
+      Label: {
+        type: labelType, //Native or HTML
+        size: 20,
+        family: 'Arial',
+        color: 'white'
+      },
+      //enable tips
+      Tips: {
+        enable: true,
+        onShow: function(tip, elem) {
+           tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
         }
+      }
     });
     //load JSON data.
     pieChart.loadJSON(json);

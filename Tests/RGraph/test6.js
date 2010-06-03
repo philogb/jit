@@ -229,26 +229,21 @@ function init(){
         }
       },
         //Nodes and Edges parameters
-        //can be overriden if defined in 
+        //can be overridden if defined in 
         //the JSON input data.
-
         //This way we can define different node
         //types individually.
-
         Node: {
             'overridable': true,
              'color': '#cc0000'
-
         },
         Edge: {
             'overridable': true,
             'color': '#cccc00'
         },
-
         //Set polar interpolation.
         //Default's linear.
         interpolation: 'polar',
-        
         //Change the transition effect from linear
         //to elastic.
         transition: $jit.Trans.Elastic.easeOut,
@@ -257,7 +252,6 @@ function init(){
         fps: 30,
         //Change father-child distance.
         levelDistance: 200,
-        
         //This method is called right before plotting
         //an edge. This method is useful to change edge styles
         //individually.
@@ -280,7 +274,6 @@ function init(){
             html += "</ul>";
             $jit.id('inner-details').innerHTML = html;
         },
-        
         //Add node click handler and some styles.
         //This method is called only once for each node/label crated.
         onCreateLabel: function(domElement, node){

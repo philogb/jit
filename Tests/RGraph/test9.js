@@ -422,7 +422,7 @@ function init(){
   };
   // end
   // init RGraph
-  var rgraph = new $jit.RGraph( {
+  var rgraph = new $jit.RGraph({
     // Where to append the visualization
     injectInto: 'infovis',
     // Optional: create a background canvas and plot
@@ -438,7 +438,7 @@ function init(){
     Node: {
       overridable: true,
       color: '#ccddee',
-      dim: 7
+      dim: 12
     },
     Edge: {
       overridable: true,
@@ -447,7 +447,7 @@ function init(){
     },
     // Use native canvas text
     Label: {
-      type: 'Native',
+      type: labelType,
       size: 11,
       family: 'Verdana',
       color: '#fff'
@@ -455,6 +455,7 @@ function init(){
     //Add events for Dragging and dropping nodes
     Events: {
       enable: true,
+      type: 'Native',
       onMouseEnter: function(node, eventInfo, e){
         rgraph.canvas.getElement().style.cursor = 'move';
       },
@@ -475,7 +476,60 @@ function init(){
           duration: 700,
           transition: $jit.Trans.Elastic.easeOut
         });
+      },
+      //touch events
+      onTouchStart: function(node, eventInfo, e) {
+        //stop the default event
+        $jit.util.event.stop(e);
+      },
+      onTouchMove: function(node, eventInfo, e){
+        //stop the default event
+        $jit.util.event.stop(e);
+        var pos = eventInfo.getPos();
+        node.pos.setc(pos.x, pos.y);
+        rgraph.plot();
+      },
+      onTouchEnd: function(node, eventInfo, e){
+        //stop the default event
+        $jit.util.event.stop(e);
+        rgraph.compute('end');
+        rgraph.fx.animate( {
+          modes: [
+            'linear'
+          ],
+          duration: 700,
+          transition: $jit.Trans.Elastic.easeOut
+        });
       }
+    },
+    //Add the name of the node in the correponding label
+    //and a click handler to move the graph.
+    //This method is called once, on label creation.
+    onCreateLabel: function(domElement, node){
+      domElement.innerHTML = node.name;
+    },
+    //Change some label dom properties.
+    //This method is called each time a label is plotted.
+    onPlaceLabel: function(domElement, node){
+        var style = domElement.style;
+        style.display = '';
+        style.cursor = 'pointer';
+
+        if (node._depth <= 1) {
+            style.fontSize = "0.8em";
+            style.color = "#ccc";
+        
+        } else if(node._depth == 2){
+            style.fontSize = "0.7em";
+            style.color = "#494949";
+        
+        } else {
+            style.display = 'none';
+        }
+
+        var left = parseInt(style.left);
+        var w = domElement.offsetWidth;
+        style.left = (left - w / 2) + 'px';
     }
   });
   // load JSON data

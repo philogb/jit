@@ -228,13 +228,13 @@ function init() {
 
     //init st
     var st = new $jit.ST({
-        'useCanvas': pie.canvas,
+        useCanvas: pie.canvas,
         orientation: 'bottom',
         //Add node/edge styles
         Node: {
-           'type': 'piechart',
-             width: 60,
-             height: 60
+           type: 'piechart',
+           width: 60,
+           height: 60
         },
         Edge: {
             color: '#999',

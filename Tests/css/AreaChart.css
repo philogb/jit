@@ -33,8 +33,10 @@
 	width:10px;
 }
 
-#update {
-  margin:10px 40px;
+#update, #restore {
+  text-align: center;
+  width: 100px;
+  margin:10px 35px;
 }
 
 .button {

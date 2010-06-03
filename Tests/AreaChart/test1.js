@@ -53,22 +53,22 @@ function init(){
     var infovis = document.getElementById('infovis');
     //init AreaChart
     var areaChart = new $jit.AreaChart({
-      //where to put the visualization
+      //id of the visualization container
       injectInto: 'infovis',
       //add animations
       animate: true,
       //separation offsets
       offset: 5,
-      labelOffset:10,
+      labelOffset: 10,
       //whether to display sums
-      showAggregates:true,
+      showAggregates: true,
       //whether to display labels at all
-      showLabels:true,
+      showLabels: true,
       //could also be 'stacked'
-      type:'stacked:gradient',
+      type: useGradients? 'stacked:gradient' : 'stacked',
       //label styling
       Label: {
-        type: 'Native',
+        type: labelType, //can be 'Native' or 'HTML'
         size: 13,
         family: 'Arial',
         color: 'white'
@@ -88,7 +88,8 @@ function init(){
     areaChart.loadJSON(json);
     //end
     var list = $jit.id('id-list'),
-        button = $jit.id('update');
+        button = $jit.id('update'),
+        restoreButton = $jit.id('restore');
     //update json on click
     $jit.util.addEvent(button, 'click', function() {
       var util = $jit.util;
@@ -96,6 +97,10 @@ function init(){
       util.removeClass(button, 'white');
       util.addClass(button, 'gray');
       areaChart.updateJSON(json2);
+    });
+    //restore graph on click
+    $jit.util.addEvent(restoreButton, 'click', function() {
+      areaChart.restore();
     });
     //dynamically add legend to list
     var legend = areaChart.getLegend(),

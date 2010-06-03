@@ -194,6 +194,7 @@ $jit.Hypertree = new Class( {
 
     var config = {
       radius: "auto",
+      offset: 0,
       Edge: {
         type: 'hyperline'
       },
@@ -252,7 +253,7 @@ $jit.Hypertree = new Class( {
     // get max viz. length.
     var r = this.getRadius();
     // get max depth.
-    var depth = 0, max = Math.max;
+    var depth = 0, max = Math.max, config = this.config;
     this.graph.eachNode(function(node) {
       depth = max(node._depth, depth);
     }, "ignore");
@@ -266,7 +267,7 @@ $jit.Hypertree = new Class( {
         while (d) {
           acum += pow(a, d--);
         }
-        return acum;
+        return acum - config.offset;
       };
     };
     // estimate better edge length.

@@ -395,9 +395,9 @@ function init() {
     //This RGraph is used to plot the upper-left pie chart.
     //It has custom *pie-chart-nodes*.
     var rgraph = new $jit.RGraph({
-        'injectInto': 'infovis1',
-        'width': w/2,
-        'height': h/2,
+        injectInto: 'infovis1',
+        width: w/2,
+        height: h/2,
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden

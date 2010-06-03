@@ -29,6 +29,7 @@ function init(){
       }]
       
   };
+  //end
   var json2 = {
       'values': [
       {
@@ -49,39 +50,46 @@ function init(){
       }],
       
   };
-  //end
-
-    var infovis = document.getElementById('infovis');
-    
     //init BarChart
     var barChart = new $jit.BarChart({
-        injectInto: 'infovis',
-        animate: true,
-        orientation: 'horizontal',
-        barsOffset: 0.5,
-        offset:10,
-        labelOffset:5,
-        type:'stacked',
-        showAggregates:true,
-        showLabels:true,
-        Label: {
-          size: 13,
-          family: 'Arial',
-          color: 'white'
-        },
-        Tips: {
-          enable: true,
-          onShow: function(tip, elem) {
-            tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
-          }
+      //id of the visualization container
+      injectInto: 'infovis',
+      //whether to add animations
+      animate: true,
+      //horizontal or vertical barcharts
+      orientation: 'horizontal',
+      //bars separation
+      barsOffset: 0.5,
+      //visualization offset
+      offset:10,
+      //labels offset position
+      labelOffset:5,
+      //bars style
+      type:'stacked',
+      //whether to show the aggregation of the values
+      showAggregates:true,
+      //whether to show the labels for the bars
+      showLabels:true,
+      //label styles
+      Label: {
+        type: labelType, //Native or HTML
+        size: 13,
+        family: 'Arial',
+        color: 'white'
+      },
+      //tooltip options
+      Tips: {
+        enable: true,
+        onShow: function(tip, elem) {
+          tip.innerHTML = "<b>" + elem.name + "</b>: " + elem.value;
         }
+      }
     });
     //load JSON data.
     barChart.loadJSON(json);
     //end
     var list = $jit.id('id-list'),
-        button = $jit.id('update'),
-        orn = $jit.id('switch-orientation');
+        button = $jit.id('update');
     //update json on click 'Update Data'
     $jit.util.addEvent(button, 'click', function() {
       var util = $jit.util;

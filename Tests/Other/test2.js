@@ -192,23 +192,10 @@ function init() {
         'injectInto': 'infovis',
         //Optional: create a background canvas and plot
         //concentric circles in it.
-        'backgroundCanvas': {
-            'styles': {
-              'strokeStyle': '#555'
-            },
-            'impl': {
-                'init': function(){},
-                'plot': function(canvas, ctx){
-                    var times = 4, d = 100;
-                    var pi2 = Math.PI * 2;
-                    for (var i = 1; i <= times; i++) {
-                        ctx.beginPath();
-                        ctx.arc(0, 0, i * d, 0, pi2, true);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-                }
-            }
+        'background': {
+          CanvasStyles: {
+            strokeStyle: '#555'
+          }
         },
         //Add node/edge styles and set
         //overridable=true if you want your
@@ -235,7 +222,7 @@ function init() {
 
     //init rgraph
     var rgraph = new $jit.RGraph({
-        'useCanvas': pie.canvas,
+        useCanvas: pie.canvas,
         //Add node/edge styles and set
         //overridable=true if you want your
         //styles to be individually overriden
@@ -249,7 +236,8 @@ function init() {
         },
         //Parent-children distance
         levelDistance: 100,
-
+        //Duration
+        duration: 1500,
         //Add styles to node labels on label creation
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;

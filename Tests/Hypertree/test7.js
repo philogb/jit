@@ -211,7 +211,8 @@ function init(){
     //end
     //init Hypertree
     var ht = new $jit.Hypertree({
-        'injectInto': 'infovis',
+        //id of the visualization container
+        injectInto: 'infovis',
         //By setting overridable=true,
         //Node and Edge global properties can be
         //overriden for each node/edge.
@@ -225,9 +226,11 @@ function init(){
             overridable: true,
             color: "#088"
         },
-        
+        //calculate nodes offset
+        offset: 0.2,
         //Change the animation transition type
         transition: $jit.Trans.Back.easeOut,
+        //animation duration (in milliseconds)
         duration:1000,
         
         //This method is called right before plotting an
@@ -236,13 +239,13 @@ function init(){
         onBeforePlotLine: function(adj){
             //Set random lineWidth for edges.
             if (!adj.data.$lineWidth) 
-                adj.data.$lineWidth = Math.random() * 5 + 1;
+                adj.data.$lineWidth = Math.random() * 7 + 1;
         },
         
         onBeforeCompute: function(node){
             Log.write("centering");
         },
-        //Attach event handlers.
+        //Attach event handlers on label creation.
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.style.cursor = "pointer";
@@ -250,7 +253,6 @@ function init(){
                 ht.onClick(node.id, { hideLabels: false });
             };
         },
-        
         //This method is called when moving/placing a label.
         //You can add some positioning offsets to the labels here.
         onPlaceLabel: function(domElement, node){

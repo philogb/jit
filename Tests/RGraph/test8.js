@@ -488,27 +488,27 @@ function init(){
         var sduration = document.getElementById('select-duration');
         var sdindex = sduration.selectedIndex;
         return parseInt(sduration.options[sdindex].text);
-    };
+    }
     //Define a function that returns the selected fps
     function getFPS() {
         var fpstype = document.getElementById('select-fps');
         var fpsindex = fpstype.selectedIndex;
         return parseInt(fpstype.options[fpsindex].text);
-    };
+    }
     //Define a function that returns whether you have to
     //hide labels during the animation or not.
     function hideLabels() {
         return document.getElementById('hide-labels').checked;
-    };
+    }
     
     //init handlers
     //Add event handlers to the right column controls.
  
     //Remove Nodes
-    var button = document.getElementById('remove-nodes');
+    var button = $jit.id('remove-nodes');
     button.onclick = function() {
         //get animation type.
-        var stype = document.getElementById('select-type-remove-nodes');
+        var stype = $jit.id('select-type-remove-nodes');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //get node ids to be removed.
@@ -529,10 +529,10 @@ function init(){
     };
 
     //Remove edges
-    button = document.getElementById('remove-edges');
+    button = $jit.id('remove-edges');
     button.onclick = function() {
         //get animation type.
-        var stype = document.getElementById('select-type-remove-edges');
+        var stype = $jit.id('select-type-remove-edges');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //perform edge removing animation.
@@ -545,12 +545,12 @@ function init(){
     };
 
     //Add a Graph (Sum)
-    button = document.getElementById('sum');
+    button = $jit.id('sum');
     button.onclick = function(){
         //get graph to add.
         var trueGraph = eval('(' + graph + ')');        
         //get animation type.
-        var stype = document.getElementById('select-type-sum');
+        var stype = $jit.id('select-type-sum');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //perform sum animation.
@@ -566,12 +566,12 @@ function init(){
     };
 
     //Morph
-    button = document.getElementById('morph');
+    button = $jit.id('morph');
     button.onclick = function(){
         //get graph to morph to.
         var trueGraph = eval('(' + graph + ')');        
         //get animation type.
-        var stype = document.getElementById('select-type-morph');
+        var stype = $jit.id('select-type-morph');
         var sindex = stype.selectedIndex;
         var type = stype.options[sindex].text;
         //perform morphing animation.
