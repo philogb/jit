@@ -475,7 +475,9 @@ $jit.ST= (function() {
         (end code)
      */
      setRoot: function(id, method, onComplete) {
-        	var that = this, canvas = this.canvas;
+        	if(this.busy) return;
+        	this.busy = true;
+          var that = this, canvas = this.canvas;
         	var rootNode = this.graph.getNode(this.root);
         	var clickedNode = this.graph.getNode(id);
         	function $setRoot() {
@@ -513,9 +515,11 @@ $jit.ST= (function() {
             	  }
             	});
               this.compute('end');
+              this.busy = true;
               this.fx.animate({
                 modes: ['linear', 'node-property:alpha'],
                 onComplete: function() {
+                  that.busy = false;
                   that.onClick(id, {
                     onComplete: function() {
                       onComplete && onComplete.onComplete();
