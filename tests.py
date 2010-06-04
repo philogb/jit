@@ -307,9 +307,11 @@ tests_model = {
             'Description': 
             """
             A static JSON Tree structure is used as input for this animation.<br /><br />
-            Clicking on a node should move the tree and center that node.<br /><br />
-            Leaves color depend on the number of children they actually have.<br /><br />
-            You can select the <b>tree orientation</b> by changing the select box in the right column.
+            <b>Click</b> on a node to select it.<br /><br />
+            You can <b>select the tree orientation</b> by changing the select box in the right column.<br /><br />
+            You can <b>change the selection mode</b> from <em>Normal</em> selection (i.e. center the selected node) to 
+            <em>Set as Root</em>.<br /><br />
+            Leaves color depend on the number of children they actually have.
             """,
             'Extras': ['excanvas.js'],
             'Example': True
@@ -341,12 +343,14 @@ tests_model = {
             'Description': 
             """
             A static JSON Tree structure is used as input for this animation.<br /><br />
-            Clicking on a node should move the tree and center that node.<br /><br />
-            Leaves color depend on the number of children they actually have.<br /><br />
-            You can select the <b>tree orientation</b> by changing the select box in the right column.
+            By setting the specific orientation for nodes we can create a multitree structure.<br /><br />
+            Nodes and Edges are styled with canvas specific styles like shadows.<br /><br />
+            <b>Click</b> on a node to select it.<br /><br />
+            You can <b>change the selection mode</b> from <em>Normal</em> selection (i.e. center the selected node) to 
+            <em>Set as Root</em>.
             """,
             'Extras': ['excanvas.js'],
-            'Example': False 
+            'Example': True
         },
         {
             'Title': 'loadJSON multiple times',
@@ -356,6 +360,21 @@ tests_model = {
             """,
             'Extras': ['excanvas.js', 'generators.js'],
             'Example': False 
+        },
+        {
+            'Title': 'Style Animations',
+            'Description': 
+            """
+            This Advanced Example shows how Node, Edge, Label and Canvas specific style animations can be triggered for this 
+            visualization.<br /><br />
+            <b>Select</b> the styles to be animated in the right column and hit the <em>Morph Styles</em> button. This will 
+            set random values for these properties and animate them.<br /><br />
+            Click on <em>Restore Styles</em> to set the default styles.<br /><br />
+            Other styles like alpha and shadows can also be triggered.<br /><br />
+            This example also implements a custom node rendering function for Stroke + Fill rectangles.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
         }
    ],
    

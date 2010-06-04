@@ -1,7 +1,4 @@
 function init(){
-    function get(id) {
-      return document.getElementById(id);  
-    };
     //init data
     var json = {
         id: "node02",
@@ -738,7 +735,8 @@ function init(){
     //init st
     //Create a new ST instance
     var st = new $jit.ST({
-        'injectInto': 'infovis',
+        //id of viz container element
+        injectInto: 'infovis',
         //set duration for the animation
         duration: 800,
         //set animation transition type
@@ -781,12 +779,11 @@ function init(){
             label.id = node.id;            
             label.innerHTML = node.name;
             label.onclick = function(){
-//            	st.setRoot(node.id, 'animate', {
-//            	  onComplete: function() {
-//            	    console.log('complete!');
-//            	  }
-//            	});
-              st.onClick(node.id);
+            	if(normal.checked) {
+            	  st.onClick(node.id);
+            	} else {
+                st.setRoot(node.id, 'animate');
+            	}
             };
             //set label styles
             var style = label.style;
@@ -850,10 +847,12 @@ function init(){
     st.onClick(st.root);
     //end
     //Add event handlers to switch spacetree orientation.
-    var top = get('r-top'), 
-    left = get('r-left'), 
-    bottom = get('r-bottom'), 
-    right = get('r-right');
+    var top = $jit.id('r-top'), 
+        left = $jit.id('r-left'), 
+        bottom = $jit.id('r-bottom'), 
+        right = $jit.id('r-right'),
+        normal = $jit.id('s-normal');
+        
     
     function changeHandler() {
         if(this.checked) {

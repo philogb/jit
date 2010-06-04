@@ -422,7 +422,7 @@ $jit.ST= (function() {
                 'y': move.offsetY 
             };
             if(move.enable) {
-                this.geom.translate(node.endPos.add(offset).$scale(-1), "endPos");
+                this.geom.translate(node.endPos.add(offset).$scale(-1), "end");
             }
             this.fx.animate($.merge(this.controller, { modes: ['linear'] }, onComplete));
          },

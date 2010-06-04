@@ -25,7 +25,7 @@ Graph.Geom = new Class({
   translate: function(pos, prop) {
      prop = $.splat(prop);
      this.viz.graph.eachNode(function(elem) {
-         $.each(prop, function(p) { elem[p].$add(pos); });
+         $.each(prop, function(p) { elem.getPos(p).$add(pos); });
      });
   },
   /*

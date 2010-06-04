@@ -1,7 +1,4 @@
 function init(){
-    function get(id) {
-      return document.getElementById(id);  
-    };
     //init data
     var json = {
         id: "node02",
@@ -738,24 +735,28 @@ function init(){
     //preprocess subtrees orientation
     var arr = json.children, len = arr.length;
     for(var i=0; i < len; i++) {
-    	if(i < len / 2) {
+    	//split half left orientation
+      if(i < len / 2) {
     		arr[i].data.$orn = 'left';
     		$jit.json.each(arr[i], function(n) {
     			n.data.$orn = 'left';
     		});
     	} else {
+    	//half right
     		arr[i].data.$orn = 'right';
     		$jit.json.each(arr[i], function(n) {
     			n.data.$orn = 'right';
     		});
     	}
     }
-    
+    //grab radio button
+    var normal = $jit.id('s-normal');
     //end
     //init st
     //Create a new ST instance
-    st = new $jit.ST({
-        'injectInto': 'infovis',
+    var st = new $jit.ST({
+        //id of viz container element
+        injectInto: 'infovis',
         //multitree
     	  multitree: true,
         //set duration for the animation
@@ -763,20 +764,28 @@ function init(){
         //set animation transition type
         transition: $jit.Trans.Quart.easeInOut,
         //set distance between node and its children
-        levelDistance: 50,
+        levelDistance: 40,
+        //sibling and subtrees offsets
+        siblingOffset: 0,
+        subtreeOffset: 0,
         //set node and edge styles
         //set overridable=true for styling individual
         //nodes or edges
         Node: {
-            height: 20,
-            width: 60,
-            type: 'rectangle',
+            height: 35,
+            width: 50,
+            type: 'ellipse',
             color: '#aaa',
-            overridable: true
+            overridable: true,
+            //set canvas specific styles
+            //like shadows
+            CanvasStyles: {
+              shadowColor: '#ccc',
+              shadowBlur: 10
+            }
         },
-        
         Edge: {
-            type: 'bezier',
+            type: 'line',
             overridable: true
         },
         
@@ -795,18 +804,21 @@ function init(){
             label.id = node.id;            
             label.innerHTML = node.name;
             label.onclick = function(){
-            	//st.onClick(node.id);
-            	st.setRoot(node.id, 'animate');
+            	if(normal.checked) {
+                st.onClick(node.id);
+            	} else {
+                st.setRoot(node.id, 'animate');
+            	}
             };
             //set label styles
             var style = label.style;
-            style.width = 60 + 'px';
-            style.height = 17 + 'px';            
+            style.width = 50 + 'px';
+            style.height = 35 + 'px';            
             style.cursor = 'pointer';
             style.color = '#333';
             style.fontSize = '0.8em';
             style.textAlign= 'center';
-            style.paddingTop = '3px';
+            style.paddingTop = '10px';
         },
         
         //This method is called right before plotting
@@ -853,14 +865,7 @@ function init(){
     //load json data
     st.loadJSON(json);
     //compute node positions and layout
-    st.compute();
+    st.compute('end');
     st.select(st.root);
-    
-    //emulate a click on the root node.
-//    st.onClick(st.root, {
-//    	Move: {
-//    		enable: false
-//    	}
-//    });
     //end
 }
