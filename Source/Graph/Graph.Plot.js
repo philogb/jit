@@ -35,7 +35,7 @@ Graph.Plot = {
     Interpolator: {
         //node/edge property parsers
         'map': {
-          'borderColor': 'borderColor',
+          'border': 'color',
           'color': 'color',
           'width': 'number',
           'height': 'number',

@@ -38,6 +38,7 @@ function init(){
     animate: true,
     titleHeight: 10,
     offset: 1,
+    cushion: true,
 
     //Allow tips
     Tips: {

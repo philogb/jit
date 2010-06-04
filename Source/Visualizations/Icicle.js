@@ -469,21 +469,33 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
 
   'rectangle': {
     'render': function(node, canvas) {
-      var offset = this.viz.config.offset;
+      var config = this.viz.config;
+      var offset = config.offset;
       var width = node.getData('width');
       var height = node.getData('height');
+      var border = node.getData('border');
       var pos = node.pos.getc(true);
       var posx = pos.x + offset / 2, posy = pos.y + offset / 2;
       var ctx = canvas.getCtx();
 
-      var color, borderColor;
-      if (color = node.getData('color'))
-        ctx.fillStyle = color;
-      if (borderColor = node.getData('borderColor'))
-        ctx.strokeStyle = borderColor;
+      if(config.cushion) {
+        var color = node.getData('color');
+        var lg = ctx.createRadialGradient(posx + (width - offset)/2, 
+                                          posy + (height - offset)/2, 1, 
+                                          posx + (width-offset)/2, posy + (height-offset)/2, 
+                                          width < height? height : width);
+        var colorGrad = $.rgbToHex($.map($.hexToRgb(color), 
+            function(r) { return r * 0.3 >> 0; }));
+        lg.addColorStop(0, color);
+        lg.addColorStop(1, colorGrad);
+        ctx.fillStyle = lg;
+      }
+
+      if (border)
+        ctx.strokeStyle = border;
 
       ctx.fillRect(posx, posy, Math.max(0, width - offset), Math.max(0, height - offset));
-      ctx.strokeRect(pos.x, pos.y, width, height);
+      border && ctx.strokeRect(pos.x, pos.y, width, height);
     },
 
     'contains': function(node, pos) {
