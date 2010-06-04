@@ -214,13 +214,18 @@ $jit.Icicle = new Class({
     }
   },
   requestNodes: function(node, onComplete){
-    var handler = $.merge(this.controller, onComplete), lev = this.config.levelsToShow;
+    var handler = $.merge(this.controller, onComplete),
+        levelsToShow = this.config.constrained ? this.config.levelsToShow : Number.MAX_VALUE;
+
     if (handler.request) {
       var leaves = [], d = node._depth;
-      Graph.Util.eachLevel(node, 0, lev, function(n){
+      Graph.Util.eachLevel(node, 0, levelsToShow, function(n){
         if (n.drawn && !Graph.Util.anySubnode(n)) {
           leaves.push(n);
-          n._level = lev - (n._depth - d);
+          n._level = n._depth - d;
+          if (this.config.constrained)
+            n._level = levelsToShow - n._level;
+
         }
       });
       this.group.requestNodes(leaves, handler);
@@ -295,15 +300,18 @@ $jit.Icicle.Plot = new Class({
   },
 
   plot: function(opt, animating){
-    var viz = this.viz, graph = viz.graph;
-    var root = graph.getNode(viz.clickedNode && viz.clickedNode.id || viz.root);
-    var initialDepth = root._depth;
+    var viz = this.viz,
+        graph = viz.graph,
+        root = graph.getNode(viz.clickedNode && viz.clickedNode.id || viz.root),
+        initialDepth = root._depth;
+
     viz.canvas.clear();
     this.plotTree(root, $.merge(opt, {
       'withLabels': true,
       'hideLabels': false,
       'plotSubtree': function(root, node) {
-        return (node._depth - initialDepth < viz.config.levelsToShow);
+        return !viz.config.contrained ||
+               (node._depth - initialDepth < viz.config.levelsToShow);
       }
     }), animating);
   }

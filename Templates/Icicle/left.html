@@ -36,7 +36,13 @@ $def with (model, type, number, max)
   var levelsToShowInput = jit.id('i-levels-to-show');
   jit.util.addEvent(levelsToShowInput, 'change', function () {
     try {
-      icicle.config.levelsToShow = parseInt(levelsToShowInput.value);
+      var l = parseInt(levelsToShowInput.value);
+      if (l < 0) {
+        icicle.config.contrained = false;
+      } else {
+        icicle.config.contrained = true;
+        icicle.config.levelsToShow = l;
+      }
       icicle.refresh();
     } catch(e) {}
   });

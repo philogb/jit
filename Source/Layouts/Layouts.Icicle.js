@@ -28,7 +28,8 @@ Layouts.Icicle = new Class({
         size = this.canvas.getSize(),
         width = size.width,
         height = size.height,
-        offset = config.offset;
+        offset = config.offset,
+        levelsToShow = config.contrained ? config.levelsToShow : Number.MAX_VALUE;
 
     this.controller.onBeforeCompute(root);
 
@@ -39,7 +40,7 @@ Layouts.Icicle = new Class({
     Graph.Util.eachLevel(root, 0, false, function (n, d) { if(d > treeDepth) treeDepth = d; });
 
     var startNode = this.graph.getNode(this.clickedNode && this.clickedNode.id || root.id);
-    var maxDepth = Math.min(treeDepth, config.levelsToShow-1);
+    var maxDepth = Math.min(treeDepth, levelsToShow-1);
     var initialDepth = startNode._depth;
     if(this.layout.horizontal()) {
       this.computeSubtree(startNode, -width/2, -height/2, width/(maxDepth+1), height, initialDepth, maxDepth, posType);
