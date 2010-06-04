@@ -31,16 +31,29 @@ Graph.Geom = new Class({
   /*
     Hides levels of the tree until it properly fits in canvas.
   */  
-  setRightLevelToShow: function(node, canvas) {
-     var level = this.getRightLevelToShow(node, canvas), fx = this.viz.labels;
+  setRightLevelToShow: function(node, canvas, callback) {
+     var level = this.getRightLevelToShow(node, canvas), 
+         fx = this.viz.labels,
+         opt = $.merge({
+           execShow:true,
+           execHide:true,
+           onHide: $.empty,
+           onShow: $.empty
+         }, callback || {});
      node.eachLevel(0, this.config.levelsToShow, function(n) {
          var d = n._depth - node._depth;
          if(d > level) {
-             n.drawn = false; 
-             n.exist = false;
-             fx.hideLabel(n, false);
+             opt.onHide(n);
+             if(opt.execHide) {
+               n.drawn = false; 
+               n.exist = false;
+               fx.hideLabel(n, false);
+             }
          } else {
-             n.exist = true;
+             opt.onShow(n);
+             if(opt.execShow) {
+               n.exist = true;
+             }
          }
      });
      node.drawn= true;

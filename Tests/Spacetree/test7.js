@@ -781,7 +781,12 @@ function init(){
             label.id = node.id;            
             label.innerHTML = node.name;
             label.onclick = function(){
-            	st.onClick(node.id);
+//            	st.setRoot(node.id, 'animate', {
+//            	  onComplete: function() {
+//            	    console.log('complete!');
+//            	  }
+//            	});
+              st.onClick(node.id);
             };
             //set label styles
             var style = label.style;

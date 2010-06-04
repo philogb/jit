@@ -190,8 +190,7 @@ $jit.ST= (function() {
             if(config.multitree && !('$orn' in n.data) 
             		&& n.anySubnode(function(ch){ return ch.exist && !ch.drawn; })) {
             	nodeArray.push(n);
-            	//TODO(nico): double check that !n.drawn && n.exist condition
-            } else if((n.drawn && !n.anySubnode("drawn")) || (!n.drawn && n.exist)) {
+            } else if(n.drawn && !n.anySubnode("drawn")) {
               nodeArray.push(n);
             }
         });
@@ -502,20 +501,36 @@ $jit.ST= (function() {
             	this.root = id;
             	this.clickedNode = clickedNode;
             	this.graph.computeLevels(this.root, 0, "ignore");
-  	        	this.geom.setRightLevelToShow(clickedNode, canvas);
-            	onComplete && onComplete.onComplete();
+            	this.geom.setRightLevelToShow(clickedNode, canvas, {
+            	  execHide: false,
+            	  onShow: function(node) {
+            	    if(!node.drawn) {
+                    node.drawn = true;
+                    node.setData('alpha', 1, 'end');
+                    node.setData('alpha', 0);
+                    node.pos.setc(clickedNode.pos.x, clickedNode.pos.y);
+            	    }
+            	  }
+            	});
+              this.compute('end');
+              this.fx.animate({
+                modes: ['linear', 'node-property:alpha'],
+                onComplete: function() {
+                  that.onClick(id, {
+                    onComplete: function() {
+                      onComplete && onComplete.onComplete();
+                    }
+                  });
+                }
+              });
         	}
 
         	// delete previous orientations (if any)
         	delete rootNode.data.$orns;
 
         	if(method == 'animate') {
-        		this.onClick(id, {
-        			onBeforeCompute: function(node) {
-                $setRoot.call(that);
-                that.selectPath(clickedNode);
-        		  }
-        		});
+        	  $setRoot.call(this);
+        	  that.selectPath(clickedNode);
         	} else if(method == 'replot') {
         		$setRoot.call(this);
         		this.select(this.root);
@@ -672,6 +687,7 @@ $jit.ST= (function() {
               offsetX: config.offsetX || 0,
               offsetY: config.offsetY || 0  
             },
+            setRightLevelToShowConfig: false,
             onBeforeRequest: $.empty,
             onBeforeContract: $.empty,
             onBeforeMove: $.empty,
@@ -691,7 +707,7 @@ $jit.ST= (function() {
                     complete.onBeforeContract(node);
                     that.contract({
                         onComplete: function() {
-                            Geom.setRightLevelToShow(node, canvas);
+                            Geom.setRightLevelToShow(node, canvas, complete.setRightLevelToShowConfig);
                             complete.onBeforeMove(node);
                             that.move(node, {
                                 Move: complete.Move,
