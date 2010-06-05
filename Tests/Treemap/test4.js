@@ -914,11 +914,11 @@ function init(){
     //no parent frames
     titleHeight: 0,
     //enable animations
-    animate: true,
+    animate: animate,
     //no box offsets
     offset: 0,
     //add cushion gradients
-    cushion: true,
+    cushion: useGradients,
     //duration of the animation
     duration: 1500,
     //Enable tips
@@ -952,6 +952,7 @@ function init(){
         domElement.innerHTML = node.name;
         var style = domElement.style;
         style.display = '';
+        style.cursor = 'default';
         style.border = '1px solid transparent';
         domElement.onmouseover = function() {
           style.border = '1px solid #9FD4FF';
@@ -986,5 +987,10 @@ function init(){
     util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
     tm.layout.orientation = "v";
     tm.refresh();
+  });
+  //add event to the back button
+  var back = $jit.id('back');
+  $jit.util.addEvent(back, 'click', function() {
+    tm.out();
   });
 }

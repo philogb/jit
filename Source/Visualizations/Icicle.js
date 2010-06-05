@@ -74,6 +74,11 @@ $jit.Icicle = new Class({
   },
 
   refresh: function(){
+    var labelType = this.config.Label.type;
+    if(labelType != 'Native') {
+      var that = this;
+      this.graph.eachNode(function(n) { that.labels.hideLabel(n, false); });
+    }
     this.compute();
     this.plot();
   },
@@ -129,6 +134,7 @@ $jit.Icicle = new Class({
         } else {
           that.clickedNode = node;
           that.busy = false;
+          that.refresh();
         }
       }
     };
@@ -470,7 +476,7 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
   },
 
   'rectangle': {
-    'render': function(node, canvas) {
+    'render': function(node, canvas, animating) {
       var config = this.viz.config;
       var offset = config.offset;
       var width = node.getData('width');
@@ -482,7 +488,7 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
       
       if(width - offset < 2 || height - offset < 2) return;
       
-      if(config.cushion) {
+      if(config.cushion && !animating) {
         var color = node.getData('color');
         var lg = ctx.createRadialGradient(posx + (width - offset)/2, 
                                           posy + (height - offset)/2, 1, 

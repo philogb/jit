@@ -865,7 +865,7 @@ function init(){
     //parent box title heights
     titleHeight: 15,
     //enable animations
-    animate: true,
+    animate: animate,
     //box offsets
     offset: 1,
     //Attach left and right click events
@@ -940,5 +940,10 @@ function init(){
     util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
     tm.layout.orientation = "v";
     tm.refresh();
+  });
+  //add event to the back button
+  var back = $jit.id('back');
+  $jit.util.addEvent(back, 'click', function() {
+    tm.out();
   });
 }

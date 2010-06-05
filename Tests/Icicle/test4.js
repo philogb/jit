@@ -7007,7 +7007,7 @@ function init(){
     // id of the visualization container
     injectInto: 'infovis',
     // whether to add transition animations
-    animate: true,
+    animate: animate,
     // nodes offset
     offset: 1,
     // whether to add cushion type nodes
@@ -7018,6 +7018,7 @@ function init(){
     // enable tips
     Tips: {
       enable: true,
+      type: 'Native',
       // add positioning offsets
       offsetX: 20,
       offsetY: 20,

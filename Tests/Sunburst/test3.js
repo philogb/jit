@@ -207,10 +207,10 @@ function init(){
     //id container for the visualization
     injectInto: 'infovis',
     //Change node and edge styles such as
-    //color, width and dimensions.
+    //color, width, lineWidth and edge types
     Node: {
       overridable: true,
-      type: 'gradient-multipie'
+      type: useGradients? 'gradient-multipie' : 'multipie'
     },
     Edge: {
       overridable: true,
@@ -221,7 +221,7 @@ function init(){
     //Draw canvas text. Can also be
     //'HTML' or 'SVG' to draw DOM labels
     Label: {
-      type: 'Native'
+      type: nativeTextSupport? 'Native' : 'SVG'
     },
     //Add animations when hovering and clicking nodes
     NodeStyles: {
@@ -238,9 +238,9 @@ function init(){
     Events: {
       enable: true,
       type: 'Native',
+      //List node connections onClick
       onClick: function(node, eventInfo, e){
-        if (!node)
-          return;
+        if (!node) return;
         var html = "<h4>" + node.name + " connections</h4><ul><li>", ans = [];
         node.eachAdjacency(function(adj){
           // if on the same level i.e siblings
@@ -248,8 +248,7 @@ function init(){
               ans.push(adj.nodeTo.name);
             }
           });
-        $jit.id('inner-details').innerHTML = html + ans.join("</li><li>")
-            + "</li></ul>";
+        $jit.id('inner-details').innerHTML = html + ans.join("</li><li>") + "</li></ul>";
       }
     },
     levelDistance: 190,
@@ -283,12 +282,7 @@ function init(){
         if (node._depth <= 1) {
           style.fontSize = "0.8em";
           style.color = "#ddd";
-        } else if (node._depth == 2) {
-          style.fontSize = "0.7em";
-          style.color = "#555";
-        } else {
-          style.display = 'none';
-        }
+        } 
         var left = parseInt(style.left);
         var w = domElement.offsetWidth;
         style.left = (left - w / 2) + 'px';

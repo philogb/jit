@@ -270,7 +270,7 @@ function init() {
     //compute node positions and layout
     st.compute();
     //optional: make a translation of the tree
-    st.geom.translate(new $jit.Complex(0, 200), "startPos");
+    st.geom.translate(new $jit.Complex(0, 200), "start");
     //Emulate a click on the root node.
     st.onClick(st.root, {
         Move: {

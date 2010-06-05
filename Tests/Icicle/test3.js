@@ -3343,14 +3343,18 @@ function init(){
     // id of the visualization container
     injectInto: 'infovis',
     // whether to add transition animations
-    animate: true,
+    animate: animate,
     // nodes offset
     offset: 1,
     // whether to add cushion type nodes
-    cushion: useGradients,
+    cushion: false,
+    //show only three levels at a time
+    constrained: true,
+    levelsToShow: 3,
     // enable tips
     Tips: {
       enable: true,
+      type: 'Native',
       // add positioning offsets
       offsetX: 20,
       offsetY: 20,
@@ -3372,11 +3376,14 @@ function init(){
     Events: {
       enable: true,
       onMouseEnter: function(node) {
+        //add border and replot node
         node.setData('border', '#33dddd');
-        icicle.fx.plot();
+        icicle.fx.plotNode(node, icicle.canvas);
+        icicle.labels.plotLabel(icicle.canvas, node, icicle.controller);
       },
       onMouseLeave: function(node) {
         node.removeData('border');
+        icicle.fx.plot();
       },
       onClick: function(node){
         if (node) {

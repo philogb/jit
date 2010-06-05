@@ -11,12 +11,12 @@ function init(){
     //parent box title heights
     titleHeight: 0,
     //enable animations
-    animate: true,
+    animate: animate,
     //box offsets
     offset: 1,
     //use canvas text
     Label: {
-      type: 'Native',
+      type: labelType,
       size: 9,
       family: 'Tahoma, Verdana, Arial'
     },
@@ -41,6 +41,7 @@ function init(){
       //when hovering a node
       onMouseEnter: function(node, eventInfo) {
         if(node) {
+          //add node selected styles and replot node
           node.setCanvasStyle('shadowBlur', 7);
           node.setData('color', '#888');
           tm.fx.plotNode(node, tm.canvas);
@@ -60,6 +61,7 @@ function init(){
     //Enable tips
     Tips: {
       enable: true,
+      type: 'Native',
       //add positioning offsets
       offsetX: 20,
       offsetY: 20,
@@ -92,6 +94,11 @@ function init(){
       var subtree = $jit.json.getSubtree(tree, nodeId);  
       $jit.json.prune(subtree, 1);  
       onComplete.onComplete(nodeId, subtree);  
+    },
+    //Add the name of the node in the corresponding label
+    //This method is called once, on label creation and only for DOM labels.
+    onCreateLabel: function(domElement, node){
+        domElement.innerHTML = node.name;
     }
   });
   
@@ -121,5 +128,10 @@ function init(){
     util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
     tm.layout.orientation = "v";
     tm.refresh();
+  });
+  //add event to the back button
+  var back = $jit.id('back');
+  $jit.util.addEvent(back, 'click', function() {
+    tm.out();
   });
 }

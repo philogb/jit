@@ -30,8 +30,10 @@ TM.Base = {
       Node: {
         type: 'rectangle',
         overridable: true,
-        width: 1,
-        height: 1,
+        //we all know with this is not zero,
+        //right, Firefox?
+        width: 3,
+        height: 3,
         color: '#444'
       },
       Label: {
@@ -98,6 +100,11 @@ TM.Base = {
         }
       }));
     } else {
+      var labelType = this.config.Label.type;
+      if(labelType != 'Native') {
+        var that = this;
+        this.graph.eachNode(function(n) { that.labels.hideLabel(n, false); });
+      }
       this.busy = false;
       this.compute();
       this.plot();
@@ -162,8 +169,9 @@ TM.Base = {
             }
           });
         } else {
-          this.clickedNode = n;
-          this.refresh();
+          that.busy = false;
+          that.clickedNode = n;
+          that.refresh();
         }
       }
     };

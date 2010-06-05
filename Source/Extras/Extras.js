@@ -192,16 +192,16 @@ var MouseEventsManager = new Class({
  */
 var Extras = {
   initializeExtras: function() {
-    var mem = new MouseEventsManager(this);
-    for(var className in Extras.Classes) {
-      var obj = new Extras.Classes[className](className, this);
+    var mem = new MouseEventsManager(this), that = this;
+    $.each(['NodeStyles', 'Tips', 'Navigation', 'Events'], function(k) {
+      var obj = new Extras.Classes[k](k, that);
       if(obj.isEnabled()) {
         mem.register(obj);
       }
       if(obj.setAsProperty()) {
-        this[className.toLowerCase()] = obj;
+        that[k.toLowerCase()] = obj;
       }
-    }
+    });
   }   
 };
 

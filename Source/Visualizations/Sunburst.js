@@ -294,7 +294,7 @@ $jit.Sunburst = new Class({
     });
     if (method == 'animate') {
       this.fx.animate(options);
-    } else if (method == ' replot') {
+    } else if (method == 'replot') {
       this.fx.plot();
       this.busy = false;
     }
@@ -515,8 +515,9 @@ $jit.Sunburst.$extend = true;
     }
 
     var thetap = cond ? p.theta + pi : p.theta;
-    tag.setAttribute('transform', 'rotate(' + thetap * 360 / (2 * pi) + ' ' + x
-        + ' ' + y + ')');
+    if(node._depth)
+      tag.setAttribute('transform', 'rotate(' + thetap * 360 / (2 * pi) + ' ' + x
+          + ' ' + y + ')');
   }
 
   controller.onPlaceLabel(tag, node);
@@ -556,8 +557,14 @@ $jit.Sunburst.$extend = true;
       
      */
     placeLabel: function(tag, node, controller) {
-      var pos = node.pos.getc(true), canvas = this.viz.canvas;
-      var radius = canvas.getSize();
+      var pos = node.pos.clone(), 
+          canvas = this.viz.canvas,
+          height = node.getData('height'),
+          ldist = ((height || node._depth == 0)? height : this.viz.config.levelDistance) /2,
+          radius = canvas.getSize();
+      pos.rho += ldist;
+      pos = pos.getc(true);
+      
       var labelPos = {
         x: Math.round(pos.x + radius.width / 2),
         y: Math.round(pos.y + radius.height / 2)
