@@ -488,7 +488,7 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
       
       if(width - offset < 2 || height - offset < 2) return;
       
-      if(config.cushion && !animating) {
+      if(config.cushion) {
         var color = node.getData('color');
         var lg = ctx.createRadialGradient(posx + (width - offset)/2, 
                                           posy + (height - offset)/2, 1, 
