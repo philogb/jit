@@ -1,19 +1,14 @@
 function init(){
-  var get = function(id){
-    return document.getElementById(id);
-  };
-
   var json = Feeder.makeTree( {
     idPrefix: "node",
     levelStart: 0,
-    levelEnd: 7,
+    levelEnd: 5,
     maxChildrenPerNode: 5,
-    minChildrenPerNode: 0,
+    minChildrenPerNode: 2,
     counter: 0,
     color: false,
     dim: true
   });
-
   var startColor = [Math.floor(Math.random()*360), 80, 100]; // HSV
   function setDepthColors(json, depth, area) {
     var color = startColor.slice(0);
@@ -32,7 +27,7 @@ function init(){
   }
   setDepthColors(json, 0, 100);
 
-  icicle  = new $jit.Icicle( {
+  var icicle  = new $jit.Icicle( {
     'injectInto': 'infovis',
     //orientation: "v",
     animate: true,

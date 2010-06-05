@@ -438,7 +438,7 @@ tests_model = {
               <b>Right click</b> to set the parent node as root for the visualization.
             </p>
             """,
-            'Extras': ['generators.js']
+            'Extras': ['generators.js', 'excanvas.js']
         },
         {
             'Title': 'Icicle tree with limited levels shown',
@@ -451,7 +451,20 @@ tests_model = {
               <b>Right click</b> to set the parent node as root for the visualization.
             </p>
             """,
-            'Extras': ['generators.js']
+            'Extras': ['excanvas.js']
+        },
+        {
+            'Title': 'Icicle Tree with static JSON data',
+            'Description': 
+            """
+            <p>Some static JSON tree data is fed to this visualization.</p>
+            <p>
+              <b>Left click</b> to set a node as root for the visualization.<br>
+              <b>Right click</b> to set the parent node as root for the visualization.
+            </p>
+            """,
+            'Extras': ['excanvas.js', 'generators.js'],
+            'Example':True
         },
    ],
 
