@@ -3,86 +3,57 @@ function init(){
     var json = {
         id: "node02",
         name: "0.2",
-        data: {},
         children: [{
             id: "node13",
             name: "1.3",
-            data: {},
             children: [{
                 id: "node24",
-                name: "2.4",
-                data: {},
-                children: []
-            }, {
+                name: "2.4"
+              }, {
                 id: "node222",
-                name: "2.22",
-                data: {},
-                children: []
-            }]
+                name: "2.22"
+              }]
         }, {
             id: "node125",
             name: "1.25",
-            data: {},
             children: [{
                 id: "node226",
-                name: "2.26",
-                data: {},
-                children: []
+                name: "2.26"
             }, {
                 id: "node237",
-                name: "2.37",
-                data: {},
-                children: []
+                name: "2.37"
             }, {
                 id: "node258",
-                name: "2.58",
-                data: {},
-                children: []
+                name: "2.58"
             }]
         }, {
             id: "node165",
             name: "1.65",
-            data: {},
             children: [{
                 id: "node266",
-                name: "2.66",
-                data: {},
-                children: []
+                name: "2.66"
             }, {
                 id: "node283",
-                name: "2.83",
-                data: {},
-                children: []
+                name: "2.83"
             }, {
                 id: "node2104",
                 name: "2.104",
-                data: {},
-                children: []
             }, {
                 id: "node2109",
-                name: "2.109",
-                data: {},
-                children: []
+                name: "2.109"
             }, {
                 id: "node2125",
-                name: "2.125",
-                data: {},
-                children: []
+                name: "2.125"
             }]
         }, {
             id: "node1130",
             name: "1.130",
-            data: {},
             children: [{
                 id: "node2131",
-                name: "2.131",
-                data: {},
-                children: []
+                name: "2.131"
             }, {
                 id: "node2138",
-                name: "2.138",
-                data: {},
-                children: []
+                name: "2.138"
             }]
         }]
     };
