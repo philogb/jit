@@ -311,7 +311,7 @@ $jit.Icicle.Plot = new Class({
       'withLabels': true,
       'hideLabels': false,
       'plotSubtree': function(root, node) {
-        return !viz.config.contrained ||
+        return !viz.config.constrained ||
                (node._depth - initialDepth < viz.config.levelsToShow);
       }
     }), animating);
@@ -479,7 +479,9 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
       var pos = node.pos.getc(true);
       var posx = pos.x + offset / 2, posy = pos.y + offset / 2;
       var ctx = canvas.getCtx();
-
+      
+      if(width - offset < 2 || height - offset < 2) return;
+      
       if(config.cushion) {
         var color = node.getData('color');
         var lg = ctx.createRadialGradient(posx + (width - offset)/2, 

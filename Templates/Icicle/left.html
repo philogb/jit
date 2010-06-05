@@ -18,32 +18,20 @@ $def with (model, type, number, max)
       <option value="v">vertical</option>
     </select>
     <br>
+    <div id="max-levels">
     <label for="i-levels-to-show">Max levels: </label>
-    <input value="-1" id="i-levels-to-show" name="i-levels-to-show" style="width: 30px">
+    <select  id="i-levels-to-show" name="i-levels-to-show" style="width: 50px">
+      <option>all</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+    </div>
   </div>
 </div>
 
+<a id="update" href="#" class="theme button white">Go to Parent</a>
+ 
 <div id="id-list"></div>
-
-<script>
-  var jit = $$jit
-  var select = jit.id('s-orientation');
-  jit.util.addEvent(select, 'change', function () {
-    icicle.layout.orientation = select[select.selectedIndex].value;
-    icicle.refresh();
-  });
-
-  var levelsToShowInput = jit.id('i-levels-to-show');
-  jit.util.addEvent(levelsToShowInput, 'change', function () {
-    try {
-      var l = parseInt(levelsToShowInput.value);
-      if (l < 0) {
-        icicle.config.contrained = false;
-      } else {
-        icicle.config.contrained = true;
-        icicle.config.levelsToShow = l;
-      }
-      icicle.refresh();
-    } catch(e) {}
-  });
-</script>

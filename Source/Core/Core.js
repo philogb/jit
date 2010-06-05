@@ -644,6 +644,7 @@ $jit.json = {
   eachLevel: function(tree, initLevel, toLevel, action) {
     if (initLevel <= toLevel) {
       action(tree, initLevel);
+      if(!tree.children) return;
       for ( var i = 0, ch = tree.children; i < ch.length; i++) {
         this.eachLevel(ch[i], initLevel + 1, toLevel, action);
       }

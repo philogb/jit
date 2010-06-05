@@ -29,7 +29,7 @@ Layouts.Icicle = new Class({
         width = size.width,
         height = size.height,
         offset = config.offset,
-        levelsToShow = config.contrained ? config.levelsToShow : Number.MAX_VALUE;
+        levelsToShow = config.constrained ? config.levelsToShow : Number.MAX_VALUE;
 
     this.controller.onBeforeCompute(root);
 

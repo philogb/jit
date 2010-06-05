@@ -1,4 +1,9 @@
+var icicle;
+
 function init(){
+  //left panel controls
+  controls();
+
   // init data
   var json = {
     "id": "node02",
@@ -43,8 +48,8 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5c6f"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node47",
                             "name": "4.7",
@@ -52,8 +57,8 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node48",
                             "name": "4.8",
@@ -61,8 +66,8 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node49",
                             "name": "4.9",
@@ -70,8 +75,8 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node410",
                             "name": "4.10",
@@ -79,8 +84,8 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff5468"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node411",
                             "name": "4.11",
@@ -88,8 +93,8 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6173"
-                            },
-                            "children": []
+                            }
+                            
                           }
                       ]
                     }, {
@@ -108,8 +113,8 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4056"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node414",
                             "name": "4.14",
@@ -117,8 +122,8 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7383"
-                            },
-                            "children": []
+                            }
+                            
                           }, {
                             "id": "node415",
                             "name": "4.15",
@@ -126,8 +131,8 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff4d61"
-                            },
-                            "children": []
+                            }
+                            
                           }
                       ]
                     }
@@ -157,8 +162,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff3048"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node419",
                             "name": "4.19",
@@ -166,8 +170,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5064"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -186,8 +189,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff697b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node422",
                             "name": "4.22",
@@ -195,8 +197,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff4e62"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node423",
                             "name": "4.23",
@@ -204,8 +205,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6f80"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node424",
                             "name": "4.24",
@@ -213,8 +213,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff596c"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -233,8 +232,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff203a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node427",
                             "name": "4.27",
@@ -242,8 +240,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -262,8 +259,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff4d61"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node430",
                             "name": "4.30",
@@ -271,8 +267,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6f7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node431",
                             "name": "4.31",
@@ -280,8 +275,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff445a"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -311,8 +305,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff0d29"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node435",
                             "name": "4.35",
@@ -320,8 +313,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7383"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -340,8 +332,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node438",
                             "name": "4.38",
@@ -349,8 +340,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5b6e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node439",
                             "name": "4.39",
@@ -358,8 +348,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff576a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node440",
                             "name": "4.40",
@@ -367,8 +356,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7282"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node441",
                             "name": "4.41",
@@ -376,8 +364,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -396,8 +383,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node444",
                             "name": "4.44",
@@ -405,8 +391,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node445",
                             "name": "4.45",
@@ -414,8 +399,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node446",
                             "name": "4.46",
@@ -423,8 +407,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff586c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node447",
                             "name": "4.47",
@@ -432,8 +415,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6779"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node448",
                             "name": "4.48",
@@ -441,8 +423,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -461,8 +442,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff4056"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node451",
                             "name": "4.51",
@@ -470,8 +450,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node452",
                             "name": "4.52",
@@ -479,8 +458,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff5c6f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -499,8 +477,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7484"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node455",
                             "name": "4.55",
@@ -508,8 +485,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6d7e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node456",
                             "name": "4.56",
@@ -517,8 +493,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6577"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node457",
                             "name": "4.57",
@@ -526,8 +501,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff697b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node458",
                             "name": "4.58",
@@ -535,8 +509,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6d7e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node459",
                             "name": "4.59",
@@ -544,8 +517,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6274"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -564,8 +536,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node462",
                             "name": "4.62",
@@ -573,8 +544,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node463",
                             "name": "4.63",
@@ -582,8 +552,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node464",
                             "name": "4.64",
@@ -591,8 +560,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7181"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node465",
                             "name": "4.65",
@@ -600,8 +568,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4e63"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node466",
                             "name": "4.66",
@@ -609,8 +576,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -651,8 +617,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff596d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node471",
                             "name": "4.71",
@@ -660,8 +625,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7383"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node472",
                             "name": "4.72",
@@ -669,8 +633,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7383"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node473",
                             "name": "4.73",
@@ -678,8 +641,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node474",
                             "name": "4.74",
@@ -687,8 +649,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff596d"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -707,8 +668,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6274"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node477",
                             "name": "4.77",
@@ -716,8 +676,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node478",
                             "name": "4.78",
@@ -725,8 +684,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6f7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node479",
                             "name": "4.79",
@@ -734,8 +692,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7383"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node480",
                             "name": "4.80",
@@ -743,8 +700,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -763,8 +719,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node483",
                             "name": "4.83",
@@ -772,8 +727,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff6779"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node484",
                             "name": "4.84",
@@ -781,8 +735,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5a6e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node485",
                             "name": "4.85",
@@ -790,8 +743,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5a6e"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -810,8 +762,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node488",
                             "name": "4.88",
@@ -819,8 +770,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6b7c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node489",
                             "name": "4.89",
@@ -828,8 +778,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff566a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node490",
                             "name": "4.90",
@@ -837,8 +786,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5a6e"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -857,8 +805,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node493",
                             "name": "4.93",
@@ -866,8 +813,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5b6e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node494",
                             "name": "4.94",
@@ -875,8 +821,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node495",
                             "name": "4.95",
@@ -884,8 +829,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff495e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node496",
                             "name": "4.96",
@@ -893,8 +837,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6779"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -924,8 +867,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff5c6f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4100",
                             "name": "4.100",
@@ -933,8 +875,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7888"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4101",
                             "name": "4.101",
@@ -942,8 +883,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4102",
                             "name": "4.102",
@@ -951,8 +891,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -971,8 +910,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4105",
                             "name": "4.105",
@@ -980,8 +918,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff697b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4106",
                             "name": "4.106",
@@ -989,8 +926,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4107",
                             "name": "4.107",
@@ -998,8 +934,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4108",
                             "name": "4.108",
@@ -1007,8 +942,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff697b"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1027,8 +961,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7585"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4111",
                             "name": "4.111",
@@ -1036,8 +969,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6778"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4112",
                             "name": "4.112",
@@ -1045,8 +977,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff6a7c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4113",
                             "name": "4.113",
@@ -1054,8 +985,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4114",
                             "name": "4.114",
@@ -1063,8 +993,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6778"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4115",
                             "name": "4.115",
@@ -1072,8 +1001,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff7182"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -1103,8 +1031,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6577"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4119",
                             "name": "4.119",
@@ -1112,8 +1039,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4120",
                             "name": "4.120",
@@ -1121,8 +1047,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6274"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4121",
                             "name": "4.121",
@@ -1130,8 +1055,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6577"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4122",
                             "name": "4.122",
@@ -1139,8 +1063,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4123",
                             "name": "4.123",
@@ -1148,8 +1071,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6274"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1168,8 +1090,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4056"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4126",
                             "name": "4.126",
@@ -1177,8 +1098,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff596d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4127",
                             "name": "4.127",
@@ -1186,8 +1106,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6c7d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4128",
                             "name": "4.128",
@@ -1195,8 +1114,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1215,8 +1133,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4131",
                             "name": "4.131",
@@ -1224,8 +1141,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4132",
                             "name": "4.132",
@@ -1233,8 +1149,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7485"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4133",
                             "name": "4.133",
@@ -1242,8 +1157,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7485"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4134",
                             "name": "4.134",
@@ -1251,8 +1165,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6f80"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4135",
                             "name": "4.135",
@@ -1260,8 +1173,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6f80"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -1291,8 +1203,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4139",
                             "name": "4.139",
@@ -1300,8 +1211,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff475c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4140",
                             "name": "4.140",
@@ -1309,8 +1219,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1329,8 +1238,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4143",
                             "name": "4.143",
@@ -1338,8 +1246,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff7080"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4144",
                             "name": "4.144",
@@ -1347,8 +1254,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7c8b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4145",
                             "name": "4.145",
@@ -1356,8 +1262,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff586b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4146",
                             "name": "4.146",
@@ -1365,8 +1270,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5c6f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1385,8 +1289,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff687a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4149",
                             "name": "4.149",
@@ -1394,8 +1297,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff576b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4150",
                             "name": "4.150",
@@ -1403,8 +1305,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4151",
                             "name": "4.151",
@@ -1412,8 +1313,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6e7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4152",
                             "name": "4.152",
@@ -1421,8 +1321,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6e7f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1441,8 +1340,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6f7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4155",
                             "name": "4.155",
@@ -1450,8 +1348,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff5e70"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4156",
                             "name": "4.156",
@@ -1459,8 +1356,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4157",
                             "name": "4.157",
@@ -1468,8 +1364,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff3b52"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1488,8 +1383,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4160",
                             "name": "4.160",
@@ -1497,8 +1391,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4161",
                             "name": "4.161",
@@ -1506,8 +1399,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6d7e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4162",
                             "name": "4.162",
@@ -1515,8 +1407,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4163",
                             "name": "4.163",
@@ -1524,8 +1415,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff576a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4164",
                             "name": "4.164",
@@ -1533,8 +1423,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff5266"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -1564,8 +1453,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff243e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4168",
                             "name": "4.168",
@@ -1573,8 +1461,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff5b6e"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1593,8 +1480,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6d7e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4171",
                             "name": "4.171",
@@ -1602,8 +1488,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4172",
                             "name": "4.172",
@@ -1611,8 +1496,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4173",
                             "name": "4.173",
@@ -1620,8 +1504,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff5266"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1640,8 +1523,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff6a7c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4176",
                             "name": "4.176",
@@ -1649,8 +1531,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff1531"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1669,8 +1550,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff2b43"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4179",
                             "name": "4.179",
@@ -1678,8 +1558,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4180",
                             "name": "4.180",
@@ -1687,8 +1566,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff5e70"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1707,8 +1585,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4183",
                             "name": "4.183",
@@ -1716,8 +1593,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff203a"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1736,8 +1612,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7080"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4186",
                             "name": "4.186",
@@ -1745,8 +1620,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4187",
                             "name": "4.187",
@@ -1754,8 +1628,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff3048"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -1785,8 +1658,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5e70"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4191",
                             "name": "4.191",
@@ -1794,8 +1666,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4192",
                             "name": "4.192",
@@ -1803,8 +1674,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5e70"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4193",
                             "name": "4.193",
@@ -1812,8 +1682,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6f7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4194",
                             "name": "4.194",
@@ -1821,8 +1690,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5e70"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1841,8 +1709,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff5e70"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4197",
                             "name": "4.197",
@@ -1850,8 +1717,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4198",
                             "name": "4.198",
@@ -1859,8 +1725,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6f7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4199",
                             "name": "4.199",
@@ -1868,8 +1733,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff3b52"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -1910,8 +1774,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff4a5f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4204",
                             "name": "4.204",
@@ -1919,8 +1782,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff354d"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1939,8 +1801,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4207",
                             "name": "4.207",
@@ -1948,8 +1809,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4208",
                             "name": "4.208",
@@ -1957,8 +1817,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4209",
                             "name": "4.209",
@@ -1966,8 +1825,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff6f7f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4210",
                             "name": "4.210",
@@ -1975,8 +1833,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -1995,8 +1852,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4213",
                             "name": "4.213",
@@ -2004,8 +1860,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7c8b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4214",
                             "name": "4.214",
@@ -2013,8 +1868,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6173"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4215",
                             "name": "4.215",
@@ -2022,8 +1876,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7c8b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4216",
                             "name": "4.216",
@@ -2031,8 +1884,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5d70"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4217",
                             "name": "4.217",
@@ -2040,8 +1892,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2060,8 +1911,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff4d61"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4220",
                             "name": "4.220",
@@ -2069,8 +1919,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff334b"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2089,8 +1938,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff485d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4223",
                             "name": "4.223",
@@ -2098,8 +1946,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff384f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2118,8 +1965,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff384f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4226",
                             "name": "4.226",
@@ -2127,8 +1973,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff485d"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -2158,8 +2003,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7484"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4230",
                             "name": "4.230",
@@ -2167,8 +2011,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff465b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4231",
                             "name": "4.231",
@@ -2176,8 +2019,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff687a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4232",
                             "name": "4.232",
@@ -2185,8 +2027,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff5d70"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2205,8 +2046,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff576a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4235",
                             "name": "4.235",
@@ -2214,8 +2054,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5266"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4236",
                             "name": "4.236",
@@ -2223,8 +2062,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7081"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4237",
                             "name": "4.237",
@@ -2232,8 +2070,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2252,8 +2089,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4240",
                             "name": "4.240",
@@ -2261,8 +2097,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff596c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4241",
                             "name": "4.241",
@@ -2270,8 +2105,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2290,8 +2124,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4244",
                             "name": "4.244",
@@ -2299,8 +2132,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7182"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4245",
                             "name": "4.245",
@@ -2308,8 +2140,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7182"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4246",
                             "name": "4.246",
@@ -2317,8 +2148,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff475c"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2337,8 +2167,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6a7c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4249",
                             "name": "4.249",
@@ -2346,8 +2175,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4a5f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4250",
                             "name": "4.250",
@@ -2355,8 +2183,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4a5f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -2386,8 +2213,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff586b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4254",
                             "name": "4.254",
@@ -2395,8 +2221,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4255",
                             "name": "4.255",
@@ -2404,8 +2229,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5c6f"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4256",
                             "name": "4.256",
@@ -2413,8 +2237,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7283"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4257",
                             "name": "4.257",
@@ -2422,8 +2245,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff6577"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4258",
                             "name": "4.258",
@@ -2431,8 +2253,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2451,8 +2272,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6a7c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4261",
                             "name": "4.261",
@@ -2460,8 +2280,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4262",
                             "name": "4.262",
@@ -2469,8 +2288,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff596d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4263",
                             "name": "4.263",
@@ -2478,8 +2296,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7383"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4264",
                             "name": "4.264",
@@ -2487,8 +2304,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff596d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4265",
                             "name": "4.265",
@@ -2496,8 +2312,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7787"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -2527,8 +2342,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6072"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4269",
                             "name": "4.269",
@@ -2536,8 +2350,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6c7d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4270",
                             "name": "4.270",
@@ -2545,8 +2358,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4271",
                             "name": "4.271",
@@ -2554,8 +2366,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff596d"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4272",
                             "name": "4.272",
@@ -2563,8 +2374,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4273",
                             "name": "4.273",
@@ -2572,8 +2382,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2592,8 +2401,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff4e62"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4276",
                             "name": "4.276",
@@ -2601,8 +2409,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4277",
                             "name": "4.277",
@@ -2610,8 +2417,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7a89"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4278",
                             "name": "4.278",
@@ -2619,8 +2425,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2639,8 +2444,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7887"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4281",
                             "name": "4.281",
@@ -2648,8 +2452,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5064"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4282",
                             "name": "4.282",
@@ -2657,8 +2460,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff384f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2677,8 +2479,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6f80"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4285",
                             "name": "4.285",
@@ -2686,8 +2487,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5367"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4286",
                             "name": "4.286",
@@ -2695,8 +2495,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff596c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4287",
                             "name": "4.287",
@@ -2704,8 +2503,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -2735,8 +2533,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff3048"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4291",
                             "name": "4.291",
@@ -2744,8 +2541,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5064"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2764,8 +2560,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff5064"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4294",
                             "name": "4.294",
@@ -2773,8 +2568,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff5a6e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4295",
                             "name": "4.295",
@@ -2782,8 +2576,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7a8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4296",
                             "name": "4.296",
@@ -2791,8 +2584,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff5a6e"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2811,8 +2603,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7484"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4299",
                             "name": "4.299",
@@ -2820,8 +2611,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff233c"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4300",
                             "name": "4.300",
@@ -2829,8 +2619,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff687a"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2849,8 +2638,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4303",
                             "name": "4.303",
@@ -2858,8 +2646,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7989"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4304",
                             "name": "4.304",
@@ -2867,8 +2654,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff7081"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4305",
                             "name": "4.305",
@@ -2876,8 +2662,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6174"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4306",
                             "name": "4.306",
@@ -2885,8 +2670,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6779"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4307",
                             "name": "4.307",
@@ -2894,8 +2678,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6779"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -2936,8 +2719,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff495e"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4312",
                             "name": "4.312",
@@ -2945,8 +2727,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff374e"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -2965,8 +2746,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4315",
                             "name": "4.315",
@@ -2974,8 +2754,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4316",
                             "name": "4.316",
@@ -2983,8 +2762,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff374e"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3003,8 +2781,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff6577"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4319",
                             "name": "4.319",
@@ -3012,8 +2789,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6174"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4320",
                             "name": "4.320",
@@ -3021,8 +2797,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff5e71"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4321",
                             "name": "4.321",
@@ -3030,8 +2805,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7585"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4322",
                             "name": "4.322",
@@ -3039,8 +2813,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6f80"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4323",
                             "name": "4.323",
@@ -3048,8 +2821,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7585"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3068,8 +2840,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff2b43"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4326",
                             "name": "4.326",
@@ -3077,8 +2848,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3097,8 +2867,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff7182"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4329",
                             "name": "4.329",
@@ -3106,8 +2875,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4330",
                             "name": "4.330",
@@ -3115,8 +2883,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6678"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4331",
                             "name": "4.331",
@@ -3124,8 +2891,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff697a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4332",
                             "name": "4.332",
@@ -3133,8 +2899,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff7484"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4333",
                             "name": "4.333",
@@ -3142,8 +2907,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -3173,8 +2937,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff4359"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4337",
                             "name": "4.337",
@@ -3182,8 +2945,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7888"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4338",
                             "name": "4.338",
@@ -3191,8 +2953,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7181"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4339",
                             "name": "4.339",
@@ -3200,8 +2961,7 @@ function init(){
                               "$area": 4,
                               "$dim": 4,
                               "$color": "#ff6274"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4340",
                             "name": "4.340",
@@ -3209,8 +2969,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7181"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3229,8 +2988,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4343",
                             "name": "4.343",
@@ -3238,8 +2996,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6174"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4344",
                             "name": "4.344",
@@ -3247,8 +3004,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff6476"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4345",
                             "name": "4.345",
@@ -3256,8 +3012,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff6174"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4346",
                             "name": "4.346",
@@ -3265,8 +3020,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7686"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4347",
                             "name": "4.347",
@@ -3274,8 +3028,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff6a7c"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3294,8 +3047,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff7080"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4350",
                             "name": "4.350",
@@ -3303,8 +3055,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4351",
                             "name": "4.351",
@@ -3312,8 +3063,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7585"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4352",
                             "name": "4.352",
@@ -3321,8 +3071,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7a8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4353",
                             "name": "4.353",
@@ -3330,8 +3079,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4a5f"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3350,8 +3098,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4356",
                             "name": "4.356",
@@ -3359,8 +3106,7 @@ function init(){
                               "$area": 7,
                               "$dim": 7,
                               "$color": "#ff1c37"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -3390,8 +3136,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff3950"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4360",
                             "name": "4.360",
@@ -3399,8 +3144,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4361",
                             "name": "4.361",
@@ -3408,8 +3152,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff6375"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3428,8 +3171,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff3950"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4364",
                             "name": "4.364",
@@ -3437,8 +3179,7 @@ function init(){
                               "$area": 2,
                               "$dim": 2,
                               "$color": "#ff7182"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4365",
                             "name": "4.365",
@@ -3446,8 +3187,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5569"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3466,8 +3206,7 @@ function init(){
                               "$area": 8,
                               "$dim": 8,
                               "$color": "#ff4359"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4368",
                             "name": "4.368",
@@ -3475,8 +3214,7 @@ function init(){
                               "$area": 3,
                               "$dim": 3,
                               "$color": "#ff697b"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4369",
                             "name": "4.369",
@@ -3484,8 +3222,7 @@ function init(){
                               "$area": 6,
                               "$dim": 6,
                               "$color": "#ff5267"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3504,8 +3241,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff4056"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4372",
                             "name": "4.372",
@@ -3513,8 +3249,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff4056"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3533,8 +3268,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff4359"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4375",
                             "name": "4.375",
@@ -3542,8 +3276,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7988"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4376",
                             "name": "4.376",
@@ -3551,8 +3284,7 @@ function init(){
                               "$area": 9,
                               "$dim": 9,
                               "$color": "#ff4359"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }, {
@@ -3571,8 +3303,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4e63"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4379",
                             "name": "4.379",
@@ -3580,8 +3311,7 @@ function init(){
                               "$area": 10,
                               "$dim": 10,
                               "$color": "#ff4e63"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4380",
                             "name": "4.380",
@@ -3589,8 +3319,7 @@ function init(){
                               "$area": 1,
                               "$dim": 1,
                               "$color": "#ff7b8a"
-                            },
-                            "children": []
+                            }
                           }, {
                             "id": "node4381",
                             "name": "4.381",
@@ -3598,8 +3327,7 @@ function init(){
                               "$area": 5,
                               "$dim": 5,
                               "$color": "#ff6779"
-                            },
-                            "children": []
+                            }
                           }
                       ]
                     }
@@ -3619,7 +3347,7 @@ function init(){
     // nodes offset
     offset: 1,
     // whether to add cushion type nodes
-    cushion: true,
+    cushion: useGradients,
     // enable tips
     Tips: {
       enable: true,

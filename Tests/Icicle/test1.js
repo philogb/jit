@@ -1,4 +1,6 @@
 function init(){
+  //init controls
+  controls();
   var json = Feeder.makeTree( {
     idPrefix: "node",
     levelStart: 0,
@@ -27,7 +29,7 @@ function init(){
   }
   setDepthColors(json, 0, 100);
 
-  var icicle  = new $jit.Icicle( {
+  var icicle  = new $jit.Icicle({
     'injectInto': 'infovis',
     //orientation: "v",
     animate: true,

@@ -459,12 +459,30 @@ tests_model = {
             """
             <p>Some static JSON tree data is fed to this visualization.</p>
             <p>
-              <b>Left click</b> to set a node as root for the visualization.<br>
+              <b>Left click</b> to set a node as root for the visualization.
+            </p>
+            <p>
               <b>Right click</b> to set the parent node as root for the visualization.
             </p>
             """,
             'Extras': ['excanvas.js', 'generators.js'],
             'Example':True
+        },
+        {
+            'Title': 'Icicle tree with limited levels shown',
+            'Description': 
+            """
+            <p>A static JSON tree representing a file system tree is loaded into
+            an Icicle Tree.</p>
+            <p>
+              <b>Left click</b> to set a node as root for the visualization.
+            </p>
+            <p>
+              <b>Right click</b> to set the parent node as root for the visualization.
+            </p>
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
         },
    ],
 

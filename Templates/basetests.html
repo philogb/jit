@@ -11,6 +11,7 @@ $def with (name, title, extras, test, build, includes)
 
 <!-- Add extra libraries -->
 <script language="javascript" type="text/javascript" src="/Tests/js/common.js"></script>
+<script language="javascript" type="text/javascript" src="/Tests/$name/left.js"></script>
 
 $if extras:
     $for lib in extras:
