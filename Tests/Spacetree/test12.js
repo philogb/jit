@@ -88,6 +88,8 @@ function init(){
     };
     //end
     //init Node Types
+    //Create a node rendering function that plots a fillRectangle and
+    //a stroke rectangle for borders
     $jit.ST.Plot.NodeTypes.implement({
       'stroke-rect': {
         'render': function(node, canvas) {
@@ -146,11 +148,19 @@ function init(){
             var style = label.style;
             style.width = 60 + 'px';
             style.height = 17 + 'px';            
-            style.cursor = 'pointer';
             style.color = '#333';
             style.fontSize = '0.8em';
             style.textAlign= 'center';
             style.paddingTop = '3px';
+        },
+        onPlaceLabel: function(label, node) {
+          var style = label.style;
+          style.width = node.getData('width') + 'px';
+          style.height = node.getData('height') + 'px';            
+          style.color = node.getLabelData('color');
+          style.fontSize = node.getLabelData('size') + 'px';
+          style.textAlign= 'center';
+          style.paddingTop = '3px';
         }
     });
     //load json data
