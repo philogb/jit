@@ -304,7 +304,7 @@ Graph.Plot = {
 
        - _modes_ (required) An Array of animation types. Possible values are "linear", "polar", "moebius", "node-property" and "edge-property".
 
-       "linear", "polar" and "moebius" animation options will interpolate <Graph.Nodes> "startPos" and "endPos" properties, storing the result in "pos". 
+       "linear", "polar" and "moebius" animation options will interpolate <Graph.Nodes> "startPos" and "endPos" properties, storing the result in "current". 
        This means interpolating either cartesian coordinates, either polar coordinates or interpolation via a moebius transformation <http://en.wikipedia.org/wiki/Moebius_transformation> 
        
        "node-property" interpolates nodes' properties like alpha, color, dim, width, height. For this to work <Options.Graph.Node.overridable> must be *true*. 

@@ -644,7 +644,7 @@ $jit.ST= (function() {
                         n.visited = false; 
                     });
                     var offset = { x: complete.offsetX, y: complete.offsetY };
-                    that.geom.translate(node.endPos.add(offset).$scale(-1), ["pos", "startPos", "endPos"]);
+                    that.geom.translate(node.endPos.add(offset).$scale(-1), ["start", "current", "end"]);
                     group.show(getNodesToShow.call(that));              
                     that.plot();
                     complete.onAfterCompute(that.clickedNode);

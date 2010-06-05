@@ -18,7 +18,7 @@ Layouts.Radial = new Class({
    * Parameters:
    * 
    * property - _optional_ A <Graph.Node> position property to store the new
-   * positions. Possible values are 'pos', 'endPos' or 'startPos'.
+   * positions. Possible values are 'pos', 'end' or 'start'.
    * 
    */
   compute : function(property) {

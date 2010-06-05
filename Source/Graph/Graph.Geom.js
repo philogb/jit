@@ -14,12 +14,12 @@ Graph.Geom = new Class({
     Parameters:
   
     pos - A <Complex> number specifying translation vector.
-    prop - A <Graph.Node> position property ('pos', 'startPos' or 'endPos').
+    prop - A <Graph.Node> position property ('pos', 'start' or 'end').
   
     Example:
   
     (start code js)
-      st.geom.translate(new Complex(300, 100), 'endPos');
+      st.geom.translate(new Complex(300, 100), 'end');
     (end code)
   */  
   translate: function(pos, prop) {

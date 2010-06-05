@@ -50,7 +50,7 @@ function init(){
        
         onAfterCompute: function(){
             Log.write("done");
-            var node = ht.graph.getClosestNodeToOrigin("pos");
+            var node = ht.graph.getClosestNodeToOrigin("current");
             var _self = this;
             ht.graph.eachNode(function(n){
                 var domNode = (n.id in nodesCache) ? nodesCache[n.id] : nodesCache[n.id] = document.getElementById(n.id);

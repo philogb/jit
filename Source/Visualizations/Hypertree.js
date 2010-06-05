@@ -66,7 +66,7 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
   this.eachNode(graph, function(elem) {
     for ( var i = 0; i < prop.length; i++) {
       var p = pos[i].scale(-1), property = startPos ? startPos : prop[i];
-      elem[prop[i]].set(elem[property].getc().moebiusTransformation(p));
+      elem.getPos(prop[i]).set(elem.getPos(property).getc().moebiusTransformation(p));
     }
   }, flags);
 };
@@ -335,8 +335,8 @@ $jit.Hypertree = new Class( {
   reposition: function() {
     this.compute('end');
     var vector = this.graph.getNode(this.root).pos.getc().scale(-1);
-    Graph.Util.moebiusTransformation(this.graph, [ vector ], [ 'endPos' ],
-        'endPos', "ignore");
+    Graph.Util.moebiusTransformation(this.graph, [ vector ], [ 'end' ],
+        'end', "ignore");
     this.graph.eachNode(function(node) {
       if (node.ignore) {
         node.endPos.rho = node.pos.rho;

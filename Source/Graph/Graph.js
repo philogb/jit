@@ -1113,7 +1113,7 @@ Graph.Util = {
     Parameters:
    
      graph - A <Graph> instance.
-     prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
+     prop - _optional_ a <Graph.Node> position property. Possible properties are 'start', 'current' or 'end'. Default's 'current'.
   
     Returns:
   
@@ -1133,7 +1133,7 @@ Graph.Util = {
    
      graph - A <Graph> instance.
      pos - A <Complex> or <Polar> instance.
-     prop - _optional_ a <Graph.Node> position property. Possible properties are 'startPos', 'pos' or 'endPos'. Default's 'pos'.
+     prop - _optional_ a <Graph.Node> position property. Possible properties are 'start', 'current' or 'end'. Default's 'current'.
   
     Returns:
   
@@ -1142,15 +1142,15 @@ Graph.Util = {
   */
   getClosestNodeToPos: function(graph, pos, prop, flags) {
    var node = null;
-   prop = prop || 'pos';
+   prop = prop || 'current';
    pos = pos && pos.getc(true) || Complex.KER;
    var distance = function(a, b) {
      var d1 = a.x - b.x, d2 = a.y - b.y;
      return d1 * d1 + d2 * d2;
    };
    this.eachNode(graph, function(elem) {
-     node = (node == null || distance(elem[prop].getc(true), pos) < distance(
-         node[prop].getc(true), pos)) ? elem : node;
+     node = (node == null || distance(elem.getPos(prop).getc(true), pos) < distance(
+         node.getPos(prop).getc(true), pos)) ? elem : node;
    }, flags);
    return node;
   } 

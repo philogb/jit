@@ -436,7 +436,7 @@ function init(){
         //Take the left style property and substract half of the label actual width.
         onPlaceLabel: function(tag, node){
             if (N == null) 
-                N = ht.graph.getClosestNodeToOrigin("pos");
+                N = ht.graph.getClosestNodeToOrigin("current");
             ht.graph.eachNode(function(n){
                 if (N.adjacentTo(node) || N.id == node.id) {
                     tag.style.display = "";
@@ -453,7 +453,7 @@ function init(){
         
         onAfterCompute: function(){
             Log.write("done");
-            N = ht.graph.getClosestNodeToOrigin("pos");
+            N = ht.graph.getClosestNodeToOrigin("current");
             var html = "<h4>" + N.name + "</h4><b>Connections:</b>";
             html += "<ul>";
             N.eachAdjacency(function(adj){

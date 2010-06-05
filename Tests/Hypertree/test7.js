@@ -266,7 +266,7 @@ function init(){
             Log.write("done");
 
             //Make the relations list shown in the right column.
-            var node = ht.graph.getClosestNodeToOrigin("pos");
+            var node = ht.graph.getClosestNodeToOrigin("current");
             var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
             html += "<ul>";
             node.eachAdjacency(function(adj){
