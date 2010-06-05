@@ -311,6 +311,7 @@ tests_model = {
             You can <b>select the tree orientation</b> by changing the select box in the right column.<br /><br />
             You can <b>change the selection mode</b> from <em>Normal</em> selection (i.e. center the selected node) to 
             <em>Set as Root</em>.<br /><br />
+            <b>Drag and Drop the canvas</b> to do some panning.<br /><br />
             Leaves color depend on the number of children they actually have.
             """,
             'Extras': ['excanvas.js'],
