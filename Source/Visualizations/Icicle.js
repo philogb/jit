@@ -300,6 +300,7 @@ $jit.Icicle.Plot = new Class({
   },
 
   plot: function(opt, animating){
+    opt = opt || this.viz.controller;
     var viz = this.viz,
         graph = viz.graph,
         root = graph.getNode(viz.clickedNode && viz.clickedNode.id || viz.root),
@@ -333,19 +334,20 @@ $jit.Icicle.Label.Native = new Class({
   Implements: Graph.Label.Native,
 
   renderLabel: function(canvas, node, controller) {
-    var ctx = canvas.getCtx();
+    var ctx = canvas.getCtx(),
+        width = node.getData('width'),
+        height = node.getData('height'),
+        size = node.getLabelData('size'),
+        m = ctx.measureText(node.name);
 
     // Guess as much as possible if the label will fit in the node
-    if(controller.orientation == 'h' && node.getData("height") < node.getLabelData("size") * 1.5 ||
-       controller.orientation == 'v' && node.getData("width") < ctx.measureText(node.name).width)
+    if(height < (size * 1.5) || width < m.width)
       return;
 
     var pos = node.pos.getc(true);
-
-    ctx.fillStyle = node.getLabelData('color') || "#333";
     ctx.fillText(node.name,
-                 pos.x + node.getData("width") / 2,
-                 pos.y + node.getData("height") / 2);
+                 pos.x + width / 2,
+                 pos.y + height / 2);
   }
 });
 
@@ -491,8 +493,10 @@ $jit.Icicle.Plot.NodeTypes = new Class( {
         ctx.fillStyle = lg;
       }
 
-      if (border)
+      if (border) {
         ctx.strokeStyle = border;
+        ctx.lineWidth = 3;
+      }
 
       ctx.fillRect(posx, posy, Math.max(0, width - offset), Math.max(0, height - offset));
       border && ctx.strokeRect(pos.x, pos.y, width, height);
