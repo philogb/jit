@@ -25,15 +25,14 @@ def make_docs():
 def make_examples(fancy=False):
 #clean examples folder
     system("rm -rf Examples/*")
-#create example folders
-    system('mkdir Examples/Hypertree Examples/RGraph Examples/Treemap Examples/Spacetree Examples/ForceDirected Examples/Sunburst Examples/Other')
 #copy css base files
     system('cp -r Tests/css Examples/css')
 #iterate over the examples
     for viz, tests in tests_model.items():
+#create example folder
+        system('mkdir Examples/' + viz)
         count = 1
-        for i in range(len(tests)):
-            model = tests[i]
+        for i, model in enumerate(tests):
             if 'Example' in model and model['Example']:
                 make_example(viz, model, i, count, fancy)
                 count += 1
