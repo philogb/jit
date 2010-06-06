@@ -1,4 +1,9 @@
 /*
+ * File: Options.NodeStyles.js
+ *
+ */
+
+/*
   Object: Options.NodeStyles
   
   Apply different styles when a node is hovered or selected.

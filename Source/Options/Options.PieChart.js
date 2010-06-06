@@ -1,3 +1,8 @@
+/*
+ * File: Options.PieChart.js
+ *
+*/
+
 Options.PieChart = {
   $extend: true,
 

@@ -1,3 +1,8 @@
+/*
+ * File: Options.Navigation.js
+ *
+*/
+
 Options.Navigation = {
   $extend: false,
   

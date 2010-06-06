@@ -1,4 +1,9 @@
 /*
+ * File: Options.Edge.js
+ *
+*/
+
+/*
   Object: Options.Edge
 
   Provides Edge options for <Canvas> based visualizations.

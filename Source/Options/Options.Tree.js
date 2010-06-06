@@ -1,4 +1,9 @@
 /*
+ * File: Options.Tree.js
+ *
+*/
+
+/*
   Object: Options.Tree
   
   Options related to (classic) Tree layout algorithms.

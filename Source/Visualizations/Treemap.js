@@ -1,3 +1,8 @@
+/*
+ * File: Treemap.js
+ *
+*/
+
 $jit.TM = {};
 
 var TM = $jit.TM;

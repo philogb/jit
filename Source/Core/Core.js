@@ -9,28 +9,7 @@
   
   Some of the Basic utility functions and the Class system are based in the MooTools Framework <http://mootools.net>. Copyright (c) 2006-2009 Valerio Proietti, <http://mad4milk.net/>. MIT license <http://mootools.net/license.txt>.
   
-  Author: 
-  
-  Nicolas Garcia Belmonte
-  
-  Copyright: 
-  
-  Copyright 2008-2009 by Nicolas Garcia Belmonte.
-  
-  Homepage: 
-  
-  <http://thejit.org>
-  
-  Version: 
-  
-  1.1.3
-
-  License: 
-  
-  BSD License
  */
-
-
 
 window.$jit = function(w) {
   w = w || window;
@@ -40,6 +19,8 @@ window.$jit = function(w) {
     }
   }
 };
+
+$jit.version = '';
 
 var $ = function(d) {
   return document.getElementById(d);

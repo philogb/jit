@@ -1,3 +1,8 @@
+/*
+ * File: Options.Events.js
+ *
+*/
+
 Options.Events = {
   $extend: false,
   

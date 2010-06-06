@@ -1,3 +1,8 @@
+/*
+ * File: PieChart.js
+ *
+*/
+
 $jit.Sunburst.Plot.NodeTypes.implement({
   'piechart-stacked' : {
     'render' : function(node, canvas) {

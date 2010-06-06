@@ -1,3 +1,8 @@
+/*
+ * File: Options.BarChart.js
+ *
+*/
+
 Options.BarChart = {
   $extend: true,
   

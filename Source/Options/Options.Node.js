@@ -1,4 +1,9 @@
 /*
+ * File: Options.Node.js
+ *
+*/
+
+/*
   Object: Options.Node
 
   Provides Node options for <Canvas> based visualizations.

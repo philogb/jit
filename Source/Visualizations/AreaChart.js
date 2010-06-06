@@ -1,3 +1,8 @@
+/*
+ * File: AreaChart.js
+ *
+*/
+
 $jit.ST.Plot.NodeTypes.implement({
   'areachart-stacked' : {
     'render' : function(node, canvas) {

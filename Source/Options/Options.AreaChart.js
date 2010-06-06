@@ -1,3 +1,8 @@
+/*
+ * File: Options.AreaChart.js
+ *
+*/
+
 Options.AreaChart = {
   $extend: true,
 

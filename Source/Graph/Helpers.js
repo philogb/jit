@@ -1,3 +1,8 @@
+/*
+ * File: Helpers.js
+ *
+*/
+
 var NodeHelper = {
   'none': {
     'render': $.empty,

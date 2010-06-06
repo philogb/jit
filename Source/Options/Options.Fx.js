@@ -1,4 +1,9 @@
 /*
+ * File: Options.Fx.js
+ *
+*/
+
+/*
   Object: Options.Fx
 
   Provides animation configuration options.

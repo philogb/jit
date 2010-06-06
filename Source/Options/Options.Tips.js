@@ -1,4 +1,9 @@
 /*
+ * File: Options.Tips.js
+ *
+ */
+
+/*
   Object: Options.Tips
   
   Options for Tips

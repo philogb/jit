@@ -1,4 +1,9 @@
 /*
+ * File: Options.Canvas.js
+ *
+*/
+
+/*
   Object: Options.Canvas
   
   Canvas Options.

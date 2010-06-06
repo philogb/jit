@@ -7,8 +7,6 @@ Graph.Geom = new Class({
     this.edge = viz.config.Edge;
   },
   /*
-    Method: translate
-    
     Applies a translation to the tree.
   
     Parameters:

@@ -1,13 +1,4 @@
 /*
- * File: Animation.js
- * 
- * Core <Animation> and <Trans> transition classes.
- *
-*/
-
-/*
-   Object: Trans
-    
      An object containing multiple type of transformations. 
      
      Based on:
@@ -219,8 +210,6 @@ var Trans = $jit.Trans;
 })();
 
 /*
-   Class: Animation
-    
    A Class that can perform animations for generic objects.
 
    If you are looking for animation transitions please take a look at the <Trans> object.

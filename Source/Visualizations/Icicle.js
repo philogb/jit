@@ -1,3 +1,8 @@
+/*
+ * File: Icicle.js
+ *
+*/
+
 $jit.Icicle = new Class({
   Implements: [ Loader, Extras, Layouts.Icicle ],
 

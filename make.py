@@ -7,6 +7,11 @@ from serve import render
 from build import Build
 
 YC = 'yuicompressor-2.4.2.jar'
+EXCLUDES = ['Source/Extras', 
+            'Source/Layouts', 
+            'Source/Options/Options.js'
+            'Source/Core/Fx.js', 
+            'Source/Graph/Graph.Geom.js']
 
 def main():
     if 'docs' in sys.argv: make_docs()
@@ -17,10 +22,13 @@ def main():
 
 def make_docs():
     system("perl " 
-        + "NaturalDocs-1.4/NaturalDocs -i " 
-        + "Source/ -o HTML "
-        + "Docs/ -p "
-        + "NaturalDocs-1.4 -img NaturalDocs-1.4/img -s docstyle -r")
+        + "NaturalDocs-1.4/NaturalDocs -r " 
+        + " -i Source/" 
+        + " -xi " + " -xi ".join(EXCLUDES) 
+        + " -o HTML Docs/" 
+        + " -p NaturalDocs-1.4"
+        + " -img NaturalDocs-1.4/img"
+        + " -s docstyle")
 
 def make_examples(fancy=False):
 #clean examples folder

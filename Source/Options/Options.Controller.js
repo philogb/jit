@@ -1,4 +1,9 @@
 /*
+ * File: Options.Controller.js
+ *
+*/
+
+/*
   Object: Options.Controller
   
   Provides controller methods.

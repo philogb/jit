@@ -1,3 +1,8 @@
+/*
+ * File: BarChart.js
+ *
+*/
+
 $jit.ST.Plot.NodeTypes.implement({
   'barchart-stacked' : {
     'render' : function(node, canvas) {

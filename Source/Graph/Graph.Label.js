@@ -1,4 +1,9 @@
 /*
+ * File: Graph.Label.js
+ *
+*/
+
+/*
    Object: Graph.Label
 
    Generic interface for plotting labels.

@@ -1,3 +1,8 @@
+/*
+ * File: Options.Label.js
+ *
+*/
+
 Options.Label = {
   $extend: false,
   
