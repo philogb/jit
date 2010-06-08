@@ -318,17 +318,8 @@ $.removeClass = function(obj, klass) {
 };
 
 $.getPos = function(elem) {
-  if (elem.getBoundingClientRect) {
-    var bound = elem.getBoundingClientRect(), html = elem.ownerDocument.documentElement;
-    return {
-      x: bound.left + html.scrollLeft - html.clientLeft,
-      y: bound.top + html.scrollTop - html.clientTop
-    };
-  }
-
   var offset = getOffsets(elem);
   var scroll = getScrolls(elem);
-
   return {
     x: offset.x - scroll.x,
     y: offset.y - scroll.y
