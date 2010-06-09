@@ -6,45 +6,70 @@
 /*
   Object: Options.Controller
   
-  Provides controller methods.
+  Provides controller methods. Controller methods are callback functions that get called at different stages 
+  of the animation, computing or plotting of the visualization.
   
-  Description:
+  Implemented by:
+    
+  All visualizations except charts (<AreaChart>, <BarChart> and <PieChart>).
   
-  You can implement controller functions inside the configuration object of all visualizations.
+  Syntax:
   
-  *Common to all visualizations*
-    
-   - _onBeforeCompute(node)_ This method is called right before performing all computation and animations to the JIT visualization.
-   - _onAfterCompute()_ This method is triggered right after all animations or computations for the JIT visualizations ended.
+  (start code js)
 
-  *Used in <Canvas> based visualizations <ST>, <Hypertree>, <RGraph>*
+  Options.Controller = {
+    onBeforeCompute: $.empty,
+    onAfterCompute:  $.empty,
+    onCreateLabel:   $.empty,
+    onPlaceLabel:    $.empty,
+    onComplete:      $.empty,
+    onBeforePlotLine:$.empty,
+    onAfterPlotLine: $.empty,
+    onBeforePlotNode:$.empty,
+    onAfterPlotNode: $.empty,
+    request:         false
+  };
+  
+  (end code)
+  
+  Example:
+    
+  (start code js)
+  var viz = new $jit.Viz({
+    onBeforePlotNode: function(node) {
+      if(node.selected) {
+        node.setData('color', '#ffc');
+      } else {
+        node.removeData('color');
+      }
+    },
+    onBeforePlotLine: function(adj) {
+      if(adj.nodeFrom.selected && adj.nodeTo.selected) {
+        adj.setData('color', '#ffc');
+      } else {
+        adj.removeData('color');
+      }
+    },
+    onAfterCompute: function() {
+      alert("computed!");
+    }
+  });
+  (end code)
+  
+  Parameters:
 
-   - _onCreateLabel(domElement, node)_ This method receives the label dom element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called on label creation. Note that a <Graph.Node> is a node from the input tree/graph you provided to the visualization. If you want to know more about what kind of JSON tree/graph format is used to feed the visualizations, you can take a look at <Loader.loadJSON>. This method proves useful when adding events to the labels used by the JIT.
-   - _onPlaceLabel(domElement, node)_ This method receives the label dom element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed on the visualization, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions.
-   - _onBeforePlotNode(node)_ This method is triggered right before plotting a given node. The _node_ parameter is the <Graph.Node> to be plotted. 
-    This method is useful for changing a node style right before plotting it.
-   - _onAfterPlotNode(node)_ This method is triggered right after plotting a given node. The _node_ parameter is the <Graph.Node> plotted.
-   - _onBeforePlotLine(adj)_ This method is triggered right before plotting an edge. The _adj_ parameter is a <Graph.Adjacence> object. 
-    This method is useful for adding some styles to a particular edge before being plotted.
-   - _onAfterPlotLine(adj)_ This method is triggered right after plotting an edge. The _adj_ parameter is the <Graph.Adjacence> plotted.
+   onBeforeCompute(node) - This method is called right before performing all computations and animations. The selected <Graph.Node> is passed as parameter.
+   onAfterCompute() - This method is triggered after all animations or computations ended.
+   onCreateLabel(domElement, node) - This method receives a new label DIV element as first parameter, and the corresponding <Graph.Node> as second parameter. This method will only be called once for each label. This method is useful when adding events or styles to the labels used by the JIT.
+   onPlaceLabel(domElement, node) - This method receives a label DIV element as first parameter and the corresponding <Graph.Node> as second parameter. This method is called each time a label has been placed in the visualization, for example at each step of an animation, and thus it allows you to update the labels properties, such as size or position. Note that onPlaceLabel will be triggered after updating the labels positions. That means that, for example, the left and top css properties are already updated to match the nodes positions. Width and height properties are not set however.
+   onBeforePlotNode(node) - This method is triggered right before plotting each <Graph.Node>. This method is useful for changing a node style right before plotting it.
+   onAfterPlotNode(node) - This method is triggered right after plotting each <Graph.Node>.
+   onBeforePlotLine(adj) - This method is triggered right before plotting a <Graph.Adjacence>. This method is useful for adding some styles to a particular edge before being plotted.
+   onAfterPlotLine(adj) - This method is triggered right after plotting a <Graph.Adjacence>.
 
-   *Used in <TM> (Treemap) and DOM based visualizations*
+    *Used in <ST>, <TM> and <Icicle> visualizations*
     
-   - _onCreateElement(content, node, isLeaf, elem1, elem2)_ This method is called on each newly created node. 
-    
-    Parameters:
-     content - The div wrapper element with _content_ className.
-     node - The corresponding JSON tree node (See also <Loader.loadJSON>).
-     isLeaf - Whether is a leaf or inner node. If the node's an inner tree node, elem1 and elem2 will become the _head_ and _body_ div elements respectively. 
-     If the node's a _leaf_, then elem1 will become the div leaf element.
-    
-    - _onDestroyElement(content, node, isLeaf, elem1, elem2)_ This method is called before collecting each node. Takes the same parameters as onCreateElement.
-    
-    *Used in <ST> and <TM>*
-    
-    - _request(nodeId, level, onComplete)_ This method is used for buffering information into the visualization. When clicking on an empty node,
-    the visualization will make a request for this node's subtrees, specifying a given level for this subtree (defined by _levelsToShow_). Once the request is completed, the _onComplete_ 
-    object should be called with the given result.
+    request(nodeId, level, onComplete) - This method is used for buffering information into the visualization. When clicking on an empty node, the visualization will make a request for this node's subtrees, specifying a given level for this subtree (defined by _levelsToShow_). Once the request is completed, the onComplete callback should be called with the given result. This is useful to provide on-demand information into the visualizations withought having to load the entire information from start. The parameters used by this method are _nodeId_, which is the id of the root of the subtree to request, _level_ which is the depth of the subtree to be requested (0 would mean just the root node). _onComplete_ is an object having the callback method _onComplete.onComplete(json)_ that should be called once the json has been retrieved.  
  
  */
 Options.Controller = {
@@ -59,7 +84,5 @@ Options.Controller = {
   onAfterPlotLine: $.empty,
   onBeforePlotNode:$.empty,
   onAfterPlotNode: $.empty,
-  onCreateElement: $.empty,
-  onDestroyElement:$.empty,
   request:         false
 };

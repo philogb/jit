@@ -1,3 +1,7 @@
+.jit-autoadjust-label {
+  padding: 15px;
+}
+
 #update, #restore {
   text-align: center;
   width: 100px;

@@ -26,7 +26,6 @@ function init(){
             overridable:true,
             width:80,
             autoHeight:true,
-            labelPadding: 15,
             color:'#555'
         },
         

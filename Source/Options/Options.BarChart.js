@@ -3,13 +3,13 @@
  *
 */
 
-/**/
+/*
   Object: Options.BarChart
   
   These are the options that you can use in the <BarChart> class. 
   Other options included in the BarChart are <Options.Canvas>, <Options.Label> and <Options.Tips>.
   
-  The code for these options is as follows
+  Syntax:
   
   (start code js)
 
