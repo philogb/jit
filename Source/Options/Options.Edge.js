@@ -41,7 +41,7 @@
   Parameters:
     
    overridable - (boolean) Default's *false*. Determine whether or not general edges properties can be overridden by a particular <Graph.Adjacence>.
-   type - (string) Default's 'line'. Edge styles include 'line', 'hyperline', 'arrow'. The default Edge type might vary in each visualization.
+   type - (string) Default's 'line'. Edge styles include 'line', 'hyperline', 'arrow'. The default Edge type might vary in each visualization. You can also implement custom Edge types.
    color - (string) Default's '#ccb'. Edge color.
    lineWidth - (number) Default's *1*. Line/Edge width.
    alpha - (number) Default's *1*. The Edge's alpha value. *1* is for full opacity.
