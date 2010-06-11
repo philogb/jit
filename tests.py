@@ -664,6 +664,18 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example': True
+        },
+        {
+            'Title': 'Area Chart Example with click events',
+            'Description': 
+            """
+            A static Area Chart example with gradients that displays tooltips when hovering the stacks.<br /><br />
+            Left-click a Stack to apply a filter to it.<br /><br />
+            Right-click to restore all stacks.<br /><br />
+            Click the Update button to update the JSON data.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': False
         }
     ],
     
@@ -687,7 +699,17 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example': True
-        }
+        },
+        {
+            'Title': 'Bar Chart Example with events',
+            'Description': 
+            """
+            A static vertical Bar Chart example with gradients. The Bar Chart displays tooltips when hovering the stacks. <br /><br />
+            Click the Update button to update the JSON data.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': False
+        },
     ],
     
    'PieChart': [
@@ -709,7 +731,17 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example': False
-        }
+        },
+        {
+            'Title': 'Pie Chart Example with events',
+            'Description': 
+            """
+            A static Pie Chart example with gradients that displays tooltips when hovering the stacks.<br /><br />
+            Click the Update button to update the JSON data.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': False
+        },
     ]
 
 }   

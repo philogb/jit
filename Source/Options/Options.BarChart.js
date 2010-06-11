@@ -57,5 +57,9 @@ Options.BarChart = {
     enable: false,
     onShow: $.empty,
     onHide: $.empty
+  },
+  Events: {
+    enable: false,
+    onClick: $.empty
   }
 };

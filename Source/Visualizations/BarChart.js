@@ -202,6 +202,15 @@ $jit.BarChart = new Class({
           that.select(false, false, false);
         }
       },
+      Events: {
+        enable: true,
+        type: 'Native',
+        onClick: function(node, eventInfo, evt) {
+          if(!config.Events.enable) return;
+          var elem = eventInfo.getContains();
+          config.Events.onClick(elem, eventInfo, evt);
+        }
+      },
       onCreateLabel: function(domElement, node) {
         var labelConf = config.Label;
         if(config.showLabels) {

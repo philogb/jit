@@ -184,9 +184,10 @@ $jit.AreaChart = new Class({
         enable: true,
         type: 'Native',
         onClick: function(node, eventInfo, evt) {
-          if(!config.filterOnClick) return;
+          if(!config.filterOnClick && !config.Events.enable) return;
           var elem = eventInfo.getContains();
-          if(elem) that.filter(elem.name);
+          if(elem) config.filterOnClick && that.filter(elem.name);
+          config.Events.enable && config.Events.onClick(elem, eventInfo, evt);
         },
         onRightClick: function(node, eventInfo, evt) {
           if(!config.restoreOnRightClick) return;

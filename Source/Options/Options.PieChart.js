@@ -46,6 +46,10 @@ Options.PieChart = {
   labelOffset: 3, // label offset
   type: 'stacked', // gradient
   hoveredColor: '#9fd4ff',
+  Events: {
+    enable: false,
+    onClick: $.empty
+  },
   Tips: {
     enable: false,
     onShow: $.empty,
