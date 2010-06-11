@@ -6,24 +6,41 @@
 /*
   Object: Options.Tree
   
-  Options related to (classic) Tree layout algorithms.
+  Options related to (strict) Tree layout algorithms. These options are used by the <ST> visualization.
   
-  Description:
+  Syntax:
   
-  Options related to classic Tree layouts.
+  (start code js)
+  Options.Tree = {
+    orientation: "left",
+    subtreeOffset: 8,
+    siblingOffset: 5,
+    indent:10,
+    multitree: false,
+    align:"center"
+  };
+  (end code)
   
-  Implemented by:
+  Example:
   
-  <ST>
-  
-  
-     - _subtreeOffset_ Separation offset between subtrees. Default's 8.
-     - _siblingOffset_ Separation offset between siblings. Default's 5.
-     - _orientation_ Sets the orientation layout. Implemented orientations are _left_ (the root node will be placed on the left side of the screen), _top_ (the root node will be placed on top of the screen), _bottom_ and _right_. Default's "left".
-     - _align_ Whether the tree alignment is left, center or right.
-     - _indent_ Used when _align_ is left or right and shows an indentation between parent and children. Default's 10.
-     - _multitree_ Used with the a node $orn data property for creating multitrees.
+  (start code js)
+  var st = new $jit.ST({
+    orientation: 'left',
+    subtreeOffset: 1,
+    siblingOFfset: 5,
+    multitree: true
+  });
+  (end code)
 
+  Parameters:
+    
+  subtreeOffset - (number) Default's 8. Separation offset between subtrees.
+  siblingOffset - (number) Default's 5. Separation offset between siblings.
+  orientation - (string) Default's 'left'. Tree orientation layout. Possible values are 'left', 'top', 'right', 'bottom'.
+  align - (string) Default's *center*. Whether the tree alignment is 'left', 'center' or 'right'.
+  indent - (number) Default's 10. Used when *align* is left or right and shows an indentation between parent and children.
+  multitree - (boolean) Default's *false*. Used with the node $orn data property for creating multitrees.
+     
 */
 Options.Tree = {
     $extend: true,

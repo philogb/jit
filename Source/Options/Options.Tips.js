@@ -6,29 +6,45 @@
 /*
   Object: Options.Tips
   
-  Options for Tips
+  Tips options
   
-  Description:
+  Syntax:
+    
+  (start code js)
+  Options.Tips = {
+    enable: false,
+    type: 'auto',
+    offsetX: 20,
+    offsetY: 20,
+    onShow: $.empty,
+    onHide: $.empty
+  };
+  (end code)
   
-  Options for Tool Tips.
+  Example:
   
-  Implemented by:
-  
-  <TM>
+  (start code js)
+  var viz = new $jit.Viz({
+    Tips: {
+      enable: true,
+      type: 'Native',
+      offsetX: 10,
+      offsetY: 10,
+      onShow: function(tip, node) {
+        tip.innerHTML = node.name;
+      }
+    }
+  });
+  (end code)
 
-  These configuration parameters are currently used by <TM>.
-
-
-  - _enable_ If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. Default's *false*. 
-  - _offsetX_ An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
-  - _offsetY_ An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
-  - _onShow(tooltip, node, isLeaf, domElement)_ Implement this method to change the HTML content of the tooltip when hovering a node.
-  
   Parameters:
-    tooltip - The tooltip div element.
-    node - The corresponding JSON tree node (See also <Loader.loadJSON>).
-    isLeaf - Whether is a leaf or inner node.
-    domElement - The current hovered DOM element.
+
+  enable - (boolean) Default's *false*. If *true*, a tooltip will be shown when a node is hovered. The tooltip is a div DOM element having "tip" as CSS class. 
+  type - (string) Default's *auto*. Defines where to attach the MouseEnter/Leave tooltip events. Possible values are 'Native' to attach them to the canvas or 'HTML' to attach them to DOM label elements (if defined). 'auto' sets this property to the value of <Options.Label>'s *type* property.
+  offsetX - (number) Default's *20*. An offset added to the current tooltip x-position (which is the same as the current mouse position). Default's 20.
+  offsetY - (number) Default's *20*. An offset added to the current tooltip y-position (which is the same as the current mouse position). Default's 20.
+  onShow(tip, node) - This callack is used right before displaying a tooltip. The first formal parameter is the tip itself (which is a DivElement). The second parameter may be a <Graph.Node> for graph based visualizations or an object with label, value properties for charts.
+  onHide() - This callack is used when hiding a tooltip.
 
 */
 Options.Tips = {

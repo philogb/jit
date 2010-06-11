@@ -10,6 +10,9 @@ All:
 SpaceTree
 * the select method should accept the same params as the onClick method (ie Move, etc).
 
+Area/Bar/PieCharts
+* add click events
+
 
 Articles
 * creating background canvases
