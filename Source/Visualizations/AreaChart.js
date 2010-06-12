@@ -128,6 +128,16 @@ $jit.ST.Plot.NodeTypes.implement({
   }
 });
 
+/*
+  Class: AreaChart
+  
+  A visualization that displays stacked area charts.
+  
+  Constructor Options:
+  
+  See <Options.AreaChart>.
+
+*/
 $jit.AreaChart = new Class({
   st: null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
@@ -268,6 +278,21 @@ $jit.AreaChart = new Class({
     this.canvas = this.st.canvas;
   },
   
+ /*
+  Method: loadJSON
+ 
+  Loads JSON data into the visualization. 
+  
+  Parameters:
+  
+  json - The JSON data format. This format is described in <http://blog.thejit.org/2010/04/24/new-javascript-infovis-toolkit-visualizations/#json-data-format>.
+  
+  Example:
+  (start code js)
+  var areaChart = new $jit.AreaChart(options);
+  areaChart.loadJSON(json);
+  (end code)
+ */  
   loadJSON: function(json) {
     var prefix = $.time(), 
         ch = [], 
@@ -322,6 +347,26 @@ $jit.AreaChart = new Class({
     }
   },
   
+ /*
+  Method: updateJSON
+ 
+  Use this method when updating values for the current JSON data. If the items specified by the JSON data already exist in the graph then their values will be updated.
+  
+  Parameters:
+  
+  json - (object) JSON data to be updated. The JSON format corresponds to the one described in <AreaChart.loadJSON>.
+  onComplete - (object) A callback object to be called when the animation transition when updating the data end.
+  
+  Example:
+  
+  (start code js)
+  areaChart.updateJSON(json, {
+    onComplete: function() {
+      alert('update complete!');
+    }
+  });
+  (end code)
+ */  
   updateJSON: function(json, onComplete) {
     if(this.busy) return;
     this.busy = true;
@@ -365,6 +410,25 @@ $jit.AreaChart = new Class({
     }
   },
   
+/*
+  Method: filter
+ 
+  Filter selected stacks, collapsing all other stacks. You can filter multiple stacks at the same time.
+  
+  Parameters:
+  
+  Variable strings arguments with the name of the stacks.
+  
+  Example:
+  
+  (start code js)
+  areaChart.filter('label A', 'label C');
+  (end code)
+  
+  See also:
+  
+  <AreaChart.restore>.
+ */  
   filter: function() {
     if(this.busy) return;
     this.busy = true;
@@ -390,6 +454,21 @@ $jit.AreaChart = new Class({
     });
   },
   
+  /*
+  Method: restore
+ 
+  Sets all stacks that could have been filtered visible.
+  
+  Example:
+  
+  (start code js)
+  areaChart.restore();
+  (end code)
+  
+  See also:
+  
+  <AreaChart.filter>.
+ */  
   restore: function() {
     if(this.busy) return;
     this.busy = true;
@@ -436,6 +515,17 @@ $jit.AreaChart = new Class({
     }
   },
   
+  /*
+    Method: getLegend
+   
+    Returns an object containing as keys the legend names and as values hex strings with color values.
+    
+    Example:
+    
+    (start code js)
+    var legend = areaChart.getLegend();
+    (end code)
+ */  
   getLegend: function() {
     var legend = {};
     var n;
@@ -450,6 +540,32 @@ $jit.AreaChart = new Class({
     return legend;
   },
   
+  /*
+    Method: getMaxValue
+   
+    Returns the maximum accumulated value for the stacks. This method is used for normalizing the graph heights according to the canvas height.
+    
+    Example:
+    
+    (start code js)
+    var ans = areaChart.getMaxValue();
+    (end code)
+    
+    In some cases it could be useful to override this method to normalize heights for a group of AreaCharts, like when doing small multiples.
+    
+    Example:
+    
+    (start code js)
+    //will return 100 for all AreaChart instances,
+    //displaying all of them with the same scale
+    $jit.AreaChart.implement({
+      'getMaxValue': function() {
+        return 100;
+      }
+    });
+    (end code)
+    
+*/  
   getMaxValue: function() {
     var maxValue = 0;
     this.st.graph.eachNode(function(n) {

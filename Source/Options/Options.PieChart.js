@@ -24,6 +24,18 @@
 
   (end code)
   
+  Example:
+  
+  (start code js)
+
+  var pie = new $jit.PieChart({
+    animate: true,
+    sliceOffset: 5,
+    type: 'stacked:gradient'
+  });  
+
+  (end code)
+  
   Parameters:
   
   animate - (boolean) Default's *true*. Whether to add animated transitions when plotting/updating the visualization.

@@ -20,3 +20,4 @@ Articles
 * making custom animations (get/setData)
 * the event system
 * in Options.Node/Edge/Label we should add some documentation about Styling nodes in the JSON data. and using getters and setters with nodes/edges etc.
+* document the code about the JSON data for the Charts.

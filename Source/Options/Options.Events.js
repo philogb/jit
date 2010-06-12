@@ -8,10 +8,6 @@
   
   This is the configuration for adding mouse/touch event handlers to Nodes.
   
-  Implemented by:
-  
-  All visualizations except chart visualizations (<AreaChart>, <BarChart> and <PieChart>).
-  
   Syntax:
   
   (start code js)

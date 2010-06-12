@@ -150,6 +150,16 @@ $jit.ST.Plot.NodeTypes.implement({
   }
 });
 
+/*
+  Class: BarChart
+  
+  A visualization that displays stacked bar charts.
+  
+  Constructor Options:
+  
+  See <Options.BarChart>.
+
+*/
 $jit.BarChart = new Class({
   st: null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
@@ -297,6 +307,21 @@ $jit.BarChart = new Class({
     this.canvas = this.st.canvas;
   },
   
+  /*
+    Method: loadJSON
+   
+    Loads JSON data into the visualization. 
+    
+    Parameters:
+    
+    json - The JSON data format. This format is described in <http://blog.thejit.org/2010/04/24/new-javascript-infovis-toolkit-visualizations/#json-data-format>.
+    
+    Example:
+    (start code js)
+    var barChart = new $jit.BarChart(options);
+    barChart.loadJSON(json);
+    (end code)
+ */  
   loadJSON: function(json) {
     if(this.busy) return;
     this.busy = true;
@@ -368,6 +393,26 @@ $jit.BarChart = new Class({
     }
   },
   
+  /*
+    Method: updateJSON
+   
+    Use this method when updating values for the current JSON data. If the items specified by the JSON data already exist in the graph then their values will be updated.
+    
+    Parameters:
+    
+    json - (object) JSON data to be updated. The JSON format corresponds to the one described in <BarChart.loadJSON>.
+    onComplete - (object) A callback object to be called when the animation transition when updating the data end.
+    
+    Example:
+    
+    (start code js)
+    barChart.updateJSON(json, {
+      onComplete: function() {
+        alert('update complete!');
+      }
+    });
+    (end code)
+ */  
   updateJSON: function(json, onComplete) {
     if(this.busy) return;
     this.busy = true;
@@ -429,6 +474,17 @@ $jit.BarChart = new Class({
     }
   },
   
+  /*
+    Method: getLegend
+   
+    Returns an object containing as keys the legend names and as values hex strings with color values.
+    
+    Example:
+    
+    (start code js)
+    var legend = barChart.getLegend();
+    (end code)
+  */  
   getLegend: function() {
     var legend = {};
     var n;
@@ -443,6 +499,32 @@ $jit.BarChart = new Class({
     return legend;
   },
   
+  /*
+    Method: getMaxValue
+   
+    Returns the maximum accumulated value for the stacks. This method is used for normalizing the graph heights according to the canvas height.
+    
+    Example:
+    
+    (start code js)
+    var ans = barChart.getMaxValue();
+    (end code)
+    
+    In some cases it could be useful to override this method to normalize heights for a group of BarCharts, like when doing small multiples.
+    
+    Example:
+    
+    (start code js)
+    //will return 100 for all BarChart instances,
+    //displaying all of them with the same scale
+    $jit.BarChart.implement({
+      'getMaxValue': function() {
+        return 100;
+      }
+    });
+    (end code)
+    
+  */  
   getMaxValue: function() {
     var maxValue = 0;
     this.st.graph.eachNode(function(n) {

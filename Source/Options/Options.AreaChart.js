@@ -27,6 +27,20 @@
   
   (end code)
   
+  Example:
+  
+  (start code js)
+
+  var areaChart = new $jit.AreaChart({
+    animate: true,
+    type: 'stacked:gradient',
+    selectOnHover: true,
+    filterOnClick: true,
+    restoreOnRightClick: true
+  });
+  
+  (end code)
+
   Parameters:
   
   animate - (boolean) Default's *true*. Whether to add animated transitions when filtering/restoring stacks.

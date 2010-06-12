@@ -133,6 +133,16 @@ $jit.Sunburst.Plot.NodeTypes.implement({
   }
 });
 
+/*
+  Class: PieChart
+  
+  A visualization that displays stacked bar charts.
+  
+  Constructor Options:
+  
+  See <Options.PieChart>.
+
+*/
 $jit.PieChart = new Class({
   sb: null,
   colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
@@ -241,6 +251,21 @@ $jit.PieChart = new Class({
     this.canvas = this.sb.canvas;
   },
   
+  /*
+    Method: loadJSON
+   
+    Loads JSON data into the visualization. 
+    
+    Parameters:
+    
+    json - The JSON data format. This format is described in <http://blog.thejit.org/2010/04/24/new-javascript-infovis-toolkit-visualizations/#json-data-format>.
+    
+    Example:
+    (start code js)
+    var pieChart = new $jit.PieChart(options);
+    pieChart.loadJSON(json);
+    (end code)
+  */  
   loadJSON: function(json) {
     var prefix = $.time(), 
         ch = [], 
@@ -294,6 +319,26 @@ $jit.PieChart = new Class({
     }
   },
   
+  /*
+    Method: updateJSON
+   
+    Use this method when updating values for the current JSON data. If the items specified by the JSON data already exist in the graph then their values will be updated.
+    
+    Parameters:
+    
+    json - (object) JSON data to be updated. The JSON format corresponds to the one described in <PieChart.loadJSON>.
+    onComplete - (object) A callback object to be called when the animation transition when updating the data end.
+    
+    Example:
+    
+    (start code js)
+    pieChart.updateJSON(json, {
+      onComplete: function() {
+        alert('update complete!');
+      }
+    });
+    (end code)
+  */  
   updateJSON: function(json, onComplete) {
     if(this.busy) return;
     this.busy = true;
@@ -346,6 +391,17 @@ $jit.PieChart = new Class({
     }
   },
   
+  /*
+    Method: getLegend
+   
+    Returns an object containing as keys the legend names and as values hex strings with color values.
+    
+    Example:
+    
+    (start code js)
+    var legend = pieChart.getLegend();
+    (end code)
+  */  
   getLegend: function() {
     var legend = {};
     var n;
@@ -360,6 +416,32 @@ $jit.PieChart = new Class({
     return legend;
   },
   
+  /*
+    Method: getMaxValue
+   
+    Returns the maximum accumulated value for the stacks. This method is used for normalizing the graph heights according to the canvas height.
+    
+    Example:
+    
+    (start code js)
+    var ans = pieChart.getMaxValue();
+    (end code)
+    
+    In some cases it could be useful to override this method to normalize heights for a group of PieCharts, like when doing small multiples.
+    
+    Example:
+    
+    (start code js)
+    //will return 100 for all PieChart instances,
+    //displaying all of them with the same scale
+    $jit.PieChart.implement({
+      'getMaxValue': function() {
+        return 100;
+      }
+    });
+    (end code)
+    
+  */  
   getMaxValue: function() {
     var maxValue = 0;
     this.sb.graph.eachNode(function(n) {

@@ -27,6 +27,18 @@
   
   (end code)
   
+  Example:
+  
+  (start code js)
+
+  var barChart = new $jit.BarChart({
+    animate: true,
+    barsOffset: 10,
+    type: 'stacked:gradient'
+  });
+  
+  (end code)
+
   Parameters:
   
   animate - (boolean) Default's *true*. Whether to add animated transitions when filtering/restoring stacks.
