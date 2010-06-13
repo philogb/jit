@@ -23,12 +23,9 @@ $jit.Icicle = new Class({
     var config = {
       animate: false,
       orientation: "h",
-      titleHeight: 13,
       offset: 2,
       levelsToShow: Number.MAX_VALUE,
       constrained: false,
-      withLabels: true,
-      clearCanvas: true,
       Node: {
         type: 'rectangle',
         overridable: true
