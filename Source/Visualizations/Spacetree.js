@@ -1,149 +1,56 @@
 /*
  * File: Spacetree.js
- * 
- * Implements the <ST> class and other derived classes.
- *
- * Description:
- *
- * The main idea of the spacetree algorithm is to take the most common tree layout, and to expand nodes that are "context-related" .i.e lying on the path between the root node and a selected node. Useful animations to contract and expand nodes are also included.
- *
- * Inspired by:
- *
- * SpaceTree: Supporting Exploration in Large Node Link Tree, Design Evolution and Empirical Evaluation (Catherine Plaisant, Jesse Grosjean, Benjamin B. Bederson)
- *
- * <http://hcil.cs.umd.edu/trs/2002-05/2002-05.pdf>
- *
- * Disclaimer:
- *
- * This visualization was built from scratch, taking only the paper as inspiration, and only shares some features with the Spacetree.
- *
  */
 
 /*
-     Class: ST
+   Class: ST
+   
+  A Tree layout with advanced contraction and expansion animations.
      
-     The main ST class
+  Inspired by:
+ 
+  SpaceTree: Supporting Exploration in Large Node Link Tree, Design Evolution and Empirical Evaluation (Catherine Plaisant, Jesse Grosjean, Benjamin B. Bederson) 
+  <http://hcil.cs.umd.edu/trs/2002-05/2002-05.pdf>
+  
+  Drawing Trees (Andrew J. Kennedy) <http://research.microsoft.com/en-us/um/people/akenn/fun/drawingtrees.pdf>
+  
+  Note:
+ 
+  This visualization was built and engineered from scratch, taking only the papers as inspiration, and only shares some features with the visualization described in those papers.
+ 
+  Constructor Options:
+  
+  Inherits options from
+  
+  - <Options.Canvas>
+  - <Options.Controller>
+  - <Options.Tree>
+  - <Options.Node>
+  - <Options.Edge>
+  - <Options.Label>
+  - <Options.Events>
+  - <Options.Tips>
+  - <Options.NodeStyles>
+  - <Options.Navigation>
+  
+  Additionally, there are other parameters and some default values changed
+  
+  constrained - (boolean) Default's *true*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
+  levelsToShow - (number) Default's *2*. The number of levels to show for a subtree. This number is relative to the selected node.
+  levelDistance - (number) Default's *30*. The distance between two consecutive levels of the tree.
+  Node.type - Described in <Options.Node>. Default's set to *rectangle*.
+  offsetX - (number) Default's *0*. The x-offset distance from the selected node to the center of the canvas.
+  offsetY - (number) Default's *0*. The y-offset distance from the selected node to the center of the canvas.
+  duration - Described in <Options.Fx>. It's default value has been changed to *700*.
+  
+  Instance Properties:
+  
+  canvas - Access a <Canvas> instance.
+  graph - Access a <Graph> instance.
+  op - Access a <ST.Op> instance.
+  fx - Access a <ST.Plot> instance.
+  labels - Access a <ST.Label> interface implementation.
 
-     Extends:
-
-     <Loader>, <Layouts.Tree>, <Tips>
-
-     Parameters:
-
-     canvas - A <Canvas> Class
-     config - A configuration/controller object.
-
-     Configuration:
-    
-     The configuration object can have the following properties (all properties are optional and have a default value)
-      
-     *General*
-
-     Inherits all properties from <Options.Tree> and also
-     
-     - _levelsToShow_ Depth of the plotted tree. The plotted tree will be pruned in order to fit the specified depth if constrained=true. Default's 2.
-     - _constrained_ If true, the algorithm will try to plot only the part of the tree that fits the Canvas.
-     - _levelDistance_ Distance between levels. Default's 30.
-
-     *Node*
-     
-     Customize the visualization nodes' shape, color, and other style properties.
-
-     Inherits options from <Options.Graph.Node>.
-
-     *Edge*
-
-     Customize the visualization edges' shape, color, and other style properties.
-
-     Inherits from <Options.Graph.Edge>.
-      
-     *Animations*
-
-     Inherits from <Options.Animation>, although the following default values are changed.
-     
-     - _duration_ Duration of the animation in milliseconds. Default's 700.
-     - _fps_ Frames per second. Default's 25.
-     
-    *Controller options*
-
-     Inherits from <Options.Controller>.
-
-    Example:
-
-    Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
-    all configuration properties  have the default value assigned.
-
-    I won't be instanciating a <Canvas> class here. If you want to know more about instanciating a <Canvas> class 
-    please take a look at the <Canvas> class documentation.
-
-    (start code js)
-      var st = new ST(canvas, {
-        orientation: "left",
-        levelsToShow: 2,
-        subtreeOffset: 8,
-        siblingOffset: 5,
-        levelDistance: 30,
-        withLabels: true,
-        align: "center",
-        multitree: false,
-        indent: 10,
-        Node: {
-          overridable: false,
-          type: 'rectangle',
-          color: '#ccb',
-          lineWidth: 1,
-          height: 20,
-          width: 90,
-          dim: 15,
-          align: "center"
-        },
-        Edge: {
-          overridable: false,
-          type: 'line',
-          color: '#ccc',
-          dim: 15,
-          lineWidth: 1
-        },
-        duration: 700,
-        fps: 25,
-        transition: Trans.Quart.easeInOut,
-        clearCanvas: true,
-        
-        onBeforeCompute: function(node) {
-          //do something onBeforeCompute
-        },
-        onAfterCompute:  function () {
-          //do something onAfterCompute
-        },
-        onCreateLabel:   function(domElement, node) {
-          //do something onCreateLabel
-        },
-        onPlaceLabel:    function(domElement, node) {
-          //do something onPlaceLabel
-        },
-        onBeforePlotNode:function(node) {
-          //do something onBeforePlotNode
-        },
-        onAfterPlotNode: function(node) {
-          //do something onAfterPlotNode
-        },
-        onBeforePlotLine:function(adj) {
-          //do something onBeforePlotLine
-        },
-        onAfterPlotLine: function(adj) {
-          //do something onAfterPlotLine
-        },
-        request:         false
-
-      });
-    (end code)
-
-    Instance Properties:
-
-    - _graph_ Access a <Graph> instance.
-    - _op_ Access a <ST.Op> instance.
-    - _fx_ Access a  <ST.Plot> instance.
-    - _labels_ Access a <ST.Label> instance.
  */
 
 $jit.ST= (function() {
@@ -251,7 +158,7 @@ $jit.ST= (function() {
         /*
          Method: plot
         
-         Plots the tree. Usually this method is called right after computing nodes' positions.
+         Plots the <ST>. This is a shortcut to *fx.plot*.
 
         */  
         plot: function() { this.fx.plot(this.controller); },
@@ -264,9 +171,9 @@ $jit.ST= (function() {
 
          Parameters:
 
-        pos - The new tree orientation. Possible values are "top", "left", "right" and "bottom".
-        method - Set this to "animate" if you want to animate the tree when switching its position. You can also set this parameter to "replot" to just replot the subtree.
-        onComplete - _optional_ This callback is called once the "switching" animation is complete.
+        pos - (string) The new tree orientation. Possible values are "top", "left", "right" and "bottom".
+        method - (string) Set this to "animate" if you want to animate the tree when switching its position. You can also set this parameter to "replot" to just replot the subtree.
+        onComplete - (optional|object) This callback is called once the "switching" animation is complete.
 
          Example:
 
@@ -304,9 +211,9 @@ $jit.ST= (function() {
 
         Parameters:
 
-       align - The new tree alignment. Possible values are "left", "center" and "right".
-       method - Set this to "animate" if you want to animate the tree after aligning its position. You can also set this parameter to "replot" to just replot the subtree.
-       onComplete - _optional_ This callback is called once the "switching" animation is complete.
+       align - (string) The new tree alignment. Possible values are "left", "center" and "right".
+       method - (string) Set this to "animate" if you want to animate the tree after aligning its position. You can also set this parameter to "replot" to just replot the subtree.
+       onComplete - (optional|object) This callback is called once the "switching" animation is complete.
 
         Example:
 
@@ -330,17 +237,17 @@ $jit.ST= (function() {
        /*
         Method: addNodeInPath
        
-        Adds a node to the current path as selected node. This node will be visible (as in non-collapsed) at all times.
+        Adds a node to the current path as selected node. The selected node will be visible (as in non-collapsed) at all times.
         
 
         Parameters:
 
-       id - A <Graph.Node> id.
+       id - (string) A <Graph.Node> id.
 
         Example:
 
         (start code js)
-          st.addNodeInPath("somenodeid");
+          st.addNodeInPath("nodeId");
         (end code)
        */  
        addNodeInPath: function(id) {
@@ -353,9 +260,9 @@ $jit.ST= (function() {
       
        Removes all nodes tagged as selected by the <ST.addNodeInPath> method.
        
-     See also:
-     
-     <ST.addNodeInPath>
+       See also:
+       
+       <ST.addNodeInPath>
      
        Example:
 
@@ -371,7 +278,7 @@ $jit.ST= (function() {
        /*
          Method: refresh
         
-         Computes nodes' positions and replots the tree.
+         Computes positions and plots the tree.
          
        */
        refresh: function() {
@@ -388,32 +295,32 @@ $jit.ST= (function() {
             this.compute('end');
         },
         
-          requestNodes: function(node, onComplete) {
-            var handler = $.merge(this.controller, onComplete), 
-            lev = this.config.levelsToShow;
-            if(handler.request) {
-                var leaves = [], d = node._depth;
-                node.eachLevel(0, lev, function(n) {
-                    if(n.drawn && 
-                     !n.anySubnode()) {
-                     leaves.push(n);
-                     n._level = lev - (n._depth - d);
-                    }
-                });
-                this.group.requestNodes(leaves, handler);
-            }
-              else
-                handler.onComplete();
-          },
+        requestNodes: function(node, onComplete) {
+          var handler = $.merge(this.controller, onComplete), 
+          lev = this.config.levelsToShow;
+          if(handler.request) {
+              var leaves = [], d = node._depth;
+              node.eachLevel(0, lev, function(n) {
+                  if(n.drawn && 
+                   !n.anySubnode()) {
+                   leaves.push(n);
+                   n._level = lev - (n._depth - d);
+                  }
+              });
+              this.group.requestNodes(leaves, handler);
+          }
+            else
+              handler.onComplete();
+        },
      
-          contract: function(onComplete, switched) {
-            var orn  = this.config.orientation;
-            var Geom = this.geom, Group = this.group;
-            if(switched) Geom.switchOrientation(switched);
-            var nodes = getNodesToHide.call(this);
-            if(switched) Geom.switchOrientation(orn);
-            Group.contract(nodes, $.merge(this.controller, onComplete));
-          },
+        contract: function(onComplete, switched) {
+          var orn  = this.config.orientation;
+          var Geom = this.geom, Group = this.group;
+          if(switched) Geom.switchOrientation(switched);
+          var nodes = getNodesToHide.call(this);
+          if(switched) Geom.switchOrientation(orn);
+          Group.contract(nodes, $.merge(this.controller, onComplete));
+        },
       
          move: function(node, onComplete) {
             this.compute('end', false);
@@ -427,12 +334,10 @@ $jit.ST= (function() {
             this.fx.animate($.merge(this.controller, { modes: ['linear'] }, onComplete));
          },
       
-      
         expand: function (node, onComplete) {
             var nodeArray = getNodesToShow.call(this, node);
             this.group.expand(nodeArray, $.merge(this.controller, onComplete));
         },
-    
     
         selectPath: function(node) {
           var that = this;
@@ -457,17 +362,17 @@ $jit.ST= (function() {
         /*
         Method: setRoot
      
-         Switches the current root node.
+         Switches the current root node. Changes the topology of the Tree.
      
         Parameters:
-           id - The id of the node to be set as root.
-           method - Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
-           onComplete - _optional_ An action to perform after the animation (if any).
+           id - (string) The id of the node to be set as root.
+           method - (string) Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+           onComplete - (optional|object) An action to perform after the animation (if any).
  
         Example:
 
         (start code js)
-          st.setRoot('my_node_id', 'animate', {
+          st.setRoot('nodeId', 'animate', {
              onComplete: function() {
                alert('complete!');
              }
@@ -544,12 +449,12 @@ $jit.ST= (function() {
      /*
            Method: addSubtree
         
-            Adds a subtree, performing optionally an animation.
+            Adds a subtree.
         
            Parameters:
-              subtree - A JSON Tree object. See also <Loader.loadJSON>.
-              method - Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
-              onComplete - _optional_ An action to perform after the animation (if any).
+              subtree - (object) A JSON Tree object. See also <Loader.loadJSON>.
+              method - (string) Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
+              onComplete - (optional|object) An action to perform after the animation (if any).
     
            Example:
 
@@ -572,13 +477,13 @@ $jit.ST= (function() {
         /*
            Method: removeSubtree
         
-            Removes a subtree, performing optionally an animation.
+            Removes a subtree.
         
            Parameters:
-              id - The _id_ of the subtree to be removed.
-              removeRoot - Remove the root of the subtree or only its subnodes.
-              method - Set this to "animate" if you want to animate the tree after removing the subtree. You can also set this parameter to "replot" to just replot the subtree.
-              onComplete - _optional_ An action to perform after the animation (if any).
+              id - (string) The _id_ of the subtree to be removed.
+              removeRoot - (boolean) Default's *false*. Remove the root of the subtree or only its subnodes.
+              method - (string) Set this to "animate" if you want to animate the tree after removing the subtree. You can also set this parameter to "replot" to just replot the subtree.
+              onComplete - (optional|object) An action to perform after the animation (if any).
 
           Example:
 
@@ -606,12 +511,12 @@ $jit.ST= (function() {
         /*
            Method: select
         
-            Selects a sepecific node in the Spacetree without performing an animation. Useful when selecting 
+            Selects a node in the <ST> without performing an animation. Useful when selecting 
             nodes which are currently hidden or deep inside the tree.
 
           Parameters:
-            id - The id of the node to select.
-            onComplete - _optional_ onComplete callback.
+            id - (string) The id of the node to select.
+            onComplete - (optional|object) an onComplete callback.
 
           Example:
           (start code js)
@@ -656,16 +561,14 @@ $jit.ST= (function() {
       /*
          Method: onClick
     
-        This method is called when clicking on a tree node. It mainly performs all calculations and the animation of contracting, translating and expanding pertinent nodes.
-        
+        Animates the <ST> to center the node specified by *id*.
             
-         Parameters:
+        Parameters:
         
-            id - A node id.
-            options - A group of options and callbacks such as
-
-            - _onComplete_ an object callback called when the animation finishes.
-            - _Move_ an object that has as properties _offsetX_ or _offsetY_ for adding some offset position to the centered node.
+        id - (string) A node id.
+        options - (optional|object) A group of options and callbacks described below.
+        onComplete - (object) An object callback called when the animation finishes.
+        Move - (object) An object that has as properties _offsetX_ or _offsetY_ for adding some offset position to the centered node.
 
         Example:
 
@@ -741,22 +644,15 @@ $jit.ST.$extend = true;
 /*
    Class: ST.Op
     
-   Performs advanced operations on trees and graphs.
+   Custom extension of <Graph.Op>.
 
    Extends:
 
    All <Graph.Op> methods
-
-   Access:
-
-   This instance can be accessed with the _op_ parameter of the st instance created.
-
-   Example:
-
-   (start code js)
-    var st = new ST(canvas, config);
-    st.op.morph //or can also call any other <Graph.Op> method
-   (end code)
+   
+   See also:
+   
+   <Graph.Op>
 
 */
 $jit.ST.Op = new Class({
@@ -862,7 +758,6 @@ $jit.ST.Group = new Class({
     
 
     /*
-    
        Expands group of nodes. 
     */
     expand: function(nodes, controller) {
@@ -993,9 +888,9 @@ $jit.ST.Group = new Class({
 });
 
 /*
-   Class: ST.Geom
+   ST.Geom
 
-    Performs low level geometrical computations.
+   Performs low level geometrical computations.
 
    Access:
 
@@ -1075,7 +970,7 @@ $jit.ST.Geom = new Class({
 
 
     /*
-       Method: getEdge
+       getEdge
        
        Returns a Complex instance with the begin or end position of the edge to be plotted.
 
@@ -1154,7 +1049,7 @@ $jit.ST.Geom = new Class({
     },
 
     /*
-       Method: treeFitsInCanvas
+       treeFitsInCanvas
        
        Returns a Boolean if the current subtree fits in canvas.
 
@@ -1179,25 +1074,17 @@ $jit.ST.Geom = new Class({
 });
 
 /*
-   Object: ST.Plot
-    
-   Performs plotting operations.
+  Class: ST.Plot
+  
+  Custom extension of <Graph.Plot>.
 
-   Extends:
+  Extends:
 
-   All <Graph.Plot> methods
-
-   Access:
-
-   This instance can be accessed with the _fx_ parameter of the st instance created.
-
-   Example:
-
-   (start code js)
-    var st = new ST(canvas, config);
-    st.fx.animate //or can also call any other <ST.Plot> method
-   (end code)
-
+  All <Graph.Plot> methods
+  
+  See also:
+  
+  <Graph.Plot>
 
 */
 $jit.ST.Plot = new Class({
@@ -1240,6 +1127,18 @@ $jit.ST.Plot = new Class({
         if(scale >= 0) node.drawn = true;
     },   
    
+    /*
+        Method: getAlignedPos
+        
+        Returns a *x, y* object with the position of the top/left corner of a <ST> node.
+        
+        Parameters:
+        
+        pos - (object) A <Graph.Node> position.
+        width - (number) The width of the node.
+        height - (number) The height of the node.
+        
+     */
     getAlignedPos: function(pos, width, height) {
         var nconfig = this.node;
         var square, orn;
@@ -1297,29 +1196,33 @@ $jit.ST.Plot = new Class({
 });
 
 /*
-  Object: ST.Label
+  Class: ST.Label
 
-  Label interface implementation for the ST
+  Custom extension of <Graph.Label>. 
+  Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
 
-  See Also:
+  Extends:
 
-  <Graph.Label>, <ST.Label.HTML>, <RGraph.Label.SVG>
+  All <Graph.Label> methods and subclasses.
 
+  See also:
+
+  <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
  */ 
 $jit.ST.Label = {};
 
 /*
-   Class: ST.Label.Native
+   ST.Label.Native
 
-   Implements labels natively, using the Canvas text API.
+   Custom extension of <Graph.Label.Native>.
 
-   Implements:
+   Extends:
 
-   <Graph.Label.Native>
+   All <Graph.Label.Native> methods
 
    See also:
 
-   <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+   <Graph.Label.Native>
 */
 $jit.ST.Label.Native = new Class({
   Implements: Graph.Label.Native,
@@ -1335,7 +1238,7 @@ $jit.ST.Label.DOM = new Class({
   Implements: Graph.Label.DOM,
 
   /* 
-      Method: placeLabel
+      placeLabel
 
       Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -1405,18 +1308,17 @@ $jit.ST.Label.DOM = new Class({
 });
 
 /*
-   Class: ST.Label.SVG
+  ST.Label.SVG
 
-   Implements labels using SVG (currently not supported in IE).
+  Custom extension of <Graph.Label.SVG>.
 
-   Extends:
+  Extends:
 
-   <ST.Label.DOM>, <Graph.Label.SVG>
+  All <Graph.Label.SVG> methods
 
-   See also:
+  See also:
 
-   <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+  <Graph.Label.SVG>
 */
 $jit.ST.Label.SVG = new Class({
   Implements: [$jit.ST.Label.DOM, Graph.Label.SVG],
@@ -1427,17 +1329,17 @@ $jit.ST.Label.SVG = new Class({
 });
 
 /*
-   Class: ST.Label.HTML
+   ST.Label.HTML
 
-   Implements labels using plain old HTML.
+   Custom extension of <Graph.Label.HTML>.
 
    Extends:
 
-   <ST.Label.DOM>, <Graph.Label.HTML>
+   All <Graph.Label.HTML> methods.
 
    See also:
 
-   <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+   <Graph.Label.HTML>
 
 */
 $jit.ST.Label.HTML = new Class({
@@ -1452,17 +1354,23 @@ $jit.ST.Label.HTML = new Class({
 /*
   Class: ST.Plot.NodeTypes
 
-  Here are implemented all kinds of node rendering functions. 
-  Rendering functions implemented are 'none', 'circle', 'ellipse', 'rectangle' and 'square'.
+  This class contains a list of <Graph.Node> built-in types. 
+  Node types implemented are 'none', 'circle', 'rectangle', 'ellipse' and 'square'.
 
-  You can add new Node types by implementing a new method in this class
+  You can add your custom node types, customizing your visualization to the extreme.
 
   Example:
 
   (start code js)
     ST.Plot.NodeTypes.implement({
-      'newnodetypename': function(node, canvas) {
-        //Render my node here.
+      'mySpecialType': {
+        'render': function(node, canvas) {
+          //print your custom node to canvas
+        },
+        //optional
+        'contains': function(node, pos) {
+          //return true if pos is inside the node or false otherwise
+        }
       }
     });
   (end code)
@@ -1534,17 +1442,17 @@ $jit.ST.Plot.NodeTypes = new Class({
 /*
   Class: ST.Plot.EdgeTypes
 
-  Here are implemented all kinds of edge rendering functions. 
-  Rendering functions implemented are 'none', 'line', 'quadratic:begin', 'quadratic:end', 'bezier' and 'arrow'.
+  This class contains a list of <Graph.Adjacence> built-in types. 
+  Edge types implemented are 'none', 'line', 'arrow', 'quadratic:begin', 'quadratic:end', 'bezier'.
 
-  You can add new Edge types by implementing a new method in this class
+  You can add your custom edge types, customizing your visualization to the extreme.
 
   Example:
 
   (start code js)
     ST.Plot.EdgeTypes.implement({
-      'newedgetypename': function(adj, canvas) {
-        //Render my edge here.
+      'mySpecialType': function(adj, canvas) {
+        //print your custom edge to canvas
       }
     });
   (end code)

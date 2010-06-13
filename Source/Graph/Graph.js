@@ -1,48 +1,41 @@
 /*
  * File: Graph.js
  *
- * Generic <Graph>, <Graph.Node> and <Graph.Adjacence> classes.
- *
- * Used by:
- *
- * <Hypertree>, <RGraph> and <ST>.
- *
 */
 
 /*
  Class: Graph
 
- A generic Graph class.
+ A Graph Class that provides useful manipulation functions. You can find more manipulation methods in the <Graph.Util> object.
 
- Description:
-
- When a json graph/tree structure is loaded by <Loader.loadJSON>, an internal <Graph> representation is created. 
-
- In most cases you'll be dealing with an already created <Graph> structure, so methods like <Graph.addNode> or <Graph.addAdjacence> won't 
- be of many use. However methods like <Graph.getNode> and <Graph.hasNode> are pretty useful.
-
- <Graph.Util> provides also iterators for <Graphs> and advanced and useful graph operations and methods.
-
- Used by:
-
- <Loader.loadJSON>, <Hypertree>, <RGraph> and <ST>.
-
- Access:
-
- An instance of this class can be accessed by using the _graph_ parameter of a <Hypertree>, <RGraph> or <ST> instance
-
+ An instance of this class can be accessed by using the *graph* parameter of any tree or graph visualization.
+ 
  Example:
 
  (start code js)
-   var st = new ST(canvas, config);
-   st.graph.getNode //or any other <Graph> method.
-   
-   var ht = new Hypertree(canvas, config);
-   ht.graph.getNode //or any other <Graph> method.
-   
-   var rg = new RGraph(canvas, config);
-   rg.graph.getNode //or any other <Graph> method.
+   //create new visualization
+   var viz = new $jit.Viz(options);
+   //load JSON data
+   viz.loadJSON(json);
+   //access model
+   viz.graph; //<Graph> instance
  (end code)
+ 
+ Implements:
+ 
+ The following <Graph.Util> methods are implemented in <Graph>
+ 
+  - <Graph.Util.getNode>
+  - <Graph.Util.eachNode>
+  - <Graph.Util.computeLevels>
+  - <Graph.Util.eachBFS>
+  - <Graph.Util.clean>
+  - <Graph.Util.getClosestNodeToPos>
+  - <Graph.Util.getClosestNodeToOrigin>
+ 
+ See also:
+ 
+ <Graph.Util>.
  
 */  
 
@@ -79,20 +72,16 @@ $jit.Graph = new Class({
 /*
      Method: getNode
     
-     Returns a <Graph.Node> by _id_.
+     Returns a <Graph.Node> by *id*.
 
      Parameters:
 
-     id - A <Graph.Node> id.
-
-     Returns:
-
-     A <Graph.Node> having _id_ as id. Returns *false* otherwise.
+     id - (string) A <Graph.Node> id.
 
      Example:
 
      (start code js)
-       var node = graph.getNode('someid');
+       var node = graph.getNode('nodeId');
      (end code)
 */  
  getNode: function(id) {
@@ -103,15 +92,11 @@ $jit.Graph = new Class({
  /*
    Method: getByName
   
-   Returns a <Graph.Node> by _name_.
+   Returns a <Graph.Node> by *name*.
   
    Parameters:
   
-   name - A <Graph.Node> name.
-  
-   Returns:
-  
-   A <Graph.Node> having _name_ as name. Returns *false* otherwise.
+   name - (string) A <Graph.Node> name.
   
    Example:
   
@@ -128,18 +113,14 @@ $jit.Graph = new Class({
   },
 
 /*
-     Method: getAdjacence
-    
-     Returns an array of <Graph.Adjacence> objects connecting nodes with ids _id_ and _id2_.
+   Method: getAdjacence
+  
+   Returns a <Graph.Adjacence> object connecting nodes with ids *id* and *id2*.
 
-     Parameters:
+   Parameters:
 
-     id - A <Graph.Node> id.
-     id2 - A <Graph.Node> id.
-
-     Returns:
-
-     A <Graph.Adjacence>.
+   id - (string) A <Graph.Node> id.
+   id2 - (string) A <Graph.Node> id.
 */  
   getAdjacence: function (id, id2) {
     if(id in this.edges) {
@@ -155,11 +136,11 @@ $jit.Graph = new Class({
      
      Parameters:
     
-        obj - An object containing as properties
+      obj - An object with the properties described below
 
-        - _id_ node's id
-        - _name_ node's name
-        - _data_ node's data hash
+      id - (string) A node id
+      name - (string) A node's name
+      data - (object) A node's data hash
 
     See also:
     <Graph.Node>
@@ -185,13 +166,13 @@ $jit.Graph = new Class({
     /*
      Method: addAdjacence
     
-     Connects nodes specified by _obj_ and _obj2_. If not found, nodes are created.
+     Connects nodes specified by *obj* and *obj2*. If not found, nodes are created.
      
      Parameters:
     
-        obj - a <Graph.Node> object.
-        obj2 - Another <Graph.Node> object.
-        data - A DataSet object. Used to store some extra information in the <Graph.Adjacence> object created.
+      obj - (object) A <Graph.Node> object.
+      obj2 - (object) Another <Graph.Node> object.
+      data - (object) A data object. Used to store some extra information in the <Graph.Adjacence> object created.
 
     See also:
 
@@ -210,11 +191,11 @@ $jit.Graph = new Class({
     /*
      Method: removeNode
     
-     Removes a <Graph.Node> matching the specified _id_.
+     Removes a <Graph.Node> matching the specified *id*.
 
      Parameters:
 
-     id - A node's id.
+     id - (string) A node's id.
 
     */  
   removeNode: function(id) {
@@ -231,12 +212,12 @@ $jit.Graph = new Class({
 /*
      Method: removeAdjacence
     
-     Removes a <Graph.Adjacence> matching _id1_ and _id2_.
+     Removes a <Graph.Adjacence> matching *id1* and *id2*.
 
      Parameters:
 
-     id1 - A <Graph.Node> id.
-     id2 - A <Graph.Node> id.
+     id1 - (string) A <Graph.Node> id.
+     id2 - (string) A <Graph.Node> id.
 */  
   removeAdjacence: function(id1, id2) {
     delete this.edges[id1][id2];
@@ -246,15 +227,11 @@ $jit.Graph = new Class({
    /*
      Method: hasNode
     
-     Returns a Boolean instance indicating if the node belongs to the <Graph> or not.
+     Returns a boolean indicating if the node belongs to the <Graph> or not.
      
      Parameters:
     
-        id - Node id.
-
-     Returns:
-      
-     A Boolean instance indicating if the node belongs to the graph or not.
+        id - (string) Node id.
    */  
   hasNode: function(id) {
     return id in this.nodes;
@@ -272,6 +249,12 @@ $jit.Graph = new Class({
 
 var Graph = $jit.Graph;
 
+/*
+ Object: Accessors
+ 
+ Defines a set of methods for data, canvas and label styles manipulation implemented by <Graph.Node> and <Graph.Adjacence> instances.
+ 
+ */
 var Accessors;
 
 (function () {
@@ -339,18 +322,17 @@ var Accessors;
 
     Parameters:
 
-      prop  -  The name of the property. The dollar sign is not necessary. For
-              example _getData('width')_ will query _data.$width_
-      type  - The type of the data property queried. Default's "current".
-      force - Whether to obtain the true value of the property (equivalent to
-              _data.$prop_) or to check for _node.overridable=true_ first. For
-              more information about _node.overridable_ please check the
-              <Options.Node> and <Options.Edge> sections.
+      prop  - (string) The name of the property. The dollar sign is not needed. For
+              example *getData(width)* will return *data.$width*.
+      type  - (string) The type of the data property queried. Default's "current". You can access *start* and *end* 
+              data properties also. These properties are used when making animations.
+      force - (boolean) Whether to obtain the true value of the property (equivalent to
+              *data.$prop*) or to check for *node.overridable = true* first.
 
     Returns:
 
-      The value of the dollar prefixed property or the global Node property
-      value if _overridable=false_
+      The value of the dollar prefixed property or the global Node/Edge property
+      value if *overridable=false*
 
     Example:
     (start code js)
@@ -366,19 +348,34 @@ var Accessors;
     Method: setData
 
     Sets the current data property with some specific value.
-    This method is only useful for (dollar prefixed) reserved properties.
+    This method is only useful for reserved (dollar prefixed) properties.
 
     Parameters:
 
-      prop  - The name of the property. The dollar sign is not necessary. For
-              example _setData('width')_ will set _data.$width_.
-      value - The value to store.
-      type  - The type of the data property to store. Default's "current" but
-              can also be "begin" or "end".
+      prop  - (string) The name of the property. The dollar sign is not necessary. For
+              example *setData(width)* will set *data.$width*.
+      value - (mixed) The value to store.
+      type  - (string) The type of the data property to store. Default's "current" but
+              can also be "start" or "end".
 
     Example:
+    
     (start code js)
      node.setData('width', 30);
+    (end code)
+    
+    If we were to make an animation of a node/edge width then we could do
+    
+    (start code js)
+      var node = viz.getNode('nodeId');
+      //set start and end values
+      node.setData('width', 10, 'start');
+      node.setData('width', 30, 'end');
+      //will animate nodes width property
+      viz.fx.animate({
+        modes: ['node-property:width'],
+        duration: 1000
+      });
     (end code)
     */
     setData: function(prop, value, type) {
@@ -389,6 +386,11 @@ var Accessors;
     Method: setDataset
 
     Convenience method to set multiple data values at once.
+    
+    Parameters:
+    
+    types - (array|string) A set of 'current', 'end' or 'start' values.
+    obj - (object) A hash containing the names and values of the properties to be altered.
 
     Example:
     (start code js)
@@ -402,6 +404,11 @@ var Accessors;
         'color': '#ccc'
       });
     (end code)
+    
+    See also: 
+    
+    <Accessors.setData>
+    
     */
     setDataset: function(types, obj) {
       types = $.splat(types);
@@ -415,11 +422,11 @@ var Accessors;
     /*
     Method: removeData
 
-    Remove properties from data.
+    Remove data properties.
 
     Parameters:
 
-      One or more property names as arguments. The dollar sign is not necessary.
+    One or more property names as arguments. The dollar sign is not needed.
 
     Example:
     (start code js)
@@ -437,7 +444,21 @@ var Accessors;
     querying special/reserved <Graph.Node> canvas style data properties (i.e.
     dollar prefixed properties that match with $canvas-<name of canvas style>).
 
-    See <getData> for more details.
+    Parameters:
+
+      prop  - (string) The name of the property. The dollar sign is not needed. For
+              example *getCanvasStyle(shadowBlur)* will return *data[$canvas-shadowBlur]*.
+      type  - (string) The type of the data property queried. Default's *current*. You can access *start* and *end* 
+              data properties also.
+              
+    Example:
+    (start code js)
+      node.getCanvasStyle('shadowBlur');
+    (end code)
+    
+    See also:
+    
+    <Accessors.getData>
     */
     getCanvasStyle: function(prop, type, force) {
       return getDataInternal.call(
@@ -447,10 +468,38 @@ var Accessors;
     /*
     Method: setCanvasStyle
 
-    Sets the current canvas style prefixed data property with some specific value.
-    This method is only useful for (dollar prefixed) reserved properties.
-
-    See <setData> for more details.
+    Sets the canvas style data property with some specific value.
+    This method is only useful for reserved (dollar prefixed) properties.
+    
+    Parameters:
+    
+    prop - (string) Name of the property. Can be any canvas property like 'shadowBlur', 'shadowColor', 'strokeStyle', etc.
+    value - (mixed) The value to set to the property.
+    type - (string) Default's *current*. Whether to set *start*, *current* or *end* type properties.
+    
+    Example:
+    
+    (start code js)
+     node.setCanvasStyle('shadowBlur', 30);
+    (end code)
+    
+    If we were to make an animation of a node/edge shadowBlur canvas style then we could do
+    
+    (start code js)
+      var node = viz.getNode('nodeId');
+      //set start and end values
+      node.setCanvasStyle('shadowBlur', 10, 'start');
+      node.setCanvasStyle('shadowBlur', 30, 'end');
+      //will animate nodes canvas style property for nodes
+      viz.fx.animate({
+        modes: ['node-style:shadowBlur'],
+        duration: 1000
+      });
+    (end code)
+    
+    See also:
+    
+    <Accessors.setData>.
     */
     setCanvasStyle: function(prop, value, type) {
       setDataInternal.call(this, 'canvas', prop, value, type);
@@ -459,9 +508,16 @@ var Accessors;
     /*
     Method: setCanvasStyles
 
-    Convenience function to set multiple styles at once.
+    Convenience method to set multiple styles at once.
 
-    See <setDataset> for more details.
+    Parameters:
+    
+    types - (array|string) A set of 'current', 'end' or 'start' values.
+    obj - (object) A hash containing the names and values of the properties to be altered.
+
+    See also:
+    
+    <Accessors.setDataset>.
     */
     setCanvasStyles: function(types, obj) {
       types = $.splat(types);
@@ -477,7 +533,13 @@ var Accessors;
 
     Remove canvas style properties from data.
 
-    See <removeData> for more details.
+    Parameters:
+    
+    A variable number of canvas style strings.
+
+    See also:
+    
+    <Accessors.removeData>.
     */
     removeCanvasStyle: function() {
       removeDataInternal.call(this, 'canvas', Array.prototype.slice.call(arguments));
@@ -488,9 +550,18 @@ var Accessors;
 
     Returns the specified label data value property. This is useful for
     querying special/reserved <Graph.Node> label options (i.e.
-    dollar prefixed properties that match with $canvas-<name of canvas style>).
+    dollar prefixed properties that match with $label-<name of label style>).
 
-    See <getData> for more details.
+    Parameters:
+
+      prop  - (string) The name of the property. The dollar sign prefix is not needed. For
+              example *getLabelData(size)* will return *data[$label-size]*.
+      type  - (string) The type of the data property queried. Default's *current*. You can access *start* and *end* 
+              data properties also.
+              
+    See also:
+    
+    <Accessors.getData>.
     */
     getLabelData: function(prop, type, force) {
       return getDataInternal.call(
@@ -500,10 +571,38 @@ var Accessors;
     /*
     Method: setLabelData
 
-    Sets the current label prefixed data property with some specific value.
-    This method is only useful for (dollar prefixed) reserved properties.
+    Sets the current label data with some specific value.
+    This method is only useful for reserved (dollar prefixed) properties.
 
-    See <setData> for more details.
+    Parameters:
+    
+    prop - (string) Name of the property. Can be any canvas property like 'shadowBlur', 'shadowColor', 'strokeStyle', etc.
+    value - (mixed) The value to set to the property.
+    type - (string) Default's *current*. Whether to set *start*, *current* or *end* type properties.
+    
+    Example:
+    
+    (start code js)
+     node.setLabelData('size', 30);
+    (end code)
+    
+    If we were to make an animation of a node label size then we could do
+    
+    (start code js)
+      var node = viz.getNode('nodeId');
+      //set start and end values
+      node.setLabelData('size', 10, 'start');
+      node.setLabelData('size', 30, 'end');
+      //will animate nodes label size
+      viz.fx.animate({
+        modes: ['label-property:size'],
+        duration: 1000
+      });
+    (end code)
+    
+    See also:
+    
+    <Accessors.setData>.
     */
     setLabelData: function(prop, value, type) {
       setDataInternal.call(this, 'label', prop, value, type);
@@ -514,7 +613,14 @@ var Accessors;
 
     Convenience function to set multiple label data at once.
 
-    See <setDataset> for more details.
+    Parameters:
+    
+    types - (array|string) A set of 'current', 'end' or 'start' values.
+    obj - (object) A hash containing the names and values of the properties to be altered.
+
+    See also:
+    
+    <Accessors.setDataset>.
     */
     setLabelDataset: function(types, obj) {
       types = $.splat(types);
@@ -529,8 +635,14 @@ var Accessors;
     Method: removeLabelData
 
     Remove label properties from data.
+    
+    Parameters:
+    
+    A variable number of label property strings.
 
-    See <removeData> for more details.
+    See also:
+    
+    <Accessors.removeData>.
     */
     removeLabelData: function() {
       removeDataInternal.call(this, 'label', Array.prototype.slice.call(arguments));
@@ -542,31 +654,21 @@ var Accessors;
      Class: Graph.Node
 
      A <Graph> node.
-
-     Parameters:
-
-     obj - An object containing an 'id', 'name' and 'data' properties as described in <Graph.addNode>.
-     complex - Whether node position properties should contain <Complex> or <Polar> instances.
-
-     See also:
-
-     <Graph>
-
-     Description:
-
-     An instance of <Graph.Node> is usually passed as parameter for most configuration/controller methods in the 
-     <Hypertree>, <RGraph> and <ST> classes.
-
-     A <Graph.Node> object has as properties
-
-      id - Node id.
-      name - Node name.
-      data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
-      selected - Whether the node is selected or not. Used by <ST> for selecting nodes that are between the root node and the selected node.
-      angleSpan - For radial layouts such as the ones performed by the <Hypertree> and the <RGraph>. Contains _begin_ and _end_ properties containing angle values describing the angle span for this subtree.
-      pos - Current position. Can be a <Complex> or <Polar> instance.
-      startPos - Starting position. Used for interpolation.
-      endPos - Ending position. Used for interpolation.
+     
+     Implements:
+     
+     <Accessors> methods.
+     
+     The following <Graph.Util> methods are implemented by <Graph.Node>
+     
+    - <Graph.Util.eachAdjacency>
+    - <Graph.Util.eachLevel>
+    - <Graph.Util.eachSubgraph>
+    - <Graph.Util.eachSubnode>
+    - <Graph.Util.anySubnode>
+    - <Graph.Util.getSubnodes>
+    - <Graph.Util.getParents>
+    - <Graph.Util.isDescendantOf>     
 */
 Graph.Node = new Class({
     
@@ -606,15 +708,11 @@ Graph.Node = new Class({
 
        Parameters:
     
-          id - A node id.
+          id - (string) A node id.
     
-       Returns:
-    
-         A Boolean instance indicating whether this node is adjacent to the specified by id or not.
-
        Example:
        (start code js)
-        node.adjacentTo('mynodeid');
+        node.adjacentTo('nodeId') == true;
        (end code)
     */
     adjacentTo: function(node) {
@@ -624,15 +722,11 @@ Graph.Node = new Class({
     /*
        Method: getAdjacency
     
-       Returns a <Graph.Adjacence> object connecting the current <Graph.Node> and the node having _id_ as id.
+       Returns a <Graph.Adjacence> object connecting the current <Graph.Node> and the node having *id* as id.
 
        Parameters:
     
-          id - A node id.
-
-       Returns:
-
-          A <Graph.Adjacence> object or undefined.
+          id - (string) A node id.
     */  
     getAdjacency: function(id) {
         return this.adjacencies[id];
@@ -641,11 +735,11 @@ Graph.Node = new Class({
     /*
       Method: getPos
    
-      Returns the position of the node. Possible values are <Complex> or <Polar> instances.
+      Returns the position of the node.
   
       Parameters:
    
-         type - Possible values are "start", "end" or "current". Default's "current".
+         type - (string) Default's *current*. Possible values are "start", "end" or "current".
    
       Returns:
    
@@ -653,7 +747,7 @@ Graph.Node = new Class({
   
       Example:
       (start code js)
-       node.getPos('end');
+       var pos = node.getPos('end');
       (end code)
    */
    getPos: function(type) {
@@ -673,12 +767,12 @@ Graph.Node = new Class({
   
      Parameters:
   
-        value - A <Complex> or <Polar> instance.
-        type - Possible values are "start", "end" or "current". Default's "current".
+        value - (object) A <Complex> or <Polar> instance.
+        type - (string) Default's *current*. Possible values are "start", "end" or "current".
   
      Example:
      (start code js)
-      node.setPos(new Complex(0, 0), 'end');
+      node.setPos(new $jit.Complex(0, 0), 'end');
      (end code)
   */
   setPos: function(value, type) {
@@ -700,28 +794,21 @@ Graph.Node.implement(Accessors);
 /*
      Class: Graph.Adjacence
 
-     A <Graph> adjacence (or edge). Connects two <Graph.Nodes>.
-
-     Parameters:
-
-     nodeFrom - A <Graph.Node>.
-     nodeTo - A <Graph.Node>.
-     data - Some custom hash data.
+     A <Graph> adjacence (or edge) connecting two <Graph.Nodes>.
+     
+     Implements:
+     
+     <Accessors> methods.
 
      See also:
 
-     <Graph>
+     <Graph>, <Graph.Node>
 
-     Description:
-
-     An instance of <Graph.Adjacence> is usually passed as parameter for some configuration/controller methods in the 
-     <Hypertree>, <RGraph> and <ST> classes.
-
-     A <Graph.Adjacence> object has as properties
-
+     Properties:
+     
       nodeFrom - A <Graph.Node> connected by this edge.
       nodeTo - Another  <Graph.Node> connected by this edge.
-      data - Node data property containing a hash (i.e {}) with custom options. For more information see <Loader.loadJSON>.
+      data - Node data property containing a hash (i.e {}) with custom options.
 */
 Graph.Adjacence = new Class({
   
@@ -742,6 +829,10 @@ Graph.Adjacence.implement(Accessors);
    Object: Graph.Util
 
    <Graph> traversal and processing utility object.
+   
+   Note:
+   
+   For your convenience some of these methods have also been appended to <Graph> and <Graph.Node> classes.
 */
 Graph.Util = {
     /*
@@ -764,21 +855,23 @@ Graph.Util = {
     /*
        Method: getNode
     
-       Returns a <Graph.Node> by _id_.
+       Returns a <Graph.Node> by *id*.
+       
+       Also implemented by:
+       
+       <Graph>
 
        Parameters:
 
-       graph - A <Graph> instance.
-       id - A <Graph.Node> id.
-
-       Returns:
-
-       A <Graph> node.
+       graph - (object) A <Graph> instance.
+       id - (string) A <Graph.Node> id.
 
        Example:
 
        (start code js)
-         Graph.Util.getNode(graph, 'nodeid');
+         $jit.Graph.Util.getNode(graph, 'nodeid');
+         //or...
+         graph.getNode('nodeid');
        (end code)
     */
     getNode: function(graph, id) {
@@ -788,17 +881,25 @@ Graph.Util = {
     /*
        Method: eachNode
     
-       Iterates over <Graph> nodes performing an _action_.
+       Iterates over <Graph> nodes performing an *action*.
+       
+       Also implemented by:
+       
+       <Graph>.
 
        Parameters:
 
-       graph - A <Graph> instance.
-       action - A callback function having a <Graph.Node> as first formal parameter.
+       graph - (object) A <Graph> instance.
+       action - (function) A callback function having a <Graph.Node> as first formal parameter.
 
        Example:
        (start code js)
-         Graph.Util.each(graph, function(node) {
+         $jit.Graph.Util.eachNode(graph, function(node) {
           alert(node.name);
+         });
+         //or...
+         graph.eachNode(function(node) {
+           alert(node.name);
          });
        (end code)
     */
@@ -812,17 +913,25 @@ Graph.Util = {
     /*
        Method: eachAdjacency
     
-       Iterates over <Graph.Node> adjacencies applying the _action_ function.
+       Iterates over <Graph.Node> adjacencies applying the *action* function.
+       
+       Also implemented by:
+       
+       <Graph.Node>.
 
        Parameters:
 
-       node - A <Graph.Node>.
-       action - A callback function having <Graph.Adjacence> as first formal parameter.
+       node - (object) A <Graph.Node>.
+       action - (function) A callback function having <Graph.Adjacence> as first formal parameter.
 
        Example:
        (start code js)
-         Graph.Util.eachAdjacency(node, function(adj) {
+         $jit.Graph.Util.eachAdjacency(node, function(adj) {
           alert(adj.nodeTo.name);
+         });
+         //or...
+         node.eachAdjacency(function(adj) {
+           alert(adj.nodeTo.name);
          });
        (end code)
     */
@@ -845,15 +954,21 @@ Graph.Util = {
        Method: computeLevels
     
        Performs a BFS traversal setting the correct depth for each node.
-
+        
+       Also implemented by:
+       
+       <Graph>.
+       
+       Note:
+       
        The depth of each node can then be accessed by 
        >node._depth
 
        Parameters:
 
-       graph - A <Graph>.
-       id - A starting node id for the BFS traversal.
-       startDepth - _optional_ A minimum depth value. Default's 0.
+       graph - (object) A <Graph>.
+       id - (string) A starting node id for the BFS traversal.
+       startDepth - (optional|number) A minimum depth value. Default's 0.
 
     */
     computeLevels: function(graph, id, startDepth, flags) {
@@ -882,18 +997,26 @@ Graph.Util = {
     /*
        Method: eachBFS
     
-       Performs a BFS traversal applying _action_ to each <Graph.Node>.
+       Performs a BFS traversal applying *action* to each <Graph.Node>.
+       
+       Also implemented by:
+       
+       <Graph>.
 
        Parameters:
 
-       graph - A <Graph>.
-       id - A starting node id for the BFS traversal.
-       action - A callback function having a <Graph.Node> as first formal parameter.
+       graph - (object) A <Graph>.
+       id - (string) A starting node id for the BFS traversal.
+       action - (function) A callback function having a <Graph.Node> as first formal parameter.
 
        Example:
        (start code js)
-         Graph.Util.eachBFS(graph, 'mynodeid', function(node) {
+         $jit.Graph.Util.eachBFS(graph, 'mynodeid', function(node) {
           alert(node.name);
+         });
+         //or...
+         graph.eachBFS('mynodeid', function(node) {
+           alert(node.name);
          });
        (end code)
     */
@@ -918,14 +1041,18 @@ Graph.Util = {
     /*
        Method: eachLevel
     
-       Iterates over a node's subgraph applying _action_ to the nodes of relative depth between _levelBegin_ and _levelEnd_.
+       Iterates over a node's subgraph applying *action* to the nodes of relative depth between *levelBegin* and *levelEnd*.
+       
+       Also implemented by:
+       
+       <Graph.Node>.
 
        Parameters:
        
-       node - A <Graph.Node>.
-       levelBegin - A relative level value.
-       levelEnd - A relative level value.
-       action - A callback function having a <Graph.Node> as first formal parameter.
+       node - (object) A <Graph.Node>.
+       levelBegin - (number) A relative level value.
+       levelEnd - (number) A relative level value.
+       action - (function) A callback function having a <Graph.Node> as first formal parameter.
 
     */
     eachLevel: function(node, levelBegin, levelEnd, action, flags) {
@@ -947,15 +1074,23 @@ Graph.Util = {
        Method: eachSubgraph
     
        Iterates over a node's children recursively.
+       
+       Also implemented by:
+       
+       <Graph.Node>.
 
        Parameters:
-       node - A <Graph.Node>.
-       action - A callback function having a <Graph.Node> as first formal parameter.
+       node - (object) A <Graph.Node>.
+       action - (function) A callback function having a <Graph.Node> as first formal parameter.
 
        Example:
        (start code js)
-         Graph.Util.eachSubgraph(node, function(node) {
-          alert(node.name);
+         $jit.Graph.Util.eachSubgraph(node, function(node) {
+           alert(node.name);
+         });
+         //or...
+         node.eachSubgraph(function(node) {
+           alert(node.name);
          });
        (end code)
     */
@@ -968,14 +1103,22 @@ Graph.Util = {
     
        Iterates over a node's children (without deeper recursion).
        
+       Also implemented by:
+       
+       <Graph.Node>.
+       
        Parameters:
-       node - A <Graph.Node>.
-       action - A callback function having a <Graph.Node> as first formal parameter.
+       node - (object) A <Graph.Node>.
+       action - (function) A callback function having a <Graph.Node> as first formal parameter.
 
        Example:
        (start code js)
-         Graph.Util.eachSubnode(node, function(node) {
+         $jit.Graph.Util.eachSubnode(node, function(node) {
           alert(node.name);
+         });
+         //or...
+         node.eachSubnode(function(node) {
+           alert(node.name);
          });
        (end code)
     */
@@ -987,17 +1130,20 @@ Graph.Util = {
        Method: anySubnode
     
        Returns *true* if any subnode matches the given condition.
+       
+       Also implemented by:
+       
+       <Graph.Node>.
 
        Parameters:
-       node - A <Graph.Node>.
-       cond - A callback function returning a Boolean instance. This function has as first formal parameter a <Graph.Node>.
-
-       Returns:
-       A boolean value.
+       node - (object) A <Graph.Node>.
+       cond - (function) A callback function returning a Boolean instance. This function has as first formal parameter a <Graph.Node>.
 
        Example:
        (start code js)
-         Graph.Util.anySubnode(node, function(node) { return node.name == "mynodename"; });
+         $jit.Graph.Util.anySubnode(node, function(node) { return node.name == "mynodename"; });
+         //or...
+         node.anySubnode(function(node) { return node.name == 'mynodename'; });
        (end code)
     */
     anySubnode: function(node, cond, flags) {
@@ -1013,11 +1159,16 @@ Graph.Util = {
     /*
        Method: getSubnodes
     
-       Collects all subnodes for a specified node. The _level_ parameter filters nodes having relative depth of _level_ from the root node.
+       Collects all subnodes for a specified node. 
+       The *level* parameter filters nodes having relative depth of *level* from the root node. 
+       
+       Also implemented by:
+       
+       <Graph.Node>.
 
        Parameters:
-       node - A <Graph.Node>.
-       level - _optional_ A starting relative depth for collecting nodes. Default's 0.
+       node - (object) A <Graph.Node>.
+       level - (optional|number) Default's *0*. A starting relative depth for collecting nodes.
 
        Returns:
        An array of nodes.
@@ -1044,17 +1195,24 @@ Graph.Util = {
     /*
        Method: getParents
     
-       Returns an Array of <Graph.Nodes> wich are parents of the given node. 
+       Returns an Array of <Graph.Nodes> which are parents of the given node.
+       
+       Also implemented by:
+       
+       <Graph.Node>.
 
        Parameters:
-       node - A <Graph.Node>.
+       node - (object) A <Graph.Node>.
 
        Returns:
        An Array of <Graph.Nodes>.
 
        Example:
        (start code js)
-         var pars = Graph.Util.getParents(node);
+         var pars = $jit.Graph.Util.getParents(node);
+         //or...
+         var pars = node.getParents();
+         
          if(pars.length > 0) {
            //do stuff with parents
          }
@@ -1072,18 +1230,22 @@ Graph.Util = {
     /*
     Method: isDescendantOf
  
-    Returns a Boolean instance indicating if some node is descendant of the node with the given id. 
+    Returns a boolean indicating if some node is descendant of the node with the given id. 
 
+    Also implemented by:
+    
+    <Graph.Node>.
+    
+    
     Parameters:
-    node - A <Graph.Node>.
-    id - A <Graph.Node> id.
-
-    Returns:
-    Ture if _node_ is descendant of the node with the given _id_. False otherwise.
+    node - (object) A <Graph.Node>.
+    id - (string) A <Graph.Node> id.
 
     Example:
     (start code js)
-      var pars = Graph.Util.isDescendantOf(node, "nodeid");
+      $jit.Graph.Util.isDescendantOf(node, "nodeid"); //true|false
+      //or...
+      node.isDescendantOf('nodeid');//true|false
     (end code)
  */
  isDescendantOf: function(node, id) {
@@ -1098,8 +1260,12 @@ Graph.Util = {
  /*
      Method: clean
   
-     Cleans flags from nodes (by setting the _flag_ property to false).
+     Cleans flags from nodes.
 
+     Also implemented by:
+     
+     <Graph>.
+     
      Parameters:
      graph - A <Graph> instance.
   */
@@ -1108,17 +1274,17 @@ Graph.Util = {
   /* 
     Method: getClosestNodeToOrigin 
   
-    Extends <Graph.Util>. Returns the closest node to the center of canvas.
+    Returns the closest node to the center of canvas.
   
+    Also implemented by:
+    
+    <Graph>.
+    
     Parameters:
    
-     graph - A <Graph> instance.
-     prop - _optional_ a <Graph.Node> position property. Possible properties are 'start', 'current' or 'end'. Default's 'current'.
+     graph - (object) A <Graph> instance.
+     prop - (optional|string) Default's 'current'. A <Graph.Node> position property. Possible properties are 'start', 'current' or 'end'.
   
-    Returns:
-  
-     Closest node to origin. Returns *null* otherwise.
-   
   */
   getClosestNodeToOrigin: function(graph, prop, flags) {
    return this.getClosestNodeToPos(graph, Polar.KER, prop, flags);
@@ -1127,18 +1293,18 @@ Graph.Util = {
   /* 
     Method: getClosestNodeToPos
   
-    Extends <Graph.Util>. Returns the closest node to the given position.
+    Returns the closest node to the given position.
   
+    Also implemented by:
+    
+    <Graph>.
+    
     Parameters:
    
-     graph - A <Graph> instance.
-     pos - A <Complex> or <Polar> instance.
-     prop - _optional_ a <Graph.Node> position property. Possible properties are 'start', 'current' or 'end'. Default's 'current'.
+     graph - (object) A <Graph> instance.
+     pos - (object) A <Complex> or <Polar> instance.
+     prop - (optional|string) Default's *current*. A <Graph.Node> position property. Possible properties are 'start', 'current' or 'end'.
   
-    Returns:
-  
-     Closest node to the given position. Returns *null* otherwise.
-   
   */
   getClosestNodeToPos: function(graph, pos, prop, flags) {
    var node = null;

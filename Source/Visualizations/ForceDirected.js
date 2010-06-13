@@ -1,129 +1,42 @@
 /*
  * File: ForceDirected.js
- * 
- * Implements the <ForceDirected> class and other derived classes.
- *
- * Description:
- *
- *
- * Inspired by:
- *
- * Disclaimer:
- *
- * This visualization was built from scratch, taking only the paper as inspiration, and only shares some features with this paper.
- *
- * 
  */
 
 /*
    Class: ForceDirected
       
-     The main ForceDirected class
-
-     Extends:
-
-     <Loader>, <Tips>, <NodeStyles>, <Layouts.ForceDirected>
-
-     Parameters:
-
-     canvas - A <Canvas> Class
-     config - A configuration/controller object.
-
-     Configuration:
-    
-     The configuration object can have the following properties (all properties are optional and have a default value)
+   A visualization that lays graphs using a Force-Directed layout algorithm.
+   
+   Inspired by:
+  
+   Force-Directed Drawing Algorithms (Stephen G. Kobourov) <http://www.cs.brown.edu/~rt/gdhandbook/chapters/force-directed.pdf>
+   
+   Constructor Options:
+   
+   Inherits options from
+   
+   - <Options.Canvas>
+   - <Options.Controller>
+   - <Options.Node>
+   - <Options.Edge>
+   - <Options.Label>
+   - <Options.Events>
+   - <Options.Tips>
+   - <Options.NodeStyles>
+   - <Options.Navigation>
+   
+   Additionally, there are two parameters
+   
+   levelDistance - (number) Default's *50*. The natural length desired for the edges.
+   iterations - (number) Default's *50*. The number of iterations for the spring layout simulation. Depending on the browser's speed you could set this to a more 'interesting' number, like *200*. 
      
-     *General*
+   Instance Properties:
 
-     - _naturalLength_ Natural Length
-     - _restoringForce_ Restoring Force 
-     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
-
-     *Node*
-     
-     Customize the visualization nodes' shape, color, and other style properties.
-
-     Inherits options from <Options.Graph.Node>.
-
-     *Edge*
-
-     Customize the visualization edges' shape, color, and other style properties.
-
-     Inherits Options from <Options.Graph.Edge>.
-      
-    *Animations*
-
-    Inherits from <Options.Animation>.
-     
-    *Controller options*
-
-    Inherits from <Options.Controller>.
-    
-    Instance Properties:
-
-    - _graph_ Access a <Graph> instance.
-    - _op_ Access a <ForceDirected.Op> instance.
-    - _fx_ Access a <ForceDirected.Plot> instance.
-    - _labels_ Access a <ForceDirected.Label> interface implementation.
-
-    Example:
-
-    Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
-    all configuration properties  have the default value assigned.
-
-    I won't be instantiating a <Canvas> class here. If you want to know more about instantiating a <Canvas> class 
-    please take a look at the <Canvas> class documentation.
-
-    (start code js)
-      var fd = new ForceDirected(canvas, {
-        naturalLength: 75,
-        restoringForce: 2,
-        withLabels: true,
-        Node: {
-          overridable: false,
-          type: 'circle',
-          color: '#ccb',
-          lineWidth: 1,
-          height: 5,
-          width: 5,
-          dim: 3
-        },
-        Edge: {
-          overridable: false,
-          type: 'line',
-          color: '#ccb',
-          lineWidth: 1
-        },
-        duration: 2500,
-        fps: 40,
-        transition: Trans.Quart.easeInOut,
-        clearCanvas: true,
-        onBeforeCompute: function(node) {
-          //do something onBeforeCompute
-        },
-        onAfterCompute:  function () {
-          //do something onAfterCompute
-        },
-        onCreateLabel:   function(domElement, node) {
-          //do something onCreateLabel
-        },
-        onPlaceLabel:    function(domElement, node) {
-          //do something onPlaceLabel
-        },
-        onBeforePlotNode:function(node) {
-          //do something onBeforePlotNode
-        },
-        onAfterPlotNode: function(node) {
-          //do something onAfterPlotNode
-        },
-        onBeforePlotLine:function(adj) {
-          //do something onBeforePlotLine
-        },
-        onAfterPlotLine: function(adj) {
-          //do something onAfterPlotLine
-        }
-      });
-    (end code)
+   canvas - Access a <Canvas> instance.
+   graph - Access a <Graph> instance.
+   op - Access a <ForceDirected.Op> instance.
+   fx - Access a <ForceDirected.Plot> instance.
+   labels - Access a <ForceDirected.Label> interface implementation.
 
 */
 
@@ -178,62 +91,50 @@ $jit.ForceDirected = new Class( {
   /* 
     Method: refresh 
     
-    Computes nodes' positions and replots the tree.
-
+    Computes positions and plots the tree.
   */
   refresh: function() {
     this.compute();
     this.plot();
   },
 
-  /*
-   Method: reposition
-  
-   An alias for computing new positions to _endPos_
-
-   See also:
-
-   <ForceDirected.compute>
-   
-  */
   reposition: function() {
     this.compute('end');
   },
 
-  /*
+/*
   Method: computeIncremental
   
-  Perform the <Layout.ForceDirected.compute> method incrementally.
+  Performs the Force Directed algorithm incrementally.
   
   Description:
   
   ForceDirected algorithms can perform many computations and lead to JavaScript taking too much time to complete. 
-  This method splits the algorithm into "small parts" allowing the user to track the evolution of the algorithm and 
+  This method splits the algorithm into smaller parts allowing the user to track the evolution of the algorithm and 
   avoiding browser messages such as "This script is taking too long to complete".
   
   Parameters:
   
-  opt - An Options object containing as properties
+  opt - (object) The object properties are described below
   
-  _iter_ - Split the algorithm into pieces of _iter_ iterations. For example, if the _iterations_ configuration property 
-  of your <ForceDirected> class is 100, then you could set _iter_ to 20 to split the main algorithm into 5 smaller pieces. 
-  Default's 20. 
+  iter - (number) Default's *20*. Split the algorithm into pieces of _iter_ iterations. For example, if the _iterations_ configuration property 
+  of your <ForceDirected> class is 100, then you could set _iter_ to 20 to split the main algorithm into 5 smaller pieces.
   
-  _property_ - Possible values are 'end', 'start', 'current'. You can also set an array of these properties. if you'd like to 
-  keep the current node positions but to perform these computations for final animation positions then you can just choose 'end'. 
-  Default's 'end'.
+  property - (string) Default's *end*. Whether to update starting, current or ending node positions. Possible values are 'end', 'start', 'current'. 
+  You can also set an array of these properties. If you'd like to keep the current node positions but to perform these 
+  computations for final animation positions then you can just choose 'end'.
   
-  _onStep_ - A callback function called when each "small part" of the algorithm completed. This function gets as first formal 
+  onStep - (function) A callback function called when each "small part" of the algorithm completed. This function gets as first formal 
   parameter a percentage value.
   
-  _onComplete_ - A callback function called when the algorithm completed.
+  onComplete - A callback function called when the algorithm completed.
   
   Example:
   
   In this example I calculate the end positions and then animate the graph to those positions
   
   (start code js)
-  var fd = new ForceDirected(...);
+  var fd = new $jit.ForceDirected(...);
   fd.computeIncremental({
     iter: 20,
     property: 'end',
@@ -264,10 +165,6 @@ $jit.ForceDirected = new Class( {
   });
   (end code)
   
-  See also:
-
-  <Layouts.ForceDirected.compute>
-  
   */
   computeIncremental: function(opt) {
     opt = $.merge( {
@@ -284,7 +181,7 @@ $jit.ForceDirected = new Class( {
   /*
     Method: plot
    
-    Plots the ForceDirected
+    Plots the ForceDirected graph. This is a shortcut to *fx.plot*.
    */
   plot: function() {
     this.fx.plot();
@@ -293,7 +190,7 @@ $jit.ForceDirected = new Class( {
   /*
      Method: animate
     
-     Animates the graph to the end positions specified.
+     Animates the graph from the current positions to the 'end' node positions.
   */
   animate: function(opt) {
     this.fx.animate($.merge( {
@@ -308,24 +205,17 @@ $jit.ForceDirected.$extend = true;
 
   /*
      Class: ForceDirected.Op
-
-     Performs advanced operations on trees and graphs.
+     
+     Custom extension of <Graph.Op>.
 
      Extends:
 
      All <Graph.Op> methods
-
-     Access:
-
-     This instance can be accessed with the _op_ parameter of the <ForceDirected> instance created.
-
-     Example:
-
-     (start code js)
-      var fd = new ForceDirected(canvas, config);
-      fd.op.morph //or can also call any other <Graph.Op> method
-     (end code)
      
+     See also:
+     
+     <Graph.Op>
+
   */
   ForceDirected.Op = new Class( {
 
@@ -337,25 +227,18 @@ $jit.ForceDirected.$extend = true;
   });
 
   /*
-     Class: ForceDirected.Plot
-
-     Performs plotting operations.
-
-     Extends:
-
-     All <Graph.Plot> methods
-
-     Access:
-
-     This instance can be accessed with the _fx_ parameter of the <ForceDirected> instance created.
-
-     Example:
-
-     (start code js)
-      var fd = new ForceDirected(canvas, config);
-      fd.fx.plot //or can also call any other <ForceDirected.Plot> method
-     (end code)
-
+    Class: ForceDirected.Plot
+    
+    Custom extension of <Graph.Plot>.
+  
+    Extends:
+  
+    All <Graph.Plot> methods
+    
+    See also:
+    
+    <Graph.Plot>
+  
   */
   ForceDirected.Plot = new Class( {
 
@@ -374,29 +257,34 @@ $jit.ForceDirected.$extend = true;
   });
 
   /*
-    Object: ForceDirected.Label
-
-    Label interface implementation for the ForceDirected
-
-    See Also:
-
-    <Graph.Label>, <ForceDirected.Label.HTML>, <ForceDirected.Label.SVG>
-
-   */
+    Class: ForceDirected.Label
+    
+    Custom extension of <Graph.Label>. 
+    Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
+  
+    Extends:
+  
+    All <Graph.Label> methods and subclasses.
+  
+    See also:
+  
+    <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
+  
+  */
   ForceDirected.Label = {};
 
   /*
-     Class: ForceDirected.Label.Native
-
-     Implements labels natively, using the Canvas text API.
+     ForceDirected.Label.Native
+     
+     Custom extension of <Graph.Label.Native>.
 
      Extends:
 
-     <Graph.Label.Native>
+     All <Graph.Label.Native> methods
 
      See also:
 
-     <Hypertree.Label>, <ForceDirected.Label>, <ST.Label>, <Hypertree>, <ForceDirected>, <ST>, <Graph>.
+     <Graph.Label.Native>
 
   */
   ForceDirected.Label.Native = new Class( {
@@ -404,18 +292,18 @@ $jit.ForceDirected.$extend = true;
   });
 
   /*
-     Class: ForceDirected.Label.SVG
-
-     Implements labels using SVG (currently not supported in IE).
-
-     Extends:
-
-     <Graph.Label.SVG>
-
-     See also:
-
-     <Hypertree.Label>, <ForceDirected.Label>, <ST.Label>, <Hypertree>, <ForceDirected>, <ST>, <Graph>.
-
+    ForceDirected.Label.SVG
+    
+    Custom extension of <Graph.Label.SVG>.
+  
+    Extends:
+  
+    All <Graph.Label.SVG> methods
+  
+    See also:
+  
+    <Graph.Label.SVG>
+  
   */
   ForceDirected.Label.SVG = new Class( {
     Implements: Graph.Label.SVG,
@@ -425,9 +313,9 @@ $jit.ForceDirected.$extend = true;
     },
 
     /* 
-       Method: placeLabel
+       placeLabel
 
-       Overrides abstract method placeLabel in <Graph.Plot>.
+       Overrides abstract method placeLabel in <Graph.Label>.
 
        Parameters:
 
@@ -456,17 +344,17 @@ $jit.ForceDirected.$extend = true;
   });
 
   /*
-     Class: ForceDirected.Label.HTML
-
-     Implements labels using plain old HTML.
+     ForceDirected.Label.HTML
+     
+     Custom extension of <Graph.Label.HTML>.
 
      Extends:
 
-     <Graph.Label.HTML>
+     All <Graph.Label.HTML> methods.
 
      See also:
 
-     <Hypertree.Label>, <ForceDirected.Label>, <ST.Label>, <Hypertree>, <ForceDirected>, <ST>, <Graph>.
+     <Graph.Label.HTML>
 
   */
   ForceDirected.Label.HTML = new Class( {
@@ -476,7 +364,7 @@ $jit.ForceDirected.$extend = true;
       this.viz = viz;
     },
     /* 
-       Method: placeLabel
+       placeLabel
 
        Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -511,17 +399,23 @@ $jit.ForceDirected.$extend = true;
   /*
     Class: ForceDirected.Plot.NodeTypes
 
-    Here are implemented all kinds of node rendering functions. 
-    Rendering functions implemented are 'none', 'circle', 'triangle', 'rectangle', 'star' and 'square'.
+    This class contains a list of <Graph.Node> built-in types. 
+    Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
 
-    You can add new Node types by implementing a new method in this class
+    You can add your custom node types, customizing your visualization to the extreme.
 
     Example:
 
     (start code js)
       ForceDirected.Plot.NodeTypes.implement({
-        'newnodetypename': function(node, canvas) {
-          //Render my node here.
+        'mySpecialType': {
+          'render': function(node, canvas) {
+            //print your custom node to canvas
+          },
+          //optional
+          'contains': function(node, pos) {
+            //return true if pos is inside the node or false otherwise
+          }
         }
       });
     (end code)
@@ -613,22 +507,22 @@ $jit.ForceDirected.$extend = true;
 
   /*
     Class: ForceDirected.Plot.EdgeTypes
-
-    Here are implemented all kinds of edge rendering functions. 
-    Rendering functions implemented are 'none', 'line' and 'arrow'.
-
-    You can add new Edge types by implementing a new method in this class
-
+  
+    This class contains a list of <Graph.Adjacence> built-in types. 
+    Edge types implemented are 'none', 'line' and 'arrow'.
+  
+    You can add your custom edge types, customizing your visualization to the extreme.
+  
     Example:
-
+  
     (start code js)
       ForceDirected.Plot.EdgeTypes.implement({
-        'newedgetypename': function(adj, canvas) {
-          //Render my edge here.
+        'mySpecialType': function(adj, canvas) {
+          //print your custom edge to canvas
         }
       });
     (end code)
-
+  
   */
   ForceDirected.Plot.EdgeTypes = new Class({
     'none': $.empty,

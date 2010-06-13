@@ -9,6 +9,56 @@ var TM = $jit.TM;
 
 $jit.TM.$extend = true;
 
+/*
+  Class: TM.Base
+  
+  Abstract class providing base functionality for <TM.Squarified>, <TM.Strip> and <TM.SliceAndDice> visualizations.
+  
+  Constructor Options:
+  
+  Inherits options from
+  
+  - <Options.Canvas>
+  - <Options.Controller>
+  - <Options.Node>
+  - <Options.Edge>
+  - <Options.Label>
+  - <Options.Events>
+  - <Options.Tips>
+  - <Options.NodeStyles>
+  - <Options.Navigation>
+  
+  Additionally, there are other parameters and some default values changed
+
+  orientation - (string) Default's *h*. Whether to set horizontal or vertical layouts. Possible values are 'h' and 'v'.
+  titleHeight - (number) Default's *13*. The height of the title rectangle for inner (non-leaf) nodes.
+  offset - (number) Default's *2*. Boxes offset.
+  constrained - (boolean) Default's *false*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
+  levelsToShow - (number) Default's *3*. The number of levels to show for a subtree. This number is relative to the selected node.
+  animate - (boolean) Default's *false*. Whether to animate transitions.
+  Node.type - Described in <Options.Node>. Default's *rectangle*.
+  duration - Described in <Options.Fx>. Default's *700*.
+  fps - Described in <Options.Fx>. Default's *45*.
+  
+  Instance Properties:
+  
+  canvas - Access a <Canvas> instance.
+  graph - Access a <Graph> instance.
+  op - Access a <TM.Op> instance.
+  fx - Access a <TM.Plot> instance.
+  labels - Access a <TM.Label> interface implementation.
+
+  Inspired by:
+  
+  Squarified Treemaps (Mark Bruls, Kees Huizing, and Jarke J. van Wijk) <http://www.win.tue.nl/~vanwijk/stm.pdf>
+  
+  Tree visualization with tree-maps: 2-d space-filling approach (Ben Shneiderman) <http://hcil.cs.umd.edu/trs/91-03/91-03.html>
+  
+   Note:
+   
+   This visualization was built and engineered from scratch, taking only the paper as inspiration, and only shares some features with the visualization described in the paper.
+
+*/
 TM.Base = {
   layout: {
     orientation: "h",
@@ -31,11 +81,10 @@ TM.Base = {
       levelsToShow: 3,
       constrained: false,
       animate: false,
-      selectPathOnHover: false,
       Node: {
         type: 'rectangle',
         overridable: true,
-        //we all know with this is not zero,
+        //we all know why this is not zero,
         //right, Firefox?
         width: 3,
         height: 3,
@@ -49,7 +98,7 @@ TM.Base = {
         type: 'none'
       },
       duration: 700,
-      fps: 25
+      fps: 45
     };
 
     this.controller = this.config = $.merge(Options("Canvas", "Node", "Edge",
@@ -91,6 +140,11 @@ TM.Base = {
     this.initializeExtras();
   },
 
+  /* 
+    Method: refresh 
+    
+    Computes positions and plots the tree.
+  */
   refresh: function(){
     if(this.busy) return;
     this.busy = true;
@@ -116,16 +170,42 @@ TM.Base = {
     }
   },
 
+  /* 
+    Method: plot 
+    
+    Plots the TreeMap. This is a shortcut to *fx.plot*. 
+  
+   */
   plot: function(){
     this.fx.plot();
   },
 
+  /* 
+  Method: leaf 
+  
+  Returns whether the node is a leaf.
+  
+   Parameters:
+   
+   n - (object) A <Graph.Node>.
+
+ */
   leaf: function(n){
     return n.getSubnodes([
         1, 1
     ], "ignore").length == 0;
   },
   
+  /* 
+  Method: enter 
+  
+  Sets the node as root.
+  
+   Parameters:
+   
+   n - (object) A <Graph.Node>.
+
+ */
   enter: function(n){
     if(this.busy) return;
     this.busy = true;
@@ -187,6 +267,12 @@ TM.Base = {
     }
   },
 
+  /* 
+  Method: out 
+  
+  Sets the parent node of the current selected node as root.
+
+ */
   out: function(){
     if(this.busy) return;
     this.busy = true;
@@ -279,6 +365,20 @@ TM.Base = {
   }
 };
 
+/*
+  Class: TM.Op
+  
+  Custom extension of <Graph.Op>.
+  
+  Extends:
+  
+  All <Graph.Op> methods
+  
+  See also:
+  
+  <Graph.Op>
+  
+  */
 TM.Op = new Class({
   Implements: Graph.Op,
 
@@ -287,6 +387,7 @@ TM.Op = new Class({
   }
 });
 
+//extend level methods of Graph.Geom
 TM.Geom = new Class({
   Implements: Graph.Geom,
   
@@ -360,7 +461,21 @@ TM.Group = new Class( {
   }
 });
 
-TM.Plot = new Class( {
+/*
+  Class: TM.Plot
+  
+  Custom extension of <Graph.Plot>.
+  
+  Extends:
+  
+  All <Graph.Plot> methods
+  
+  See also:
+  
+  <Graph.Plot>
+  
+  */
+TM.Plot = new Class({
 
   Implements: Graph.Plot,
 
@@ -390,30 +505,34 @@ TM.Plot = new Class( {
 });
 
 /*
-Object: TM.Label
+  Class: TM.Label
+  
+  Custom extension of <Graph.Label>. 
+  Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
 
-Label interface implementation for the ST
+  Extends:
 
-See Also:
+  All <Graph.Label> methods and subclasses.
 
-<Graph.Label>, <ST.Label.HTML>, <RGraph.Label.SVG>
+  See also:
 
+  <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
+  
 */
 TM.Label = {};
 
 /*
- Class: ST.Label.Native
+ TM.Label.Native
 
- Implements labels natively, using the Canvas text API.
+ Custom extension of <Graph.Label.Native>.
 
  Extends:
 
- <Graph.Label.Native>
+ All <Graph.Label.Native> methods
 
  See also:
 
- <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+ <Graph.Label.Native>
 */
 TM.Label.Native = new Class({
   Implements: Graph.Label.Native,
@@ -437,18 +556,17 @@ TM.Label.Native = new Class({
 });
 
 /*
- Class: ST.Label.SVG
+ TM.Label.SVG
 
- Implements labels using SVG (currently not supported in IE).
+  Custom extension of <Graph.Label.SVG>.
 
- Extends:
+  Extends:
 
- <ST.Label.DOM>, <Graph.Label.SVG>
+  All <Graph.Label.SVG> methods
 
- See also:
+  See also:
 
- <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+  <Graph.Label.SVG>
 */
 TM.Label.SVG = new Class( {
   Implements: Graph.Label.SVG,
@@ -460,7 +578,7 @@ TM.Label.SVG = new Class( {
   },
 
   /* 
-  Method: placeLabel
+  placeLabel
 
   Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -494,17 +612,17 @@ TM.Label.SVG = new Class( {
 });
 
 /*
- Class: ST.Label.HTML
+ TM.Label.HTML
 
- Implements labels using plain old HTML.
+ Custom extension of <Graph.Label.HTML>.
 
  Extends:
 
- <ST.Label.DOM>, <Graph.Label.HTML>
+ All <Graph.Label.HTML> methods.
 
  See also:
 
- <ST.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+ <Graph.Label.HTML>
 
 */
 TM.Label.HTML = new Class( {
@@ -517,15 +635,15 @@ TM.Label.HTML = new Class( {
   },
 
   /* 
-  Method: placeLabel
-
-  Overrides abstract method placeLabel in <Graph.Plot>.
-
-  Parameters:
-
-  tag - A DOM label element.
-  node - A <Graph.Node>.
-  controller - A configuration/controller object passed to the visualization.
+    placeLabel
+  
+    Overrides abstract method placeLabel in <Graph.Plot>.
+  
+    Parameters:
+  
+    tag - A DOM label element.
+    node - A <Graph.Node>.
+    controller - A configuration/controller object passed to the visualization.
   
   */
   placeLabel: function(tag, node, controller){
@@ -557,22 +675,28 @@ TM.Label.HTML = new Class( {
 });
 
 /*
-Class: TM.Plot.NodeTypes
+  Class: TM.Plot.NodeTypes
 
-Here are implemented all kinds of node rendering functions. 
-Rendering functions implemented are 'none', 'circle', 'ellipse', 'rectangle' and 'square'.
+  This class contains a list of <Graph.Node> built-in types. 
+  Node types implemented are 'none', 'rectangle'.
 
-You can add new Node types by implementing a new method in this class
+  You can add your custom node types, customizing your visualization to the extreme.
 
-Example:
+  Example:
 
-(start code js)
-  ST.Plot.NodeTypes.implement({
-    'newnodetypename': function(node, canvas) {
-      //Render my node here.
-    }
-  });
-(end code)
+  (start code js)
+    TM.Plot.NodeTypes.implement({
+      'mySpecialType': {
+        'render': function(node, canvas) {
+          //print your custom node to canvas
+        },
+        //optional
+        'contains': function(node, pos) {
+          //return true if pos is inside the node or false otherwise
+        }
+      }
+    });
+  (end code)
 
 */
 TM.Plot.NodeTypes = new Class( {
@@ -638,18 +762,45 @@ TM.Plot.EdgeTypes = new Class( {
   'none': $.empty
 });
 
+/*
+  Class: TM.SliceAndDice
+  
+  A slice and dice TreeMap visualization.
+  
+  Implements:
+  
+  All <TM.Base> methods and properties.
+*/
 TM.SliceAndDice = new Class( {
   Implements: [
       Loader, Extras, TM.Base, Layouts.TM.SliceAndDice
   ]
 });
 
+/*
+  Class: TM.Squarified
+  
+  A squarified TreeMap visualization.
+
+  Implements:
+  
+  All <TM.Base> methods and properties.
+*/
 TM.Squarified = new Class( {
   Implements: [
       Loader, Extras, TM.Base, Layouts.TM.Squarified
   ]
 });
 
+/*
+  Class: TM.Strip
+  
+  A strip TreeMap visualization.
+
+  Implements:
+  
+  All <TM.Base> methods and properties.
+*/
 TM.Strip = new Class( {
   Implements: [
       Loader, Extras, TM.Base, Layouts.TM.Strip

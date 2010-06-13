@@ -3,6 +3,47 @@
  *
 */
 
+/*
+  Class: Icicle
+  
+  Icicle space filling visualization.
+  
+  Constructor Options:
+  
+  Inherits options from
+  
+  - <Options.Canvas>
+  - <Options.Controller>
+  - <Options.Node>
+  - <Options.Edge>
+  - <Options.Label>
+  - <Options.Events>
+  - <Options.Tips>
+  - <Options.NodeStyles>
+  - <Options.Navigation>
+  
+  Additionally, there are other parameters and some default values changed
+
+  orientation - (string) Default's *h*. Whether to set horizontal or vertical layouts. Possible values are 'h' and 'v'.
+  offset - (number) Default's *2*. Boxes offset.
+  constrained - (boolean) Default's *false*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
+  levelsToShow - (number) Default's *3*. The number of levels to show for a subtree. This number is relative to the selected node.
+  animate - (boolean) Default's *false*. Whether to animate transitions.
+  Node.type - Described in <Options.Node>. Default's *rectangle*.
+  Label.type - Described in <Options.Label>. Default's *Native*.
+  duration - Described in <Options.Fx>. Default's *700*.
+  fps - Described in <Options.Fx>. Default's *45*.
+  
+  Instance Properties:
+  
+  canvas - Access a <Canvas> instance.
+  graph - Access a <Graph> instance.
+  op - Access a <Icicle.Op> instance.
+  fx - Access a <Icicle.Plot> instance.
+  labels - Access a <Icicle.Label> interface implementation.
+
+*/
+
 $jit.Icicle = new Class({
   Implements: [ Loader, Extras, Layouts.Icicle ],
 
@@ -37,7 +78,7 @@ $jit.Icicle = new Class({
         type: 'Native'
       },
       duration: 700,
-      fps: 25
+      fps: 45
     };
 
     var opts = Options("Canvas", "Node", "Edge", "Fx", "Tips", "NodeStyles",
@@ -75,6 +116,11 @@ $jit.Icicle = new Class({
     this.initializeExtras();
   },
 
+  /* 
+    Method: refresh 
+    
+    Computes positions and plots the tree.
+  */
   refresh: function(){
     var labelType = this.config.Label.type;
     if(labelType != 'Native') {
@@ -85,14 +131,26 @@ $jit.Icicle = new Class({
     this.plot();
   },
 
+  /* 
+    Method: plot 
+    
+    Plots the Icicle visualization. This is a shortcut to *fx.plot*. 
+  
+   */
   plot: function(){
     this.fx.plot(this.config);
   },
 
-  leaf: function(n){
-    return Graph.Util.getSubnodes(n, [1, 1], "ignore").length == 0;
-  },
-
+  /* 
+    Method: enter 
+    
+    Sets the node as root.
+    
+     Parameters:
+     
+     node - (object) A <Graph.Node>.
+  
+   */
   enter: function (node) {
     if (this.busy)
       return;
@@ -148,6 +206,12 @@ $jit.Icicle = new Class({
     }
   },
 
+  /* 
+    Method: out 
+    
+    Sets the parent node of the current selected node as root.
+  
+   */
   out: function(){
     if(this.busy)
       return;
@@ -243,6 +307,20 @@ $jit.Icicle = new Class({
   },
 });
 
+/*
+  Class: Icicle.Op
+  
+  Custom extension of <Graph.Op>.
+  
+  Extends:
+  
+  All <Graph.Op> methods
+  
+  See also:
+  
+  <Graph.Op>
+  
+  */
 $jit.Icicle.Op = new Class({
   Implements: Graph.Op,
 
@@ -293,6 +371,20 @@ $jit.Icicle.Group = new Class({
   }
 });
 
+/*
+  Class: Icicle.Plot
+  
+  Custom extension of <Graph.Plot>.
+  
+  Extends:
+  
+  All <Graph.Plot> methods
+  
+  See also:
+  
+  <Graph.Plot>
+  
+  */
 $jit.Icicle.Plot = new Class({
   Implements: Graph.Plot,
 
@@ -327,17 +419,36 @@ $jit.Icicle.Plot = new Class({
 });
 
 /*
- * Object: Icicle.Label
- *
- * Label interface implementation for the Icicle
- *
- * See Also:
- *
- * <Graph.Label>, <ST.Label.HTML>, <RGraph.Label.SVG>
- *
- */
+  Class: Icicle.Label
+  
+  Custom extension of <Graph.Label>. 
+  Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
+  
+  Extends:
+  
+  All <Graph.Label> methods and subclasses.
+  
+  See also:
+  
+  <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
+  
+  */
 $jit.Icicle.Label = {};
 
+/*
+  Icicle.Label.Native
+  
+  Custom extension of <Graph.Label.Native>.
+  
+  Extends:
+  
+  All <Graph.Label.Native> methods
+  
+  See also:
+  
+  <Graph.Label.Native>
+
+  */
 $jit.Icicle.Label.Native = new Class({
   Implements: Graph.Label.Native,
 
@@ -360,19 +471,18 @@ $jit.Icicle.Label.Native = new Class({
 });
 
 /*
- * Class: Icicle.Label.SVG
- *
- * Implements labels using SVG (currently not supported in IE).
- *
- * Extends:
- *
- * <Graph.Label.SVG>
- *
- * See also:
- *
- * <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
- *
- */
+  Icicle.Label.SVG
+  
+  Custom extension of <Graph.Label.SVG>.
+  
+  Extends:
+  
+  All <Graph.Label.SVG> methods
+  
+  See also:
+  
+  <Graph.Label.SVG>
+*/
 $jit.Icicle.Label.SVG = new Class( {
   Implements: Graph.Label.SVG,
 
@@ -381,15 +491,15 @@ $jit.Icicle.Label.SVG = new Class( {
   },
 
   /*
-   * Method: placeLabel
-   *
-   * Overrides abstract method placeLabel in <Graph.Plot>.
-   *
-   * Parameters:
-   *
-   * tag - A DOM label element.
-   * node - A <Graph.Node>.
-   * controller - A configuration/controller object passed to the visualization.
+    placeLabel
+   
+    Overrides abstract method placeLabel in <Graph.Plot>.
+   
+    Parameters:
+   
+    tag - A DOM label element.
+    node - A <Graph.Node>.
+    controller - A configuration/controller object passed to the visualization.
    */
   placeLabel: function(tag, node, controller){
     var pos = node.pos.getc(true), canvas = this.viz.canvas;
@@ -406,19 +516,19 @@ $jit.Icicle.Label.SVG = new Class( {
 });
 
 /*
- * Class: Icicle.Label.HTML
- *
- * Implements labels using plain old HTML.
- *
- * Extends:
- *
- * <Icicle.Label.DOM>, <Graph.Label.HTML>
- *
- * See also:
- *
- * <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
- *
-*/
+  Icicle.Label.HTML
+  
+  Custom extension of <Graph.Label.HTML>.
+  
+  Extends:
+  
+  All <Graph.Label.HTML> methods.
+  
+  See also:
+  
+  <Graph.Label.HTML>
+  
+  */
 $jit.Icicle.Label.HTML = new Class( {
   Implements: Graph.Label.HTML,
 
@@ -427,15 +537,15 @@ $jit.Icicle.Label.HTML = new Class( {
   },
 
   /*
-   * Method: placeLabel
-   *
-   * Overrides abstract method placeLabel in <Graph.Plot>.
-   *
-   * Parameters:
-   *
-   * tag - A DOM label element.
-   * node - A <Graph.Node>.
-   * controller - A configuration/controller object passed to the visualization.
+    placeLabel
+   
+    Overrides abstract method placeLabel in <Graph.Plot>.
+   
+    Parameters:
+   
+    tag - A DOM label element.
+    node - A <Graph.Node>.
+    controller - A configuration/controller object passed to the visualization.
    */
   placeLabel: function(tag, node, controller){
     var pos = node.pos.getc(true), canvas = this.viz.canvas;
@@ -455,23 +565,30 @@ $jit.Icicle.Label.HTML = new Class( {
 });
 
 /*
- * Class: Icicle.Plot.NodeTypes
- *
- * Here are implemented all kinds of node rendering functions.
- * Rendering functions implemented are 'none' and 'rectangle'
- *
- * You can add new Node types by implementing a new method in this class
- *
- * Example:
- *
- * (start code js)
- *   Icicle.Plot.NodeTypes.implement({
- *     'newnodetypename': function(node, canvas) {
- *       //Render my node here.
- *     }
- *   });
- * (end code)
- */
+  Class: Icicle.Plot.NodeTypes
+  
+  This class contains a list of <Graph.Node> built-in types. 
+  Node types implemented are 'none', 'rectangle'.
+  
+  You can add your custom node types, customizing your visualization to the extreme.
+  
+  Example:
+  
+  (start code js)
+    Icicle.Plot.NodeTypes.implement({
+      'mySpecialType': {
+        'render': function(node, canvas) {
+          //print your custom node to canvas
+        },
+        //optional
+        'contains': function(node, pos) {
+          //return true if pos is inside the node or false otherwise
+        }
+      }
+    });
+  (end code)
+  
+  */
 $jit.Icicle.Plot.NodeTypes = new Class( {
   'none': {
     'render': $.empty

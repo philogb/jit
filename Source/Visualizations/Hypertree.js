@@ -1,25 +1,6 @@
 /*
  * File: Hypertree.js
  * 
- * Implements the <Hypertree> class and other derived classes.
- *
- * Description:
- *
- * A Hyperbolic Tree (HT) is a focus+context information visualization technique used to display large amount of inter-related data. This technique was originally developed at Xerox PARC.
- *
- * The HT algorithm plots a tree in what's called the Poincare Disk model of Hyperbolic Geometry, a kind of non-Euclidean geometry. By doing this, the HT algorithm applies a moebius transformation to the tree in order to display it with a magnifying glass effect.
- *
- * Inspired by:
- *
- * A Focus+Context Technique Based on Hyperbolic Geometry for Visualizing Large Hierarchies (John Lamping, Ramana Rao, and Peter Pirolli).
- *
- * <http://www.cs.tau.ac.il/~asharf/shrek/Projects/HypBrowser/startree-chi95.pdf>
- *
- * Disclaimer:
- *
- * This visualization was built from scratch, taking only the paper as inspiration, and only shares some features with the Hypertree.
- *
-
 */
 
 /* 
@@ -73,115 +54,47 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
 
 /* 
    Class: Hypertree 
-      
-     The main Hypertree class
+   
+   A Hyperbolic Tree/Graph visualization.
+   
+   Inspired by:
+ 
+   A Focus+Context Technique Based on Hyperbolic Geometry for Visualizing Large Hierarchies (John Lamping, Ramana Rao, and Peter Pirolli). 
+   <http://www.cs.tau.ac.il/~asharf/shrek/Projects/HypBrowser/startree-chi95.pdf>
+ 
+  Note:
+ 
+  This visualization was built and engineered from scratch, taking only the paper as inspiration, and only shares some features with the Hypertree described in the paper.
 
-     Extends:
-
-     <Loader>, <Layouts.Radial>, <Tips>
-
-     Parameters:
-
-     canvas - A <Canvas> Class
-     config - A configuration/controller object.
-
-     Configuration:
-    
-     The configuration object can have the following properties (all properties are optional and have a default value)
-      
-     *General*
-     
-     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
-     - _radius_ The radius length of the visualization. Default's "auto" which means that the radius will be calculated to 
-     fit the canvas. You can change this value to any float value.
-     
-     *Node*
-     
-     Customize the visualization nodes' shape, color, and other style properties.
-
-     Inherits options from <Options.Graph.Node>.
-
-     *Edge*
-
-     Customize the visualization edges' shape, color, and other style properties.
-
-     Inherits from <Options.Graph.Edge>.
-      
-     *Animations*
-
-     Inherits from <Options.Animation>.
-     
-    *Controller options*
-
-     Inherits from <Options.Controller>.
-     
-    Instance Properties:
-
-    - _graph_ Access a <Graph> instance.
-    - _op_ Access a <Hypertree.Op> instance.
-    - _fx_ Access a <Hypertree.Plot> instance.
-    - _labels_ Access a <Hypertree.Label> instance.
-
-    Example:
-
-    Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
-    all configuration properties  have the default value assigned.
-
-    I won't be instantiating a <Canvas> class here. If you want to know more about instantiating a <Canvas> class 
-    please take a look at the <Canvas> class documentation.
-
-    (start code js)
-      var ht = new Hypertree(canvas, {
-        
-        Node: {
-          overridable: false,
-          type: 'circle',
-          color: '#ccb',
-          lineWidth: 1,
-          height: 5,
-          width: 5,
-          dim: 7,
-          transform: true
-        },
-        Edge: {
-          overridable: false,
-          type: 'hyperline',
-          color: '#ccb',
-          lineWidth: 1
-        },
-        duration: 1500,
-        fps: 40,
-        transition: Trans.Quart.easeInOut,
-        clearCanvas: true,
-        withLabels: true,
-        radius: "auto",
-        
-        onBeforeCompute: function(node) {
-          //do something onBeforeCompute
-        },
-        onAfterCompute:  function () {
-          //do something onAfterCompute
-        },
-        onCreateLabel:   function(domElement, node) {
-          //do something onCreateLabel
-        },
-        onPlaceLabel:    function(domElement, node) {
-          //do something onPlaceLabel
-        },
-        onBeforePlotNode:function(node) {
-          //do something onBeforePlotNode
-        },
-        onAfterPlotNode: function(node) {
-          //do something onAfterPlotNode
-        },
-        onBeforePlotLine:function(adj) {
-          //do something onBeforePlotLine
-        },
-        onAfterPlotLine: function(adj) {
-          //do something onAfterPlotLine
-        }
-      });
-    (end code)
+  Constructor Options:
+  
+  Inherits options from
+  
+  - <Options.Canvas>
+  - <Options.Controller>
+  - <Options.Node>
+  - <Options.Edge>
+  - <Options.Label>
+  - <Options.Events>
+  - <Options.Tips>
+  - <Options.NodeStyles>
+  - <Options.Navigation>
+  
+  Additionally, there are other parameters and some default values changed
+  
+  radius - (string|number) Default's *auto*. The radius of the disc to plot the <Hypertree> in. 'auto' will take the smaller value from the width and height canvas dimensions. You can also set this to a custom value, for example *250*.
+  offset - (number) Default's *0*. A number in the range [0, 1) that will be substracted to each node position to make a more compact <Hypertree>. This will avoid placing nodes too far from each other when a there's a selected node.
+  fps - Described in <Options.Fx>. It's default value has been changed to *35*.
+  duration - Described in <Options.Fx>. It's default value has been changed to *1500*.
+  Edge.type - Described in <Options.Edge>. It's default value has been changed to *hyperline*. 
+  
+  Instance Properties:
+  
+  canvas - Access a <Canvas> instance.
+  graph - Access a <Graph> instance.
+  op - Access a <Hypertree.Op> instance.
+  fx - Access a <Hypertree.Plot> instance.
+  labels - Access a <Hypertree.Label> interface implementation.
 
 */
 
@@ -240,7 +153,7 @@ $jit.Hypertree = new Class( {
 
   /* 
   
-  Method: createLevelDistanceFunc 
+  createLevelDistanceFunc 
 
   Returns the levelDistance function used for calculating a node distance 
   to its origin. This function returns a function that is computed 
@@ -297,19 +210,15 @@ $jit.Hypertree = new Class( {
   },
 
   /* 
-      Method: refresh 
-      
-      Computes nodes' positions and replots the tree.
+    Method: refresh 
+    
+    Computes positions and plots the tree.
 
-      Parameters:
+    Parameters:
 
-      reposition - _optional_ Set this to *true* to force repositioning.
+    reposition - (optional|boolean) Set this to *true* to force all positions (current, start, end) to match.
 
-      See also:
-
-      <Hypertree.reposition>
-       
-     */
+   */
   refresh: function(reposition) {
     if (reposition) {
       this.reposition();
@@ -324,7 +233,7 @@ $jit.Hypertree = new Class( {
   },
 
   /* 
-   Method: reposition 
+   reposition 
    
    Computes nodes' positions and restores the tree to its previous position.
 
@@ -348,7 +257,7 @@ $jit.Hypertree = new Class( {
   /* 
    Method: plot 
    
-   Plots the Hypertree 
+   Plots the <Hypertree>. This is a shortcut to *fx.plot*. 
 
   */
   plot: function() {
@@ -358,14 +267,13 @@ $jit.Hypertree = new Class( {
   /* 
    Method: onClick 
    
-   Performs all calculations and animations to center the node specified by _id_.
+   Animates the <Hypertree> to center the node specified by *id*.
 
    Parameters:
 
    id - A <Graph.Node> id.
-   opt - _optional_ An object containing some extra properties like
-
-   - _hideLabels_ Hide labels when performing the animation. Default's *true*.
+   opt - (optional|object) An object containing some extra properties described below
+   hideLabels - (boolean) Default's *true*. Hide labels when performing the animation.
 
    Example:
 
@@ -390,9 +298,16 @@ $jit.Hypertree = new Class( {
 
    Parameters:
 
-   pos - A <Complex> number determining the position to move the tree to.
-   opt - _optional_ An object containing some extra properties defined in <Hypertree.onClick>
-
+   pos - (object) A *x, y* coordinate object where x, y in [0, 1), to move the tree to.
+   opt - This object has been defined in <Hypertree.onClick>
+   
+   Example:
+   
+   (start code js)
+     ht.move({ x: 0, y: 0.7 }, {
+       hideLabels: false
+     });
+   (end code)
 
   */
   move: function(pos, opt) {
@@ -425,23 +340,16 @@ $jit.Hypertree.$extend = true;
   /* 
      Class: Hypertree.Op 
    
-     Performs advanced operations on trees and graphs.
+     Custom extension of <Graph.Op>.
 
      Extends:
 
      All <Graph.Op> methods
+     
+     See also:
+     
+     <Graph.Op>
 
-     Access:
-
-     This instance can be accessed with the _op_ parameter of the hypertree instance created.
-
-     Example:
-
-     (start code js)
-      var ht = new Hypertree(canvas, config);
-      ht.op.morph //or can also call any other <Graph.Op> method
-     (end code)
-      
   */
   Hypertree.Op = new Class( {
 
@@ -455,23 +363,16 @@ $jit.Hypertree.$extend = true;
   /* 
      Class: Hypertree.Plot 
    
-     Performs plotting operations.
-
-     Extends:
-
-     All <Graph.Plot> methods
-
-     Access:
-
-     This instance can be accessed with the _fx_ parameter of the hypertree instance created.
-
-     Example:
-
-     (start code js)
-      var ht = new Hypertree(canvas, config);
-      ht.fx.animate //or can also call any other <Hypertree.Plot> method
-     (end code)
-
+    Custom extension of <Graph.Plot>.
+  
+    Extends:
+  
+    All <Graph.Plot> methods
+    
+    See also:
+    
+    <Graph.Plot>
+  
   */
   Hypertree.Plot = new Class( {
 
@@ -492,27 +393,32 @@ $jit.Hypertree.$extend = true;
   /*
     Object: Hypertree.Label
 
-    Label interface implementation for the Hypertree
-
-    See Also:
-
-    <Graph.Label>, <Hypertree.Label.HTML>, <RGraph.Label.SVG>
+    Custom extension of <Graph.Label>. 
+    Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
+  
+    Extends:
+  
+    All <Graph.Label> methods and subclasses.
+  
+    See also:
+  
+    <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
 
    */
   Hypertree.Label = {};
 
   /*
-     Class: Hypertree.Label.Native
+     Hypertree.Label.Native
 
-     Implements labels natively, using the Canvas text API.
+     Custom extension of <Graph.Label.Native>.
 
-     Implements:
+     Extends:
 
-     <Graph.Label.Native>
+     All <Graph.Label.Native> methods
 
      See also:
 
-     <Hypertree.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+     <Graph.Label.Native>
 
   */
   Hypertree.Label.Native = new Class( {
@@ -531,18 +437,18 @@ $jit.Hypertree.$extend = true;
   });
 
   /*
-     Class: Hypertree.Label.SVG
+     Hypertree.Label.SVG
 
-     Implements labels using SVG (currently not supported in IE).
-
-     Extends:
-
-     <Graph.Label.SVG>
-
-     See also:
-
-     <Hypertree.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+    Custom extension of <Graph.Label.SVG>.
+  
+    Extends:
+  
+    All <Graph.Label.SVG> methods
+  
+    See also:
+  
+    <Graph.Label.SVG>
+  
   */
   Hypertree.Label.SVG = new Class( {
     Implements: Graph.Label.SVG,
@@ -552,7 +458,7 @@ $jit.Hypertree.$extend = true;
     },
 
     /* 
-       Method: placeLabel
+       placeLabel
 
        Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -583,17 +489,17 @@ $jit.Hypertree.$extend = true;
   });
 
   /*
-     Class: Hypertree.Label.HTML
+     Hypertree.Label.HTML
 
-     Implements labels using plain old HTML.
+     Custom extension of <Graph.Label.HTML>.
 
      Extends:
 
-     <Graph.Label.HTML>
+     All <Graph.Label.HTML> methods.
 
      See also:
 
-     <Hypertree.Label>, <Hypertree.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+     <Graph.Label.HTML>
 
   */
   Hypertree.Label.HTML = new Class( {
@@ -603,7 +509,7 @@ $jit.Hypertree.$extend = true;
       this.viz = viz;
     },
     /* 
-       Method: placeLabel
+       placeLabel
 
        Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -639,17 +545,23 @@ $jit.Hypertree.$extend = true;
   /*
     Class: Hypertree.Plot.NodeTypes
 
-    Here are implemented all kinds of node rendering functions. 
-    Rendering functions implemented are 'none', 'circle', 'triangle', 'rectangle', 'star' and 'square'.
+    This class contains a list of <Graph.Node> built-in types. 
+    Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
 
-    You can add new Node types by implementing a new method in this class
+    You can add your custom node types, customizing your visualization to the extreme.
 
     Example:
 
     (start code js)
       Hypertree.Plot.NodeTypes.implement({
-        'newnodetypename': function(node, canvas) {
-          //Render my node here.
+        'mySpecialType': {
+          'render': function(node, canvas) {
+            //print your custom node to canvas
+          },
+          //optional
+          'contains': function(node, pos) {
+            //return true if pos is inside the node or false otherwise
+          }
         }
       });
     (end code)
@@ -767,21 +679,21 @@ $jit.Hypertree.$extend = true;
   /*
    Class: Hypertree.Plot.EdgeTypes
 
-   Here are implemented all kinds of edge rendering functions. 
-   Rendering functions implemented are 'none', 'line' and 'hyperline'.
-
-   You can add new Edge types by implementing a new method in this class
-
-   Example:
-
-   (start code js)
-     Hypertree.Plot.EdgeTypes.implement({
-       'newedgetypename': function(adj, canvas) {
-         //Render my edge here.
-       }
-     });
-   (end code)
-
+    This class contains a list of <Graph.Adjacence> built-in types. 
+    Edge types implemented are 'none', 'line', 'arrow' and 'hyperline'.
+  
+    You can add your custom edge types, customizing your visualization to the extreme.
+  
+    Example:
+  
+    (start code js)
+      Hypertree.Plot.EdgeTypes.implement({
+        'mySpecialType': function(adj, canvas) {
+          //print your custom edge to canvas
+        }
+      });
+    (end code)
+  
   */
   Hypertree.Plot.EdgeTypes = new Class({
     'none': $.empty,

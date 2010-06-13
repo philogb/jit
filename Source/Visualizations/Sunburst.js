@@ -1,136 +1,51 @@
 /*
  * File: Sunburst.js
- * 
- * Implements the <Sunburst> class and other derived classes.
- *
- * Description:
- *
- * A radial layout of a tree puts the root node on the center of the canvas, places its children on the first concentric ring away from the root node, its grandchildren on a second concentric ring, and so on...
- *
- * Ka-Ping Yee, Danyel Fisher, Rachna Dhamija and Marti Hearst introduced a very interesting paper called "Animated Exploration of Dynamic Graphs with Radial Layout". In this paper they describe a way to animate a radial layout of a tree with ease-in and ease-out transitions, which make transitions from a graph's state to another easier to understand for the viewer.
- *
- * Inspired by:
- *
- * Animated Exploration of Dynamic Graphs with Radial Layout (Ka-Ping Yee, Danyel Fisher, Rachna Dhamija, Marti Hearst)
- *
- * <http://bailando.sims.berkeley.edu/papers/infovis01.htm>
- *
- * Disclaimer:
- *
- * This visualization was built from scratch, taking only the paper as inspiration, and only shares some features with this paper.
- *
- * 
  */
 
 /*
    Class: Sunburst
       
-     The main Sunburst class
-
-     Extends:
-
-     <Loader>, <Tips>, <NodeStyles>, <Layouts.Radial>
-
-     Parameters:
-
-     canvas - A <Canvas> Class
-     config - A configuration/controller object.
-
-     Configuration:
-    
-     The configuration object can have the following properties (all properties are optional and have a default value)
+   A radial space filling tree visualization.
+   
+   Inspired by:
+ 
+   Sunburst <http://www.cc.gatech.edu/gvu/ii/sunburst/>.
+   
+   Note:
+   
+   This visualization was built and engineered from scratch, taking only the paper as inspiration, and only shares some features with the visualization described in the paper.
+   
+   Constructor Options:
+   
+   Inherits options from
+   
+   - <Options.Canvas>
+   - <Options.Controller>
+   - <Options.Node>
+   - <Options.Edge>
+   - <Options.Label>
+   - <Options.Events>
+   - <Options.Tips>
+   - <Options.NodeStyles>
+   - <Options.Navigation>
+   
+   Additionally, there are other parameters and some default values changed
+   
+   interpolation - (string) Default's *linear*. Describes the way nodes are interpolated. Possible values are 'linear' and 'polar'.
+   levelDistance - (number) Default's *100*. The distance between levels of the tree. 
+   Node.type - Described in <Options.Node>. Default's to *multipie*.
+   Node.height - Described in <Options.Node>. Default's *0*.
+   Edge.type - Described in <Options.Edge>. Default's *none*.
+   Label.textAlign - Described in <Options.Label>. Default's *start*.
+   Label.textBaseline - Described in <Options.Label>. Default's *middle*.
      
-     *General*
+   Instance Properties:
 
-     - _interpolation_ Interpolation type used for animations. Possible options are 'polar' and 'linear'. Default's 'linear'.
-     - _levelDistance_ Distance between a parent node and its children. Default's 100.
-     - _withLabels_ Whether the visualization should use/create labels or not. Default's *true*.
-
-     *Node*
-     
-     Customize the visualization nodes' shape, color, and other style properties.
-
-     Inherits options from <Options.Graph.Node>.
-
-     *Edge*
-
-     Customize the visualization edges' shape, color, and other style properties.
-
-     Inherits Options from <Options.Graph.Edge>.
-      
-    *Animations*
-
-    Inherits from <Options.Animation>.
-     
-    *Controller options*
-
-    Inherits from <Options.Controller>.
-    
-    Instance Properties:
-
-    - _graph_ Access a <Graph> instance.
-    - _op_ Access a <Sunburst.Op> instance.
-    - _fx_ Access a <Sunburst.Plot> instance.
-    - _labels_ Access a <Sunburst.Label> interface implementation.
-
-    Example:
-
-    Here goes a complete example. In most cases you won't be forced to implement all properties and methods. In fact, 
-    all configuration properties  have the default value assigned.
-
-    I won't be instantiating a <Canvas> class here. If you want to know more about instantiating a <Canvas> class 
-    please take a look at the <Canvas> class documentation.
-
-    (start code js)
-      var sunburst = new Sunburst(canvas, {
-        interpolation: 'linear',
-        levelDistance: 100,
-        withLabels: true,
-        Node: {
-          overridable: false,
-          type: 'circle',
-          color: '#ccb',
-          lineWidth: 1,
-          height: 5,
-          width: 5,
-          dim: 3
-        },
-        Edge: {
-          overridable: false,
-          type: 'line',
-          color: '#ccb',
-          lineWidth: 1
-        },
-        duration: 2500,
-        fps: 40,
-        transition: Trans.Quart.easeInOut,
-        clearCanvas: true,
-        onBeforeCompute: function(node) {
-          //do something onBeforeCompute
-        },
-        onAfterCompute:  function () {
-          //do something onAfterCompute
-        },
-        onCreateLabel:   function(domElement, node) {
-          //do something onCreateLabel
-        },
-        onPlaceLabel:    function(domElement, node) {
-          //do something onPlaceLabel
-        },
-        onBeforePlotNode:function(node) {
-          //do something onBeforePlotNode
-        },
-        onAfterPlotNode: function(node) {
-          //do something onAfterPlotNode
-        },
-        onBeforePlotLine:function(adj) {
-          //do something onBeforePlotLine
-        },
-        onAfterPlotLine: function(adj) {
-          //do something onAfterPlotLine
-        }
-      });
-    (end code)
+   canvas - Access a <Canvas> instance.
+   graph - Access a <Graph> instance.
+   op - Access a <Sunburst.Op> instance.
+   fx - Access a <Sunburst.Plot> instance.
+   labels - Access a <Sunburst.Label> interface implementation.   
 
 */
 
@@ -197,7 +112,7 @@ $jit.Sunburst = new Class({
 
   /* 
   
-    Method: createLevelDistanceFunc 
+    createLevelDistanceFunc 
   
     Returns the levelDistance function used for calculating a node distance 
     to its origin. This function returns a function that is computed 
@@ -216,7 +131,7 @@ $jit.Sunburst = new Class({
   /* 
      Method: refresh 
      
-     Computes nodes' positions and replots the tree.
+     Computes positions and plots the tree.
 
    */
   refresh: function() {
@@ -225,7 +140,7 @@ $jit.Sunburst = new Class({
   },
 
   /*
-   Method: reposition
+   reposition
   
    An alias for computing new positions to _endPos_
 
@@ -245,9 +160,9 @@ $jit.Sunburst = new Class({
 
   Parameters:
   
-  node - A <Graph.Node>.
-  method - _(string)_ Whether to perform an animation or just replot the graph. Possible values are "replot" or "animate".
-  opt - _(object)_ Configuration options merged with this visualization configuration options.
+  node - (object) A <Graph.Node>.
+  method - (string) Whether to perform an animation or just replot the graph. Possible values are "replot" or "animate".
+  opt - (object) Configuration options merged with this visualization configuration options.
   
   See also:
 
@@ -263,13 +178,13 @@ $jit.Sunburst = new Class({
   /*
   Method: rotateAngle
   
-  Rotates the graph with an angle theta.
+  Rotates the graph of an angle theta.
   
    Parameters:
    
-   node - A <Graph.Node>.
-   method - _(string)_ Whether to perform an animation or just replot the graph. Possible values are "replot" or "animate".
-   opt - _(object)_ Configuration options merged with this visualization configuration options.
+   node - (object) A <Graph.Node>.
+   method - (string) Whether to perform an animation or just replot the graph. Possible values are "replot" or "animate".
+   opt - (object) Configuration options merged with this visualization configuration options.
    
    See also:
 
@@ -303,7 +218,7 @@ $jit.Sunburst = new Class({
   /*
    Method: plot
   
-   Plots the Sunburst
+   Plots the Sunburst. This is a shortcut to *fx.plot*.
   */
   plot: function() {
     this.fx.plot();
@@ -317,23 +232,16 @@ $jit.Sunburst.$extend = true;
   /*
      Class: Sunburst.Op
 
-     Performs advanced operations on trees and graphs.
+     Custom extension of <Graph.Op>.
 
      Extends:
 
      All <Graph.Op> methods
-
-     Access:
-
-     This instance can be accessed with the _op_ parameter of the <Sunburst> instance created.
-
-     Example:
-
-     (start code js)
-      var sunburst = new Sunburst(canvas, config);
-      sunburst.op.morph //or can also call any other <Graph.Op> method
-     (end code)
      
+     See also:
+     
+     <Graph.Op>
+
   */
   Sunburst.Op = new Class( {
 
@@ -347,23 +255,16 @@ $jit.Sunburst.$extend = true;
   /*
      Class: Sunburst.Plot
 
-     Performs plotting operations.
-
-     Extends:
-
-     All <Graph.Plot> methods
-
-     Access:
-
-     This instance can be accessed with the _fx_ parameter of the <Sunburst> instance created.
-
-     Example:
-
-     (start code js)
-      var sunburst = new Sunburst(canvas, config);
-      sunburst.fx.placeLabel //or can also call any other <Sunburst.Plot> method
-     (end code)
-
+    Custom extension of <Graph.Plot>.
+  
+    Extends:
+  
+    All <Graph.Plot> methods
+    
+    See also:
+    
+    <Graph.Plot>
+  
   */
   Sunburst.Plot = new Class( {
 
@@ -382,30 +283,34 @@ $jit.Sunburst.$extend = true;
   });
 
   /*
-    Object: Sunburst.Label
+    Class: Sunburst.Label
 
-    Label interface implementation for the Sunburst
-
-    See Also:
-
-    <Graph.Label>, <Sunburst.Label.HTML>, <Sunburst.Label.SVG>
-
+    Custom extension of <Graph.Label>. 
+    Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
+  
+    Extends:
+  
+    All <Graph.Label> methods and subclasses.
+  
+    See also:
+  
+    <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
+  
    */
   Sunburst.Label = {};
 
   /*
-     Class: Sunburst.Label.Native
+     Sunburst.Label.Native
 
-     Implements labels natively, using the Canvas text API.
+     Custom extension of <Graph.Label.Native>.
 
      Extends:
 
-     <Graph.Label.Native>
+     All <Graph.Label.Native> methods
 
      See also:
 
-     <Hypertree.Label>, <Sunburst.Label>, <ST.Label>, <Hypertree>, <Sunburst>, <ST>, <Graph>.
-
+     <Graph.Label.Native>
   */
   Sunburst.Label.Native = new Class( {
     Implements: Graph.Label.Native,
@@ -455,18 +360,18 @@ $jit.Sunburst.$extend = true;
   });
 
   /*
-     Class: Sunburst.Label.SVG
+     Sunburst.Label.SVG
 
-     Implements labels using SVG (currently not supported in IE).
-
-     Extends:
-
-     <Graph.Label.SVG>
-
-     See also:
-
-     <Hypertree.Label>, <Sunburst.Label>, <ST.Label>, <Hypertree>, <Sunburst>, <ST>, <Graph>.
-
+    Custom extension of <Graph.Label.SVG>.
+  
+    Extends:
+  
+    All <Graph.Label.SVG> methods
+  
+    See also:
+  
+    <Graph.Label.SVG>
+  
   */
   Sunburst.Label.SVG = new Class( {
     Implements: Graph.Label.SVG,
@@ -476,7 +381,7 @@ $jit.Sunburst.$extend = true;
     },
 
     /* 
-       Method: placeLabel
+       placeLabel
 
        Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -525,17 +430,17 @@ $jit.Sunburst.$extend = true;
   });
 
   /*
-     Class: Sunburst.Label.HTML
+     Sunburst.Label.HTML
 
-     Implements labels using plain old HTML.
+     Custom extension of <Graph.Label.HTML>.
 
      Extends:
 
-     <Graph.Label.HTML>
+     All <Graph.Label.HTML> methods.
 
      See also:
 
-     <Hypertree.Label>, <Sunburst.Label>, <ST.Label>, <Hypertree>, <Sunburst>, <ST>, <Graph>.
+     <Graph.Label.HTML>
 
   */
   Sunburst.Label.HTML = new Class( {
@@ -545,7 +450,7 @@ $jit.Sunburst.$extend = true;
       this.viz = viz;
     },
     /* 
-       Method: placeLabel
+       placeLabel
 
        Overrides abstract method placeLabel in <Graph.Plot>.
 
@@ -582,23 +487,22 @@ $jit.Sunburst.$extend = true;
   /*
     Class: Sunburst.Plot.NodeTypes
 
-    Here are implemented all kinds of node rendering functions. 
-    Rendering functions implemented are 'none', 'circle', 'triangle', 'rectangle', 'star' and 'square'.
+    This class contains a list of <Graph.Node> built-in types. 
+    Node types implemented are 'none', 'pie', 'multipie', 'gradient-pie' and 'gradient-multipie'.
 
-    You can add new Node types by implementing a new method in this class
+    You can add your custom node types, customizing your visualization to the extreme.
 
     Example:
 
     (start code js)
       Sunburst.Plot.NodeTypes.implement({
-        'newnodetypename': {
-          'plot': function(node, canvas) {
-            //render my node here
+        'mySpecialType': {
+          'render': function(node, canvas) {
+            //print your custom node to canvas
           },
+          //optional
           'contains': function(node, pos) {
-            //Optional
-            //return if the position is in the node definition
-            //return false otherwise.
+            //return true if pos is inside the node or false otherwise
           }
         }
       });
@@ -757,21 +661,21 @@ $jit.Sunburst.$extend = true;
   /*
     Class: Sunburst.Plot.EdgeTypes
 
-    Here are implemented all kinds of edge rendering functions. 
-    Rendering functions implemented are 'none', 'line' and 'arrow'.
-
-    You can add new Edge types by implementing a new method in this class
-
+    This class contains a list of <Graph.Adjacence> built-in types. 
+    Edge types implemented are 'none', 'line' and 'arrow'.
+  
+    You can add your custom edge types, customizing your visualization to the extreme.
+  
     Example:
-
+  
     (start code js)
       Sunburst.Plot.EdgeTypes.implement({
-        'newedgetypename': function(adj, canvas) {
-          //Render my edge here.
+        'mySpecialType': function(adj, canvas) {
+          //print your custom edge to canvas
         }
       });
     (end code)
-
+  
   */
   Sunburst.Plot.EdgeTypes = new Class({
     'none': $.empty,
