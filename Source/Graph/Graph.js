@@ -33,10 +33,6 @@
   - <Graph.Util.getClosestNodeToPos>
   - <Graph.Util.getClosestNodeToOrigin>
  
- See also:
- 
- <Graph.Util>.
- 
 */  
 
 $jit.Graph = new Class({

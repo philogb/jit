@@ -1,14 +1,68 @@
 /*
- * File: Helpers.js
- *
+   File: Helpers.js
+ 
+   Helpers are objects that contain rendering primitives (like rectangles, ellipses, etc), for plotting nodes and edges.
+   Helpers also contain implementations of the *contains* method, a method returning a boolean indicating whether the mouse
+   position is over the rendered shape.
+   
+   Helpers are very useful when implementing new NodeTypes, since you can access them through *this.nodeHelper* and 
+   *this.edgeHelper* <Graph.Plot> properties, providing you with simple primitives and mouse-position check functions.
+   
+   Example:
+   (start code js)
+   //implement a new node type
+   $jit.Viz.Plot.NodeTypes.implement({
+     'customNodeType': {
+       'render': function(node, canvas) {
+         this.nodeHelper.circle.render ...
+       },
+       'contains': function(node, pos) {
+         this.nodeHelper.circle.contains ...
+       }
+     }
+   });
+   //implement an edge type
+   //edges do not implement the contains method
+   $jit.Viz.Plot.EdgeTypes.implement({
+     'customEdgeType': function(adj, canvas) {
+       this.edgeHelper.line ...
+     }
+   });
+   (end code)
+
 */
 
+/*
+   Object: NodeHelper
+   
+   Contains rendering and other type of primitives for simple shapes.
+ */
 var NodeHelper = {
   'none': {
     'render': $.empty,
     'contains': $.lambda(false)
   },
+  /*
+   Object: NodeHelper.circle
+   */
   'circle': {
+    /*
+     Method: render
+     
+     Renders a circle into the canvas.
+     
+     Parameters:
+     
+     type - (string) Possible options are 'fill' or 'stroke'.
+     pos - (object) An *x*, *y* object with the position of the center of the circle.
+     radius - (number) The radius of the circle to be rendered.
+     canvas - (object) A <Canvas> instance.
+     
+     Example:
+     (start code js)
+     NodeHelper.circle.render('fill', { x: 10, y: 30 }, 30, viz.canvas);
+     (end code)
+     */
     'render': function(type, pos, radius, canvas){
       var ctx = canvas.getCtx();
       ctx.beginPath();
@@ -16,6 +70,22 @@ var NodeHelper = {
       ctx.closePath();
       ctx[type]();
     },
+    /*
+    Method: contains
+    
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    npos - (object) An *x*, *y* object with the <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    radius - (number) The radius of the rendered circle.
+    
+    Example:
+    (start code js)
+    NodeHelper.circle.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30); //true
+    (end code)
+    */
     'contains': function(npos, pos, radius){
       var diffx = npos.x - pos.x, 
           diffy = npos.y - pos.y, 
@@ -23,7 +93,28 @@ var NodeHelper = {
       return diff <= radius * radius;
     }
   },
+  /*
+  Object: NodeHelper.ellipse
+  */
   'ellipse': {
+    /*
+    Method: render
+    
+    Renders an ellipse into the canvas.
+    
+    Parameters:
+    
+    type - (string) Possible options are 'fill' or 'stroke'.
+    pos - (object) An *x*, *y* object with the position of the center of the ellipse.
+    width - (number) The width of the ellipse.
+    height - (number) The height of the ellipse.
+    canvas - (object) A <Canvas> instance.
+    
+    Example:
+    (start code js)
+    NodeHelper.ellipse.render('fill', { x: 10, y: 30 }, 30, 40, viz.canvas);
+    (end code)
+    */
     'render': function(type, pos, width, height, canvas){
       var ctx = canvas.getCtx();
       height /= 2;
@@ -37,8 +128,25 @@ var NodeHelper = {
       ctx[type]();
       ctx.restore();
     },
-    // TODO(nico): be more precise...
+    /*
+    Method: contains
+    
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    npos - (object) An *x*, *y* object with the <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    width - (number) The width of the rendered ellipse.
+    height - (number) The height of the rendered ellipse.
+    
+    Example:
+    (start code js)
+    NodeHelper.ellipse.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30, 40);
+    (end code)
+    */
     'contains': function(npos, pos, width, height){
+      // TODO(nico): be more precise...
       width /= 2; 
       height /= 2;
       var dist = (width + height) / 2, 
@@ -48,25 +156,119 @@ var NodeHelper = {
       return diff <= dist * dist;
     }
   },
+  /*
+  Object: NodeHelper.square
+  */
   'square': {
+    /*
+    Method: render
+    
+    Renders a square into the canvas.
+    
+    Parameters:
+    
+    type - (string) Possible options are 'fill' or 'stroke'.
+    pos - (object) An *x*, *y* object with the position of the center of the square.
+    dim - (number) The radius (or half-diameter) of the square.
+    canvas - (object) A <Canvas> instance.
+    
+    Example:
+    (start code js)
+    NodeHelper.square.render('stroke', { x: 10, y: 30 }, 40, viz.canvas);
+    (end code)
+    */
     'render': function(type, pos, dim, canvas){
       canvas.getCtx()[type + "Rect"](pos.x - dim, pos.y - dim, 2*dim, 2*dim);
     },
+    /*
+    Method: contains
+    
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    npos - (object) An *x*, *y* object with the <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    dim - (number) The radius (or half-diameter) of the square.
+    
+    Example:
+    (start code js)
+    NodeHelper.square.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30);
+    (end code)
+    */
     'contains': function(npos, pos, dim){
       return Math.abs(pos.x - npos.x) <= dim && Math.abs(pos.y - npos.y) <= dim;
     }
   },
+  /*
+  Object: NodeHelper.rectangle
+  */
   'rectangle': {
+    /*
+    Method: render
+    
+    Renders a rectangle into the canvas.
+    
+    Parameters:
+    
+    type - (string) Possible options are 'fill' or 'stroke'.
+    pos - (object) An *x*, *y* object with the position of the center of the rectangle.
+    width - (number) The width of the rectangle.
+    height - (number) The height of the rectangle.
+    canvas - (object) A <Canvas> instance.
+    
+    Example:
+    (start code js)
+    NodeHelper.rectangle.render('fill', { x: 10, y: 30 }, 30, 40, viz.canvas);
+    (end code)
+    */
     'render': function(type, pos, width, height, canvas){
       canvas.getCtx()[type + "Rect"](pos.x - width / 2, pos.y - height / 2, 
                                       width, height);
     },
+    /*
+    Method: contains
+    
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    npos - (object) An *x*, *y* object with the <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    width - (number) The width of the rendered rectangle.
+    height - (number) The height of the rendered rectangle.
+    
+    Example:
+    (start code js)
+    NodeHelper.rectangle.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30, 40);
+    (end code)
+    */
     'contains': function(npos, pos, width, height){
       return Math.abs(pos.x - npos.x) <= width / 2
           && Math.abs(pos.y - npos.y) <= height / 2;
     }
   },
+  /*
+  Object: NodeHelper.triangle
+  */
   'triangle': {
+    /*
+    Method: render
+    
+    Renders a triangle into the canvas.
+    
+    Parameters:
+    
+    type - (string) Possible options are 'fill' or 'stroke'.
+    pos - (object) An *x*, *y* object with the position of the center of the triangle.
+    dim - (number) The dimension of the triangle.
+    canvas - (object) A <Canvas> instance.
+    
+    Example:
+    (start code js)
+    NodeHelper.triangle.render('stroke', { x: 10, y: 30 }, 40, viz.canvas);
+    (end code)
+    */
     'render': function(type, pos, dim, canvas){
       var ctx = canvas.getCtx(), 
           c1x = pos.x, 
@@ -82,11 +284,47 @@ var NodeHelper = {
       ctx.closePath();
       ctx[type]();
     },
+    /*
+    Method: contains
+    
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    npos - (object) An *x*, *y* object with the <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    dim - (number) The dimension of the shape.
+    
+    Example:
+    (start code js)
+    NodeHelper.triangle.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30);
+    (end code)
+    */
     'contains': function(npos, pos, dim) {
       return NodeHelper.circle.contains(npos, pos, dim);
     }
   },
+  /*
+  Object: NodeHelper.star
+  */
   'star': {
+    /*
+    Method: render
+    
+    Renders a star into the canvas.
+    
+    Parameters:
+    
+    type - (string) Possible options are 'fill' or 'stroke'.
+    pos - (object) An *x*, *y* object with the position of the center of the star.
+    dim - (number) The dimension of the star.
+    canvas - (object) A <Canvas> instance.
+    
+    Example:
+    (start code js)
+    NodeHelper.star.render('stroke', { x: 10, y: 30 }, 40, viz.canvas);
+    (end code)
+    */
     'render': function(type, pos, dim, canvas){
       var ctx = canvas.getCtx(), 
           pi5 = Math.PI / 5;
@@ -106,13 +344,50 @@ var NodeHelper = {
       ctx[type]();
       ctx.restore();
     },
+    /*
+    Method: contains
+    
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    npos - (object) An *x*, *y* object with the <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    dim - (number) The dimension of the shape.
+    
+    Example:
+    (start code js)
+    NodeHelper.star.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30);
+    (end code)
+    */
     'contains': function(npos, pos, dim) {
       return NodeHelper.circle.contains(npos, pos, dim);
     }
   }
 };
 
+/*
+  Object: EdgeHelper
+  
+  Contains rendering primitives for simple edge shapes.
+*/
 var EdgeHelper = {
+    /*
+    Method: line
+    
+    Renders a line into the canvas.
+    
+    Parameters:
+    
+    from - (object) An *x*, *y* object with the starting position of the line.
+    to - (object) An *x*, *y* object with the ending position of the line.
+    canvas - (object) A <Canvas> instance.
+    
+    Example:
+    (start code js)
+    EdgeHelper.line({ x: 10, y: 30 }, { x: 10, y: 50 }, viz.canvas);
+    (end code)
+    */
   'line': function(from, to, canvas){
     var ctx = canvas.getCtx();
     ctx.beginPath();
@@ -120,7 +395,24 @@ var EdgeHelper = {
     ctx.lineTo(to.x, to.y);
     ctx.stroke();
   },
-  //'type' stroke or fill does not make much sense here.
+  /*
+  Method: arrow
+  
+  Renders an arrow into the canvas.
+  
+  Parameters:
+  
+  from - (object) An *x*, *y* object with the starting position of the arrow.
+  to - (object) An *x*, *y* object with the ending position of the arrow.
+  dim - (number) The dimension of the arrow.
+  swap - (boolean) Whether to set the arrow pointing to the starting position or the ending position.
+  canvas - (object) A <Canvas> instance.
+  
+  Example:
+  (start code js)
+  EdgeHelper.arrow({ x: 10, y: 30 }, { x: 10, y: 50 }, 13, false, viz.canvas);
+  (end code)
+  */
   'arrow': function(from, to, dim, swap, canvas){
     var ctx = canvas.getCtx();
     // invert edge direction
@@ -148,12 +440,21 @@ var EdgeHelper = {
     ctx.fill();
   },
   /*
-  Plots a hyperline between two nodes. A hyperline is an arc of a circle which is orthogonal to the main circle. 
+  Method: hyperline
+  
+  Renders a hyperline into the canvas. A hyperline are the lines drawn for the <Hypertree> visualization.
   
   Parameters:
   
-  adj - A <Graph.Adjacence> object.
-  canvas - A <Canvas> instance.
+  from - (object) An *x*, *y* object with the starting position of the hyperline. *x* and *y* must belong to [0, 1).
+  to - (object) An *x*, *y* object with the ending position of the hyperline. *x* and *y* must belong to [0, 1).
+  r - (number) The scaling factor.
+  canvas - (object) A <Canvas> instance.
+  
+  Example:
+  (start code js)
+  EdgeHelper.hyperline({ x: 10, y: 30 }, { x: 10, y: 50 }, 100, viz.canvas);
+  (end code)
   */
   'hyperline': function(from, to, r, canvas){
     var ctx = canvas.getCtx();  

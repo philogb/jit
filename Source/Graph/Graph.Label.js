@@ -6,7 +6,7 @@
 /*
    Object: Graph.Label
 
-   Generic interface for plotting labels.
+   An interface for plotting/hiding/showing labels.
 
    Description:
 
@@ -14,23 +14,11 @@
    The <Graph.Label> interface is implemented in multiple ways to provide
    different label types.
 
-   For example, the Graph.Label interface is implemented as Graph.Label.DOM to provide
-   DOM label elements. Also we provide the Graph.Label.SVG interface (currently not working in IE)
-   for providing SVG type labels. The Graph.Label.Native interface implements these methods with the
-   native Canvas text rendering functions.
-
-   Implemented by:
-
-   <Hypertree.Label>, <RGraph.Label>, <ST.Label>.
-
-   Access:
-
-   The subclasses for this abstract class can be accessed by using the _labels_ property of the <Hypertree>, <RGraph>, or <ST> instances created.
-
-   See also:
-
-   <Hypertree.Plot>, <RGraph.Plot>, <ST.Plot>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+   For example, the Graph.Label interface is implemented as <Graph.Label.HTML> to provide
+   HTML label elements. Also we provide the <Graph.Label.SVG> interface for SVG type labels. 
+   The <Graph.Label.Native> interface implements these methods with the native Canvas text rendering functions.
+   
+   All subclasses (<Graph.Label.HTML>, <Graph.Label.SVG> and <Graph.Label.Native>) implement the method plotLabel.
 */
 
 Graph.Label = {};
@@ -39,11 +27,6 @@ Graph.Label = {};
    Class: Graph.Label.Native
 
    Implements labels natively, using the Canvas text API.
-
-   See also:
-
-   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
 */
 Graph.Label.Native = new Class({
     /*
@@ -53,9 +36,17 @@ Graph.Label.Native = new Class({
 
        Parameters:
 
-       canvas - A <Canvas> instance.
-       node - A <Graph.Node>.
-       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+       canvas - (object) A <Canvas> instance.
+       node - (object) A <Graph.Node>.
+       controller - (object) A configuration object.
+       
+       Example:
+       
+       (start code js)
+       var viz = new $jit.Viz(options);
+       var node = viz.graph.getNode('nodeId');
+       viz.labels.plotLabel(viz.canvas, node, viz.config);
+       (end code)
     */
     plotLabel: function(canvas, node, controller) {
       var ctx = canvas.getCtx();
@@ -70,7 +61,7 @@ Graph.Label.Native = new Class({
     },
 
     /*
-       Method: renderLabel
+       renderLabel
 
        Does the actual rendering of the label in the canvas. The default
        implementation renders the label close to the position of the node, this
@@ -99,11 +90,7 @@ Graph.Label.Native = new Class({
 
    Implemented by:
 
-   <Graph.Label.HTML>, <Graph.Label.SVG>.
-
-   See also:
-
-   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+   <Graph.Label.HTML> and <Graph.Label.SVG>.
 
 */
 Graph.Label.DOM = new Class({
@@ -126,8 +113,8 @@ Graph.Label.DOM = new Class({
        Example:
 
       (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        var labelContainer = rg.fx.getLabelContainer();
+        var viz = new $jit.Viz(options);
+        var labelContainer = viz.labels.getLabelContainer();
         alert(labelContainer.innerHTML);
       (end code)
     */
@@ -144,7 +131,7 @@ Graph.Label.DOM = new Class({
 
        Parameters:
 
-       id - The label id (which is also a <Graph.Node> id).
+       id - (string) The label id (which is also a <Graph.Node> id).
 
        Returns:
 
@@ -153,8 +140,8 @@ Graph.Label.DOM = new Class({
        Example:
 
       (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        var label = rg.fx.getLabel('someid');
+        var viz = new $jit.Viz(options);
+        var label = viz.labels.getLabel('someid');
         alert(label.innerHTML);
       (end code)
 
@@ -172,12 +159,12 @@ Graph.Label.DOM = new Class({
 
        Parameters:
 
-       hide - A boolean value indicating if the label container must be hidden or not.
+       hide - (boolean) A boolean value indicating if the label container must be hidden or not.
 
        Example:
        (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.hideLabels(true);
+        var viz = new $jit.Viz(options);
+        rg.labels.hideLabels(true);
        (end code)
 
     */
@@ -199,12 +186,12 @@ Graph.Label.DOM = new Class({
 
        Parameters:
 
-       force - Forces deletion of all labels.
+       force - (boolean) Forces deletion of all labels.
 
        Example:
        (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.clearLabels();
+        var viz = new $jit.Viz(options);
+        viz.labels.clearLabels();
         (end code)
     */
     clearLabels: function(force) {
@@ -223,12 +210,12 @@ Graph.Label.DOM = new Class({
 
        Parameters:
 
-       id - A label id (which generally is also a <Graph.Node> id).
+       id - (string) A label id (which generally is also a <Graph.Node> id).
 
        Example:
        (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.disposeLabel('labelid');
+        var viz = new $jit.Viz(options);
+        viz.labels.disposeLabel('labelid');
        (end code)
     */
     disposeLabel: function(id) {
@@ -245,13 +232,13 @@ Graph.Label.DOM = new Class({
 
        Parameters:
 
-       node - A <Graph.Node>. Can also be an array of <Graph.Nodes>.
-       show - If *true*, nodes will be shown. Otherwise nodes will be hidden.
+       node - (object) A <Graph.Node>. Can also be an array of <Graph.Nodes>.
+       show - (boolean) If *true*, nodes will be shown. Otherwise nodes will be hidden.
 
        Example:
        (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.hideLabel(rg.graph.getNode('someid'), false);
+        var rg = new $jit.Viz(options);
+        viz.labels.hideLabel(viz.graph.getNode('someid'), false);
        (end code)
     */
     hideLabel: function(node, show) {
@@ -266,7 +253,7 @@ Graph.Label.DOM = new Class({
     },
 
     /*
-       Method: fitsInCanvas
+       fitsInCanvas
 
        Returns _true_ or _false_ if the label for the node is contained in the canvas dom element or not.
 
@@ -295,11 +282,7 @@ Graph.Label.DOM = new Class({
 
    Extends:
 
-   <Graph.Label.DOM>.
-
-   See also:
-
-   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
+   All <Graph.Label.DOM> methods.
 
 */
 Graph.Label.HTML = new Class({
@@ -312,9 +295,18 @@ Graph.Label.HTML = new Class({
 
        Parameters:
 
-       canvas - A <Canvas> instance.
-       node - A <Graph.Node>.
-       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+       canvas - (object) A <Canvas> instance.
+       node - (object) A <Graph.Node>.
+       controller - (object) A configuration object.
+       
+      Example:
+       
+       (start code js)
+       var viz = new $jit.Viz(options);
+       var node = viz.graph.getNode('nodeId');
+       viz.labels.plotLabel(viz.canvas, node, viz.config);
+       (end code)
+
 
     */
     plotLabel: function(canvas, node, controller) {
@@ -342,12 +334,7 @@ Graph.Label.HTML = new Class({
 
    Extends:
 
-   <Graph.Label.DOM>.
-
-   See also:
-
-   <Hypertree.Label>, <RGraph.Label>, <ST.Label>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+   All <Graph.Label.DOM> methods.
 */
 Graph.Label.SVG = new Class({
     Implements: Graph.Label.DOM,
@@ -359,9 +346,18 @@ Graph.Label.SVG = new Class({
 
        Parameters:
 
-       canvas - A <Canvas> instance.
-       node - A <Graph.Node>.
-       controller - A configuration object. See also <Hypertree>, <RGraph>, <ST>.
+       canvas - (object) A <Canvas> instance.
+       node - (object) A <Graph.Node>.
+       controller - (object) A configuration object.
+       
+       Example:
+       
+       (start code js)
+       var viz = new $jit.Viz(options);
+       var node = viz.graph.getNode('nodeId');
+       viz.labels.plotLabel(viz.canvas, node, viz.config);
+       (end code)
+
 
     */
     plotLabel: function(canvas, node, controller) {

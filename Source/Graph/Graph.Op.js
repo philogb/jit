@@ -1,39 +1,23 @@
 /*
  * File: Graph.Op.js
  *
- * Defines an abstract class for performing <Graph> Operations.
 */
 
 /*
    Object: Graph.Op
 
-   Generic <Graph> Operations.
-   
-   Description:
+   Perform <Graph> operations like adding/removing <Graph.Nodes> or <Graph.Adjacences>, 
+   morphing a <Graph> into another <Graph>, contracting or expanding subtrees, etc.
 
-   An abstract class holding unary and binary powerful graph operations such as removingNodes, removingEdges, adding two graphs and morphing.
-
-   Implemented by:
-
-   <Hypertree.Op>, <RGraph.Op> and <ST.Op>.
-
-   Access:
-
-   The subclasses for this abstract class can be accessed by using the _op_ property of the <Hypertree>, <RGraph> or <ST> instances created.
-
-   See also:
-
-   <Hypertree.Op>, <RGraph.Op>, <ST.Op>, <Hypertree>, <RGraph>, <ST>, <Graph>.
 */
 Graph.Op = {
 
     options: {
-        type: 'nothing',
-        duration: 2000,
-        hideLabels: true,
-        fps:30
+      type: 'nothing',
+      duration: 2000,
+      hideLabels: true,
+      fps:30
     },
-  
     /*
        Method: removeNode
     
@@ -42,27 +26,25 @@ Graph.Op = {
 
        Parameters:
     
-          node - The node's id. Can also be an array having many ids.
-          opt - Animation options. It's an object with optional properties
-          
-          - _type_ Type of the animation. Can be "nothing", "replot", "fade:seq",  "fade:con" or "iter". Default's "nothing".
-          - _duration_ Duration of the animation in milliseconds. Default's 2000.
-          - _fps_ Frames per second for the animation. Default's 30.
-          - _hideLabels_ Hide labels during the animation. Default's *true*.
-          - _transition_ Transitions defined in the <Animation> class. Default's the default transition option of the 
-          <RGraph>, <Hypertree> or <ST> instance created.
+        node - (string|array) The node's id. Can also be an array having many ids.
+        opt - (object) Animation options. It's an object with optional properties described below
+        type - (string) Default's *nothing*. Type of the animation. Can be "nothing", "replot", "fade:seq",  "fade:con" or "iter".
+        duration - Described in <Options.Fx>.
+        fps - Described in <Options.Fx>.
+        transition - Described in <Options.Fx>.
+        hideLabels - (boolean) Default's *true*. Hide labels during the animation.
    
       Example:
       (start code js)
-        var rg = new RGraph(canvas, config); //could be new ST or new Hypertree also.
-        rg.op.removeNode('nodeid', {
+        var viz = new $jit.Viz(options);
+        viz.op.removeNode('nodeId', {
           type: 'fade:seq',
           duration: 1000,
           hideLabels: false,
-          transition: Trans.Quart.easeOut
+          transition: $jit.Trans.Quart.easeOut
         });
         //or also
-        rg.op.removeNode(['someid', 'otherid'], {
+        viz.op.removeNode(['someId', 'otherId'], {
           type: 'fade:con',
           duration: 1500
         });
@@ -139,32 +121,30 @@ Graph.Op = {
     /*
        Method: removeEdge
     
-       Removes one or more edges from the visualization. 
+       Removes one or more <Graph.Adjacences> from the visualization. 
        It can also perform several animations like fading sequentially, fading concurrently, iterating or replotting.
 
        Parameters:
     
-       vertex - An array having two strings which are the ids of the nodes connected by this edge (i.e ['id1', 'id2']). Can also be a two dimensional array holding many edges (i.e [['id1', 'id2'], ['id3', 'id4'], ...]).
-          opt - Animation options. It's an object with optional properties
-          
-          - _type_ Type of the animation. Can be "nothing", "replot", "fade:seq",  "fade:con" or "iter". Default's "nothing".
-          - _duration_ Duration of the animation in milliseconds. Default's 2000.
-          - _fps_ Frames per second for the animation. Default's 30.
-          - _hideLabels_ Hide labels during the animation. Default's *true*.
-          - _transition_ Transitions defined in the <Animation> class. Default's the default transition option of the 
-          <RGraph>, <Hypertree> or <ST> instance created.
+       vertex - (array) An array having two strings which are the ids of the nodes connected by this edge (i.e ['id1', 'id2']). Can also be a two dimensional array holding many edges (i.e [['id1', 'id2'], ['id3', 'id4'], ...]).
+       opt - (object) Animation options. It's an object with optional properties described below
+       type - (string) Default's *nothing*. Type of the animation. Can be "nothing", "replot", "fade:seq",  "fade:con" or "iter".
+       duration - Described in <Options.Fx>.
+       fps - Described in <Options.Fx>.
+       transition - Described in <Options.Fx>.
+       hideLabels - (boolean) Default's *true*. Hide labels during the animation.
    
       Example:
       (start code js)
-        var rg = new RGraph(canvas, config); //could be new ST or new Hypertree also.
-        rg.op.removeEdge(['nodeid', 'otherid'], {
+        var viz = new $jit.Viz(options);
+        viz.op.removeEdge(['nodeId', 'otherId'], {
           type: 'fade:seq',
           duration: 1000,
           hideLabels: false,
-          transition: Trans.Quart.easeOut
+          transition: $jit.Trans.Quart.easeOut
         });
         //or also
-        rg.op.removeEdge([['someid', 'otherid'], ['id3', 'id4']], {
+        viz.op.removeEdge([['someId', 'otherId'], ['id3', 'id4']], {
           type: 'fade:con',
           duration: 1500
         });
@@ -244,36 +224,32 @@ Graph.Op = {
        Method: sum
     
        Adds a new graph to the visualization. 
-       
-       The json graph (or tree) must at least have a common node with the current graph plotted by the visualization. 
-       
+       The JSON graph (or tree) must at least have a common node with the current graph plotted by the visualization. 
        The resulting graph can be defined as follows <http://mathworld.wolfram.com/GraphSum.html>
 
        Parameters:
     
-          json - A json tree or graph structure. See also <Loader.loadJSON>.
-           opt - Animation options. It's an object with optional properties
-          
-          - _type_ Type of the animation. Can be "nothing", "replot", "fade:seq" or "fade:con". Default's "nothing".
-          - _duration_ Duration of the animation in milliseconds. Default's 2000.
-          - _fps_ Frames per second for the animation. Default's 30.
-          - _hideLabels_ Hide labels during the animation. Default's *true*.
-          - _transition_ Transitions defined in the <Animation> class. Default's the default transition option of the 
-          <RGraph>, <Hypertree> or <ST> instance created.
+       json - (object) A json tree or graph structure. See also <Loader.loadJSON>.
+       opt - (object) Animation options. It's an object with optional properties described below
+       type - (string) Default's *nothing*. Type of the animation. Can be "nothing", "replot", "fade:seq",  "fade:con".
+       duration - Described in <Options.Fx>.
+       fps - Described in <Options.Fx>.
+       transition - Described in <Options.Fx>.
+       hideLabels - (boolean) Default's *true*. Hide labels during the animation.
    
       Example:
       (start code js)
-        //json contains a tree or graph structure.
+        //...json contains a tree or graph structure...
 
-        var rg = new RGraph(canvas, config); //could be new ST or new Hypertree also.
-        rg.op.sum(json, {
+        var viz = new $jit.Viz(options);
+        viz.op.sum(json, {
           type: 'fade:seq',
           duration: 1000,
           hideLabels: false,
-          transition: Trans.Quart.easeOut
+          transition: $jit.Trans.Quart.easeOut
         });
         //or also
-        rg.op.sum(json, {
+        viz.op.sum(json, {
           type: 'fade:con',
           duration: 1500
         });
@@ -340,37 +316,48 @@ Graph.Op = {
     /*
        Method: morph
     
-       This method will _morph_ the current visualized graph into the new _json_ representation passed in the method. 
-       
-       Can also perform multiple animations. The _json_ object must at least have the root node in common with the current visualized graph.
+       This method will transform the current visualized graph into the new JSON representation passed in the method. 
+       The JSON object must at least have the root node in common with the current visualized graph.
 
        Parameters:
     
-           json - A json tree or graph structure. See also <Loader.loadJSON>.
-           opt - Animation options. It's an object with optional properties
-          
-          - _type_ Type of the animation. Can be "nothing", "replot", or "fade". Default's "nothing".
-          - _duration_ Duration of the animation in milliseconds. Default's 2000.
-          - _fps_ Frames per second for the animation. Default's 30.
-          - _hideLabels_ Hide labels during the animation. Default's *true*.
-          - _transition_ Transitions defined in the <Animation> class. Default's the default transition option of the 
-          <RGraph>, <Hypertree> or <ST> instance created.
+       json - (object) A json tree or graph structure. See also <Loader.loadJSON>.
+       opt - (object) Animation options. It's an object with optional properties described below
+       type - (string) Default's *nothing*. Type of the animation. Can be "nothing", "replot", "fade:con".
+       duration - Described in <Options.Fx>.
+       fps - Described in <Options.Fx>.
+       transition - Described in <Options.Fx>.
+       hideLabels - (boolean) Default's *true*. Hide labels during the animation.
+       id - (string) The shared <Graph.Node> id between both graphs.
+       
+       extraModes - (optional|object) When morphing with an animation, dollar prefixed data parameters are added to 
+                    *endData* and not *data* itself. This way you can animate dollar prefixed parameters during your morphing operation. 
+                    For animating these extra-parameters you have to specify an object that has animation groups as keys and animation 
+                    properties as values, just like specified in <Graph.Plot.animate>.
    
       Example:
       (start code js)
-        //json contains a tree or graph structure.
+        //...json contains a tree or graph structure...
 
-        var rg = new RGraph(canvas, config); //could be new ST or new Hypertree also.
-        rg.op.morph(json, {
+        var viz = new $jit.Viz(options);
+        viz.op.morph(json, {
           type: 'fade',
           duration: 1000,
           hideLabels: false,
-          transition: Trans.Quart.easeOut
+          transition: $jit.Trans.Quart.easeOut
         });
         //or also
-        rg.op.morph(json, {
+        viz.op.morph(json, {
           type: 'fade',
           duration: 1500
+        });
+        //if the json data contains dollar prefixed params
+        //like $width or $height these too can be animated
+        viz.op.morph(json, {
+          type: 'fade',
+          duration: 1500
+        }, {
+          'node-property': ['width', 'height']
         });
       (end code)
     
@@ -476,7 +463,7 @@ Graph.Op = {
                     $.splat(extraModes['edge-property']).join(':') : '');
                 //Add label-property animations (if any)
                 if(extraModes && ('label-property' in extraModes)) {
-                  modes.push('label-property' + extraModes['label-property'].join(':'))
+                  modes.push('label-property' + $.splat(extraModes['label-property']).join(':'))
                 }
                 viz.reposition();
                 viz.graph.eachNode(function(elem) {
@@ -508,25 +495,24 @@ Graph.Op = {
   /*
     Method: contract
  
-    Contracts the subtree to the given node. The given node will have a _collapsed=true_ property.
+    Collapses the subtree of the given node. The node will have a _collapsed=true_ property.
     
     Parameters:
  
-       node - A <Graph.Node>.
-       opt - An object containing options like
-       
-       _type_ - Whether to 'replot' or 'animate' the contraction.
-       
-       There are also a number of Animation options. For more information see <Options.Animation>.
+    node - (object) A <Graph.Node>.
+    opt - (object) An object containing options described below
+    type - (string) Whether to 'replot' or 'animate' the contraction.
+   
+    There are also a number of Animation options. For more information see <Options.Fx>.
 
-   Example:
-   (start code js)
-     var rg = new RGraph(canvas, config); //could be ST, Hypertree, Sunburst also.
-     rg.op.contract(node, {
+    Example:
+    (start code js)
+     var viz = new $jit.Viz(options);
+     viz.op.contract(node, {
        type: 'animate',
        duration: 1000,
        hideLabels: true,
-       transition: Trans.Quart.easeOut
+       transition: $jit.Trans.Quart.easeOut
      });
    (end code)
  
@@ -571,23 +557,22 @@ Graph.Op = {
     
     Parameters:
  
-       node - A <Graph.Node>.
-       opt - An object containing options like
-       
-       _type_ - Whether to 'replot' or 'animate'.
-       
-       There are also a number of Animation options. For more information see <Options.Animation>.
+    node - (object) A <Graph.Node>.
+    opt - (object) An object containing options described below
+    type - (string) Whether to 'replot' or 'animate'.
+     
+    There are also a number of Animation options. For more information see <Options.Fx>.
 
-   Example:
-   (start code js)
-     var rg = new RGraph(canvas, config); //could be ST, Hypertree, Sunburst also.
-     rg.op.expand(node, {
-       type: 'animate',
-       duration: 1000,
-       hideLabels: true,
-       transition: Trans.Quart.easeOut
-     });
-   (end code)
+    Example:
+    (start code js)
+      var viz = new $jit.Viz(options);
+      viz.op.expand(node, {
+        type: 'animate',
+        duration: 1000,
+        hideLabels: true,
+        transition: $jit.Trans.Quart.easeOut
+      });
+    (end code)
  
    */
     expand: function(node, opt) {

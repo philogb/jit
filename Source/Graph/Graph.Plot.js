@@ -1,31 +1,16 @@
 /*
  * File: Graph.Plot.js
- *
- * Defines an abstract classes for performing <Graph> rendering and animation.
- *
  */
 
 /*
    Object: Graph.Plot
 
-   Generic <Graph> rendering and animation methods.
+   <Graph> rendering and animation methods.
    
-   Description:
-
-   An abstract class for plotting a generic graph structure.
-
-   Implemented by:
-
-   <Hypertree.Plot>, <RGraph.Plot>, <ST.Plot>.
-
-   Access:
-
-   The subclasses for this abstract class can be accessed by using the _fx_ property of the <Hypertree>, <RGraph>, or <ST> instances created.
-
-   See also:
-
-   <Hypertree.Plot>, <RGraph.Plot>, <ST.Plot>, <Hypertree>, <RGraph>, <ST>, <Graph>.
-
+   Properties:
+   
+   nodeHelper - <NodeHelper> object.
+   edgeHelper - <EdgeHelper> object.
 */
 Graph.Plot = {
     //Add helpers
@@ -178,22 +163,21 @@ Graph.Plot = {
     
   
     /*
-       Method: sequence
+       sequence
     
        Iteratively performs an action while refreshing the state of the visualization.
 
        Parameters:
 
-       options - Some sequence options like
-      
-       - _condition_ A function returning a boolean instance in order to stop iterations.
-       - _step_ A function to execute on each step of the iteration.
-       - _onComplete_ A function to execute when the sequence finishes.
-       - _duration_ Duration (in milliseconds) of each step.
+       options - (object) An object containing some sequence options described below
+       condition - (function) A function returning a boolean instance in order to stop iterations.
+       step - (function) A function to execute on each step of the iteration.
+       onComplete - (function) A function to execute when the sequence finishes.
+       duration - (number) Duration (in milliseconds) of each step.
 
       Example:
        (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
+        var rg = new $jit.RGraph(options);
         var i = 0;
         rg.fx.sequence({
           condition: function() {
@@ -230,7 +214,7 @@ Graph.Plot = {
     },
     
     /*
-      Method: prepare
+      prepare
  
       Prepare graph position and other attribute values before performing an Animation. 
       This method is used internally by the Toolkit.
@@ -263,9 +247,19 @@ Graph.Plot = {
 
       //parse modes
       var m = {};
-      for(var i=0, len=modes.length; i < len; i++) {
-        var elems = modes[i].split(':');
-        m[elems.shift()] = elems;
+      if($.type(modes) == 'array') {
+        for(var i=0, len=modes.length; i < len; i++) {
+          var elems = modes[i].split(':');
+          m[elems.shift()] = elems;
+        }
+      } else {
+        for(var p in modes) {
+          if(p == 'position') {
+            m[modes.position] = [];
+          } else {
+            m[p] = $.splat(modes[p]);
+          }
+        }
       }
       
       graph.eachNode(function(node) { 
@@ -289,47 +283,57 @@ Graph.Plot = {
           }
         });
       });
-      
       return m;
     },
     
     /*
        Method: animate
     
-       Animates a <Graph> by interpolating some <Graph.Nodes> properties.
+       Animates a <Graph> by interpolating some <Graph.Node>, <Graph.Adjacence> or <Graph.Label> properties.
 
        Parameters:
 
-       opt - Animation options. This object contains as properties
+       opt - (object) Animation options. The object properties are described below
+       duration - (optional) Described in <Options.Fx>.
+       fps - (optional) Described in <Options.Fx>.
+       hideLabels - (optional|boolean) Whether to hide labels during the animation.
+       modes - (required|object) An object with animation modes (described below).
 
-       - _modes_ (required) An Array of animation types. Possible values are "linear", "polar", "moebius", "node-property" and "edge-property".
-
-       "linear", "polar" and "moebius" animation options will interpolate <Graph.Nodes> "startPos" and "endPos" properties, storing the result in "current". 
-       This means interpolating either cartesian coordinates, either polar coordinates or interpolation via a moebius transformation <http://en.wikipedia.org/wiki/Moebius_transformation> 
+       Animation modes:
        
-       "node-property" interpolates nodes' properties like alpha, color, dim, width, height. For this to work <Options.Graph.Node.overridable> must be *true*. 
-       Also, this mode is used with the specific node property you want to change. So for example if you'd wanted to change the nodes color and alpha you should write "node-property:alpha:color". 
-       To know more about node specific properties check <Options.Node>.
+       Animation modes are strings representing different node/edge and graph properties that you'd like to animate. 
+       They are represented by an object that has as keys main categories of properties to animate and as values a list 
+       of these specific properties. The properties are described below
        
-        "edge-property" works just like "node-property". To know more about edge properties check <Options.Graph.Edge>
-      
-
-       - _duration_ Duration (in milliseconds) of the Animation.
-       - _fps_ Frames per second.
-       - _hideLabels_ hide labels or not during the animation.
-
-       ...and other <Hypertree>, <RGraph> or <ST> controller methods.
+       position - Describes the way nodes' positions must be interpolated. Possible values are 'linear', 'polar' or 'moebius'.
+       node-property - Describes which Node properties will be interpolated. These properties can be any of the ones defined in <Options.Node>.
+       edge-property - Describes which Edge properties will be interpolated. These properties can be any the ones defined in <Options.Edge>.
+       label-property - Describes which Label properties will be interpolated. These properties can be any of the ones defined in <Options.Label> like color or size.
+       node-style - Describes which Node Canvas Styles will be interpolated. These are specific canvas properties like fillStyle, strokeStyle, lineWidth, shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY, etc.
+       edge-style - Describes which Edge Canvas Styles will be interpolated. These are specific canvas properties like fillStyle, strokeStyle, lineWidth, shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY, etc.
 
        Example:
        (start code js)
-        var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-        rg.fx.animate({
-          modes: ['linear'],
-          hideLabels: false
-        }); 
+       var viz = new $jit.Viz(options);
+       //...tweak some Data, CanvasStyles or LabelData properties...
+       viz.fx.animate({
+         modes: {
+           'position': 'linear',
+           'node-property': ['width', 'height'],
+           'node-style': 'shadowColor',
+           'label-property': 'size'
+         },
+         hideLabels: false
+       });
+       //...can also be written like this...
+       viz.fx.animate({
+         modes: ['linear',
+                 'node-property:width:height',
+                 'node-style:shadowColor',
+                 'label-property:size'],
+         hideLabels: false
+       });
        (end code)
-       
-       
     */
     animate: function(opt, versor) {
       opt = $.merge(this.viz.config, opt || {});
@@ -364,15 +368,14 @@ Graph.Plot = {
     },
     
     /*
-      Method: nodeFx
+      nodeFx
    
       Apply animation to node properties like color, width, height, dim, etc.
   
       Parameters:
   
-      options - Animation options. This object contains as properties
-      
-      - _elements_ The Elements to be transformed. This is an object that has a properties
+      options - Animation options. This object properties is described below
+      elements - The Elements to be transformed. This is an object that has a properties
       
       (start code js)
       'elements': {
@@ -471,13 +474,13 @@ Graph.Plot = {
 
        Parameters:
 
-       opt - _optional_ Plotting options.
+       opt - (optional) Plotting options. Most of them are described in <Options.Fx>.
 
        Example:
 
        (start code js)
-       var rg = new RGraph(canvas, config); //can be also Hypertree or ST
-       rg.fx.plot(); 
+       var viz = new $jit.Viz(options);
+       viz.fx.plot(); 
        (end code)
 
     */
@@ -566,8 +569,8 @@ Graph.Plot = {
 
        Parameters:
        
-       node - A <Graph.Node>.
-       canvas - A <Canvas> element.
+       node - (object) A <Graph.Node>.
+       canvas - (object) A <Canvas> element.
 
     */
     plotNode: function(node, canvas, animating) {
@@ -594,12 +597,12 @@ Graph.Plot = {
     /*
        Method: plotLine
     
-       Plots a line.
+       Plots a <Graph.Adjacence>.
 
        Parameters:
 
-       adj - A <Graph.Adjacence>.
-       canvas - A <Canvas> instance.
+       adj - (object) A <Graph.Adjacence>.
+       canvas - (object) A <Canvas> instance.
 
     */
     plotLine: function(adj, canvas, animating) {
