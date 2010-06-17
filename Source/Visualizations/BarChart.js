@@ -69,12 +69,12 @@ $jit.ST.Plot.NodeTypes.implement({
           }
           ctx.restore();
         }
-        if(label.type == 'Native' && (aggregates || showLabels)) {
+        if(label.type == 'Native') {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
           ctx.font = label.size + 'px ' + label.family;
           ctx.textBaseline = 'middle';
-          if(aggregates) {
+          if(aggregates(node.name, valAcum)) {
             if(horz) {
               ctx.textAlign = 'right';
               ctx.fillText(valAcum, x + acum - config.labelOffset, y + height/2);
@@ -83,7 +83,7 @@ $jit.ST.Plot.NodeTypes.implement({
               ctx.fillText(valAcum, x + width/2, y - height - label.size/2 - config.labelOffset, width);
             }
           }
-          if(showLabels) {
+          if(showLabels(node.name, valAcum, node)) {
             if(horz) {
               ctx.textAlign = 'center';
               ctx.translate(x - config.labelOffset - label.size/2, y + height/2);
@@ -168,7 +168,17 @@ $jit.BarChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "BarChart", "Label"), opt);
+      $.merge(Options("Canvas", "Label", "BarChart"), {
+        Label: { type: 'Native' }
+      }, opt);
+    //set functions for showLabels and showAggregates
+    var showLabels = this.config.showLabels,
+        typeLabels = $.type(showLabels),
+        showAggregates = this.config.showAggregates,
+        typeAggregates = $.type(showAggregates);
+    this.config.showLabels = typeLabels == 'function'? showLabels : $.lambda(showLabels);
+    this.config.showAggregates = typeAggregates == 'function'? showAggregates : $.lambda(showAggregates);
+    
     this.initializeViz();
   },
   
@@ -206,10 +216,6 @@ $jit.BarChart = new Class({
         onShow: function(tip, node, contains) {
           var elem = contains;
           config.Tips.onShow(tip, elem, node);
-          that.select(node.id, elem.name, elem.index);
-        },
-        onHide: function() {
-          that.select(false, false, false);
         }
       },
       Events: {
@@ -219,47 +225,61 @@ $jit.BarChart = new Class({
           if(!config.Events.enable) return;
           var elem = eventInfo.getContains();
           config.Events.onClick(elem, eventInfo, evt);
+        },
+        onMouseMove: function(node, eventInfo, evt) {
+          if(!config.hoveredColor) return;
+          if(node) {
+            var elem = eventInfo.getContains();
+            that.select(node.id, elem.name, elem.index);
+          } else {
+            that.select(false, false, false);
+          }
         }
       },
       onCreateLabel: function(domElement, node) {
-        var labelConf = config.Label;
-        if(config.showLabels) {
-          var nlbs = {
-            wrapper: document.createElement('div'),
-            aggregate: document.createElement('div'),
-            label: document.createElement('div')
-          };
-          var wrapper = nlbs.wrapper,
-              label = nlbs.label,
-              aggregate = nlbs.aggregate,
-              wrapperStyle = wrapper.style,
-              labelStyle = label.style,
-              aggregateStyle = aggregate.style;
-          //store node labels
-          nodeLabels[node.id] = nlbs;
-          //append labels
-          wrapper.appendChild(label);
-          if(config.showAggregates) {
-            wrapper.appendChild(aggregate);
-          }
-          wrapperStyle.position = 'relative';
-          wrapperStyle.overflow = 'visible';
-          wrapperStyle.fontSize = labelConf.size + 'px';
-          wrapperStyle.fontFamily = labelConf.family;
-          wrapperStyle.color = labelConf.color;
-          wrapperStyle.textAlign = 'center';
-          aggregateStyle.position = labelStyle.position = 'absolute';
-          
-          domElement.style.width = node.getData('width') + 'px';
-          domElement.style.height = node.getData('height') + 'px';
-          aggregateStyle.left = labelStyle.left =  '0px';
-
-          label.innerHTML = node.name;
-          
-          domElement.appendChild(wrapper);
+        var labelConf = config.Label,
+            valueArray = node.getData('valueArray'),
+            acum = $.reduce(valueArray, function(x, y) { return x + y; }, 0);
+        var nlbs = {
+          wrapper: document.createElement('div'),
+          aggregate: document.createElement('div'),
+          label: document.createElement('div')
+        };
+        var wrapper = nlbs.wrapper,
+            label = nlbs.label,
+            aggregate = nlbs.aggregate,
+            wrapperStyle = wrapper.style,
+            labelStyle = label.style,
+            aggregateStyle = aggregate.style;
+        //store node labels
+        nodeLabels[node.id] = nlbs;
+        //append labels
+        wrapper.appendChild(label);
+        wrapper.appendChild(aggregate);
+        if(!config.showLabels(node.name, acum, node)) {
+          labelStyle.display = 'none';
         }
+        if(!config.showAggregates(node.name, acum, node)) {
+          aggregateStyle.display = 'none';
+        }
+        wrapperStyle.position = 'relative';
+        wrapperStyle.overflow = 'visible';
+        wrapperStyle.fontSize = labelConf.size + 'px';
+        wrapperStyle.fontFamily = labelConf.family;
+        wrapperStyle.color = labelConf.color;
+        wrapperStyle.textAlign = 'center';
+        aggregateStyle.position = labelStyle.position = 'absolute';
+        
+        domElement.style.width = node.getData('width') + 'px';
+        domElement.style.height = node.getData('height') + 'px';
+        aggregateStyle.left = labelStyle.left =  '0px';
+
+        label.innerHTML = node.name;
+        
+        domElement.appendChild(wrapper);
       },
       onPlaceLabel: function(domElement, node) {
+        if(!nodeLabels[node.id]) return;
         var labels = nodeLabels[node.id],
             wrapperStyle = labels.wrapper.style,
             labelStyle = labels.label.style,
@@ -277,6 +297,16 @@ $jit.BarChart = new Class({
             if(dimArray[i] > 0) {
               acum+= valArray[i];
             }
+          }
+          if(config.showLabels(node.name, acum, node)) {
+            labelStyle.display = '';
+          } else {
+            labelStyle.display = 'none';
+          }
+          if(config.showAggregates(node.name, acum, node)) {
+            aggregateStyle.display = '';
+          } else {
+            aggregateStyle.display = 'none';
           }
           if(config.orientation == 'horizontal') {
             aggregateStyle.textAlign = 'right';
@@ -339,7 +369,7 @@ $jit.BarChart = new Class({
     
     for(var i=0, values=json.values, l=values.length; i<l; i++) {
       var val = values[i]
-      var valArray = values[i].values;
+      var valArray = $.splat(values[i].values);
       var acum = 0;
       ch.push({
         'id': prefix + val.label,
@@ -426,7 +456,7 @@ $jit.BarChart = new Class({
     $.each(values, function(v) {
       var n = graph.getByName(v.label);
       if(n) {
-        n.setData('valueArray', v.values);
+        n.setData('valueArray', $.splat(v.values));
       }
     });
     this.normalizeDims();

@@ -14,6 +14,8 @@ $jit.ST.Plot.NodeTypes.implement({
           stringArray = node.getData('stringArray'),
           dimArray = node.getData('dimArray'),
           valArray = node.getData('valueArray'),
+          valLeft = $.reduce(valArray, function(x, y) { return x + y[0]; }, 0),
+          valRight = $.reduce(valArray, function(x, y) { return x + y[1]; }, 0),
           colorArray = node.getData('colorArray'),
           colorLength = colorArray.length,
           config = node.getData('config'),
@@ -84,11 +86,11 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.font = label.size + 'px ' + label.family;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          if(aggregates) {
+          if(aggregates(node.name, valLeft, valRight, node)) {
             ctx.fillText(valAcum, x, y - acumLeft - config.labelOffset - label.size/2, width);
           }
-          if(showLabels) {
-            ctx.fillText(node.name, x, y + label.size/2 + config.labelOffset, width);
+          if(showLabels(node.name, valLeft, valRight, node)) {
+            ctx.fillText(node.name, x, y + label.size/2 + config.labelOffset);
           }
           ctx.restore();
         }
@@ -146,7 +148,17 @@ $jit.AreaChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "AreaChart", "Label"), opt);
+      $.merge(Options("Canvas", "Label", "AreaChart"), {
+        Label: { type: 'Native' }
+      }, opt);
+    //set functions for showLabels and showAggregates
+    var showLabels = this.config.showLabels,
+        typeLabels = $.type(showLabels),
+        showAggregates = this.config.showAggregates,
+        typeAggregates = $.type(showAggregates);
+    this.config.showLabels = typeLabels == 'function'? showLabels : $.lambda(showLabels);
+    this.config.showAggregates = typeAggregates == 'function'? showAggregates : $.lambda(showAggregates);
+    
     this.initializeViz();
   },
   
@@ -184,10 +196,6 @@ $jit.AreaChart = new Class({
         onShow: function(tip, node, contains) {
           var elem = contains;
           config.Tips.onShow(tip, elem, node);
-          that.select(node.id, elem.name, elem.index);
-        },
-        onHide: function() {
-          that.select(false, false, false);
         }
       },
       Events: {
@@ -202,11 +210,23 @@ $jit.AreaChart = new Class({
         onRightClick: function(node, eventInfo, evt) {
           if(!config.restoreOnRightClick) return;
           that.restore();
+        },
+        onMouseMove: function(node, eventInfo, evt) {
+          if(!config.selectOnHover) return;
+          if(node) {
+            var elem = eventInfo.getContains();
+            that.select(node.id, elem.name, elem.index);
+          } else {
+            that.select(false, false, false);
+          }
         }
       },
       onCreateLabel: function(domElement, node) {
-        var labelConf = config.Label;
-        if(config.showLabels && node.getData('prev')) {
+        var labelConf = config.Label,
+            valueArray = node.getData('valueArray'),
+            acumLeft = $.reduce(valueArray, function(x, y) { return x + y[0]; }, 0),
+            acumRight = $.reduce(valueArray, function(x, y) { return x + y[1]; }, 0);
+        if(node.getData('prev')) {
           var nlbs = {
             wrapper: document.createElement('div'),
             aggregate: document.createElement('div'),
@@ -222,8 +242,12 @@ $jit.AreaChart = new Class({
           nodeLabels[node.id] = nlbs;
           //append labels
           wrapper.appendChild(label);
-          if(config.showAggregates) {
-            wrapper.appendChild(aggregate);
+          wrapper.appendChild(aggregate);
+          if(!config.showLabels(node.name, acumLeft, acumRight, node)) {
+            label.style.display = 'none';
+          }
+          if(!config.showAggregates(node.name, acumLeft, acumRight, node)) {
+            aggregate.style.display = 'none';
           }
           wrapperStyle.position = 'relative';
           wrapperStyle.overflow = 'visible';
@@ -250,10 +274,22 @@ $jit.AreaChart = new Class({
             height = node.getData('height'),
             dimArray = node.getData('dimArray'),
             valArray = node.getData('valueArray'),
+            acumLeft = $.reduce(valArray, function(x, y) { return x + y[0]; }, 0),
+            acumRight = $.reduce(valArray, function(x, y) { return x + y[1]; }, 0),
             font = parseInt(wrapperStyle.fontSize, 10),
             domStyle = domElement.style;
         
         if(dimArray && valArray) {
+          if(config.showLabels(node.name, acumLeft, acumRight, node)) {
+            labelStyle.display = '';
+          } else {
+            labelStyle.display = 'none';
+          }
+          if(config.showAggregates(node.name, acumLeft, acumRight, node)) {
+            aggregateStyle.display = '';
+          } else {
+            aggregateStyle.display = 'none';
+          }
           wrapperStyle.width = aggregateStyle.width = labelStyle.width = domElement.style.width = width + 'px';
           aggregateStyle.left = labelStyle.left = -width/2 + 'px';
           for(var i=0, l=valArray.length, acum=0, leftAcum=0; i<l; i++) {
@@ -305,7 +341,7 @@ $jit.AreaChart = new Class({
     
     for(var i=0, values=json.values, l=values.length; i<l-1; i++) {
       var val = values[i], prev = values[i-1], next = values[i+1];
-      var valLeft = values[i].values, valRight = values[i+1].values;
+      var valLeft = $.splat(values[i].values), valRight = $.splat(values[i+1].values);
       var valArray = $.zip(valLeft, valRight);
       var acumLeft = 0, acumRight = 0;
       ch.push({
@@ -379,6 +415,7 @@ $jit.AreaChart = new Class({
     $.each(values, function(v) {
       var n = graph.getByName(v.label);
       if(n) {
+        v.values = $.splat(v.values);
         var valArray = n.getData('valueArray');
         $.each(valArray, function(a, i) {
           a[0] = v.values[i];
@@ -432,7 +469,7 @@ $jit.AreaChart = new Class({
   filter: function() {
     if(this.busy) return;
     this.busy = true;
-    if(this.st.tips) this.st.tips.hide();
+    if(this.config.Tips.enable) this.st.tips.hide();
     this.select(false, false, false);
     var args = Array.prototype.slice.call(arguments);
     var rt = this.st.graph.getNode(this.st.root);
@@ -472,7 +509,7 @@ $jit.AreaChart = new Class({
   restore: function() {
     if(this.busy) return;
     this.busy = true;
-    if(this.st.tips) this.st.tips.hide();
+    if(this.config.Tips.enable) this.st.tips.hide();
     this.select(false, false, false);
     this.normalizeDims();
     var that = this;
