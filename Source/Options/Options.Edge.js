@@ -6,7 +6,7 @@
 /*
   Object: Options.Edge
 
-  Provides Edge style and behavioral options for Tree and Graph based visualizations.
+  Provides Edge rendering options for Tree and Graph based visualizations.
 
   Syntax:
     

@@ -6,7 +6,7 @@
 /*
   Object: Options.Navigation
   
-  This set of options adds panning and zooming capabilities to Graph based visualizations. These options are implemented 
+  Panning and zooming options for Graph/Tree based visualizations. These options are implemented 
   by all visualizations except charts (<AreaChart>, <BarChart> and <PieChart>).
   
   Syntax:

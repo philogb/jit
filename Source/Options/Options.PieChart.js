@@ -5,7 +5,7 @@
 /*
   Object: Options.PieChart
   
-  These are the options that you can use in the <PieChart> class. 
+  <PieChart> options. 
   Other options included in the PieChart are <Options.Canvas>, <Options.Label>, <Options.Tips> and <Options.Events>.
   
   Syntax:

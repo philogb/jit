@@ -6,7 +6,7 @@
 /*
   Object: Options.Events
   
-  This is the configuration for adding mouse/touch event handlers to Nodes.
+  Configuration for adding mouse/touch event handlers to Nodes.
   
   Syntax:
   

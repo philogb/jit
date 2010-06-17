@@ -6,7 +6,7 @@
 /*
   Object: Options.BarChart
   
-  These are the options that you can use in the <BarChart> class. 
+  <BarChart> options. 
   Other options included in the BarChart are <Options.Canvas>, <Options.Label>, <Options.Tips> and <Options.Events>.
   
   Syntax:

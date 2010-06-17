@@ -1,16 +1,15 @@
 /*
   File: Core.js
-  
-  Description:
-  
-  Provides common utility functions and the Class object used internally by the library.
-  
-  Also provides the <TreeUtil> object for manipulating JSON tree structures
-  
-  Some of the Basic utility functions and the Class system are based in the MooTools Framework <http://mootools.net>. Copyright (c) 2006-2009 Valerio Proietti, <http://mad4milk.net/>. MIT license <http://mootools.net/license.txt>.
-  
+
  */
 
+/*
+ Object: $jit
+ 
+ Defines the namespace for all library Classes and Objects. 
+ This variable is the *only* global variable defined in the Toolkit. 
+ There are also other interesting properties attached to this variable described below.
+ */
 window.$jit = function(w) {
   w = w || window;
   for(var k in $jit) {
@@ -21,7 +20,32 @@ window.$jit = function(w) {
 };
 
 $jit.version = '';
+/*
+  Object: $jit.id
+  
+  Works just like *document.getElementById*
+  
+  Example:
+  (start code js)
+  var element = $jit.id('elementId');
+  (end code)
 
+*/
+
+/*
+ Object: $jit.util
+ 
+ Contains utility functions.
+ 
+ Some of the utility functions and the Class system were based in the MooTools Framework 
+ <http://mootools.net>. Copyright (c) 2006-2010 Valerio Proietti, <http://mad4milk.net/>. 
+ MIT license <http://mootools.net/license.txt>.
+ 
+ These methods are generally also implemented in DOM manipulation frameworks like JQuery, MooTools and Prototype.
+ I'd suggest you to use the functions from those libraries instead of using these, since their functions 
+ are widely used and tested in many different platforms/browsers. Use these functions only if you have to.
+ 
+ */
 var $ = function(d) {
   return document.getElementById(d);
 };
@@ -29,6 +53,21 @@ var $ = function(d) {
 $.empty = function() {
 };
 
+/*
+  Method: extend
+  
+  Augment an object by appending another object's properties.
+  
+  Parameters:
+  
+  original - (object) The object to be extended.
+  extended - (object) An object which properties are going to be appended to the original object.
+  
+  Example:
+  (start code js)
+  $jit.util.extend({ 'a': 1, 'b': 2 }, { 'b': 3, 'c': 4 }); //{ 'a':1, 'b': 3, 'c': 4 }
+  (end code)
+*/
 $.extend = function(original, extended) {
   for ( var key in (extended || {}))
     original[key] = extended[key];
@@ -45,6 +84,21 @@ $.time = Date.now || function() {
   return +new Date;
 };
 
+/*
+  Method: splat
+  
+  Returns an array wrapping *obj* if *obj* is not an array. Returns *obj* otherwise.
+  
+  Parameters:
+  
+  obj - (mixed) The object to be wrapped in an array.
+  
+  Example:
+  (start code js)
+  $jit.util.splat(3);   //[3]
+  $jit.util.splat([3]); //[3]
+  (end code)
+*/
 $.splat = function(obj) {
   var type = $.type(obj);
   return type ? ((type != 'array') ? [ obj ] : obj) : [];
@@ -58,6 +112,21 @@ $.type = function(elem) {
 };
 $.type.s = Object.prototype.toString;
 
+/*
+  Method: each
+  
+  Iterates through an iterable applying *f*.
+  
+  Parameters:
+  
+  iterable - (array) The original array.
+  fn - (function) The function to apply to the array elements.
+  
+  Example:
+  (start code js)
+  $jit.util.each([3, 4, 5], function(n) { alert('number ' + n); });
+  (end code)
+*/
 $.each = function(iterable, fn) {
   var type = $.type(iterable);
   if (type == 'object') {
@@ -77,6 +146,21 @@ $.indexOf = function(array, item) {
   return -1;
 };
 
+/*
+  Method: map
+  
+  Maps or collects an array by applying *f*.
+  
+  Parameters:
+  
+  array - (array) The original array.
+  f - (function) The function to apply to the array elements.
+  
+  Example:
+  (start code js)
+  $jit.util.map([3, 4, 5], function(n) { return n*n; }); //[9, 16, 25]
+  (end code)
+*/
 $.map = function(array, f) {
   var ans = [];
   $.each(array, function(elem, i) {
@@ -85,6 +169,22 @@ $.map = function(array, f) {
   return ans;
 };
 
+/*
+  Method: reduce
+  
+  Iteratively applies the binary function *f* storing the result in an accumulator.
+  
+  Parameters:
+  
+  array - (array) The original array.
+  f - (function) The function to apply to the array elements.
+  opt - (optional|mixed) The starting value for the acumulator.
+  
+  Example:
+  (start code js)
+  $jit.util.reduce([3, 4, 5], function(x, y) { return x + y; }, 0); //12
+  (end code)
+*/
 $.reduce = function(array, f, opt) {
   var l = array.length;
   if(l==0) return opt;
@@ -95,6 +195,20 @@ $.reduce = function(array, f, opt) {
   return acum;
 };
 
+/*
+  Method: merge
+  
+  Merges n-objects and their sub-objects creating a new, fresh object.
+  
+  Parameters:
+  
+  An arbitrary number of objects.
+  
+  Example:
+  (start code js)
+  $jit.util.merge({ 'a': 1, 'b': 2 }, { 'b': 3, 'c': 4 }); //{ 'a':1, 'b': 3, 'c': 4 }
+  (end code)
+*/
 $.merge = function() {
   var mix = {};
   for ( var i = 0, l = arguments.length; i < l; i++) {
@@ -140,6 +254,20 @@ $.zip = function() {
   return ans;
 };
 
+/*
+  Method: rgbToHex
+  
+  Converts an RGB array into a Hex string.
+  
+  Parameters:
+  
+  srcArray - (array) An array with R, G and B values
+  
+  Example:
+  (start code js)
+  $jit.util.rgbToHex([255, 255, 255]); //'#ffffff'
+  (end code)
+*/
 $.rgbToHex = function(srcArray, array) {
   if (srcArray.length < 3)
     return null;
@@ -153,6 +281,20 @@ $.rgbToHex = function(srcArray, array) {
   return array ? hex : '#' + hex.join('');
 };
 
+/*
+  Method: hexToRgb
+  
+  Converts an Hex color string into an RGB array.
+  
+  Parameters:
+  
+  hex - (string) A color hex string.
+  
+  Example:
+  (start code js)
+  $jit.util.hexToRgb('#fff'); //[255, 255, 255]
+  (end code)
+*/
 $.hexToRgb = function(hex) {
   if (hex.length != 7) {
     hex = hex.match(/^#?(\w{1,2})(\w{1,2})(\w{1,2})$/);
@@ -290,6 +432,22 @@ $.clean = function(elem) {
   }
 };
 
+/*
+  Method: addEvent
+  
+  Cross-browser add event listener.
+  
+  Parameters:
+  
+  obj - (obj) The Element to attach the listener to.
+  type - (string) The listener type. For example 'click', or 'mousemove'.
+  fn - (function) The callback function to be used when the event is fired.
+  
+  Example:
+  (start code js)
+  $jit.util.addEvent(elem, 'click', function(){ alert('hello'); });
+  (end code)
+*/
 $.addEvent = function(obj, type, fn) {
   if (obj.addEventListener)
     obj.addEventListener(type, fn, false);
@@ -487,6 +645,13 @@ Class.prototype.implement = function() {
 
 $jit.Class = Class;
 
+/*
+  Object: $jit.json
+  
+  Provides JSON utility functions.
+  
+  Most of these functions are JSON-tree traversal and manipulation functions.
+*/
 $jit.json = {
   /*
      Method: prune
@@ -495,8 +660,8 @@ $jit.json = {
   
      Parameters:
   
-        tree - A JSON tree object. For more information please see <Loader.loadJSON>.
-        maxLevel - An integer specifying the maximum level allowed for this tree. All nodes having depth greater than max level will be deleted.
+        tree - (object) A JSON tree object. For more information please see <Loader.loadJSON>.
+        maxLevel - (number) An integer specifying the maximum level allowed for this tree. All nodes having depth greater than max level will be deleted.
 
   */
   prune: function(tree, maxLevel) {
@@ -514,8 +679,8 @@ $jit.json = {
   
      Parameters:
   
-        tree - A JSON tree object. See also <Loader.loadJSON>.
-        id - The _id_ of the child node whose parent will be returned.
+        tree - (object) A JSON tree object. See also <Loader.loadJSON>.
+        id - (string) The _id_ of the child node whose parent will be returned.
 
     Returns:
 
@@ -546,8 +711,8 @@ $jit.json = {
   
      Parameters:
   
-        tree - A JSON tree object. See also <Loader.loadJSON>.
-        id - A node *unique* identifier.
+        tree - (object) A JSON tree object. See also <Loader.loadJSON>.
+        id - (string) A node *unique* identifier.
   
      Returns:
   
@@ -565,50 +730,20 @@ $jit.json = {
     return null;
   },
   /*
-     Method: getLeaves
-  
-      Returns the leaves of the tree.
-  
-     Parameters:
-  
-        node - A JSON tree node. See also <Loader.loadJSON>.
-        maxLevel - _optional_ A subtree's max level.
-  
-     Returns:
-  
-     An array having objects with two properties. 
-     
-      - The _node_ property contains the leaf node. 
-      - The _level_ property specifies the depth of the node.
-
-  */
-  getLeaves: function(node, maxLevel) {
-    var leaves = [], levelsToShow = maxLevel || Number.MAX_VALUE;
-    this.each(node, function(elem, i) {
-      if (i < levelsToShow && (!elem.children || elem.children.length == 0)) {
-        leaves.push( {
-          'node': elem,
-          'level': levelsToShow - i
-        });
-      }
-    });
-    return leaves;
-  },
-  /*
      Method: eachLevel
   
       Iterates on tree nodes with relative depth less or equal than a specified level.
   
      Parameters:
   
-        tree - A JSON tree or subtree. See also <Loader.loadJSON>.
-        initLevel - An integer specifying the initial relative level. Usually zero.
-        toLevel - An integer specifying a top level. This method will iterate only through nodes with depth less than or equal this number.
-        action - A function that receives a node and an integer specifying the actual level of the node.
+        tree - (object) A JSON tree or subtree. See also <Loader.loadJSON>.
+        initLevel - (number) An integer specifying the initial relative level. Usually zero.
+        toLevel - (number) An integer specifying a top level. This method will iterate only through nodes with depth less than or equal this number.
+        action - (function) A function that receives a node and an integer specifying the actual level of the node.
           
     Example:
    (start code js)
-     TreeUtil.eachLevel(tree, 0, 3, function(node, depth) {
+     $jit.json.eachLevel(tree, 0, 3, function(node, depth) {
         alert(node.name + ' ' + depth);
      });
    (end code)
@@ -625,16 +760,16 @@ $jit.json = {
   /*
      Method: each
   
-      A tree iterator.
+      A JSON tree iterator.
   
      Parameters:
   
-        tree - A JSON tree or subtree. See also <Loader.loadJSON>.
-        action - A function that receives a node.
+        tree - (object) A JSON tree or subtree. See also <Loader.loadJSON>.
+        action - (function) A function that receives a node.
 
     Example:
     (start code js)
-      TreeUtil.each(tree, function(node) {
+      $jit.json.each(tree, function(node) {
         alert(node.name);
       });
     (end code)
@@ -642,52 +777,5 @@ $jit.json = {
   */
   each: function(tree, action) {
     this.eachLevel(tree, 0, Number.MAX_VALUE, action);
-  },
-  /*
-     Method: loadSubtrees
-  
-      Appends subtrees to leaves by requesting new subtrees
-      with the _request_ method.
-  
-     Parameters:
-  
-        tree - A JSON tree node. <Loader.loadJSON>.
-        controller - An object that implements a request method.
-    
-     Example:
-      (start code js)
-        TreeUtil.loadSubtrees(leafNode, {
-          request: function(nodeId, level, onComplete) {
-            //Pseudo-code to make an ajax request for a new subtree
-            // that has as root id _nodeId_ and depth _level_ ...
-            Ajax.request({
-              'url': 'http://subtreerequesturl/',
-              
-              onSuccess: function(json) {
-                onComplete.onComplete(nodeId, json);
-              }
-            });
-          }
-        });
-      (end code)
-  */
-  loadSubtrees: function(tree, controller) {
-    var maxLevel = controller.request && controller.levelsToShow;
-    var leaves = this.getLeaves(tree, maxLevel), len = leaves.length, selectedNode = {};
-    if (len == 0)
-      controller.onComplete();
-    for ( var i = 0, counter = 0; i < len; i++) {
-      var leaf = leaves[i], id = leaf.node.id;
-      selectedNode[id] = leaf.node;
-      controller.request(id, leaf.level, {
-        onComplete: function(nodeId, tree) {
-          var ch = tree.children;
-          selectedNode[nodeId].children = ch;
-          if (++counter == len) {
-            controller.onComplete();
-          }
-        }
-      });
-    }
   }
 };

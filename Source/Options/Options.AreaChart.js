@@ -6,7 +6,7 @@
 /*
   Object: Options.AreaChart
   
-  These are the options that you can use in the <AreaChart> class. 
+  <AreaChart> options. 
   Other options included in the AreaChart are <Options.Canvas>, <Options.Label>, <Options.Tips> and <Options.Events>.
   
   Syntax:

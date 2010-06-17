@@ -6,7 +6,7 @@
 /*
   Object: Options.Node
 
-  Provides Node style and behavioral options for Tree and Graph based visualizations.
+  Provides Node rendering options for Tree and Graph based visualizations.
 
   Syntax:
     
