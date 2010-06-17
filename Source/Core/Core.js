@@ -196,7 +196,7 @@ $.rgbToHsl = function(rgbArray) {
   }
 
   return [Math.round(h*360), Math.round(s*100), Math.round(l*100)];
-}
+};
 
 $.hslToRgb = function(hslArray){
   var h = hslArray[0] / 360, s = hslArray[1] / 100, l = hslArray[2] / 100;
@@ -222,11 +222,11 @@ $.hslToRgb = function(hslArray){
   }
 
   return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
-}
+};
 
 $.hslToHex = function(hslArray) {
   return $.rgbToHex($.hslToRgb(hslArray));
-}
+};
 
 $.rgbToHsv = function (rgbArray) {
   r = rgbArray[0]/255, g = rgbArray[1]/255, b = rgbArray[2]/255;
@@ -248,7 +248,7 @@ $.rgbToHsv = function (rgbArray) {
   }
 
   return [Math.round(h*360), Math.round(s*100), Math.round(v*100)];
-}
+};
 
 $.hsvToRgb = function(hsvArray){
   var h = hsvArray[0] / 360, s = hsvArray[1] / 100, v = hsvArray[2] / 100;
@@ -270,11 +270,11 @@ $.hsvToRgb = function(hsvArray){
   }
 
   return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
-}
+};
 
 $.hsvToHex = function(hsvArray) {
   return $.rgbToHex($.hsvToRgb(hsvArray));
-}
+};
 
 $.destroy = function(elem) {
   $.clean(elem);
