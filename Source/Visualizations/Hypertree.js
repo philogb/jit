@@ -66,6 +66,10 @@ Graph.Util.moebiusTransformation = function(graph, pos, prop, startPos, flags) {
  
   This visualization was built and engineered from scratch, taking only the paper as inspiration, and only shares some features with the Hypertree described in the paper.
 
+  Implements:
+  
+  All <Loader> methods
+  
   Constructor Options:
   
   Inherits options from

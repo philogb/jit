@@ -16,6 +16,10 @@
    
    This visualization was built and engineered from scratch, taking only the paper as inspiration, and only shares some features with the visualization described in the paper.
    
+  Implements:
+  
+  All <Loader> methods
+  
    Constructor Options:
    
    Inherits options from

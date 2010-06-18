@@ -11,6 +11,10 @@
   
    Force-Directed Drawing Algorithms (Stephen G. Kobourov) <http://www.cs.brown.edu/~rt/gdhandbook/chapters/force-directed.pdf>
    
+  Implements:
+  
+  All <Loader> methods
+  
    Constructor Options:
    
    Inherits options from

@@ -14,6 +14,10 @@ $jit.TM.$extend = true;
   
   Abstract class providing base functionality for <TM.Squarified>, <TM.Strip> and <TM.SliceAndDice> visualizations.
   
+  Implements:
+  
+  All <Loader> methods
+  
   Constructor Options:
   
   Inherits options from

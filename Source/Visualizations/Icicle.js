@@ -8,6 +8,10 @@
   
   Icicle space filling visualization.
   
+  Implements:
+  
+  All <Loader> methods
+  
   Constructor Options:
   
   Inherits options from

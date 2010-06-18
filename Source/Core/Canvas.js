@@ -1,28 +1,16 @@
 /*
  * File: Canvas.js
  *
- * A cross browser Canvas widget.
- *
- * Used By:
- *
- * <ST>, <Hypertree>, <RGraph>, <Icicle>, <Sunburst>, <ForceDirected>
  */
+
 /*
  Class: Canvas
  
- 	A multi-purpose Canvas Widget Class. This Class can be used with the ExCanvas library to provide
- cross browser Canvas based visualizations.
+ 	A canvas widget used by all visualizations. The canvas object can be accessed by doing *viz.canvas*. If you want to 
+ 	know more about <Canvas> options take a look at <Options.Canvas>.
  
- Parameters:
- 
- id - The canvas id. This id will be used as prefix for the canvas widget DOM elements ids.
- options - An object containing multiple options such as
- 
- - _injectInto_ This property is _required_ and it specifies the id of the DOM element
- to which the Canvas widget will be appended. It can also be the actual DOM element container.
- - _width_ The width of the Canvas widget. Default's to 200px
- - _height_ The height of the Canvas widget. Default's to 200px
- - _styles_ A hash containing canvas specific style properties such as _fillStyle_ and _strokeStyle_ among others.
+ A canvas widget is a set of DOM elements that wrap the native canvas DOM Element providing a consistent API and behavior 
+ across all browsers. It can also include Elements to add DOM (SVG or HTML) label support to all visualizations.
  
  Example:
  
@@ -32,21 +20,16 @@
  	<div id="infovis"></div>
  (end code)
  
- Now we create a new Canvas instance
+ Now we create a new Visualization
  
  (start code js)
- 	//Create a new canvas instance
- 	var canvas = new Canvas('mycanvas', {
+ 	var viz = new $jit.Viz({
  		//Where to inject the canvas. Any div container will do.
  		'injectInto':'infovis',
-		 //width and height for canvas. Default's to 200.
+		 //width and height for canvas. 
+		 //Default's to the container offsetWidth and Height.
 		 'width': 900,
-		 'height':500,
-		 //Canvas styles
-		 'styles': {
-		 'fillStyle': '#ccddee',
-		 'strokeStyle': '#772277'
-		 }
+		 'height':500
 	 });
  (end code)
 
@@ -54,67 +37,18 @@
  
  (start code xml)
  <div id="infovis">
- 	<div id="mycanvas" style="position:relative;">
- 	<canvas id="mycanvas-canvas" width=900 height=500
+ 	<div id="infovis-canvaswidget" style="position:relative;">
+ 	<canvas id="infovis-canvas" width=900 height=500
  	style="position:absolute; top:0; left:0; width:900px; height:500px;" />
- 	<div id="mycanvas-label"
+ 	<div id="infovis-label"
  	style="overflow:visible; position:absolute; top:0; left:0; width:900px; height:0px">
  	</div>
  	</div>
  </div>
  (end code)
  
- As you can see, the generated HTML consists of a canvas DOM element of id _mycanvas-canvas_ and a div label container
- of id _mycanvas-label_, wrapped in a main div container of id _mycanvas_.
- You can also add a background canvas, for making background drawings.
- This is how the <RGraph> background concentric circles are drawn
- 
- Example:
- 
- (start code js)
- 	//Create a new canvas instance.
- 	var canvas = new Canvas('mycanvas', {
-		//Where to inject the canvas. Any div container will do.
-		'injectInto':'infovis',
-		//width and height for canvas. Default's to 200.
-		'width': 900,
-		'height':500,
-		//Canvas styles
-		'styles': {
-			'fillStyle': '#ccddee',
-			'strokeStyle': '#772277'
-		},
-		//Add a background canvas for plotting
-		//concentric circles.
-		'backgroundCanvas': {
-			//Add Canvas styles for the bck canvas.
-			'styles': {
-				'fillStyle': '#444',
-				'strokeStyle': '#444'
-			},
-			//Add the initialization and plotting functions.
-			'impl': {
-				'init': function() {},
-				'plot': function(canvas, ctx) {
-					var times = 6, d = 100;
-					var pi2 = Math.PI*2;
-					for(var i=1; i<=times; i++) {
-						ctx.beginPath();
-						ctx.arc(0, 0, i * d, 0, pi2, true);
-						ctx.stroke();
-						ctx.closePath();
-					}
-				}
-			}
-		}
-	});
- (end code)
- 
- The _backgroundCanvas_ object contains a canvas _styles_ property and
- an _impl_ key to be used for implementing background canvas specific code.
- 
- The _init_ method is only called once, at the instanciation of the background canvas.
- The _plot_ method is called for plotting a Canvas image.
+ As you can see, the generated HTML consists of a canvas DOM Element of id *infovis-canvas* and a div label container
+ of id *infovis-label*, wrapped in a main div container of id *infovis-canvaswidget*.
  */
 
 var Canvas;
@@ -216,10 +150,6 @@ var Canvas;
       
       Returns the main canvas context object
       
-      Returns:
-      
-      Main canvas context
-      
       Example:
       
       (start code js)
@@ -237,10 +167,6 @@ var Canvas;
       
       Returns the current Configuration for this Canvas Widget.
       
-      Returns:
-      
-      Canvas Widget Configuration
-      
       Example:
       
       (start code js)
@@ -255,15 +181,11 @@ var Canvas;
 
       Returns the main Canvas DOM wrapper
       
-      Returns:
-      
-      DOM canvas wrapper generated, (i.e the div wrapper element with id _mycanvas_)
-      
       Example:
       
       (start code js)
        var wrapper = canvas.getElement();
-       //Returns <div id="mycanvas" ... >...</div> as element
+       //Returns <div id="infovis-canvaswidget" ... >...</div> as element
       (end code)
     */
     getElement: function() {
@@ -276,7 +198,8 @@ var Canvas;
       
       Returns:
       
-      An object with _width_ and _height_ properties.
+      An object with *width* and *height* properties.
+      
       Example:
       (start code js)
       canvas.getSize(); //returns { width: 900, height: 500 }
@@ -294,9 +217,6 @@ var Canvas;
       
       width - New canvas width.
       height - New canvas height.
-      
-      This method can be used with the <ST>, <Hypertree> or <RGraph> visualizations to resize
-      the visualizations
       
       Example:
       
@@ -321,12 +241,13 @@ var Canvas;
     /*
       Method: translate
       
-      Applies a translation to canvases.
+      Applies a translation to the canvas.
       
       Parameters:
       
-      x - pos.
-      y - pos.
+      x - (number) x offset.
+      y - (number) y offset.
+      disablePlot - (boolean) Default's *false*. Set this to *true* if you don't want to refresh the visualization.
       
       Example:
       
@@ -345,12 +266,13 @@ var Canvas;
     /*
       Method: scale
       
-      Scales the canvas(ses)
+      Scales the canvas.
       
       Parameters:
       
-      x - value.
-      y - value.
+      x - (number) scale value.
+      y - (number) scale value.
+      disablePlot - (boolean) Default's *false*. Set this to *true* if you don't want to refresh the visualization.
       
       Example:
       
@@ -374,14 +296,19 @@ var Canvas;
     /*
       Method: getPos
       
-      Returns canvas position vector.
+      Returns the canvas position as an *x, y* object.
+      
+      Parameters:
+      
+      force - (boolean) Default's *false*. Set this to *true* if you want to recalculate the position without using any cache information.
       
       Returns:
       
-      An object with _x_ and _y_ properties.
+      An object with *x* and *y* properties.
+      
       Example:
       (start code js)
-      canvas.getPos(); //returns { x: 900, y: 500 }
+      canvas.getPos(true); //returns { x: 900, y: 500 }
       (end code)
     */
     getPos: function(force){
@@ -393,7 +320,7 @@ var Canvas;
     /*
        Method: clear
        
-       Clears the canvas object.
+       Clears the canvas.
     */
     clear: function(i){
       this.canvases[i||0].clear();
@@ -543,6 +470,7 @@ var Canvas;
     }
   });
   //background canvases
+  //TODO(nico): document this!
   Canvas.Background = {};
   Canvas.Background.Circles = new Class({
     initialize: function(viz, options) {
