@@ -82,8 +82,7 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.save();
           ctx.beginPath();
           ctx.fillStyle = ctx.strokeStyle = label.color;
-          ctx.fillStyle = '#ffffff';
-          ctx.font = label.size + 'px ' + label.family;
+          ctx.font = label.style + ' ' + label.size + 'px ' + label.family;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           if(aggregates(node.name, valLeft, valRight, node)) {
@@ -407,18 +406,21 @@ $jit.AreaChart = new Class({
     if(this.busy) return;
     this.busy = true;
     
-    var st = this.st;
-    var graph = st.graph;
-    var values = json.values;
-    var animate = this.config.animate;
-    var that = this;
+    var st = this.st,
+        graph = st.graph,
+        labels = json.label && $.splat(json.label),
+        values = json.values,
+        animate = this.config.animate,
+        that = this;
     $.each(values, function(v) {
       var n = graph.getByName(v.label);
       if(n) {
         v.values = $.splat(v.values);
-        var valArray = n.getData('valueArray');
+        var stringArray = n.getData('stringArray'),
+            valArray = n.getData('valueArray');
         $.each(valArray, function(a, i) {
           a[0] = v.values[i];
+          if(labels) stringArray[i] = labels[i];
         });
         n.setData('valueArray', valArray);
         var prev = n.getData('prev');

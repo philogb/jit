@@ -72,7 +72,7 @@ $jit.ST.Plot.NodeTypes.implement({
         if(label.type == 'Native') {
           ctx.save();
           ctx.fillStyle = ctx.strokeStyle = label.color;
-          ctx.font = label.size + 'px ' + label.family;
+          ctx.font = label.style + ' ' + label.size + 'px ' + label.family;
           ctx.textBaseline = 'middle';
           if(aggregates(node.name, valAcum)) {
             if(horz) {
@@ -457,6 +457,9 @@ $jit.BarChart = new Class({
       var n = graph.getByName(v.label);
       if(n) {
         n.setData('valueArray', $.splat(v.values));
+        if(json.label) {
+          n.setData('stringArray', $.splat(json.label));
+        }
       }
     });
     this.normalizeDims();

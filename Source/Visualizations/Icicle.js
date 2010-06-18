@@ -304,7 +304,7 @@ $jit.Icicle = new Class({
     } else {
       handler.onComplete();
     }
-  },
+  }
 });
 
 /*

@@ -92,7 +92,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
               fontSize = (label.size * scale) >> 0;
           fontSize = fontSize < +resizeLabels? +resizeLabels : fontSize;
           
-          ctx.font = fontSize + 'px ' + label.family;
+          ctx.font = label.style + ' ' + fontSize + 'px ' + label.family;
           ctx.textBaseline = 'middle';
           ctx.textAlign = 'center';
           
@@ -151,7 +151,9 @@ $jit.PieChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "PieChart", "Label"), opt);
+      $.merge(Options("Canvas", "PieChart", "Label"), {
+        Label: { type: 'Native' }
+      }, opt);
     this.initializeViz();
   },
   
@@ -181,10 +183,6 @@ $jit.PieChart = new Class({
         onShow: function(tip, node, contains) {
           var elem = contains;
           config.Tips.onShow(tip, elem, node);
-          that.select(node.id, elem.name, elem.index);
-        },
-        onHide: function() {
-          that.select(false, false, false);
         }
       },
       Events: {
@@ -194,6 +192,15 @@ $jit.PieChart = new Class({
           if(!config.Events.enable) return;
           var elem = eventInfo.getContains();
           config.Events.onClick(elem, eventInfo, evt);
+        },
+        onMouseMove: function(node, eventInfo, evt) {
+          if(!config.hoveredColor) return;
+          if(node) {
+            var elem = eventInfo.getContains();
+            that.select(node.id, elem.name, elem.index);
+          } else {
+            that.select(false, false, false);
+          }
         }
       },
       onCreateLabel: function(domElement, node) {
@@ -249,6 +256,7 @@ $jit.PieChart = new Class({
       - config.offset - config.sliceOffset;
     this.sb = sb;
     this.canvas = this.sb.canvas;
+    this.canvas.getCtx().globalCompositeOperation = 'lighter';
   },
   
   /*
@@ -354,6 +362,9 @@ $jit.PieChart = new Class({
       if(n) {
         n.setData('valueArray', vals);
         n.setData('angularWidth', $.reduce(vals, function(x,y){return x+y;}));
+        if(json.label) {
+          n.setData('stringArray', $.splat(json.label));
+        }
       }
     });
     this.normalizeDims();
