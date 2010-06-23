@@ -147,6 +147,152 @@ $jit.ST.Plot.NodeTypes.implement({
       }
       return false;
     }
+  },
+  'barchart-grouped' : {
+    'render' : function(node, canvas) {
+      var pos = node.pos.getc(true), 
+          width = node.getData('width'),
+          height = node.getData('height'),
+          algnPos = this.getAlignedPos(pos, width, height),
+          x = algnPos.x, y = algnPos.y,
+          dimArray = node.getData('dimArray'),
+          valueArray = node.getData('valueArray'),
+          valueLength = valueArray.length,
+          colorArray = node.getData('colorArray'),
+          colorLength = colorArray.length,
+          stringArray = node.getData('stringArray'); 
+
+      var ctx = canvas.getCtx(),
+          opt = {},
+          border = node.getData('border'),
+          gradient = node.getData('gradient'),
+          config = node.getData('config'),
+          horz = config.orientation == 'horizontal',
+          aggregates = config.showAggregates,
+          showLabels = config.showLabels,
+          label = config.Label,
+          fixedDim = (horz? height : width) / valueLength;
+      
+      if (colorArray && dimArray && stringArray) {
+        for (var i=0, l=valueLength, acum=0, valAcum=0; i<l; i++) {
+          ctx.fillStyle = ctx.strokeStyle = colorArray[i % colorLength];
+          if(gradient) {
+            var linear;
+            if(horz) {
+              linear = ctx.createLinearGradient(x + dimArray[i]/2, y + fixedDim * i, 
+                  x + dimArray[i]/2, y + fixedDim * (i + 1));
+            } else {
+              linear = ctx.createLinearGradient(x + fixedDim * i, y - dimArray[i]/2, 
+                  x + fixedDim * (i + 1), y - dimArray[i]/2);
+            }
+            var color = $.rgbToHex($.map($.hexToRgb(colorArray[i % colorLength].slice(1)), 
+                function(v) { return (v * 0.5) >> 0; }));
+            linear.addColorStop(0, color);
+            linear.addColorStop(0.5, colorArray[i % colorLength]);
+            linear.addColorStop(1, color);
+            ctx.fillStyle = linear;
+          }
+          if(horz) {
+            ctx.fillRect(x, y + fixedDim * i, dimArray[i], fixedDim);
+          } else {
+            ctx.fillRect(x + fixedDim * i, y - dimArray[i], fixedDim, dimArray[i]);
+          }
+          if(border && border.name == stringArray[i]) {
+            opt.acum = fixedDim * i;
+            opt.dimValue = dimArray[i];
+          }
+          acum += (dimArray[i] || 0);
+          valAcum += (valueArray[i] || 0);
+        }
+        if(border) {
+          ctx.save();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = border.color;
+          if(horz) {
+            ctx.strokeRect(x + 1, y + opt.acum + 1, opt.dimValue -2, fixedDim - 2);
+          } else {
+            ctx.strokeRect(x + opt.acum + 1, y - opt.dimValue + 1, fixedDim -2, opt.dimValue -2);
+          }
+          ctx.restore();
+        }
+        if(label.type == 'Native') {
+          ctx.save();
+          ctx.fillStyle = ctx.strokeStyle = label.color;
+          ctx.font = label.style + ' ' + label.size + 'px ' + label.family;
+          ctx.textBaseline = 'middle';
+          if(aggregates(node.name, valAcum)) {
+            if(horz) {
+              ctx.textAlign = 'right';
+              ctx.fillText(valAcum, x + Math.max.apply(null, dimArray) - config.labelOffset, y + height/2);
+            } else {
+              ctx.textAlign = 'center';
+              ctx.fillText(valAcum, x + width/2, y - Math.max.apply(null, dimArray) - label.size/2 - config.labelOffset, width);
+            }
+          }
+          if(showLabels(node.name, valAcum, node)) {
+            if(horz) {
+              ctx.textAlign = 'center';
+              ctx.translate(x - config.labelOffset - label.size/2, y + height/2);
+              ctx.rotate(Math.PI / 2);
+              ctx.fillText(node.name, 0, 0, width);
+            } else {
+              ctx.textAlign = 'center';
+              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset, width);
+            }
+          }
+          ctx.restore();
+        }
+      }
+    },
+    'contains': function(node, mpos) {
+      var pos = node.pos.getc(true), 
+          width = node.getData('width'),
+          height = node.getData('height'),
+          algnPos = this.getAlignedPos(pos, width, height),
+          x = algnPos.x, y = algnPos.y,
+          dimArray = node.getData('dimArray'),
+          len = dimArray.length,
+          config = node.getData('config'),
+          rx = mpos.x - x,
+          horz = config.orientation == 'horizontal',
+          fixedDim = (horz? height : width) / len;
+      //bounding box check
+      if(horz) {
+        if(mpos.x < x || mpos.x > x + width
+            || mpos.y > y + height || mpos.y < y) {
+            return false;
+          }
+      } else {
+        if(mpos.x < x || mpos.x > x + width
+            || mpos.y > y || mpos.y < y - height) {
+            return false;
+          }
+      }
+      //deep check
+      for(var i=0, l=dimArray.length; i<l; i++) {
+        var dimi = dimArray[i];
+        if(horz) {
+          var limit = y + fixedDim * i;
+          if(mpos.x <= x+ dimi && mpos.y >= limit && mpos.y <= limit + fixedDim) {
+            return {
+              'name': node.getData('stringArray')[i],
+              'color': node.getData('colorArray')[i],
+              'value': node.getData('valueArray')[i]
+            };
+          }
+        } else {
+          var limit = x + fixedDim * i;
+          if(mpos.x >= limit && mpos.x <= limit + fixedDim && mpos.y >= y - dimi) {
+            return {
+              'name': node.getData('stringArray')[i],
+              'color': node.getData('colorArray')[i],
+              'value': node.getData('valueArray')[i]
+            };
+          }
+        }
+      }
+      return false;
+    }
   }
 });
 
@@ -284,12 +430,15 @@ $jit.BarChart = new Class({
             wrapperStyle = labels.wrapper.style,
             labelStyle = labels.label.style,
             aggregateStyle = labels.aggregate.style,
-            width = node.getData('width'),
-            height = node.getData('height'),
+            grouped = config.type.split(':')[0] == 'grouped',
+            horz = config.orientation == 'horizontal',
             dimArray = node.getData('dimArray'),
             valArray = node.getData('valueArray'),
+            width = (grouped && horz)? Math.max.apply(null, dimArray) : node.getData('width'),
+            height = (grouped && !horz)? Math.max.apply(null, dimArray) : node.getData('height'),
             font = parseInt(wrapperStyle.fontSize, 10),
             domStyle = domElement.style;
+            
         
         if(dimArray && valArray) {
           wrapperStyle.width = aggregateStyle.width = labelStyle.width = domElement.style.width = width + 'px';
@@ -559,13 +708,18 @@ $jit.BarChart = new Class({
     
   */  
   getMaxValue: function() {
-    var maxValue = 0;
+    var maxValue = 0, stacked = this.config.type.split(':')[0] == 'stacked';
     this.st.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acum = 0;
-      $.each(valArray, function(v) { 
-        acum += +v;
-      });
+      if(!valArray) return;
+      if(stacked) {
+        $.each(valArray, function(v) { 
+          acum += +v;
+        });
+      } else {
+        acum = Math.max.apply(null, valArray);
+      }
       maxValue = maxValue>acum? maxValue:acum;
     });
     return maxValue;
