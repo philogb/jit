@@ -107,7 +107,7 @@ $.splat = function(obj) {
 $.type = function(elem) {
   var type = $.type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
   if(type != 'object') return type;
-  if(elem && elem.$family) return elem.$family;
+  if(elem && elem.$$family) return elem.$$family;
   return (elem && elem.nodeName && elem.nodeType == 1)? 'element' : type;
 };
 $.type.s = Object.prototype.toString;
@@ -564,7 +564,7 @@ var Class = function(properties) {
     var instance = this.initialize ? this.initialize.apply(this, arguments)
         : this;
     //typize
-    this.$family = 'class';
+    this.$$family = 'class';
     return instance;
   };
 
