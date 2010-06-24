@@ -7093,6 +7093,7 @@ function init(){
   icicle.loadJSON(json);
   // compute positions and plot
   icicle.refresh();
+  //end
 }
 
 //init controls

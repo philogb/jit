@@ -749,10 +749,10 @@ function init(){
     		});
     	}
     }
+    //end
     //grab radio button
     var normal = $jit.id('s-normal');
-    //end
-    //init st
+    //init Spacetree
     //Create a new ST instance
     var st = new $jit.ST({
         //id of viz container element

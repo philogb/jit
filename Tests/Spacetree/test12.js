@@ -59,8 +59,8 @@ function init(){
     };
     //end
     //init Node Types
-    //Create a node rendering function that plots a fillRectangle and
-    //a stroke rectangle for borders
+    //Create a node rendering function that plots a fill
+    //rectangle and a stroke rectangle for borders
     $jit.ST.Plot.NodeTypes.implement({
       'stroke-rect': {
         'render': function(node, canvas) {
@@ -74,7 +74,8 @@ function init(){
         }
       }
     });
-    //init st
+    //end
+    //init Spacetree
     //Create a new ST instance
     var st = new $jit.ST({
         //id of viz container element

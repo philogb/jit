@@ -1,4 +1,5 @@
 function init(){
+  //init data
   var json = {
     "children": [
        {

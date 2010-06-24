@@ -734,7 +734,7 @@ function init(){
     var subtree = json.children.pop();
     //end
     var removing = false;
-    //init st
+    //init Spacetree
     //Create a new ST instance
     var st = new $jit.ST({
         'injectInto': 'infovis',

@@ -44,7 +44,7 @@ function init(){
           
     });
 
-    //init st
+    //init Spacetree
     //Create a new ST instance
     var st = new $jit.ST({
         'injectInto': 'infovis',
