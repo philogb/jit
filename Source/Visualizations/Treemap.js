@@ -721,6 +721,7 @@ TM.Plot.NodeTypes = new Class( {
           ctx = canvas.getCtx(),
           posx = pos.x + offst / 2, 
           posy = pos.y + offst / 2;
+      if(width <= offst || height <= offst) return;
       if (leaf) {
         if(config.cushion) {
           var lg = ctx.createRadialGradient(posx + (width-offst)/2, posy + (height-offst)/2, 1, 
