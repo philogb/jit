@@ -76,7 +76,7 @@ $jit.RGraph = new Class( {
         }, canvasConfig.background);
       }
       this.canvas = new Canvas(this, canvasConfig);
-      this.config.labelContainer = canvasConfig.injectInto + '-label';
+      this.config.labelContainer = (typeof canvasConfig.injectInto == 'string'? canvasConfig.injectInto : canvasConfig.injectInto.id) + '-label';
     }
 
     this.graphOptions = {
