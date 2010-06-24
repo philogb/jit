@@ -507,7 +507,6 @@ Extras.Classes.NodeStyles = new Class({
     var label;
     if(this.dom && (label = this.isLabel(e, win))) {
       var node = this.viz.graph.getNode(label.id);
-      alert([node, label.id, label.innerHTML]);
       if(node.selected) return;
       this.hoveredNode = node;
       this.toggleStylesOnHover(this.hoveredNode, true);
