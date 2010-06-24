@@ -26,7 +26,7 @@ function init(){
       CanvasStyles: {
         shadowBlur: 0,
         shadowColor: '#000'
-      },
+      }
     },
     //Attach left and right click events
     Events: {

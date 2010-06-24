@@ -1181,7 +1181,7 @@ function init(){
         }
     };
     
-    var json3 = {
+    var json2 = {
         "children": [
                      {
                        "children": [

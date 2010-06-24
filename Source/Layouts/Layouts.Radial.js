@@ -64,7 +64,7 @@ Layouts.Radial = new Class({
         //get max dim
         for ( var i=0, l=propArray.length; i < l; i++) {
           var pi = propArray[i], dim = sib.getData('dim', pi);
-          maxDim[pi] = !!maxDim[pi]? (dim > maxDim[pi]? dim : maxDim[pi]) : dim;
+          maxDim[pi] = (pi in maxDim)? (dim > maxDim[pi]? dim : maxDim[pi]) : dim;
         }
         subnodes.push(sib);
       }, "ignore");
@@ -107,7 +107,7 @@ Layouts.Radial = new Class({
    */
   setAngularWidthForNodes : function(prop) {
     this.graph.eachBFS(this.root, function(elem, i) {
-      var diamValue = elem.getData('angularWidth', prop[0]);
+      var diamValue = elem.getData('angularWidth', prop[0]) || 5;
       elem._angularWidth = diamValue / i;
     }, "ignore");
   },

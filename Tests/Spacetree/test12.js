@@ -37,7 +37,7 @@ function init(){
                 name: "2.83"
             }, {
                 id: "node2104",
-                name: "2.104",
+                name: "2.104"
             }, {
                 id: "node2109",
                 name: "2.109"

@@ -81,7 +81,7 @@ def make_example(viz, ex, i, count, fancy):
 
 #create syntax highlighted code page
     if fancy:
-        begin, end, res = re.compile("[\s]*//init ([a-zA-Z0-9]+)[\s]*"), re.compile('[\s]*//end[\s]*'), []
+        begin, end, res = re.compile("[\s]*//[\s]?init ([a-zA-Z0-9]+)[\s]*"), re.compile('[\s]*//[\s]?end[\s]*'), []
         ftest = open('Tests/' + viz + '/test' + stri + '.js', 'r')
         for l in ftest:
             if begin.match(l):

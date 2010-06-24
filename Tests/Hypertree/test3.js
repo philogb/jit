@@ -504,7 +504,7 @@ function init(){
             fps: fps,
             hideLabels:hideLabels,
             onComplete: function(){
-                N = ht.graph.getClosestNodeToOrigin('pos');
+                N = ht.graph.getClosestNodeToOrigin('current');
             }
         });
         ht.controller.onAfterCompute();

@@ -530,14 +530,14 @@ $.event = {
     win = win || window;
     e = e || win.event;
     var doc = win.document;
-    doc = doc.html || doc.body;
+    doc = doc.documentElement || doc.body;
     //TODO(nico): make touch event handling better
     if(e.touches && e.touches.length) {
       e = e.touches[0];
     }
     var page = {
-      x: e.pageX || e.clientX + doc.scrollLeft,
-      y: e.pageY || e.clientY + doc.scrollTop
+      x: e.pageX || (e.clientX + doc.scrollLeft),
+      y: e.pageY || (e.clientY + doc.scrollTop)
     };
     return page;
   },

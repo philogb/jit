@@ -698,7 +698,7 @@ function init(){
               duration: 1000,
               transition: $jit.Trans.Quart.easeInOut
             });
-          },
+          }
         },
         // Only used when Label type is 'HTML' or 'SVG'
         // Add text to the labels. 

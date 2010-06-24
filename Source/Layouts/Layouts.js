@@ -47,7 +47,7 @@ var NodeDim = {
         var offsetWidth  = label.offsetWidth,
             offsetHeight = label.offsetHeight;
         var type = n.getData('type');
-        if(['circle', 'square', 'triangle', 'star'].indexOf(type) === -1) {
+        if($.indexOf(['circle', 'square', 'triangle', 'star'], type) === -1) {
           n.setData('width', offsetWidth);
           n.setData('height', offsetHeight);
         } else {

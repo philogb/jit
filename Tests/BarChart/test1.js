@@ -47,7 +47,7 @@ function init(){
       {
         'label': 'date C',
         'values': [26, 40, 85, 28]
-      }],
+      }]
       
   };
     //init BarChart
