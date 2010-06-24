@@ -80,7 +80,7 @@ $jit.ST.Plot.NodeTypes.implement({
               ctx.fillText(valAcum, x + acum - config.labelOffset, y + height/2);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(valAcum, x + width/2, y - height - label.size/2 - config.labelOffset, width);
+              ctx.fillText(valAcum, x + width/2, y - height - label.size/2 - config.labelOffset);
             }
           }
           if(showLabels(node.name, valAcum, node)) {
@@ -88,10 +88,10 @@ $jit.ST.Plot.NodeTypes.implement({
               ctx.textAlign = 'center';
               ctx.translate(x - config.labelOffset - label.size/2, y + height/2);
               ctx.rotate(Math.PI / 2);
-              ctx.fillText(node.name, 0, 0, width);
+              ctx.fillText(node.name, 0, 0);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset, width);
+              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset);
             }
           }
           ctx.restore();
@@ -226,7 +226,7 @@ $jit.ST.Plot.NodeTypes.implement({
               ctx.fillText(valAcum, x + Math.max.apply(null, dimArray) - config.labelOffset, y + height/2);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(valAcum, x + width/2, y - Math.max.apply(null, dimArray) - label.size/2 - config.labelOffset, width);
+              ctx.fillText(valAcum, x + width/2, y - Math.max.apply(null, dimArray) - label.size/2 - config.labelOffset);
             }
           }
           if(showLabels(node.name, valAcum, node)) {
@@ -234,10 +234,10 @@ $jit.ST.Plot.NodeTypes.implement({
               ctx.textAlign = 'center';
               ctx.translate(x - config.labelOffset - label.size/2, y + height/2);
               ctx.rotate(Math.PI / 2);
-              ctx.fillText(node.name, 0, 0, width);
+              ctx.fillText(node.name, 0, 0);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset, width);
+              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset);
             }
           }
           ctx.restore();
