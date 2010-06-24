@@ -725,6 +725,11 @@ $jit.BarChart = new Class({
     return maxValue;
   },
   
+  setBarType: function(type) {
+    this.config.type = type;
+    this.st.config.Node.type = 'barchart-' + type.split(':')[0];
+  },
+  
   normalizeDims: function() {
     //number of elements
     var root = this.st.graph.getNode(this.st.root), l=0;
