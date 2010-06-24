@@ -33,6 +33,7 @@ $jit.Sunburst.Plot.NodeTypes.implement({
       if (colorArray && dimArray && stringArray) {
         for (var i=0, l=dimArray.length, acum=0, valAcum=0; i<l; i++) {
           var dimi = dimArray[i], colori = colorArray[i % colorLength];
+          if(dimi <= 0) continue;
           ctx.fillStyle = ctx.strokeStyle = colori;
           if(gradient && dimi) {
             var radialGradient = ctx.createRadialGradient(xpos, ypos, acum + config.sliceOffset,
