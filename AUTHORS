@@ -1,0 +1,16 @@
+##
+## This should be a somewhat complete list of people that have
+## contributed to the JavaScript InfoVis Toolkit project. The fields are: name
+## (N), email (E), web-address (W), description (D).
+##
+
+N: Nicolas Garcia Belmonte
+E: philogb@gmail.com
+W: http://blog.thejit.org/
+D: Creator and main author.
+
+N: Pablo Flouret
+E: quuxbaz@gmail.com
+W: http://quuxbaz.com.ar/
+D: Mostly Icicle code.
+
