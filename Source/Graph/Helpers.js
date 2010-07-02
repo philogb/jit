@@ -372,174 +372,264 @@ var NodeHelper = {
   Contains rendering primitives for simple edge shapes.
 */
 var EdgeHelper = {
+  /*
+    Object: EdgeHelper.line
+  */
+  'line': {
+      /*
+      Method: render
+      
+      Renders a line into the canvas.
+      
+      Parameters:
+      
+      from - (object) An *x*, *y* object with the starting position of the line.
+      to - (object) An *x*, *y* object with the ending position of the line.
+      canvas - (object) A <Canvas> instance.
+      
+      Example:
+      (start code js)
+      EdgeHelper.line.render({ x: 10, y: 30 }, { x: 10, y: 50 }, viz.canvas);
+      (end code)
+      */
+      'render': function(from, to, canvas){
+        var ctx = canvas.getCtx();
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.stroke();
+      },
+      /*
+      Method: contains
+      
+      Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+      
+      Parameters:
+      
+      posFrom - (object) An *x*, *y* object with a <Graph.Node> position.
+      posTo - (object) An *x*, *y* object with a <Graph.Node> position.
+      pos - (object) An *x*, *y* object with the position to check.
+      epsilon - (number) The dimension of the shape.
+      
+      Example:
+      (start code js)
+      EdgeHelper.line.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, { x: 15, y: 35 }, 30);
+      (end code)
+      */
+      'contains': function(posFrom, posTo, pos, epsilon) {
+        var min = Math.min, 
+            max = Math.max,
+            minPosX = min(posFrom.x, posTo.x),
+            maxPosX = max(posFrom.x, posTo.x),
+            minPosY = min(posFrom.y, posTo.y),
+            maxPosY = max(posFrom.y, posTo.y);
+        
+        if(pos.x >= minPosX && pos.x <= maxPosX 
+            && pos.y >= minPosY && pos.y <= maxPosY) {
+          if(Math.abs(posTo.x - posFrom.x) <= epsilon) {
+            return true;
+          }
+          var dist = (posTo.y - posFrom.y) / (posTo.x - posFrom.x) * (pos.x - posFrom.x) + posFrom.y;
+          return Math.abs(dist - pos.y) <= epsilon;
+        }
+        return false;
+      }
+    },
+  /*
+    Object: EdgeHelper.arrow
+  */
+  'arrow': {
+      /*
+      Method: render
+      
+      Renders an arrow into the canvas.
+      
+      Parameters:
+      
+      from - (object) An *x*, *y* object with the starting position of the arrow.
+      to - (object) An *x*, *y* object with the ending position of the arrow.
+      dim - (number) The dimension of the arrow.
+      swap - (boolean) Whether to set the arrow pointing to the starting position or the ending position.
+      canvas - (object) A <Canvas> instance.
+      
+      Example:
+      (start code js)
+      EdgeHelper.arrow.render({ x: 10, y: 30 }, { x: 10, y: 50 }, 13, false, viz.canvas);
+      (end code)
+      */
+    'render': function(from, to, dim, swap, canvas){
+        var ctx = canvas.getCtx();
+        // invert edge direction
+        if (swap) {
+          var tmp = from;
+          from = to;
+          to = tmp;
+        }
+        var vect = new Complex(to.x - from.x, to.y - from.y);
+        vect.$scale(dim / vect.norm());
+        var intermediatePoint = new Complex(to.x - vect.x, to.y - vect.y),
+            normal = new Complex(-vect.y / 2, vect.x / 2),
+            v1 = intermediatePoint.add(normal), 
+            v2 = intermediatePoint.$add(normal.$scale(-1));
+        
+        ctx.beginPath();
+        ctx.moveTo(from.x, from.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(v1.x, v1.y);
+        ctx.lineTo(v2.x, v2.y);
+        ctx.lineTo(to.x, to.y);
+        ctx.closePath();
+        ctx.fill();
+    },
     /*
-    Method: line
+    Method: contains
     
-    Renders a line into the canvas.
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
     
     Parameters:
     
-    from - (object) An *x*, *y* object with the starting position of the line.
-    to - (object) An *x*, *y* object with the ending position of the line.
+    posFrom - (object) An *x*, *y* object with a <Graph.Node> position.
+    posTo - (object) An *x*, *y* object with a <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    epsilon - (number) The dimension of the shape.
+    
+    Example:
+    (start code js)
+    EdgeHelper.arrow.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, { x: 15, y: 35 }, 30);
+    (end code)
+    */
+    'contains': function(posFrom, posTo, pos, epsilon) {
+      return EdgeHelper.line.contains(posFrom, posTo, pos, epsilon);
+    }
+  },
+  /*
+    Object: EdgeHelper.hyperline
+  */
+  'hyperline': {
+    /*
+    Method: render
+    
+    Renders a hyperline into the canvas. A hyperline are the lines drawn for the <Hypertree> visualization.
+    
+    Parameters:
+    
+    from - (object) An *x*, *y* object with the starting position of the hyperline. *x* and *y* must belong to [0, 1).
+    to - (object) An *x*, *y* object with the ending position of the hyperline. *x* and *y* must belong to [0, 1).
+    r - (number) The scaling factor.
     canvas - (object) A <Canvas> instance.
     
     Example:
     (start code js)
-    EdgeHelper.line({ x: 10, y: 30 }, { x: 10, y: 50 }, viz.canvas);
+    EdgeHelper.hyperline.render({ x: 10, y: 30 }, { x: 10, y: 50 }, 100, viz.canvas);
     (end code)
     */
-  'line': function(from, to, canvas){
-    var ctx = canvas.getCtx();
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.stroke();
-  },
-  /*
-  Method: arrow
-  
-  Renders an arrow into the canvas.
-  
-  Parameters:
-  
-  from - (object) An *x*, *y* object with the starting position of the arrow.
-  to - (object) An *x*, *y* object with the ending position of the arrow.
-  dim - (number) The dimension of the arrow.
-  swap - (boolean) Whether to set the arrow pointing to the starting position or the ending position.
-  canvas - (object) A <Canvas> instance.
-  
-  Example:
-  (start code js)
-  EdgeHelper.arrow({ x: 10, y: 30 }, { x: 10, y: 50 }, 13, false, viz.canvas);
-  (end code)
-  */
-  'arrow': function(from, to, dim, swap, canvas){
-    var ctx = canvas.getCtx();
-    // invert edge direction
-    if (swap) {
-      var tmp = from;
-      from = to;
-      to = tmp;
-    }
-    var vect = new Complex(to.x - from.x, to.y - from.y);
-    vect.$scale(dim / vect.norm());
-    var intermediatePoint = new Complex(to.x - vect.x, to.y - vect.y),
-        normal = new Complex(-vect.y / 2, vect.x / 2),
-        v1 = intermediatePoint.add(normal), 
-        v2 = intermediatePoint.$add(normal.$scale(-1));
-    
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(v1.x, v1.y);
-    ctx.lineTo(v2.x, v2.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.closePath();
-    ctx.fill();
-  },
-  /*
-  Method: hyperline
-  
-  Renders a hyperline into the canvas. A hyperline are the lines drawn for the <Hypertree> visualization.
-  
-  Parameters:
-  
-  from - (object) An *x*, *y* object with the starting position of the hyperline. *x* and *y* must belong to [0, 1).
-  to - (object) An *x*, *y* object with the ending position of the hyperline. *x* and *y* must belong to [0, 1).
-  r - (number) The scaling factor.
-  canvas - (object) A <Canvas> instance.
-  
-  Example:
-  (start code js)
-  EdgeHelper.hyperline({ x: 10, y: 30 }, { x: 10, y: 50 }, 100, viz.canvas);
-  (end code)
-  */
-  'hyperline': function(from, to, r, canvas){
-    var ctx = canvas.getCtx();  
-    var centerOfCircle = computeArcThroughTwoPoints(from, to);
-    if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
-        || centerOfCircle.ratio < 0) {
-      ctx.beginPath();
-      ctx.moveTo(from.x * r, from.y * r);
-      ctx.lineTo(to.x * r, to.y * r);
-      ctx.stroke();
-    } else {
-      var angleBegin = Math.atan2(to.y - centerOfCircle.y, to.x
-          - centerOfCircle.x);
-      var angleEnd = Math.atan2(from.y - centerOfCircle.y, from.x
-          - centerOfCircle.x);
-      var sense = sense(angleBegin, angleEnd);
-      ctx.beginPath();
-      ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio
-          * r, angleBegin, angleEnd, sense);
-      ctx.stroke();
-    }
-    /*      
-      Calculates the arc parameters through two points.
+    'render': function(from, to, r, canvas){
+      var ctx = canvas.getCtx();  
+      var centerOfCircle = computeArcThroughTwoPoints(from, to);
+      if (centerOfCircle.a > 1000 || centerOfCircle.b > 1000
+          || centerOfCircle.ratio < 0) {
+        ctx.beginPath();
+        ctx.moveTo(from.x * r, from.y * r);
+        ctx.lineTo(to.x * r, to.y * r);
+        ctx.stroke();
+      } else {
+        var angleBegin = Math.atan2(to.y - centerOfCircle.y, to.x
+            - centerOfCircle.x);
+        var angleEnd = Math.atan2(from.y - centerOfCircle.y, from.x
+            - centerOfCircle.x);
+        var sense = sense(angleBegin, angleEnd);
+        ctx.beginPath();
+        ctx.arc(centerOfCircle.x * r, centerOfCircle.y * r, centerOfCircle.ratio
+            * r, angleBegin, angleEnd, sense);
+        ctx.stroke();
+      }
+      /*      
+        Calculates the arc parameters through two points.
+        
+        More information in <http://en.wikipedia.org/wiki/Poincar%C3%A9_disc_model#Analytic_geometry_constructions_in_the_hyperbolic_plane> 
       
-      More information in <http://en.wikipedia.org/wiki/Poincar%C3%A9_disc_model#Analytic_geometry_constructions_in_the_hyperbolic_plane> 
+        Parameters:
+      
+        p1 - A <Complex> instance.
+        p2 - A <Complex> instance.
+        scale - The Disk's diameter.
+      
+        Returns:
+      
+        An object containing some arc properties.
+      */
+      function computeArcThroughTwoPoints(p1, p2){
+        var aDen = (p1.x * p2.y - p1.y * p2.x), bDen = aDen;
+        var sq1 = p1.squaredNorm(), sq2 = p2.squaredNorm();
+        // Fall back to a straight line
+        if (aDen == 0)
+          return {
+            x: 0,
+            y: 0,
+            ratio: -1
+          };
     
-      Parameters:
-    
-      p1 - A <Complex> instance.
-      p2 - A <Complex> instance.
-      scale - The Disk's diameter.
-    
-      Returns:
-    
-      An object containing some arc properties.
-    */
-    function computeArcThroughTwoPoints(p1, p2){
-      var aDen = (p1.x * p2.y - p1.y * p2.x), bDen = aDen;
-      var sq1 = p1.squaredNorm(), sq2 = p2.squaredNorm();
-      // Fall back to a straight line
-      if (aDen == 0)
-        return {
-          x: 0,
-          y: 0,
-          ratio: -1
+        var a = (p1.y * sq2 - p2.y * sq1 + p1.y - p2.y) / aDen;
+        var b = (p2.x * sq1 - p1.x * sq2 + p2.x - p1.x) / bDen;
+        var x = -a / 2;
+        var y = -b / 2;
+        var squaredRatio = (a * a + b * b) / 4 - 1;
+        // Fall back to a straight line
+        if (squaredRatio < 0)
+          return {
+            x: 0,
+            y: 0,
+            ratio: -1
+          };
+        var ratio = Math.sqrt(squaredRatio);
+        var out = {
+          x: x,
+          y: y,
+          ratio: ratio > 1000? -1 : ratio,
+          a: a,
+          b: b
         };
-  
-      var a = (p1.y * sq2 - p2.y * sq1 + p1.y - p2.y) / aDen;
-      var b = (p2.x * sq1 - p1.x * sq2 + p2.x - p1.x) / bDen;
-      var x = -a / 2;
-      var y = -b / 2;
-      var squaredRatio = (a * a + b * b) / 4 - 1;
-      // Fall back to a straight line
-      if (squaredRatio < 0)
-        return {
-          x: 0,
-          y: 0,
-          ratio: -1
-        };
-      var ratio = Math.sqrt(squaredRatio);
-      var out = {
-        x: x,
-        y: y,
-        ratio: ratio > 1000? -1 : ratio,
-        a: a,
-        b: b
-      };
-  
-      return out;
-    }
-    /*      
-      Sets angle direction to clockwise (true) or counterclockwise (false). 
-       
-      Parameters: 
     
-         angleBegin - Starting angle for drawing the arc. 
-         angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
+        return out;
+      }
+      /*      
+        Sets angle direction to clockwise (true) or counterclockwise (false). 
+         
+        Parameters: 
+      
+           angleBegin - Starting angle for drawing the arc. 
+           angleEnd - The HyperLine will be drawn from angleBegin to angleEnd. 
+      
+        Returns: 
+      
+           A Boolean instance describing the sense for drawing the HyperLine. 
+      */
+      function sense(angleBegin, angleEnd){
+        return (angleBegin < angleEnd)? ((angleBegin + Math.PI > angleEnd)? false
+            : true) : ((angleEnd + Math.PI > angleBegin)? true : false);
+      }
+    },
+    /*
+    Method: contains
     
-      Returns: 
+    Not Implemented
     
-         A Boolean instance describing the sense for drawing the HyperLine. 
+    Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+    
+    Parameters:
+    
+    posFrom - (object) An *x*, *y* object with a <Graph.Node> position.
+    posTo - (object) An *x*, *y* object with a <Graph.Node> position.
+    pos - (object) An *x*, *y* object with the position to check.
+    epsilon - (number) The dimension of the shape.
+    
+    Example:
+    (start code js)
+    EdgeHelper.hyperline.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, { x: 15, y: 35 }, 30);
+    (end code)
     */
-    function sense(angleBegin, angleEnd){
-      return (angleBegin < angleEnd)? ((angleBegin + Math.PI > angleEnd)? false
-          : true) : ((angleEnd + Math.PI > angleBegin)? true : false);
-    }
+    'contains': $.lambda(false)
   }
 };

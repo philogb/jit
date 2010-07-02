@@ -62,6 +62,7 @@ var MouseEventsManager = new Class({
     this.viz = viz;
     this.canvas = viz.canvas;
     this.node = false;
+    this.edge = false;
     this.registeredObjects = [];
     this.attachEvents();
   },
@@ -131,12 +132,15 @@ var MouseEventsManager = new Class({
     var that = this,
         graph = this.viz.graph,
         fx = this.viz.fx,
-        types = fx.nodeTypes;
+        ntypes = fx.nodeTypes,
+        etypes = fx.edgeTypes;
     return {
       pos: false,
       node: false,
+      edge: false,
       contains: false,
       getNodeCalled: false,
+      getEdgeCalled: false,
       getPos: function() {
         if(this.pos) return this.pos;
         var canvas = that.viz.canvas,
@@ -156,18 +160,9 @@ var MouseEventsManager = new Class({
       getNode: function() {
         if(this.getNodeCalled) return this.node;
         this.getNodeCalled = true;
-        if(that.node) {
-          var n = graph.getNode(that.node),
-              geom = n && types[n.getData('type')],
-              contains = geom && geom.contains && geom.contains.call(fx, n, this.getPos());
-          if(contains) {
-            this.contains = contains;
-            return this.node = n;
-          }
-        }
         for(var id in graph.nodes) {
           var n = graph.nodes[id],
-              geom = n && types[n.getData('type')],
+              geom = n && ntypes[n.getData('type')],
               contains = geom && geom.contains && geom.contains.call(fx, n, this.getPos());
           if(contains) {
             this.contains = contains;
@@ -175,6 +170,26 @@ var MouseEventsManager = new Class({
           }
         }
         return that.node = this.node = false;
+      },
+      getEdge: function() {
+        if(this.getEdgeCalled) return this.edge;
+        this.getEdgeCalled = true;
+        var hashset = {};
+        for(var id in graph.edges) {
+          var edgeFrom = graph.edges[id];
+          hashset[id] = true;
+          for(var edgeId in edgeFrom) {
+            if(edgeId in hashset) continue;
+            var e = edgeFrom[edgeId],
+                geom = e && etypes[e.getData('type')],
+                contains = geom && geom.contains && geom.contains.call(fx, e, this.getPos());
+            if(contains) {
+              this.contains = contains;
+              return that.edge = this.edge = e;
+            }
+          }
+        }
+        return that.edge = this.edge = false;
       },
       getContains: function() {
         if(this.getNodeCalled) return this.contains;
@@ -218,12 +233,16 @@ Extras.Classes.Events = new Class({
   
   initializePost: function() {
     this.fx = this.viz.fx;
-    this.types = this.viz.fx.nodeTypes;
-    this.hoveredNode = false;
-    this.pressedNode = false;
-    this.touchedNode = false;
+    this.ntypes = this.viz.fx.nodeTypes;
+    this.etypes = this.viz.fx.edgeTypes;
+    
+    this.hovered = false;
+    this.pressed = false;
+    this.touched = false;
+
     this.touchMoved = false;
     this.moved = false;
+    
   },
   
   setAsProperty: $.lambda(true),
@@ -231,17 +250,17 @@ Extras.Classes.Events = new Class({
   onMouseUp: function(e, win, event, isRightClick) {
     var evt = $.event.get(e, win);
     if(isRightClick) {
-      this.config.onRightClick(this.hoveredNode, event, evt);
+      this.config.onRightClick(this.hovered, event, evt);
     } else {
-      this.config.onClick(this.pressedNode, event, evt);
+      this.config.onClick(this.pressed, event, evt);
     }
-    if(this.pressedNode) {
+    if(this.pressed) {
       if(this.moved) {
-        this.config.onDragEnd(this.pressedNode, event, evt);
+        this.config.onDragEnd(this.pressed, event, evt);
       } else {
-        this.config.onDragCancel(this.pressedNode, event, evt);
+        this.config.onDragCancel(this.pressed, event, evt);
       }
-      this.pressedNode = this.moved = false;
+      this.pressed = this.moved = false;
     }
   },
 
@@ -251,7 +270,7 @@ Extras.Classes.Events = new Class({
    if(this.dom && (label = this.isLabel(e, win))) {
      this.config.onMouseLeave(this.viz.graph.getNode(label.id),
                               event, evt);
-     this.hoveredNode = false;
+     this.hovered = false;
      return;
    }
    //mouseout canvas
@@ -261,10 +280,10 @@ Extras.Classes.Events = new Class({
      if(canvasWidget == rt.parentNode) return;
      rt = rt.parentNode;
    }
-   if(this.hoveredNode) {
-     this.config.onMouseLeave(this.hoveredNode,
+   if(this.hovered) {
+     this.config.onMouseLeave(this.hovered,
          event, evt);
-     this.hoveredNode = false;
+     this.hovered = false;
    }
   },
   
@@ -272,26 +291,26 @@ Extras.Classes.Events = new Class({
     //mouseover a label
     var evt = $.event.get(e, win), label;
     if(this.dom && (label = this.isLabel(e, win))) {
-      this.hoveredNode = this.viz.graph.getNode(label.id);
-      this.config.onMouseEnter(this.hoveredNode,
+      this.hovered = this.viz.graph.getNode(label.id);
+      this.config.onMouseEnter(this.hovered,
                                event, evt);
     }
   },
   
   onMouseMove: function(e, win, event) {
    var label, evt = $.event.get(e, win);
-   if(this.pressedNode) {
+   if(this.pressed) {
      this.moved = true;
-     this.config.onDragMove(this.pressedNode, event, evt);
+     this.config.onDragMove(this.pressed, event, evt);
      return;
    }
    if(this.dom) {
-     this.config.onMouseMove(this.hoveredNode,
+     this.config.onMouseMove(this.hovered,
          event, evt);
    } else {
-     if(this.hoveredNode) {
-       var hn = this.hoveredNode;
-       var geom = this.types[hn.getData('type')];
+     if(this.hovered) {
+       var hn = this.hovered;
+       var geom = hn.nodeFrom? this.etypes[hn.getData('type')] : this.ntypes[hn.getData('type')];
        var contains = geom && geom.contains 
          && geom.contains.call(this.fx, hn, event.getPos());
        if(contains) {
@@ -299,11 +318,11 @@ Extras.Classes.Events = new Class({
          return;
        } else {
          this.config.onMouseLeave(hn, event, evt);
-         this.hoveredNode = false;
+         this.hovered = false;
        }
      }
-     if(this.hoveredNode = event.getNode()) {
-       this.config.onMouseEnter(this.hoveredNode, event, evt);
+     if(this.hovered = event.getNode() || (this.config.enableForEdges && event.getEdge())) {
+       this.config.onMouseEnter(this.hovered, event, evt);
      } else {
        this.config.onMouseMove(false, event, evt);
      }
@@ -316,33 +335,33 @@ Extras.Classes.Events = new Class({
   
   onMouseDown: function(e, win, event) {
     var evt = $.event.get(e, win);
-    this.pressedNode = event.getNode();
-    this.config.onDragStart(this.pressedNode, event, evt);
+    this.pressed = event.getNode() || (this.config.enableForEdges && event.getEdge());
+    this.config.onDragStart(this.pressed, event, evt);
   },
   
   onTouchStart: function(e, win, event) {
     var evt = $.event.get(e, win);
-    this.touchedNode = event.getNode();
-    this.config.onTouchStart(this.touchedNode, event, evt);
+    this.touched = event.getNode() || (this.config.enableForEdges && event.getEdge());
+    this.config.onTouchStart(this.touched, event, evt);
   },
   
   onTouchMove: function(e, win, event) {
     var evt = $.event.get(e, win);
-    if(this.touchedNode) {
+    if(this.touched) {
       this.touchMoved = true;
-      this.config.onTouchMove(this.touchedNode, event, evt);
+      this.config.onTouchMove(this.touched, event, evt);
     }
   },
   
   onTouchEnd: function(e, win, event) {
     var evt = $.event.get(e, win);
-    if(this.touchedNode) {
+    if(this.touched) {
       if(this.touchMoved) {
-        this.config.onTouchEnd(this.touchedNode, event, evt);
+        this.config.onTouchEnd(this.touched, event, evt);
       } else {
-        this.config.onTouchCancel(this.touchedNode, event, evt);
+        this.config.onTouchCancel(this.touched, event, evt);
       }
-      this.touchedNode = this.touchMoved = false;
+      this.touched = this.touchMoved = false;
     }
   }
 });

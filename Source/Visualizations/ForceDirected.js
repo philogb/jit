@@ -521,27 +521,45 @@ $jit.ForceDirected.$extend = true;
   
     (start code js)
       ForceDirected.Plot.EdgeTypes.implement({
-        'mySpecialType': function(adj, canvas) {
-          //print your custom edge to canvas
-        }
+        'mySpecialType': {
+          'render': function(adj, canvas) {
+            //print your custom edge to canvas
+          },
+          'contains': function(adj, pos) {
+            //return true if pos is inside the edge or false otherwise
+          }
       });
     (end code)
   
   */
   ForceDirected.Plot.EdgeTypes = new Class({
     'none': $.empty,
-    'line': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(true),
-          to = adj.nodeTo.pos.getc(true);
-      this.edgeHelper.line(from, to, canvas);
+    'line': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true);
+        this.edgeHelper.line.render(from, to, canvas);
+      },
+      'contains': function(adj, pos) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true);
+        return this.edgeHelper.line.contains(from, to, pos, 10);
+      }
     },
-    'arrow': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(true),
-          to = adj.nodeTo.pos.getc(true),
-          dim = adj.getData('dim'),
-          direction = adj.data.$direction,
-          inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
-      this.edgeHelper.arrow(from, to, dim, inv, canvas);
+    'arrow': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true),
+            dim = adj.getData('dim'),
+            direction = adj.data.$direction,
+            inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+        this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
+      },
+      'contains': function(adj, pos) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true);
+        return this.edgeHelper.arrow.contains(from, to, pos, 10);
+      }
     }
   });
 

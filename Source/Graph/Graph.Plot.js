@@ -620,7 +620,7 @@ Graph.Plot = {
           ctx[s] = adj.getCanvasStyle(s);
         }
 
-        this.edgeTypes[f].call(this, adj, canvas, animating);
+        this.edgeTypes[f].render.call(this, adj, canvas, animating);
       }
     }    
   
