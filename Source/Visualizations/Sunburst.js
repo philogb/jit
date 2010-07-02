@@ -683,24 +683,41 @@ $jit.Sunburst.$extend = true;
   */
   Sunburst.Plot.EdgeTypes = new Class({
     'none': $.empty,
-    'line': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(true),
-          to = adj.nodeTo.pos.getc(true);
-      this.edgeHelper.line(from, to, canvas);
+    'line': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true);
+        this.edgeHelper.line.render(from, to, canvas);
+      },
+      'contains': function(adj, pos) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true);
+        return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);
+      }
     },
-    'arrow': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(true),
-          to = adj.nodeTo.pos.getc(true),
-          dim = adj.getData('dim'),
-          direction = adj.data.$direction,
-          inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
-      this.edgeHelper.arrow(from, to, dim, inv, canvas);
+    'arrow': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true),
+            dim = adj.getData('dim'),
+            direction = adj.data.$direction,
+            inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+        this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
+      },
+      'contains': function(adj, pos) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true);
+        return this.edgeHelper.arrow.contains(from, to, pos, this.edge.epsilon);
+      }
     },
-    'hyperline': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(),
-          to = adj.nodeTo.pos.getc(),
-          dim = Math.max(from.norm(), to.norm());
-      this.edgeHelper.hyperline(from.$scale(1/dim), to.$scale(1/dim), dim, canvas);
+    'hyperline': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(),
+            to = adj.nodeTo.pos.getc(),
+            dim = Math.max(from.norm(), to.norm());
+        this.edgeHelper.hyperline.render(from.$scale(1/dim), to.$scale(1/dim), dim, canvas);
+      },
+      'contains': $.lambda(false) //TODO(nico): Implement this!
     }
   });
 

@@ -701,26 +701,45 @@ $jit.Hypertree.$extend = true;
   */
   Hypertree.Plot.EdgeTypes = new Class({
     'none': $.empty,
-    'line': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(true),
+    'line': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(true),
           to = adj.nodeTo.pos.getc(true),
           r = adj.nodeFrom.scale;
-      this.edgeHelper.line({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, canvas);
+          this.edgeHelper.line.render({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, canvas);
+      },
+      'contains': function(adj, pos) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true),
+            r = adj.nodeFrom.scale;
+            this.edgeHelper.line.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
+      }
     },
-    'arrow': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(true),
-          to = adj.nodeTo.pos.getc(true),
-          r = adj.nodeFrom.scale,
-          dim = adj.getData('dim'),
-          direction = adj.data.$direction,
-          inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
-      this.edgeHelper.arrow({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, dim, inv, canvas);
+    'arrow': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true),
+            r = adj.nodeFrom.scale,
+            dim = adj.getData('dim'),
+            direction = adj.data.$direction,
+            inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
+        this.edgeHelper.arrow.render({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, dim, inv, canvas);
+      },
+      'contains': function(adj, pos) {
+        var from = adj.nodeFrom.pos.getc(true),
+            to = adj.nodeTo.pos.getc(true),
+            r = adj.nodeFrom.scale;
+        this.edgeHelper.arrow.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
+      }
     },
-    'hyperline': function(adj, canvas) {
-      var from = adj.nodeFrom.pos.getc(),
-          to = adj.nodeTo.pos.getc(),
-          dim = this.viz.getRadius();
-      this.edgeHelper.hyperline(from, to, dim, canvas);
+    'hyperline': {
+      'render': function(adj, canvas) {
+        var from = adj.nodeFrom.pos.getc(),
+            to = adj.nodeTo.pos.getc(),
+            dim = this.viz.getRadius();
+        this.edgeHelper.hyperline.render(from, to, dim, canvas);
+      },
+      'contains': $.lambda(false)
     }
   });
 

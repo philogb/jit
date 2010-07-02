@@ -543,7 +543,7 @@ $jit.ForceDirected.$extend = true;
       'contains': function(adj, pos) {
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true);
-        return this.edgeHelper.line.contains(from, to, pos, 10);
+        return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);
       }
     },
     'arrow': {
@@ -558,7 +558,7 @@ $jit.ForceDirected.$extend = true;
       'contains': function(adj, pos) {
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true);
-        return this.edgeHelper.arrow.contains(from, to, pos, 10);
+        return this.edgeHelper.arrow.contains(from, to, pos, this.edge.epsilon);
       }
     }
   });
