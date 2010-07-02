@@ -178,10 +178,13 @@ $jit.Graph = new Class({
     if(!this.hasNode(obj.id)) { this.addNode(obj); }
     if(!this.hasNode(obj2.id)) { this.addNode(obj2); }
     obj = this.nodes[obj.id]; obj2 = this.nodes[obj2.id];
-    var adjsObj = this.edges[obj.id] = this.edges[obj.id] || {};
-    var adjsObj2 = this.edges[obj2.id] = this.edges[obj2.id] || {};
-    adjsObj[obj2.id] = adjsObj2[obj.id] = new Graph.Adjacence(obj, obj2, data, this.Edge, this.Label);
-    return adjsObj[obj2.id];
+    if(!obj.adjacentTo(obj2)) {
+      var adjsObj = this.edges[obj.id] = this.edges[obj.id] || {};
+      var adjsObj2 = this.edges[obj2.id] = this.edges[obj2.id] || {};
+      adjsObj[obj2.id] = adjsObj2[obj.id] = new Graph.Adjacence(obj, obj2, data, this.Edge, this.Label);
+      return adjsObj[obj2.id];
+    }
+    return this.edges[obj.id][obj2.id];
  },
 
     /*
