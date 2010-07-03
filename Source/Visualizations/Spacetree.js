@@ -1455,8 +1455,14 @@ $jit.ST.Plot.NodeTypes = new Class({
 
   (start code js)
     ST.Plot.EdgeTypes.implement({
-      'mySpecialType': function(adj, canvas) {
-        //print your custom edge to canvas
+      'mySpecialType': {
+        'render': function(adj, canvas) {
+          //print your custom edge to canvas
+        },
+        //optional
+        'contains': function(adj, pos) {
+          //return true if pos is inside the arc or false otherwise
+        }
       }
     });
   (end code)
@@ -1494,7 +1500,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
              to = this.viz.geom.getEdge(child, 'end', orn),
              direction = adj.data.$direction,
              inv = (direction && direction.length>1 && direction[0] != node.id);
-         this.edgeHelper.arrow(from, to, dim, inv, canvas);
+         this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
        },
        'contains': function(adj, pos) {
          var orn = this.getOrientation(adj),

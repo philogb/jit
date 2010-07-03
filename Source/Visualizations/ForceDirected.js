@@ -525,9 +525,11 @@ $jit.ForceDirected.$extend = true;
           'render': function(adj, canvas) {
             //print your custom edge to canvas
           },
+          //optional
           'contains': function(adj, pos) {
-            //return true if pos is inside the edge or false otherwise
+            //return true if pos is inside the arc or false otherwise
           }
+        }
       });
     (end code)
   

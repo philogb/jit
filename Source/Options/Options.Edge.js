@@ -46,6 +46,7 @@
    lineWidth - (number) Default's *1*. Line/Edge width.
    alpha - (number) Default's *1*. The Edge's alpha value. *1* is for full opacity.
    dim - (number) Default's *15*. An extra parameter used by other complex shapes such as quadratic, bezier or arrow, to determine the shape's diameter.
+   epsilon - (number) Default's *7*. Only used when using *enableForEdges* in <Options.Events>. This dimension is used to create an area for the line where the contains method for the edge returns *true*.
    CanvasStyles - (object) Default's an empty object (i.e. {}). Attach any other canvas specific property that you'd set to the canvas context before plotting an Edge.
 
   See also:
@@ -61,6 +62,7 @@ Options.Edge = {
   lineWidth: 1,
   dim:15,
   alpha: 1,
+  epsilon: 7,
 
   //Raw canvas styles to be
   //applied to the context instance

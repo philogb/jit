@@ -22,10 +22,15 @@
      }
    });
    //implement an edge type
-   //edges do not implement the contains method
    $jit.Viz.Plot.EdgeTypes.implement({
-     'customEdgeType': function(adj, canvas) {
-       this.edgeHelper.line ...
+     'customNodeType': {
+       'render': function(node, canvas) {
+         this.edgeHelper.circle.render ...
+       },
+       //optional
+       'contains': function(node, pos) {
+         this.edgeHelper.circle.contains ...
+       }
      }
    });
    (end code)

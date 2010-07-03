@@ -507,10 +507,6 @@ function init(){
       //Add also a click handler to nodes
       onClick: function(node) {
         if(!node) return;
-        if(node.nodeFrom) {
-          console.log(node.nodeFrom.name, ' - ', node.nodeTo.name);
-          return;
-        }
         // Build the right column relations list.
         // This is done by traversing the clicked node connections.
         var html = "<h4>" + node.name + "</h4><b> connections:</b><ul><li>",

@@ -674,8 +674,14 @@ $jit.Sunburst.$extend = true;
   
     (start code js)
       Sunburst.Plot.EdgeTypes.implement({
-        'mySpecialType': function(adj, canvas) {
-          //print your custom edge to canvas
+        'mySpecialType': {
+          'render': function(adj, canvas) {
+            //print your custom edge to canvas
+          },
+          //optional
+          'contains': function(adj, pos) {
+            //return true if pos is inside the arc or false otherwise
+          }
         }
       });
     (end code)
