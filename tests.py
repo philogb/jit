@@ -742,6 +742,17 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': False
         },
-    ]
+    ],
+   'TimeGraph': [
+        {
+            'Title': 'TimeGraph Example',
+            'Description': 
+            """
+            A static TimeGraph Example.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        },
+    ]    
 
 }   

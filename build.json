@@ -62,6 +62,9 @@
     ],
     "Layouts.Icicle": [
       "Layouts"
+    ],
+    "Layouts.Grid": [
+      "Layouts"
     ]
   },
 
@@ -293,6 +296,29 @@
         "Layouts.Icicle",
         "Fx"
     ],
+
+    "TimeGraph": [
+       "Core",
+       "Options.Canvas",
+       "Options.Node",
+       "Options.Edge",
+       "Options.Fx",
+       "Options.Label",
+       "Options.Tips",
+       "Options.Navigation",
+       "Options.NodeStyles",
+       "Options.Events",
+       "Options.Controller",
+       "Extras",
+       "Canvas",
+       "Complex",
+       "Polar",
+       "Graph.Plot",
+       "Graph.Label",
+       "Loader",
+       "Layouts.Grid",
+       "Fx"
+   ],
 
     "AreaChart": [
         "Options.AreaChart",
