@@ -142,7 +142,8 @@ var MouseEventsManager = new Class({
       getNodeCalled: false,
       getEdgeCalled: false,
       getPos: function() {
-        if(this.pos) return this.pos;
+        //TODO(nico): check why this can't be cache anymore when using edge detection
+        //if(this.pos) return this.pos;
         var canvas = that.viz.canvas,
             s = canvas.getSize(),
             p = canvas.getPos(),
@@ -321,7 +322,7 @@ Extras.Classes.Events = new Class({
          this.hovered = false;
        }
      }
-     if(this.hovered = event.getNode() || (this.config.enableForEdges && event.getEdge())) {
+     if(this.hovered = (event.getNode() || (this.config.enableForEdges && event.getEdge()))) {
        this.config.onMouseEnter(this.hovered, event, evt);
      } else {
        this.config.onMouseMove(false, event, evt);
