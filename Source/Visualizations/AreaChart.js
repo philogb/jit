@@ -626,7 +626,7 @@ $jit.AreaChart = new Class({
     root.eachAdjacency(function() {
       l++;
     });
-    var maxValue = this.getMaxValue(),
+    var maxValue = this.getMaxValue() || 1,
         size = this.st.canvas.getSize(),
         config = this.config,
         offset = config.offset,

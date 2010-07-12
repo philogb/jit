@@ -473,7 +473,7 @@ $jit.PieChart = new Class({
     root.eachAdjacency(function() {
       l++;
     });
-    var maxValue = this.getMaxValue(),
+    var maxValue = this.getMaxValue() || 1,
         config = this.config,
         animate = config.animate,
         rho = this.sb.config.levelDistance;
