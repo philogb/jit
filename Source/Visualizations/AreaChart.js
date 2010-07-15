@@ -423,14 +423,21 @@ $jit.AreaChart = new Class({
           if(labels) stringArray[i] = labels[i];
         });
         n.setData('valueArray', valArray);
-        var prev = n.getData('prev');
+        var prev = n.getData('prev'),
+            next = n.getData('next'),
+            nextNode = graph.getByName(next);
         if(prev) {
           var p = graph.getByName(prev);
           var valArray = p.getData('valueArray');
           $.each(valArray, function(a, i) {
             a[1] = v.values[i];
           });
-          p.setData('valueArray', valArray);
+        }
+        if(!nextNode) {
+          var valArray = n.getData('valueArray');
+          $.each(valArray, function(a, i) {
+            a[1] = v.values[i];
+          });
         }
       }
     });
