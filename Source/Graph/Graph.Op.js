@@ -415,6 +415,10 @@ Graph.Op = {
                 that = this;
                 graph = viz.construct(json);
                 //preprocessing for nodes to delete.
+                //get node property modes to interpolate
+                var nodeModes = extraModes && ('node-property' in extraModes) 
+                  && $.map($.splat(extraModes['node-property']), 
+                      function(n) { return '$' + n; });
                 viz.graph.eachNode(function(elem) {
                   var graphNode = graph.getNode(elem.id);   
                   if(!graphNode) {
@@ -426,7 +430,7 @@ Graph.Op = {
                       //Update node data information
                       var graphNodeData = graphNode.data;
                       for(var prop in graphNodeData) {
-                        if(prop[0] == '$' && prop != '$type') {
+                        if(nodeModes && (prop in nodeModes)) {
                           elem.endData[prop] = graphNodeData[prop];
                         } else {
                           elem.data[prop] = graphNodeData[prop];
