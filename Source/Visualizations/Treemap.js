@@ -230,9 +230,7 @@ TM.Base = {
         if(config.request) that.compute();
         if(config.animate) {
           //fade nodes
-          graph.nodeList.setDataset(['current', 'end'], {
-            'alpha': [1, 0]
-          });
+          graph.nodeList.setData('alpha', 0, 'end');
           n.eachSubgraph(function(n) {
             n.setData('alpha', 1, 'end');
           }, "ignore");
@@ -330,9 +328,11 @@ TM.Base = {
           //animate the parent subtree
           that.clickedNode = clickedNode;
           //change nodes alpha
-          graph.nodeList.setDataset(['current', 'end'], {
-            'alpha': [0, 1]
-          });
+          graph.eachNode(function(n) {
+            n.setDataset(['current', 'end'], {
+              'alpha': [0, 1]
+            });
+          }, "ignore");
           previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
@@ -753,7 +753,7 @@ TM.Plot.NodeTypes = new Class( {
       }
     },
     'contains': function(node, pos) {
-      if(this.viz.clickedNode && !node.isDescendantOf(this.viz.clickedNode.id)) return false;
+      if(this.viz.clickedNode && !node.isDescendantOf(this.viz.clickedNode.id) || node.ignore) return false;
       var npos = node.pos.getc(true),
           width = node.getData('width'), 
           leaf = this.viz.leaf(node),
