@@ -753,6 +753,16 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': True
         },
+    ],    
+   'HeatMap': [
+        {
+            'Title': 'HeatMap Example',
+            'Description': 
+            """
+            A static HeatMap Example.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        },
     ]    
-
 }   
