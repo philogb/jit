@@ -13,6 +13,7 @@ $jit.HeatMap = new Class({
       },
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
+      showNodeNames: false,
       
       colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
       Node: {
@@ -133,6 +134,7 @@ HeatMap.Label.Native = new Class( {
   Implements: Graph.Label.Native,
 
   renderLabel: function(canvas, node, controller) {
+    if(!controller.showNodeNames) return;
     var ctx = canvas.getCtx(),
         width = node.getData('width'),
         height = node.getData('height');
@@ -240,7 +242,7 @@ HeatMap.Label.HTML = new Class( {
     var style = tag.style;
     style.left = labelPos.x + 'px';
     style.top = labelPos.y + 'px';
-    style.display = this.fitsInCanvas(labelPos, canvas) ? '' : 'none';
+    style.display = (this.controller.showNodeNames && this.fitsInCanvas(labelPos, canvas)) ? '' : 'none';
   
     controller.onPlaceLabel(tag, node);
   }

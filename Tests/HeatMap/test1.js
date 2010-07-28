@@ -4,7 +4,8 @@ var json = [
     "name": "event0",
     "data": {
       "$legendX": "2010-01-01",
-      "$legendY": "category0"
+      "$legendY": "category0",
+      "$color": "#ccc"
     }
   },
   {
@@ -12,7 +13,8 @@ var json = [
     "name": "event1",
     "data": {
       "$legendX": "2010-01-01",
-      "$legendY": "category2"
+      "$legendY": "category2",
+      "$color": "#456"      
     }
   },
   {
@@ -20,7 +22,8 @@ var json = [
     "name": "event2",
     "data": {
       "$legendX": "2010-01-02",
-      "$legendY": "category1"
+      "$legendY": "category1",
+      "$color": "#459"
     }
   },
   {
@@ -28,7 +31,8 @@ var json = [
     "name": "event3",
     "data": {
       "$legendX": "2010-01-02",
-      "$legendY": "category2"
+      "$legendY": "category2",
+      "$color": "#ff7"
     }
   },
   {
@@ -36,7 +40,8 @@ var json = [
     "name": "event4",
     "data": {
       "$legendX": "2010-01-03",
-      "$legendY": "category0"
+      "$legendY": "category0",
+      "$color": "#234"
     }
   },
   {
@@ -44,7 +49,8 @@ var json = [
     "name": "event5",
     "data": {
       "$legendX": "2010-01-04",
-      "$legendY": "category2"
+      "$legendY": "category2",
+      "$color": "#432"
     }
   },
   {
@@ -52,7 +58,8 @@ var json = [
     "name": "event6",
     "data": {
       "$legendX": "2010-01-05",
-      "$legendY": "category0"
+      "$legendY": "category0",
+      "$color": "#8974ac"
     }
   },
   {
@@ -60,7 +67,8 @@ var json = [
     "name": "event7",
     "data": {
       "$legendX": "2010-01-05",
-      "$legendY": "category1"
+      "$legendY": "category1",
+      "$color": "#f974af"      
     }
   },
   {
@@ -68,7 +76,8 @@ var json = [
     "name": "event8",
     "data": {
       "$legendX": "2010-01-06",
-      "$legendY": "category0"
+      "$legendY": "category0",
+      "$color": "#29acf4"
     }
   },
   {
@@ -76,7 +85,8 @@ var json = [
     "name": "event9",
     "data": {
       "$legendX": "2010-01-06",
-      "$legendY": "category1"
+      "$legendY": "category1",
+      "$color": "#459aca"
     }
   },
   {
@@ -84,7 +94,8 @@ var json = [
     "name": "event10",
     "data": {
       "$legendX": "2010-01-07",
-      "$legendY": "category1"
+      "$legendY": "category1",
+      "$color": "#888aaa"
     }
   },
   {
@@ -92,7 +103,8 @@ var json = [
     "name": "event11",
     "data": {
       "$legendX": "2010-01-08",
-      "$legendY": "category2"
+      "$legendY": "category2",
+      "$color": "#674fde"
     }
   },
   {
@@ -100,7 +112,8 @@ var json = [
     "name": "event12",
     "data": {
       "$legendX": "2010-01-09",
-      "$legendY": "category3"
+      "$legendY": "category3",
+      "$color": "#333111"
     }
   }
 ];
@@ -109,7 +122,11 @@ $jit.Canvas.Background.Grid = new $jit.Class({
   initialize: function(viz, options) {
     this.viz = viz;
     this.config = $jit.util.merge({
-      idSuffix: '-bkcanvas'
+      idSuffix: '-bkcanvas',
+      angleLegendX: 0,
+      angleLegendY: 0,
+      marginLegendX: 0,
+      marginLegendY: 0
     }, options);
   },
   resize: function(width, height, base) {
@@ -129,30 +146,59 @@ $jit.Canvas.Background.Grid = new $jit.Class({
         ly = viz.getLegendY(),
         config = viz.config,
         margin = config.margin,
-        colors = config.colors,
-        colorsLen = colors.length,
         size = base.getSize(),
         width = size.width - margin.left - margin.right,
         height = size.height - margin.top - margin.bottom,
         stripeHeight = height / (ly.length || 1),
         bandWidth = width / (lx.length || 1);
     
-    for(var i=0, l=ly.length; i<l; i++) {
-      ctx.fillStyle = colors[i % colorsLen];
-      ctx.fillRect(-size.width/2 + margin.left, -size.height/2 + i * stripeHeight + margin.top, width, stripeHeight);
-    }
     ctx.fillStyle = 'white';
     ctx.font = 'bold 12px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    if(conf.angleLegendX) {
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+    } else {
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+    }
     for(var i=0, l=lx.length; i<l; i++) {
-      ctx.fillText(lx[i], -size.width/2 + margin.left + i * bandWidth + bandWidth/2, size.height/2 - 8);
+      if(conf.angleLegendX) {
+        ctx.save();
+        ctx.translate(-size.width/2 + margin.left + i * bandWidth + bandWidth/2, 
+            size.height/2 - margin.bottom + conf.marginLegendX);
+        ctx.rotate(-conf.angleLegendX);
+        ctx.fillText(lx[i], 0, 0);
+        ctx.restore();
+      } else {
+        ctx.fillText(lx[i], -size.width/2 + margin.left + i * bandWidth + bandWidth/2, 
+            size.height/2 - margin.bottom + conf.marginLegendX);
+      }
+    }
+    if(conf.angleLegendY) {
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'bottom';
+    } else {
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+    }
+    for(var i=0, l=ly.length; i<l; i++) {
+      if(conf.angleLegendY) {
+        ctx.save();
+        ctx.translate(-size.width/2 + margin.left - conf.marginLegendY, 
+            -size.height/2 + i * stripeHeight + margin.top + stripeHeight /2);
+        ctx.rotate(-conf.angleLegendY);
+        ctx.fillText(ly[i], 0, 0);
+        ctx.restore();
+      } else {
+        ctx.fillText(ly[i], -size.width/2 + margin.left - conf.marginLegendY, 
+            -size.height/2 + i * stripeHeight + margin.top + stripeHeight /2);
+      }
     }
   }
 });
 
 function init() {
-  var tg = new $jit.HeatMap({
+  var hm = new $jit.HeatMap({
     //id of the visualization container
     injectInto: 'infovis',
     //Native canvas text styling
@@ -162,23 +208,26 @@ function init() {
       style: 'bold',
       color: '#ccc'
     },
-    Node: {
-      color: 'rgba(0, 0, 0, 0.2)'
-    },
     background: {
-      type: 'Grid'
+      type: 'Grid',
+      CanvasStyles: {
+        fillStyle: 'white',
+        font: 'bold 12px Arial'
+      },
+      angleLegendX: Math.PI/4,
+      angleLegendY: 0,
+      marginLegendX: 10,
+      marginLegendY: 10
     },
     margin: {
       top: 0,
-      left: 0,
-      bottom: 20,
+      left: 70,
+      bottom: 70,
       right: 0
-    },
-    nodeOffsetWidth: 30,
-    nodeOffsetHeight: 30
+    }
   });
 
-  tg.loadJSON(json);
-  tg.refresh();
-  tg.canvas.canvases[1].plot();
+  hm.loadJSON(json);
+  hm.refresh();
+  hm.canvas.canvases[1].plot();
 }
