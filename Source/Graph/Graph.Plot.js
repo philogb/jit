@@ -495,7 +495,10 @@ Graph.Plot = {
       opt = opt || this.viz.controller;
       opt.clearCanvas && canvas.clear();
         
-      var T = !!aGraph.getNode(id).visited;
+      var root = aGraph.getNode(id);
+      if(!root) return;
+      
+      var T = !!root.visited;
       aGraph.eachNode(function(node) {
         var nodeAlpha = node.getData('alpha');
         node.eachAdjacency(function(adj) {
