@@ -130,7 +130,8 @@ $jit.ST.Plot.NodeTypes.implement({
             return {
               'name': node.getData('stringArray')[i],
               'color': node.getData('colorArray')[i],
-              'value': node.getData('valueArray')[i]
+              'value': node.getData('valueArray')[i],
+              'label': node.name
             };
           }
         } else {
@@ -140,7 +141,8 @@ $jit.ST.Plot.NodeTypes.implement({
             return {
               'name': node.getData('stringArray')[i],
               'color': node.getData('colorArray')[i],
-              'value': node.getData('valueArray')[i]
+              'value': node.getData('valueArray')[i],
+              'label': node.name
             };
           }
         }
@@ -277,7 +279,8 @@ $jit.ST.Plot.NodeTypes.implement({
             return {
               'name': node.getData('stringArray')[i],
               'color': node.getData('colorArray')[i],
-              'value': node.getData('valueArray')[i]
+              'value': node.getData('valueArray')[i],
+              'label': node.name
             };
           }
         } else {
@@ -286,7 +289,8 @@ $jit.ST.Plot.NodeTypes.implement({
             return {
               'name': node.getData('stringArray')[i],
               'color': node.getData('colorArray')[i],
-              'value': node.getData('valueArray')[i]
+              'value': node.getData('valueArray')[i],
+              'label': node.name
             };
           }
         }
