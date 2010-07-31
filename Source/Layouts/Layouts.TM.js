@@ -289,7 +289,10 @@ Layouts.TM.Squarified = new Class({
      ch[i]._area = parentArea * chArea[i] / totalChArea;
    }
    var minimumSideValue = this.layout.horizontal()? coord.height : coord.width;
-   ch.sort(function(a, b) { return (a._area <= b._area) - (a._area >= b._area); });
+   ch.sort(function(a, b) { 
+     var diff = b._area - a._area; 
+     return diff? diff : (b.id == a.id? 0 : (b.id < a.id? 1 : -1)); 
+   });
    var initElem = [ch[0]];
    var tail = ch.slice(1);
    this.squarify(tail, initElem, minimumSideValue, coord, prop);
