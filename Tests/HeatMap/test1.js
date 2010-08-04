@@ -203,10 +203,19 @@ function init() {
     injectInto: 'infovis',
     //Native canvas text styling
     Label: {
-      type: 'Native',
+      type: 'HTML',
       size: 10,
       style: 'bold',
       color: '#ccc'
+    },
+    Events: {
+      enable: true,
+      onMouseEnter: function(node) {
+        console.log(node);
+      },
+      onClick: function(node) {
+        console.log(node);
+      }
     },
     background: {
       type: 'Grid',

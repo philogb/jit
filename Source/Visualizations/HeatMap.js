@@ -242,7 +242,8 @@ HeatMap.Label.HTML = new Class( {
     var style = tag.style;
     style.left = labelPos.x + 'px';
     style.top = labelPos.y + 'px';
-    style.display = (this.controller.showNodeNames && this.fitsInCanvas(labelPos, canvas)) ? '' : 'none';
+    style.width = ((node.getData('width') * sx) >> 0) + 'px';
+    style.height = ((node.getData('height') * sy) >> 0) + 'px';
   
     controller.onPlaceLabel(tag, node);
   }
@@ -293,7 +294,7 @@ HeatMap.Plot.NodeTypes = new Class({
       var npos = node.pos.getc(true), 
           width = node.getData('width'), 
           height = node.getData('height');
-      return this.nodeHelper.rectangle.contains(npos, pos, width, height);
+      return this.nodeHelper.rectangle.contains({x: npos.x + width/2, y: npos.y + height/2}, pos, width, height);
     }
   }
 });
