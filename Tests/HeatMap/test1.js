@@ -210,7 +210,11 @@ function init() {
     },
     Events: {
       enable: true,
+      type: 'Native',
       onMouseEnter: function(node) {
+        console.log(node);
+      },
+      onMouseLeave: function(node) {
         console.log(node);
       },
       onClick: function(node) {
