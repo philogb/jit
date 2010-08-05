@@ -242,9 +242,10 @@ Layouts.TM.Squarified = new Class({
  computePositions: function(node, coord, prop) {
    var config = this.config;
    
-   if (!(coord.width >= coord.height 
-       && this.layout.horizontal())) 
-     this.layout.change();
+   if (coord.width >= coord.height) 
+     this.layout.orientation = 'h';
+   else
+     this.layout.orientation = 'v';
    
    var ch = node.getSubnodes([1, 1], "ignore");
    if(ch.length > 0) {

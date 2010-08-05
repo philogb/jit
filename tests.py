@@ -398,7 +398,7 @@ tests_model = {
             You can <b>choose a different tiling algorithm</b> below:
             
             """,
-            'Extras': ['generators.js', 'excanvas.js'],
+            'Extras': ['excanvas.js'],
             'Example': True
         },
         {
@@ -410,7 +410,7 @@ tests_model = {
             There should be only one level shown at a time.<br /><br /> 
             Clicking on a band should show a new TreeMap with its most listened albums.<br /><br />            
             """,
-            'Extras': ['generators.js', 'excanvas.js'],
+            'Extras': ['excanvas.js'],
             'Example': True
         },
         {
@@ -423,8 +423,16 @@ tests_model = {
             You can <b>choose a different tiling algorithm</b> below:
             
             """,
-            'Extras': ['generators.js', 'excanvas.js'],
+            'Extras': ['excanvas.js'],
             'Example': True
+        },
+        {
+            'Title': 'Sorting Problem',
+            'Description': 
+            """
+            Layout in Squarified TreeMaps should be unique regardless of area.
+            """,
+            'Extras': ['excanvas.js'],
         },
    ],
 
