@@ -82,7 +82,7 @@ TM.Base = {
       orientation: "h",
       titleHeight: 13,
       offset: 2,
-      levelsToShow: 3,
+      levelsToShow: 0,
       constrained: false,
       animate: false,
       Node: {
@@ -155,7 +155,7 @@ TM.Base = {
     var that = this;
     if(this.config.animate) {
       this.compute('end');
-      this.geom.setRightLevelToShow(this.graph.getNode(this.root));
+      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.root));
       this.fx.animate($.merge(this.config, {
         modes: ['linear', 'node-property:width:height'],
         onComplete: function() {
@@ -227,7 +227,7 @@ TM.Base = {
           that.geom.setRightLevelToShow(n);
         }
         //compute positions of newly inserted nodes
-        if(config.request) that.compute();
+        if(config.levelsToShow > 0 || config.request) that.compute();
         if(config.animate) {
           //fade nodes
           graph.nodeList.setData('alpha', 0, 'end');
