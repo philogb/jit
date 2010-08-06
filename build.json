@@ -336,6 +336,7 @@
        "Canvas",
        "Complex",
        "Polar",
+       "Graph.Op",
        "Graph.Plot",
        "Graph.Label",
        "Loader",

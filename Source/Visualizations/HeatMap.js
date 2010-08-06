@@ -53,6 +53,7 @@ $jit.HeatMap = new Class({
 
     this.labels = new $jit.HeatMap.Label[this.config.Label.type](this);
     this.fx = new $jit.HeatMap.Plot(this);
+    this.op = new $jit.HeatMap.Op(this);
 
     this.initializeExtras();
   },
@@ -64,6 +65,10 @@ $jit.HeatMap = new Class({
   
   plot: function() {
     this.fx.plot();
+  },
+  
+  reposition: function() {
+    this.compute('end');
   }
 });
 
@@ -98,6 +103,30 @@ HeatMap.Plot = new Class( {
    this.labels = viz.labels;
   }
 });
+
+/* 
+  Class: HeatMap.Op 
+  
+  Custom extension of <Graph.Op>.
+  
+  Extends:
+  
+  All <Graph.Op> methods
+  
+  See also:
+  
+  <Graph.Op>
+  
+*/
+HeatMap.Op = new Class( {
+  
+  Implements: Graph.Op,
+  
+  initialize: function(viz) {
+   this.viz = viz;
+  }
+});
+
 
 /*
   Class: HeatMap.Label

@@ -48,7 +48,7 @@ var Loader = {
                     for(var j=0, lj=adj.length; j<lj; j++) {
                       var node = adj[j], data = {};
                       if(typeof adj[j] != 'string') {
-                        data = node.data;
+                        data = $.merge(node.data, {});
                         node = node.nodeTo;
                       }
                       ans.addAdjacence(json[i], getNode(node), data);

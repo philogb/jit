@@ -430,7 +430,7 @@ Graph.Op = {
                       //Update node data information
                       var graphNodeData = graphNode.data;
                       for(var prop in graphNodeData) {
-                        if(nodeModes && (prop in nodeModes)) {
+                        if(nodeModes && ($.indexOf(nodeModes, prop) > -1)) {
                           elem.endData[prop] = graphNodeData[prop];
                         } else {
                           elem.data[prop] = graphNodeData[prop];
@@ -461,13 +461,13 @@ Graph.Op = {
                                          'edge-property:alpha'];
                 //Append extra node-property animations (if any)
                 modes[0] = modes[0] + ((extraModes && ('node-property' in extraModes))? 
-                    $.splat(extraModes['node-property']).join(':') : '');
+                    (':' + $.splat(extraModes['node-property']).join(':')) : '');
                 //Append extra edge-property animations (if any)
                 modes[1] = (modes[1] || 'edge-property:alpha') + ((extraModes && ('edge-property' in extraModes))? 
-                    $.splat(extraModes['edge-property']).join(':') : '');
+                    (':' + $.splat(extraModes['edge-property']).join(':')) : '');
                 //Add label-property animations (if any)
                 if(extraModes && ('label-property' in extraModes)) {
-                  modes.push('label-property' + $.splat(extraModes['label-property']).join(':'))
+                  modes.push('label-property:' + $.splat(extraModes['label-property']).join(':'))
                 }
                 viz.reposition();
                 viz.graph.eachNode(function(elem) {

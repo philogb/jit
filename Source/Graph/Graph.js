@@ -148,7 +148,7 @@ $jit.Graph = new Class({
      this.nodes[obj.id] = new Graph.Node($.extend({
         'id': obj.id,
         'name': obj.name,
-        'data': obj.data || {},
+        'data': $.merge(obj.data || {}, {}),
         'adjacencies': edges 
       }, this.opt.Node), 
       this.opt.complex, 
