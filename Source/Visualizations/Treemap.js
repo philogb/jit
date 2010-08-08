@@ -155,7 +155,8 @@ TM.Base = {
     var that = this;
     if(this.config.animate) {
       this.compute('end');
-      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.root));
+      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
+          && this.clickedNode.id || this.root));
       this.fx.animate($.merge(this.config, {
         modes: ['linear', 'node-property:width:height'],
         onComplete: function() {
@@ -170,6 +171,8 @@ TM.Base = {
       }
       this.busy = false;
       this.compute();
+      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
+          && this.clickedNode.id || this.root));
       this.plot();
     }
   },
