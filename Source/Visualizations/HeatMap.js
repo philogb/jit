@@ -75,7 +75,7 @@ $jit.HeatMap = new Class({
 var HeatMap = $jit.HeatMap;
 
 /*
-  Class: HeatMap.Plot
+  HeatMap.Plot
   
   Custom extension of <Graph.Plot>.
   
@@ -105,7 +105,7 @@ HeatMap.Plot = new Class( {
 });
 
 /* 
-  Class: HeatMap.Op 
+  HeatMap.Op 
   
   Custom extension of <Graph.Op>.
   
@@ -129,7 +129,7 @@ HeatMap.Op = new Class( {
 
 
 /*
-  Class: HeatMap.Label
+  HeatMap.Label
   
   Custom extension of <Graph.Label>. 
   Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
@@ -279,7 +279,7 @@ HeatMap.Label.HTML = new Class( {
 });
 
 /*
-  Class: HeatMap.Plot.NodeTypes
+  HeatMap.Plot.NodeTypes
   
   This class contains a list of <Graph.Node> built-in types. 
   Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
@@ -329,7 +329,7 @@ HeatMap.Plot.NodeTypes = new Class({
 });
 
 /*
-  Class: HeatMap.Plot.EdgeTypes
+  HeatMap.Plot.EdgeTypes
   
   This class contains a list of <Graph.Adjacence> built-in types. 
   Edge types implemented are 'none', 'line' and 'arrow'.

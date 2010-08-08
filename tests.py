@@ -758,8 +758,7 @@ tests_model = {
             """
             A static TimeGraph Example.
             """,
-            'Extras': ['excanvas.js'],
-            'Example': True
+            'Extras': ['excanvas.js']
         },
     ],    
    'HeatMap': [
@@ -769,8 +768,7 @@ tests_model = {
             """
             A static HeatMap Example.
             """,
-            'Extras': ['excanvas.js'],
-            'Example': True
+            'Extras': ['excanvas.js']
         },
     ]    
 }   

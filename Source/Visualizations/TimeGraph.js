@@ -69,7 +69,7 @@ $jit.TimeGraph = new Class({
 var TimeGraph = $jit.TimeGraph;
 
 /*
-  Class: TimeGraph.Plot
+  TimeGraph.Plot
   
   Custom extension of <Graph.Plot>.
   
@@ -99,7 +99,7 @@ TimeGraph.Plot = new Class( {
 });
 
 /*
-  Class: TimeGraph.Label
+  TimeGraph.Label
   
   Custom extension of <Graph.Label>. 
   Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
@@ -248,7 +248,7 @@ TimeGraph.Label.HTML = new Class( {
 });
 
 /*
-  Class: TimeGraph.Plot.NodeTypes
+  TimeGraph.Plot.NodeTypes
   
   This class contains a list of <Graph.Node> built-in types. 
   Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
@@ -298,7 +298,7 @@ TimeGraph.Plot.NodeTypes = new Class({
 });
 
 /*
-  Class: TimeGraph.Plot.EdgeTypes
+  TimeGraph.Plot.EdgeTypes
   
   This class contains a list of <Graph.Adjacence> built-in types. 
   Edge types implemented are 'none', 'line' and 'arrow'.

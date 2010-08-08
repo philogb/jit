@@ -1,15 +1,20 @@
-import sys, json
+import os, sys, json
 
+prefix = lambda x: os.path.join(os.path.dirname(__file__), x) 
+default_visualizations = ['AreaChart', 'BarChart', 'PieChart',
+                          'Sunburst', 'Icicle', 'ForceDirected',
+                          'Treemap', 'Spacetree', 'RGraph',
+                          'Hypertree']
 #build model
 class Build():
     def __init__(self):
-        self.sources = 'Source/'
+        self.sources = prefix('Source/')
         
         self.included = []
         
         self.script = ''
         
-        self.build_model = json.load(open('build.json', 'r'))
+        self.build_model = json.load(open(prefix('build.json'), 'r'))
         
         self.build_paths = {}
         
@@ -21,7 +26,7 @@ class Build():
                 }
     
     def build(self, args=[]):
-        if not args: args = [viz for viz in self.build_model['Visualizations']]
+        if not args: args = default_visualizations
         self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model['Visualizations']])
         return '(function () { \n\n' + self.script + '\n\n })();'
     
@@ -38,6 +43,6 @@ class Build():
 
 def main():
     ans = Build().build(sys.argv[1:])
-    print open('LICENSE').read() + ans
+    print open(prefix('LICENSE')).read() + ans
     
 if __name__ == "__main__": main()

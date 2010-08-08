@@ -36,14 +36,16 @@ def make_examples(fancy=False):
 #copy css base files
     system('cp -r Tests/css Examples/css')
 #iterate over the examples
+    has_example = lambda x: 'Example' in x and x['Example']
     for viz, tests in tests_model.items():
 #create example folder
-        system('mkdir Examples/' + viz)
-        count = 1
-        for i, model in enumerate(tests):
-            if 'Example' in model and model['Example']:
-                make_example(viz, model, i, count, fancy)
-                count += 1
+        if filter(has_example, tests): 
+            system('mkdir Examples/' + viz)
+            count = 1
+            for i, model in enumerate(tests):
+                if has_example(model):
+                    make_example(viz, model, i, count, fancy)
+                    count += 1
 #copy some extra files
     if fancy:
         system('cp -r Extras/sh Examples/')
