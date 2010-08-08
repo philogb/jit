@@ -352,7 +352,7 @@ $jit.AreaChart = new Class({
           '$colorArray': color,
           '$stringArray': name,
           '$next': next.label,
-          '$prev': prev? prev.label:null,
+          '$prev': prev? prev.label:false,
           '$config': config,
           '$gradient': gradient
         },
@@ -428,10 +428,12 @@ $jit.AreaChart = new Class({
             nextNode = graph.getByName(next);
         if(prev) {
           var p = graph.getByName(prev);
-          var valArray = p.getData('valueArray');
-          $.each(valArray, function(a, i) {
-            a[1] = v.values[i];
-          });
+          if(p) {
+            var valArray = p.getData('valueArray');
+            $.each(valArray, function(a, i) {
+              a[1] = v.values[i];
+            });
+          }
         }
         if(!nextNode) {
           var valArray = n.getData('valueArray');
