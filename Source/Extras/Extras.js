@@ -250,10 +250,12 @@ Extras.Classes.Events = new Class({
   
   onMouseUp: function(e, win, event, isRightClick) {
     var evt = $.event.get(e, win);
-    if(isRightClick) {
-      this.config.onRightClick(this.hovered, event, evt);
-    } else {
-      this.config.onClick(this.pressed, event, evt);
+    if(!this.moved) {
+      if(isRightClick) {
+        this.config.onRightClick(this.hovered, event, evt);
+      } else {
+        this.config.onClick(this.pressed, event, evt);
+      }
     }
     if(this.pressed) {
       if(this.moved) {
