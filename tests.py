@@ -438,31 +438,6 @@ tests_model = {
 
     'Icicle': [
         {
-            'Title': 'Icicle tree',
-            'Description': 
-            """
-            <p>An icicle tree loaded with random generated data.</p>
-            <p>
-              <b>Left click</b> to set a node as root for the visualization.<br>
-              <b>Right click</b> to set the parent node as root for the visualization.
-            </p>
-            """,
-            'Extras': ['generators.js', 'excanvas.js']
-        },
-        {
-            'Title': 'Icicle tree with limited levels shown',
-            'Description': 
-            """
-            <p>A static json tree representing a file system tree is loaded into
-            an icicle tree.</p>
-            <p>
-              <b>Left click</b> to set a node as root for the visualization.<br>
-              <b>Right click</b> to set the parent node as root for the visualization.
-            </p>
-            """,
-            'Extras': ['excanvas.js']
-        },
-        {
             'Title': 'Icicle Tree with static JSON data',
             'Description': 
             """
@@ -474,7 +449,7 @@ tests_model = {
               <b>Right click</b> to set the parent node as root for the visualization.
             </p>
             """,
-            'Extras': ['excanvas.js', 'generators.js'],
+            'Extras': ['excanvas.js'],
             'Example':True
         },
         {
