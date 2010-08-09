@@ -7,7 +7,7 @@
   Object: Options.BarChart
   
   <BarChart> options. 
-  Other options included in the BarChart are <Options.Canvas>, <Options.Label>, <Options.Tips> and <Options.Events>.
+  Other options included in the BarChart are <Options.Canvas>, <Options.Label>, <Options.Margin>, <Options.Tips> and <Options.Events>.
   
   Syntax:
   
@@ -15,7 +15,6 @@
 
   Options.BarChart = {
     animate: true,
-    offset: 25, 
     labelOffset: 3,
     barsOffset: 0,
     type: 'stacked',
@@ -58,7 +57,6 @@ Options.BarChart = {
   
   animate: true,
   type: 'stacked', //stacked, grouped, : gradient
-  offset: 25, //page offset
   labelOffset: 3, //label offset
   barsOffset: 0, //distance between bars
   hoveredColor: '#9fd4ff',

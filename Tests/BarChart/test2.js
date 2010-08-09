@@ -61,7 +61,12 @@ function init(){
       //bars separation
       barsOffset: 0.5,
       //visualization offset
-      offset:10,
+      Margin: {
+        top: 5,
+        left: 5,
+        right: 5,
+        bottom: 5
+      },
       //labels offset position
       labelOffset:5,
       //bars style

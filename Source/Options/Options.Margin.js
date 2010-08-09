@@ -6,7 +6,7 @@
 /*
   Object: Options.Margin
   
-  Canvas drawing margin. 
+  Canvas drawing margins. 
   
   Syntax:
   

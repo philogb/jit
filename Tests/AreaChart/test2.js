@@ -58,7 +58,13 @@ function init(){
       //add animations
       animate: true,
       //separation offsets
-      offset: 5,
+      //separation offsets
+      Margin: {
+        top: 5,
+        left: 5,
+        right: 5,
+        bottom: 5
+      },
       labelOffset: 10,
       //whether to display sums
       showAggregates: true,

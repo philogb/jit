@@ -7,7 +7,7 @@
   Object: Options.AreaChart
   
   <AreaChart> options. 
-  Other options included in the AreaChart are <Options.Canvas>, <Options.Label>, <Options.Tips> and <Options.Events>.
+  Other options included in the AreaChart are <Options.Canvas>, <Options.Label>, <Options.Margin>, <Options.Tips> and <Options.Events>.
   
   Syntax:
   
@@ -15,7 +15,6 @@
 
   Options.AreaChart = {
     animate: true,
-    offset: 25,
     labelOffset: 3,
     type: 'stacked',
     selectOnHover: true,
@@ -44,7 +43,6 @@
   Parameters:
   
   animate - (boolean) Default's *true*. Whether to add animated transitions when filtering/restoring stacks.
-  offset - (number) Default's *25*. Adds margin between the visualization and the canvas.
   labelOffset - (number) Default's *3*. Adds margin between the label and the default place where it should be drawn.
   type - (string) Default's *'stacked'*. Stack style. Posible values are 'stacked', 'stacked:gradient' to add gradients.
   selectOnHover - (boolean) Default's *true*. If true, it will add a mark to the hovered stack.
@@ -59,7 +57,6 @@ Options.AreaChart = {
   $extend: true,
 
   animate: true,
-  offset: 25, // page offset
   labelOffset: 3, // label offset
   type: 'stacked', // gradient
   Tips: {

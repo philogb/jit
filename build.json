@@ -351,6 +351,7 @@
 
     "AreaChart": [
         "Options.AreaChart",
+        "Options.Margin",
         "Spacetree"
     ],
 
@@ -361,6 +362,7 @@
 
     "BarChart": [
         "Options.BarChart",
+        "Options.Margin",
         "Spacetree"
     ]
   }

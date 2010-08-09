@@ -318,7 +318,7 @@ $jit.BarChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "Label", "BarChart"), {
+      $.merge(Options("Canvas", "Margin", "Label", "BarChart"), {
         Label: { type: 'Native' }
       }, opt);
     //set functions for showLabels and showAggregates
@@ -478,13 +478,16 @@ $jit.BarChart = new Class({
       }
     });
     
-    var size = st.canvas.getSize();
+    var size = st.canvas.getSize(),
+        margin = config.Margin;
     if(horz) {
-      st.config.offsetX = + size.width/2 - config.offset
+      st.config.offsetX = size.width/2 - margin.left
         - (config.showLabels && (config.labelOffset + config.Label.size));    
+      st.config.offsetY = (margin.bottom - margin.top)/2;
     } else {
-      st.config.offsetY = -size.height/2 + config.offset 
-        + (config.showLabels && (config.labelOffset + config.Label.size));    
+      st.config.offsetY = -size.height/2 + margin.bottom 
+        + (config.showLabels && (config.labelOffset + config.Label.size));
+      st.config.offsetX = (margin.right - margin.left)/2;
     }
     this.st = st;
     this.canvas = this.st.canvas;
@@ -743,11 +746,13 @@ $jit.BarChart = new Class({
     var maxValue = this.getMaxValue() || 1,
         size = this.st.canvas.getSize(),
         config = this.config,
-        offset = config.offset,
+        margin = config.Margin,
+        marginWidth = margin.left + margin.right,
+        marginHeight = margin.top + margin.bottom,
         horz = config.orientation == 'horizontal',
-        fixedDim = (size[horz? 'height':'width'] - 2 * offset - (l -1) * config.barsOffset) / l,
+        fixedDim = (size[horz? 'height':'width'] - (horz? marginHeight:marginWidth) - (l -1) * config.barsOffset) / l,
         animate = config.animate,
-        height = size[horz? 'width':'height'] - 2 * offset 
+        height = size[horz? 'width':'height'] - (horz? marginWidth:marginHeight) 
           - (!horz && config.showAggregates && (config.Label.size + config.labelOffset))
           - (config.showLabels && (config.Label.size + config.labelOffset)),
         dim1 = horz? 'height':'width',

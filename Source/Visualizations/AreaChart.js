@@ -147,7 +147,7 @@ $jit.AreaChart = new Class({
   
   initialize: function(opt) {
     this.controller = this.config = 
-      $.merge(Options("Canvas", "Label", "AreaChart"), {
+      $.merge(Options("Canvas", "Margin", "Label", "AreaChart"), {
         Label: { type: 'Native' }
       }, opt);
     //set functions for showLabels and showAggregates
@@ -306,9 +306,11 @@ $jit.AreaChart = new Class({
       }
     });
     
-    var size = st.canvas.getSize();
-    st.config.offsetY = -size.height/2 + config.offset 
-      + (config.showLabels && (config.labelOffset + config.Label.size));    
+    var size = st.canvas.getSize(),
+        margin = config.Margin;
+    st.config.offsetY = -size.height/2 + margin.bottom 
+      + (config.showLabels && (config.labelOffset + config.Label.size));
+    st.config.offsetX = (margin.right - margin.left)/2;
     this.st = st;
     this.canvas = this.st.canvas;
   },
@@ -638,11 +640,11 @@ $jit.AreaChart = new Class({
     var maxValue = this.getMaxValue() || 1,
         size = this.st.canvas.getSize(),
         config = this.config,
-        offset = config.offset,
+        margin = config.Margin,
         labelOffset = config.labelOffset + config.Label.size,
-        fixedDim = (size.width - 2 * offset) / l,
+        fixedDim = (size.width - (margin.left + margin.right)) / l,
         animate = config.animate,
-        height = size.height - 2 * offset - (config.showAggregates && labelOffset) 
+        height = size.height - (margin.top + margin.bottom) - (config.showAggregates && labelOffset) 
           - (config.showLabels && labelOffset);
     this.st.graph.eachNode(function(n) {
       var acumLeft = 0, acumRight = 0, animateValue = [];
