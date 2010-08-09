@@ -5,12 +5,6 @@ $jit.HeatMap = new Class({
     var opt = {
       legendX: [],
       legendY: [],
-      margin: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      },
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
       showNodeNames: false,
@@ -26,7 +20,7 @@ $jit.HeatMap = new Class({
         textBaseline: 'middle'
       }
     };
-    var opts = Options("Canvas", "Node", "Edge", "Fx", "Tips", "NodeStyles",
+    var opts = Options("Canvas", "Margin", "Node", "Edge", "Fx", "Tips", "NodeStyles",
         "Events", "Navigation", "Controller", "Label");
     this.controller = this.config = $.merge(opts, opt, config);
     
@@ -52,7 +46,7 @@ $jit.HeatMap = new Class({
       this.graphOptions, this.config.Node, this.config.Edge, this.config.Label);
 
     this.labels = new $jit.HeatMap.Label[this.config.Label.type](this);
-    this.fx = new $jit.HeatMap.Plot(this);
+    this.fx = new $jit.HeatMap.Plot(this, $jit.HeatMap);
     this.op = new $jit.HeatMap.Op(this);
 
     this.initializeExtras();
@@ -90,18 +84,8 @@ var HeatMap = $jit.HeatMap;
 */
 HeatMap.Plot = new Class( {
   
-  Implements: Graph.Plot,
+  Implements: Graph.Plot
   
-  initialize: function(viz){
-   this.viz = viz;
-   this.config = viz.config;
-   this.node = viz.config.Node;
-   this.edge = viz.config.Edge;
-   this.animation = new Animation;
-   this.nodeTypes = new HeatMap.Plot.NodeTypes;
-   this.edgeTypes = new HeatMap.Plot.EdgeTypes;
-   this.labels = viz.labels;
-  }
 });
 
 /* 
@@ -120,11 +104,8 @@ HeatMap.Plot = new Class( {
 */
 HeatMap.Op = new Class( {
   
-  Implements: Graph.Op,
+  Implements: Graph.Op
   
-  initialize: function(viz) {
-   this.viz = viz;
-  }
 });
 
 

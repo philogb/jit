@@ -90,7 +90,7 @@ $jit.RGraph = new Class( {
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
     this.labels = new $RGraph.Label[canvasConfig.Label.type](this);
-    this.fx = new $RGraph.Plot(this);
+    this.fx = new $RGraph.Plot(this, $RGraph);
     this.op = new $RGraph.Op(this);
     this.json = null;
     this.root = null;
@@ -263,11 +263,8 @@ $jit.RGraph.$extend = true;
   */
   RGraph.Op = new Class( {
 
-    Implements: Graph.Op,
+    Implements: Graph.Op
 
-    initialize: function(viz){
-      this.viz = viz;
-    }
   });
 
   /*
@@ -286,18 +283,8 @@ $jit.RGraph.$extend = true;
   */
   RGraph.Plot = new Class( {
 
-    Implements: Graph.Plot,
+    Implements: Graph.Plot
 
-    initialize: function(viz){
-      this.viz = viz;
-      this.config = viz.config;
-      this.node = viz.config.Node;
-      this.edge = viz.config.Edge;
-      this.animation = new Animation;
-      this.nodeTypes = new RGraph.Plot.NodeTypes;
-      this.edgeTypes = new RGraph.Plot.EdgeTypes;
-      this.labels = viz.labels;
-    }
   });
 
   /*

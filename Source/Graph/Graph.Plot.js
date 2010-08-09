@@ -13,6 +13,18 @@
    edgeHelper - <EdgeHelper> object.
 */
 Graph.Plot = {
+    //Default intializer
+    initialize: function(viz, klass){
+      this.viz = viz;
+      this.config = viz.config;
+      this.node = viz.config.Node;
+      this.edge = viz.config.Edge;
+      this.animation = new Animation;
+      this.nodeTypes = new klass.Plot.NodeTypes;
+      this.edgeTypes = new klass.Plot.EdgeTypes;
+      this.labels = viz.labels;
+   },
+
     //Add helpers
     nodeHelper: NodeHelper,
     edgeHelper: EdgeHelper,

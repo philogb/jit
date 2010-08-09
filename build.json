@@ -102,6 +102,9 @@
     "Options.Tips": [
       "Options"
     ],
+    "Options.Margin": [
+      "Options"
+    ],
     "Options.Events": [
       "Options"
     ],
@@ -300,6 +303,7 @@
     "TimeGraph": [
        "Core",
        "Options.Canvas",
+       "Options.Margin",
        "Options.Node",
        "Options.Edge",
        "Options.Fx",
@@ -323,6 +327,7 @@
    "HeatMap": [
        "Core",
        "Options.Canvas",
+       "Options.Margin",
        "Options.Node",
        "Options.Edge",
        "Options.Fx",

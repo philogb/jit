@@ -84,7 +84,7 @@ $jit.ForceDirected = new Class( {
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
     this.labels = new $ForceDirected.Label[canvasConfig.Label.type](this);
-    this.fx = new $ForceDirected.Plot(this);
+    this.fx = new $ForceDirected.Plot(this, $ForceDirected);
     this.op = new $ForceDirected.Op(this);
     this.json = null;
     this.busy = false;
@@ -223,11 +223,8 @@ $jit.ForceDirected.$extend = true;
   */
   ForceDirected.Op = new Class( {
 
-    Implements: Graph.Op,
+    Implements: Graph.Op
 
-    initialize: function(viz) {
-      this.viz = viz;
-    }
   });
 
   /*
@@ -246,18 +243,8 @@ $jit.ForceDirected.$extend = true;
   */
   ForceDirected.Plot = new Class( {
 
-    Implements: Graph.Plot,
+    Implements: Graph.Plot
 
-    initialize: function(viz) {
-      this.viz = viz;
-      this.config = viz.config;
-      this.node = viz.config.Node;
-      this.edge = viz.config.Edge;
-      this.animation = new Animation;
-      this.nodeTypes = new ForceDirected.Plot.NodeTypes;
-      this.edgeTypes = new ForceDirected.Plot.EdgeTypes;
-      this.labels = viz.labels;
-    }
   });
 
   /*

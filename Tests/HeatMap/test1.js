@@ -145,7 +145,7 @@ $jit.Canvas.Background.Grid = new $jit.Class({
         lx = viz.getLegendX(),
         ly = viz.getLegendY(),
         config = viz.config,
-        margin = config.margin,
+        margin = config.Margin,
         size = base.getSize(),
         width = size.width - margin.left - margin.right,
         height = size.height - margin.top - margin.bottom,
@@ -232,7 +232,7 @@ function init() {
       marginLegendX: 10,
       marginLegendY: 10
     },
-    margin: {
+    Margin: {
       top: 0,
       left: 70,
       bottom: 70,

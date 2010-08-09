@@ -18,6 +18,11 @@ Graph.Op = {
       hideLabels: true,
       fps:30
     },
+    
+    initialize: function(viz) {
+      this.viz = viz;
+    },
+
     /*
        Method: removeNode
     

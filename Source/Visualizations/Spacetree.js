@@ -150,7 +150,7 @@ $jit.ST= (function() {
             };
             this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
             this.labels = new $ST.Label[canvasConfig.Label.type](this);
-            this.fx = new $ST.Plot(this);
+            this.fx = new $ST.Plot(this, $ST);
             this.op = new $ST.Op(this);
             this.group = new $ST.Group(this);
             this.geom = new $ST.Geom(this);
@@ -660,11 +660,9 @@ $jit.ST.$extend = true;
 
 */
 $jit.ST.Op = new Class({
-    Implements: Graph.Op,
+
+  Implements: Graph.Op
     
-    initialize: function(viz) {
-        this.viz = viz;
-    }
 });
 
 /*
@@ -1094,17 +1092,6 @@ $jit.ST.Geom = new Class({
 $jit.ST.Plot = new Class({
     
     Implements: Graph.Plot,
-    
-    initialize: function(viz) {
-        this.viz = viz;
-        this.config = viz.config;
-        this.node = this.config.Node;
-        this.edge = this.config.Edge;
-        this.animation = new Animation;
-        this.nodeTypes = new $jit.ST.Plot.NodeTypes;
-        this.edgeTypes = new $jit.ST.Plot.EdgeTypes;        
-        this.labels = viz.labels;
-    },
     
     /*
        Plots a subtree from the spacetree.

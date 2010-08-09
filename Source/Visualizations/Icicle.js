@@ -112,7 +112,7 @@ $jit.Icicle = new Class({
       this.graphOptions, this.config.Node, this.config.Edge, this.config.Label);
 
     this.labels = new $jit.Icicle.Label[this.config.Label.type](this);
-    this.fx = new $jit.Icicle.Plot(this);
+    this.fx = new $jit.Icicle.Plot(this, $jit.Icicle);
     this.op = new $jit.Icicle.Op(this);
     this.group = new $jit.Icicle.Group(this);
     this.clickedNode = null;
@@ -326,11 +326,9 @@ $jit.Icicle = new Class({
   
   */
 $jit.Icicle.Op = new Class({
-  Implements: Graph.Op,
 
-  initialize: function(viz) {
-    this.viz = viz;
-  }
+  Implements: Graph.Op
+
 });
 
 /*
@@ -391,17 +389,6 @@ $jit.Icicle.Group = new Class({
   */
 $jit.Icicle.Plot = new Class({
   Implements: Graph.Plot,
-
-  initialize: function(viz){
-    this.viz = viz;
-    this.config = viz.config;
-    this.node = this.config.Node;
-    this.edge = this.config.Edge;
-    this.animation = new Animation;
-    this.nodeTypes = new $jit.Icicle.Plot.NodeTypes;
-    this.edgeTypes = new $jit.Icicle.Plot.EdgeTypes;
-    this.labels = viz.labels;
-  },
 
   plot: function(opt, animating){
     opt = opt || this.viz.controller;

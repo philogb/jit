@@ -5,12 +5,6 @@ $jit.TimeGraph = new Class({
     var opt = {
       legendX: [],
       legendY: [],
-      margin: {
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      },
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
       
@@ -25,7 +19,7 @@ $jit.TimeGraph = new Class({
         textBaseline: 'middle'
       }
     };
-    var opts = Options("Canvas", "Node", "Edge", "Fx", "Tips", "NodeStyles",
+    var opts = Options("Canvas", "Margin", "Node", "Edge", "Fx", "Tips", "NodeStyles",
         "Events", "Navigation", "Controller", "Label");
     this.controller = this.config = $.merge(opts, opt, config);
     
@@ -51,7 +45,7 @@ $jit.TimeGraph = new Class({
       this.graphOptions, this.config.Node, this.config.Edge, this.config.Label);
 
     this.labels = new $jit.TimeGraph.Label[this.config.Label.type](this);
-    this.fx = new $jit.TimeGraph.Plot(this);
+    this.fx = new $jit.TimeGraph.Plot(this, $jit.TimeGraph);
 
     this.initializeExtras();
   },
@@ -84,18 +78,8 @@ var TimeGraph = $jit.TimeGraph;
 */
 TimeGraph.Plot = new Class( {
   
-  Implements: Graph.Plot,
+  Implements: Graph.Plot
   
-  initialize: function(viz){
-   this.viz = viz;
-   this.config = viz.config;
-   this.node = viz.config.Node;
-   this.edge = viz.config.Edge;
-   this.animation = new Animation;
-   this.nodeTypes = new TimeGraph.Plot.NodeTypes;
-   this.edgeTypes = new TimeGraph.Plot.EdgeTypes;
-   this.labels = viz.labels;
-  }
 });
 
 /*

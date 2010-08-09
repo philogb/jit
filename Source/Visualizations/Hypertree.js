@@ -146,7 +146,7 @@ $jit.Hypertree = new Class( {
     this.graph = new Graph(this.graphOptions, this.config.Node,
         this.config.Edge);
     this.labels = new $Hypertree.Label[canvasConfig.Label.type](this);
-    this.fx = new $Hypertree.Plot(this);
+    this.fx = new $Hypertree.Plot(this, $Hypertree);
     this.op = new $Hypertree.Op(this);
     this.json = null;
     this.root = null;
@@ -357,11 +357,8 @@ $jit.Hypertree.$extend = true;
   */
   Hypertree.Op = new Class( {
 
-    Implements: Graph.Op,
+    Implements: Graph.Op
 
-    initialize: function(viz) {
-      this.viz = viz;
-    }
   });
 
   /* 
@@ -380,18 +377,8 @@ $jit.Hypertree.$extend = true;
   */
   Hypertree.Plot = new Class( {
 
-    Implements: Graph.Plot,
+    Implements: Graph.Plot
 
-    initialize: function(viz) {
-      this.viz = viz;
-      this.config = viz.config;
-      this.node = this.config.Node;
-      this.edge = this.config.Edge;
-      this.animation = new Animation;
-      this.nodeTypes = new Hypertree.Plot.NodeTypes;
-      this.edgeTypes = new Hypertree.Plot.EdgeTypes;
-      this.labels = viz.labels;
-    }
   });
 
   /*

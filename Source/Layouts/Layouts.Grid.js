@@ -3,7 +3,7 @@ Layouts.Grid = new Class({
     this.controller.onBeforeCompute();
     var size = this.canvas.getSize(),
         config = this.config,
-        margin = config.margin,
+        margin = config.Margin,
         width = size.width - margin.left - margin.right,
         height = size.height - margin.top - margin.bottom,
         legendX = this.getLegendX(),
