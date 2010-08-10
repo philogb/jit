@@ -485,7 +485,6 @@ function init(){
     // Add node events
     Events: {
       enable: true,
-      enableForEdges: true,
       //Change cursor style when hovering a node
       onMouseEnter: function() {
         fd.canvas.getElement().style.cursor = 'move';
@@ -495,9 +494,9 @@ function init(){
       },
       //Update node positions when dragged
       onDragMove: function(node, eventInfo, e) {
-        var pos = eventInfo.getPos();
-        node.pos.setc(pos.x, pos.y);
-        fd.plot();
+          var pos = eventInfo.getPos();
+          node.pos.setc(pos.x, pos.y);
+          fd.plot();
       },
       //Implement the same handler for touchscreens
       onTouchMove: function(node, eventInfo, e) {
