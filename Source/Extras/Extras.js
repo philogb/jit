@@ -34,12 +34,24 @@ var ExtrasInitializer = {
   isEnabled: function() {
     return this.config.enable;
   },
-  isLabel: function(e, win) {
+  isLabel: function(e, win, group) {
     e = $.event.get(e, win);
     var labelContainer = this.labelContainer,
-        target = e.target || e.srcElement;
-    if(target && target.parentNode == labelContainer)
-      return target;
+        target = e.target || e.srcElement,
+        related = e.relatedTarget;
+    if(group) {
+      return related && related.nodeName && related.nodeName === "CANVAS" 
+          && !!target && this.isDescendantOf(target, labelContainer);
+    } else {
+      return this.isDescendantOf(target, labelContainer);
+    }
+  },
+  isDescendantOf: function(elem, par) {
+    while(elem && elem.parentNode) {
+      if(elem.parentNode == par)
+        return elem;
+      elem = elem.parentNode;
+    }
     return false;
   }
 };
@@ -270,7 +282,7 @@ Extras.Classes.Events = new Class({
   onMouseOut: function(e, win, event) {
    //mouseout a label
    var evt = $.event.get(e, win), label;
-   if(this.dom && (label = this.isLabel(e, win))) {
+   if(this.dom && (label = this.isLabel(e, win, true))) {
      this.config.onMouseLeave(this.viz.graph.getNode(label.id),
                               event, evt);
      this.hovered = false;
@@ -293,7 +305,7 @@ Extras.Classes.Events = new Class({
   onMouseOver: function(e, win, event) {
     //mouseover a label
     var evt = $.event.get(e, win), label;
-    if(this.dom && (label = this.isLabel(e, win))) {
+    if(this.dom && (label = this.isLabel(e, win, true))) {
       this.hovered = this.viz.graph.getNode(label.id);
       this.config.onMouseEnter(this.hovered,
                                event, evt);
@@ -337,15 +349,25 @@ Extras.Classes.Events = new Class({
   },
   
   onMouseDown: function(e, win, event) {
-    var evt = $.event.get(e, win);
-    this.pressed = event.getNode() || (this.config.enableForEdges && event.getEdge());
-    this.config.onDragStart(this.pressed, event, evt);
+    var evt = $.event.get(e, win), label;
+    if(this.dom) {
+      if(label = this.isLabel(e, win)) {
+        this.pressed = this.viz.graph.getNode(label.id);
+      }
+    } else {
+      this.pressed = event.getNode() || (this.config.enableForEdges && event.getEdge());
+    }
+    this.pressed && this.config.onDragStart(this.pressed, event, evt);
   },
   
   onTouchStart: function(e, win, event) {
-    var evt = $.event.get(e, win);
-    this.touched = event.getNode() || (this.config.enableForEdges && event.getEdge());
-    this.config.onTouchStart(this.touched, event, evt);
+    var evt = $.event.get(e, win), label;
+    if(this.dom && (label = this.isLabel(e, win))) {
+      this.touched = this.viz.graph.getNode(label.id);
+    } else {
+      this.touched = event.getNode() || (this.config.enableForEdges && event.getEdge());
+    }
+    this.touched && this.config.onTouchStart(this.touched, event, evt);
   },
   
   onTouchMove: function(e, win, event) {
@@ -407,7 +429,8 @@ Extras.Classes.Tips = new Class({
   
   onMouseOut: function(e, win) {
     //mouseout a label
-    if(this.dom && this.isLabel(e, win)) {
+    var evt = $.event.get(e, win);
+    if(this.dom && this.isLabel(e, win, true)) {
       this.hide(true);
       return;
     }
@@ -424,7 +447,7 @@ Extras.Classes.Tips = new Class({
   onMouseOver: function(e, win) {
     //mouseover a label
     var label;
-    if(this.dom && (label = this.isLabel(e, win))) {
+    if(this.dom && (label = this.isLabel(e, win, true))) {
       this.node = this.viz.graph.getNode(label.id);
       this.config.onShow(this.tip, this.node, label);
     }
@@ -510,7 +533,7 @@ Extras.Classes.NodeStyles = new Class({
     this.down = this.move = false;
     if(!this.hoveredNode) return;
     //mouseout a label
-    if(this.dom && this.isLabel(e, win)) {
+    if(this.dom && this.isLabel(e, win, true)) {
       this.toggleStylesOnHover(this.hoveredNode, false);
     }
     //mouseout canvas
@@ -527,7 +550,7 @@ Extras.Classes.NodeStyles = new Class({
   onMouseOver: function(e, win) {
     //mouseover a label
     var label;
-    if(this.dom && (label = this.isLabel(e, win))) {
+    if(this.dom && (label = this.isLabel(e, win, true))) {
       var node = this.viz.graph.getNode(label.id);
       if(node.selected) return;
       this.hoveredNode = node;
@@ -705,7 +728,7 @@ Extras.Classes.Navigation = new Class({
   
   onMouseDown: function(e, win, eventInfo) {
     if(!this.config.panning) return;
-    if(this.config.panning == 'avoid nodes' && eventInfo.getNode()) return;
+    if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : eventInfo.getNode())) return;
     this.pressed = true;
     this.pos = eventInfo.getPos();
     var canvas = this.canvas,
@@ -722,7 +745,7 @@ Extras.Classes.Navigation = new Class({
   onMouseMove: function(e, win, eventInfo) {
     if(!this.config.panning) return;
     if(!this.pressed) return;
-    if(this.config.panning == 'avoid nodes' && eventInfo.getNode()) return;
+    if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : eventInfo.getNode())) return;
     var thispos = this.pos, 
         currentPos = eventInfo.getPos(),
         canvas = this.canvas,

@@ -523,7 +523,15 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':True
-        } 
+        },
+        {
+            'Title': 'Event delegation for labels',
+            'Description': 
+            """
+            Testing event delegation for Extras in ForceDirected graph labels.
+            """,
+            'Extras': ['excanvas.js']
+        },
     ],
     
     'Other': [

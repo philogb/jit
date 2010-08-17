@@ -466,13 +466,14 @@ function init(){
     },
     //Native canvas text styling
     Label: {
-      type: labelType, //Native or HTML
+      type: 'HTML',
       size: 10,
       style: 'bold'
     },
     //Add Tips
     Tips: {
-      enable: true,
+      enable: false,
+      type: 'HTML',
       onShow: function(tip, node) {
         //count connections
         var count = 0;
@@ -485,7 +486,7 @@ function init(){
     // Add node events
     Events: {
       enable: true,
-      type: 'Native',
+      type: 'HTML',
       //Change cursor style when hovering a node
       onMouseEnter: function() {
         fd.canvas.getElement().style.cursor = 'move';
@@ -525,10 +526,12 @@ function init(){
     // Add text to the labels. This method is only triggered
     // on label creation and only for DOM labels (not native canvas ones).
     onCreateLabel: function(domElement, node){
-      domElement.innerHTML = node.name;
+      domElement.innerHTML = '<div style="margin-left:5px;">' + node.name + '<span> some other text inside</span></div>';
+      //domElement.innerHTML = node.name;
       var style = domElement.style;
       style.fontSize = "0.8em";
       style.color = "#ddd";
+      style.backgroundColor = 'darkred';
     },
     // Change node styles when DOM labels are placed
     // or moved.

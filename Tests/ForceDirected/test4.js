@@ -456,6 +456,7 @@ function init(){
     //with scrolling and DnD
     Navigation: {
       enable: true,
+      type: 'Native',
       //Enable panning events only if we're dragging the empty
       //canvas (and not a node).
       panning: 'avoid nodes',
