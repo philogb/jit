@@ -434,6 +434,14 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
         },
+        {
+            'Title': 'Morphing Treemaps',
+            'Description': 
+            """
+            Test Morphing Treemaps
+            """,
+            'Extras': ['excanvas.js'],
+        },
    ],
 
     'Icicle': [

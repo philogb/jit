@@ -369,6 +369,10 @@ TM.Base = {
     } else {
       handler.onComplete();
     }
+  },
+  
+  reposition: function() {
+    this.compute('end');
   }
 };
 
