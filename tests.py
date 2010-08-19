@@ -239,7 +239,15 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':True
-        }
+        },
+        {
+            'Title': 'Drag Tree',
+            'Description': 
+            """
+            """,
+            'Extras': ['excanvas.js'],
+        },
+
     ],
     
     'Spacetree': [
