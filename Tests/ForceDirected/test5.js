@@ -489,9 +489,11 @@ function init(){
       type: 'HTML',
       //Change cursor style when hovering a node
       onMouseEnter: function() {
+        console.log('enter');  
         fd.canvas.getElement().style.cursor = 'move';
       },
       onMouseLeave: function() {
+        console.log('leave');
         fd.canvas.getElement().style.cursor = '';
       },
       //Update node positions when dragged

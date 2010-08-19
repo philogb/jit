@@ -40,7 +40,7 @@ var ExtrasInitializer = {
         target = e.target || e.srcElement,
         related = e.relatedTarget;
     if(group) {
-      return related && related.nodeName && related.nodeName === "CANVAS" 
+      return related && related == this.viz.canvas.getCtx().canvas 
           && !!target && this.isDescendantOf(target, labelContainer);
     } else {
       return this.isDescendantOf(target, labelContainer);
