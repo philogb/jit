@@ -121,14 +121,27 @@ var NodeHelper = {
     (end code)
     */
     'render': function(type, pos, width, height, canvas){
-      var ctx = canvas.getCtx();
-      height /= 2;
-      width /= 2;
+      var ctx = canvas.getCtx(),
+          scalex = 1,
+          scaley = 1,
+          scaleposx = 1,
+          scaleposy = 1,
+          radius = 0;
+
+      if (width > height) {
+          radius = width / 2;
+          scaley = height / width;
+          scaleposy = width / height;
+      } else {
+          radius = height / 2;
+          scalex = width / height;
+          scaleposx = height / width;
+      }
+
       ctx.save();
-      ctx.scale(width / height, height / width);
+      ctx.scale(scalex, scaley);
       ctx.beginPath();
-      ctx.arc(pos.x * (height / width), pos.y * (width / height), height, 0,
-          Math.PI * 2, true);
+      ctx.arc(pos.x * scaleposx, pos.y * scaleposy, radius, 0, Math.PI * 2, true);
       ctx.closePath();
       ctx[type]();
       ctx.restore();
