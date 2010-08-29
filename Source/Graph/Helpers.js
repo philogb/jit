@@ -164,14 +164,25 @@ var NodeHelper = {
     (end code)
     */
     'contains': function(npos, pos, width, height){
-      // TODO(nico): be more precise...
-      width /= 2; 
-      height /= 2;
-      var dist = (width + height) / 2, 
-          diffx = npos.x - pos.x, 
-          diffy = npos.y - pos.y, 
-          diff = diffx * diffx + diffy * diffy;
-      return diff <= dist * dist;
+      var radius = 0,
+          scalex = 1,
+          scaley = 1,
+          diffx = 0,
+          diffy = 0,
+          diff = 0;
+
+      if (width > height) {
+	      radius = width / 2;
+	      scaley = height / width;
+	  } else {
+          radius = height / 2;
+          scalex = width / height;
+      }
+
+      diffx = (npos.x - pos.x) * (1 / scalex);
+      diffy = (npos.y - pos.y) * (1 / scaley);
+      diff = diffx * diffx + diffy * diffy;
+      return diff <= radius * radius;
     }
   },
   /*

@@ -436,7 +436,6 @@ $jit.ForceDirected.$extend = true;
             height = node.getData('height');
         this.nodeHelper.ellipse.render('fill', pos, width, height, canvas);
         },
-      // TODO(nico): be more precise...
       'contains': function(node, pos){
         var npos = node.pos.getc(true), 
             width = node.getData('width'), 
