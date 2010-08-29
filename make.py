@@ -1,4 +1,4 @@
-from os import system, walk
+from os import system, walk, path, mkdir
 from shutil import copy
 import sys, re
 
@@ -31,7 +31,10 @@ def make_docs():
         + " -s docstyle")
 
 def make_examples(fancy=False):
-#clean examples folder
+    if (not path.exists('Examples')):
+        mkdir('Examples')
+        
+#clean examples folders
     system("rm -rf Examples/*")
 #copy css base files
     system('cp -r Tests/css Examples/css')
