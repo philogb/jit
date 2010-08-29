@@ -766,8 +766,8 @@ function init(){
         //set distance between node and its children
         levelDistance: 40,
         //sibling and subtrees offsets
-        siblingOffset: 0,
-        subtreeOffset: 0,
+        siblingOffset: 3,
+        subtreeOffset: 3,
         //set node and edge styles
         //set overridable=true for styling individual
         //nodes or edges

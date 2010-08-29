@@ -174,7 +174,7 @@ var NodeHelper = {
       if (width > height) {
 	      radius = width / 2;
 	      scaley = height / width;
-	  } else {
+      } else {
           radius = height / 2;
           scalex = width / height;
       }

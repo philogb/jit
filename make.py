@@ -31,9 +31,8 @@ def make_docs():
         + " -s docstyle")
 
 def make_examples(fancy=False):
-    if (not path.exists('Examples')):
+    if not path.exists('Examples'):
         mkdir('Examples')
-        
 #clean examples folders
     system("rm -rf Examples/*")
 #copy css base files
