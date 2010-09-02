@@ -15,7 +15,12 @@
     ],
     "Polar": [
       "Complex"
-    ]
+    ],
+    "Matrix4": [
+      "Vector4"
+    ],
+    "Vector3": [],
+    "Vector4": []
   },
 
   "Extras": {
@@ -55,6 +60,9 @@
       "Layouts"
     ],
     "Layouts.ForceDirected": [
+      "Layouts"
+    ],
+    "Layouts.ForceDirected3D": [
       "Layouts"
     ],
     "Layouts.TM": [
@@ -219,6 +227,29 @@
         "Graph.Label",
         "Loader",
         "Layouts.ForceDirected",
+        "Fx"
+    ],
+
+    "ForceDirected3D": [
+        "Core",
+        "Options.Canvas",
+        "Options.Node",
+        "Options.Edge",
+        "Options.Fx",
+        "Options.Label",
+        "Options.Tips",
+        "Options.NodeStyles",
+        "Options.Events",
+        "Options.Navigation",
+        "Options.Controller",
+        "Extras",
+        "Canvas",
+        "Vector3",
+        "Graph.Op",
+        "Graph.Plot",
+        "Graph.Label",
+        "Loader",
+        "Layouts.ForceDirected3D",
         "Fx"
     ],
 

@@ -89,6 +89,14 @@ Graph.Plot = {
                           this.compute(from.y, to.y, delta));
         },
 
+        'linear3': function(elem, props, delta) {
+          var from = elem.startPos.getc(true);
+          var to = elem.endPos.getc(true);
+          elem.pos.setc(this.compute(from.x, to.x, delta), 
+                        this.compute(from.y, to.y, delta),
+                        this.compute(from.z, to.z, delta));
+        },
+
         'polar': function(elem, props, delta) {
           var from = elem.startPos.getp(true);
           var to = elem.endPos.getp();

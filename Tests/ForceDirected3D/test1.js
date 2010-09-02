@@ -554,7 +554,7 @@ function init(){
     onComplete: function(){
       Log.write('done');
       fd.animate({
-        modes: ['linear'],
+        modes: ['linear3'],
         transition: $jit.Trans.Elastic.easeOut,
         duration: 2500
       });

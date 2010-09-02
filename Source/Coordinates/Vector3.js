@@ -16,13 +16,27 @@ $jit.Vector3 = Vector3;
 
 Vector3.prototype = {
   
-  set: function ( x, y, z ) {
+  set: function ( v ) {
+  
+    this.x = v.x;
+    this.y = v.y;
+    this.z = v.z;
+  
+  },
+
+  setc: function ( x, y, z ) {
 
 		this.x = x;
 		this.y = y;
 		this.z = z;
 
 	},
+	
+	getc: function() {
+	  return this;
+	},
+	
+	//TODO(nico): getp
 
 	copy: function ( v ) {
 
@@ -37,6 +51,7 @@ Vector3.prototype = {
 		this.x = v1.x + v2.x;
 		this.y = v1.y + v2.y;
 		this.z = v1.z + v2.z;
+		return this;
 
 	},
 
@@ -45,6 +60,7 @@ Vector3.prototype = {
 		this.x += v.x;
 		this.y += v.y;
 		this.z += v.z;
+		return this;
 
 	},
 
@@ -53,6 +69,7 @@ Vector3.prototype = {
 		this.x += s;
 		this.y += s;
 		this.z += s;
+		return this;
 
 	},
 
@@ -61,6 +78,7 @@ Vector3.prototype = {
 		this.x = v1.x - v2.x;
 		this.y = v1.y - v2.y;
 		this.z = v1.z - v2.z;
+		return this;
 
 	},
 
@@ -69,6 +87,7 @@ Vector3.prototype = {
 		this.x -= v.x;
 		this.y -= v.y;
 		this.z -= v.z;
+		return this;
 
 	},
 
@@ -77,6 +96,7 @@ Vector3.prototype = {
 		this.x = v1.y * v2.z - v1.z * v2.y;
 		this.y = v1.z * v2.x - v1.x * v2.z;
 		this.z = v1.x * v2.y - v1.y * v2.x;
+		return this;
 
 	},
 
@@ -87,6 +107,7 @@ Vector3.prototype = {
 		this.x = ty * v.z - tz * v.y;
 		this.y = tz * v.x - tx * v.z;
 		this.z = tx * v.y - ty * v.x;
+		return this;
 
 	},
 
@@ -95,6 +116,7 @@ Vector3.prototype = {
 		this.x *= v.x;
 		this.y *= v.y;
 		this.z *= v.z;
+		return this;
 
 	},
 
@@ -103,6 +125,7 @@ Vector3.prototype = {
 		this.x *= s;
 		this.y *= s;
 		this.z *= s;
+		return this;
 
 	},
 
@@ -142,6 +165,7 @@ Vector3.prototype = {
 		this.x = - this.x;
 		this.y = - this.y;
 		this.z = - this.z;
+		return this;
 
 	},
 
@@ -156,6 +180,7 @@ Vector3.prototype = {
 			this.multiplyScalar( 0 );
 
 		}
+		return this;
 
 	},
 
