@@ -94,7 +94,7 @@ $jit.Sunburst = new Class({
     }
 
     this.graphOptions = {
-      'complex': false,
+      'klass': Polar,
       'Node': {
         'selected': false,
         'exist': true,

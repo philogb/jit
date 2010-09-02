@@ -15,7 +15,7 @@ var Vector4 = function ( x, y, z, w ) {
 $jit.Vector4 = Vector4;
 
 Vector4.prototype = {
-
+  
 	set: function ( x, y, z, w ) {
 
 		this.x = x;
@@ -43,7 +43,7 @@ Vector4.prototype = {
 
 	},
 
-	addSelf: function ( v ) {
+	$add: function ( v ) {
 
 		this.x += v.x;
 		this.y += v.y;
@@ -61,7 +61,7 @@ Vector4.prototype = {
 
 	},
 
-	subSelf: function ( v ) {
+	$sub: function ( v ) {
 
 		this.x -= v.x;
 		this.y -= v.y;

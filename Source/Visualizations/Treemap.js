@@ -124,7 +124,7 @@ TM.Base = {
     }
 
     this.graphOptions = {
-      'complex': true,
+      'klass': Complex,
       'Node': {
         'selected': false,
         'exist': true,

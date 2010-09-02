@@ -445,7 +445,7 @@ function init(){
     //Enable zooming and panning
     //by scrolling and DnD
     Navigation: {
-      enable: true,
+      enable: false,
       //Enable panning events only if we're dragging the empty
       //canvas (and not a node).
       panning: 'avoid nodes',

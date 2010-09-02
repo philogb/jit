@@ -15,8 +15,8 @@ var Vector3 = function ( x, y, z ) {
 $jit.Vector3 = Vector3;
 
 Vector3.prototype = {
-
-	set: function ( x, y, z ) {
+  
+  set: function ( x, y, z ) {
 
 		this.x = x;
 		this.y = y;
@@ -40,7 +40,7 @@ Vector3.prototype = {
 
 	},
 
-	addSelf: function ( v ) {
+	$add: function ( v ) {
 
 		this.x += v.x;
 		this.y += v.y;
@@ -64,7 +64,7 @@ Vector3.prototype = {
 
 	},
 
-	subSelf: function ( v ) {
+	$sub: function ( v ) {
 
 		this.x -= v.x;
 		this.y -= v.y;
@@ -80,7 +80,7 @@ Vector3.prototype = {
 
 	},
 
-	crossSelf: function ( v ) {
+	$cross: function ( v ) {
 
 		var tx = this.x, ty = this.y, tz = this.z;
 
@@ -90,7 +90,7 @@ Vector3.prototype = {
 
 	},
 
-	multiplySelf: function ( v ) {
+	$multiply: function ( v ) {
 
 		this.x *= v.x;
 		this.y *= v.y;
@@ -98,19 +98,11 @@ Vector3.prototype = {
 
 	},
 
-	multiplyScalar: function ( s ) {
+	$scale: function ( s ) {
 
 		this.x *= s;
 		this.y *= s;
 		this.z *= s;
-
-	},
-
-	divideScalar: function ( s ) {
-
-		this.x /= s;
-		this.y /= s;
-		this.z /= s;
 
 	},
 
@@ -133,13 +125,13 @@ Vector3.prototype = {
 
 	},
 
-	length: function () {
+	norm: function () {
 
 		return Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
 
 	},
 
-	lengthSq: function () {
+	normSquared: function () {
 
 		return this.x * this.x + this.y * this.y + this.z * this.z;
 

@@ -39,7 +39,7 @@ $jit.Graph = new Class({
 
   initialize: function(opt, Node, Edge, Label) {
     var innerOptions = {
-    'complex': false,
+    'klass': Complex,
     'Node': {}
     };
     this.Node = Node;
@@ -151,7 +151,7 @@ $jit.Graph = new Class({
         'data': $.merge(obj.data || {}, {}),
         'adjacencies': edges 
       }, this.opt.Node), 
-      this.opt.complex, 
+      this.opt.klass, 
       this.Node, 
       this.Edge,
       this.Label);
@@ -671,7 +671,7 @@ var Accessors;
 */
 Graph.Node = new Class({
     
-  initialize: function(opt, complex, Node, Edge, Label) {
+  initialize: function(opt, klass, Node, Edge, Label) {
     var innerOptions = {
       'id': '',
       'name': '',
@@ -689,9 +689,9 @@ Graph.Node = new Class({
         'end' : 0
       },
 
-      'pos': (complex && $C(0, 0)) || $P(0, 0),
-      'startPos': (complex && $C(0, 0)) || $P(0, 0),
-      'endPos': (complex && $C(0, 0)) || $P(0, 0)
+      'pos': new klass,
+      'startPos': new klass,
+      'endPos': new klass
     };
     
     $.extend(this, $.extend(innerOptions, opt));

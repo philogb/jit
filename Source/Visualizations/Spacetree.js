@@ -146,7 +146,7 @@ $jit.ST= (function() {
             }
 
             this.graphOptions = {
-                'complex': true
+                'klass': Complex
             };
             this.graph = new Graph(this.graphOptions, this.config.Node, this.config.Edge);
             this.labels = new $ST.Label[canvasConfig.Label.type](this);

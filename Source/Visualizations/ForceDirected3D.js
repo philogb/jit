@@ -74,7 +74,7 @@ $jit.ForceDirected3D = new Class( {
     }
 
     this.graphOptions = {
-      'complex': true,
+      'klass': Vector3,
       'Node': {
         'selected': false,
         'exist': true,
