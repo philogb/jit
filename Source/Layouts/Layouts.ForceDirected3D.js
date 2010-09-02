@@ -1,25 +1,21 @@
 /*
- * File: Layouts.ForceDirected.js
+ * File: Layouts.ForceDirected3D.js
  *
 */
 
 /*
- * Class: Layouts.ForceDirected
+ * Class: Layouts.ForceDirected3D
  * 
  * Implements a Force Directed Layout.
  * 
  * Implemented By:
  * 
- * <ForceDirected>
- * 
- * Credits:
- * 
- * Marcus Cobden <http://marcuscobden.co.uk>
+ * <ForceDirected3D>
  * 
  */
-Layouts.ForceDirected = new Class({
+Layouts.ForceDirected3D = new Class({
 
-  getOptions: function(random) {
+  getOptions: function() {
     var s = this.canvas.getSize();
     var w = s.width, h = s.height;
     //count nodes
@@ -47,14 +43,15 @@ Layouts.ForceDirected = new Class({
     this.graph.eachNode(function(n) {
       $.each(prop, function(p) {
         var pos = n.getPos(p);
-        if(pos.equals(Complex.KER)) {
+        if(pos.isZero()) {
           pos.x = opt.width/5 * (Math.random() - 0.5);
           pos.y = opt.height/5 * (Math.random() - 0.5);
+          pos.z = 200 * (Math.random() - 0.5);
         }
         //initialize disp vector
         n.disp = {};
         $.each(prop, function(p) {
-          n.disp[p] = $C(0, 0);
+          n.disp[p] = $V3(0, 0, 0);
         });
       });
     });
@@ -66,10 +63,9 @@ Layouts.ForceDirected = new Class({
     if(incremental) {
       (function iter() {
         for(var total=incremental.iter, j=0; j<total; j++) {
-          opt.t = opt.tstart;
-          if(times) opt.t *= (1 - i++/(times -1));
+          opt.t = opt.tstart * (1 - i++/(times -1));
           that.computePositionStep(property, opt);
-          if(times && i >= times) {
+          if(i >= times) {
             incremental.onComplete();
             return;
           }
@@ -133,8 +129,8 @@ Layouts.ForceDirected = new Class({
         var disp = u.disp[p];
         var norm = disp.norm() || 1;
         var p = u.getPos(p);
-        p.$add($C(disp.x * min(Math.abs(disp.x), t) / norm, 
-            disp.y * min(Math.abs(disp.y), t) / norm));
+        p.$add($C(disp.x * Math.min(Math.abs(disp.x), t) / norm, 
+            disp.y * Math.min(Math.abs(disp.y), t) / norm));
         p.x = min(w2, max(-w2, p.x));
         p.y = min(h2, max(-h2, p.y));
       });

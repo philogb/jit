@@ -548,6 +548,15 @@ tests_model = {
             """,
             'Extras': ['excanvas.js']
         },
+        {
+            'Title': 'Force Directed Static Graph',
+            'Description': 
+            """
+              Infinite iterations.
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': False
+        },
     ],
     
     'Other': [
