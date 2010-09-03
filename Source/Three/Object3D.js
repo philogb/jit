@@ -26,5 +26,6 @@ THREE.Object3D = function ( material ) {
 		this.matrix.multiplySelf( THREE.Matrix4.scaleMatrix( this.scale.x, this.scale.y, this.scale.z ) );
 
 	};
+	
 
 };

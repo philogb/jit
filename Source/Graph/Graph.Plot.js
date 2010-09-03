@@ -13,7 +13,7 @@
    edgeHelper - <EdgeHelper> object.
 */
 Graph.Plot = {
-    //Default intializer
+    //Default initializer
     initialize: function(viz, klass){
       this.viz = viz;
       this.config = viz.config;
@@ -87,14 +87,6 @@ Graph.Plot = {
             var to = elem.endPos.getc(true);
             elem.pos.setc(this.compute(from.x, to.x, delta), 
                           this.compute(from.y, to.y, delta));
-        },
-
-        'linear3': function(elem, props, delta) {
-          var from = elem.startPos.getc(true);
-          var to = elem.endPos.getc(true);
-          elem.pos.setc(this.compute(from.x, to.x, delta), 
-                        this.compute(from.y, to.y, delta),
-                        this.compute(from.z, to.z, delta));
         },
 
         'polar': function(elem, props, delta) {
@@ -649,3 +641,35 @@ Graph.Plot = {
   
 };
 
+/*
+  Object: Graph.Plot3D
+  
+  <Graph> 3D rendering and animation methods.
+  
+  Properties:
+  
+  nodeHelper - <NodeHelper> object.
+  edgeHelper - <EdgeHelper> object.
+
+*/
+Graph.Plot3D = $.merge(Graph.Plot, {
+  Interpolator: {
+    'linear3D': function(elem, props, delta) {
+      var from = elem.startPos.getc(true);
+      var to = elem.endPos.getc(true);
+      elem.pos.setc(this.compute(from.x, to.x, delta), 
+                    this.compute(from.y, to.y, delta),
+                    this.compute(from.z, to.z, delta));
+    }
+  },
+  
+  plotNode: function(node, canvas) {
+    if(!node.geometry) {
+      
+    }
+  },
+  
+  plotEdge: function(adj, canvas) {
+    
+  }
+});
