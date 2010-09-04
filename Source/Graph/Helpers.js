@@ -290,7 +290,7 @@ var NodeHelper = {
     
     type - (string) Possible options are 'fill' or 'stroke'.
     pos - (object) An *x*, *y* object with the position of the center of the triangle.
-    dim - (number) The dimension of the triangle.
+    dim - (number) Half the base and half the height of the triangle.
     canvas - (object) A <Canvas> instance.
     
     Example:
@@ -322,7 +322,7 @@ var NodeHelper = {
     
     npos - (object) An *x*, *y* object with the <Graph.Node> position.
     pos - (object) An *x*, *y* object with the position to check.
-    dim - (number) The dimension of the shape.
+    dim - (number) Half the base and half the height of the triangle.
     
     Example:
     (start code js)
@@ -340,13 +340,13 @@ var NodeHelper = {
     /*
     Method: render
     
-    Renders a star into the canvas.
+    Renders a star (concave decagon) into the canvas.
     
     Parameters:
     
     type - (string) Possible options are 'fill' or 'stroke'.
     pos - (object) An *x*, *y* object with the position of the center of the star.
-    dim - (number) The dimension of the star.
+    dim - (number) The length of a side of a concave decagon.
     canvas - (object) A <Canvas> instance.
     
     Example:
@@ -382,7 +382,7 @@ var NodeHelper = {
     
     npos - (object) An *x*, *y* object with the <Graph.Node> position.
     pos - (object) An *x*, *y* object with the position to check.
-    dim - (number) The dimension of the shape.
+    dim - (number) The length of a side of a concave decagon.
     
     Example:
     (start code js)
