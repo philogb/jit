@@ -12,6 +12,8 @@ EXCLUDES = ['Source/Extras',
             'Source/Options/Options.js'
             'Source/Core/Fx.js', 
             'Source/Graph/Graph.Geom.js']
+NATURALDOCS_VER = "1.4"
+NATURALDOCS = "NaturalDocs-%s" % NATURALDOCS_VER
 
 def main():
     if 'docs' in sys.argv: make_docs()
@@ -21,14 +23,30 @@ def main():
     if 'build-fancy' in sys.argv: make_build(fancy=True)
 
 def make_docs():
+    if not path.exists(NATURALDOCS):
+		print "Requires NaturalDocs %s." % NATURALDOCS_VER
+		print "http://www.naturaldocs.org/download.html"
+		return
+
+    if not path.exists(NATURALDOCS + '/img'):
+        mkdir(NATURALDOCS + '/img')
+
+    if not path.exists('Docs'):
+        mkdir('Docs')
+
+    # If we can't use 'docstyle' then fallback to 'Default'
+    docstyle = 'docstyle'
+    if not path.exists(NATURALDOCS + '/Styles/' + docstyle + '.css'):
+        docstyle = 'Default'
+
     system("perl " 
-        + "NaturalDocs-1.4/NaturalDocs -r " 
+        + NATURALDOCS + "/NaturalDocs -r "
         + " -i Source/" 
         + " -xi " + " -xi ".join(EXCLUDES) 
         + " -o HTML Docs/" 
-        + " -p NaturalDocs-1.4"
-        + " -img NaturalDocs-1.4/img"
-        + " -s docstyle")
+        + " -p " + NATURALDOCS
+        + " -img " + NATURALDOCS + "/img"
+        + " -s " + docstyle)
 
 def make_examples(fancy=False):
     if not path.exists('Examples'):
