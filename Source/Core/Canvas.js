@@ -87,6 +87,7 @@ var Canvas;
       this.opt = opt;
       var id = $.type(opt.injectInto) == 'string'? 
           opt.injectInto:opt.injectInto.id,
+          type = opt.type,
           idLabel = id + "-label", 
           wrapper = $(id),
           width = opt.width || wrapper.offsetWidth,
@@ -111,7 +112,7 @@ var Canvas;
       this.labelContainer = this.createLabelContainer(opt.Label.type, 
           idLabel, canvasOptions);
       //create primary canvas
-      this.canvases.push(new Canvas.Base({
+      this.canvases.push(new Canvas.Base[type]({
         config: $.extend({idSuffix: '-canvas'}, canvasOptions),
         plot: function(base) {
           viz.fx.plot();
@@ -124,7 +125,7 @@ var Canvas;
       var back = opt.background;
       if(back) {
         var backCanvas = new Canvas.Background[back.type](viz, $.extend(back, canvasOptions));
-        this.canvases.push(new Canvas.Base(backCanvas));
+        this.canvases.push(new Canvas.Base[type](backCanvas));
       }
       //insert canvases
       var len = this.canvases.length;
@@ -367,7 +368,8 @@ var Canvas;
     }
   });
   //base canvas wrapper
-  Canvas.Base = new Class({
+  Canvas.Base = {};
+  Canvas.Base.2D = new Class({
     translateOffsetX: 0,
     translateOffsetY: 0,
     scaleOffsetX: 1,
