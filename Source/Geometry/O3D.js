@@ -7,7 +7,7 @@ var O3D = {};
 
 $jit.O3D = O3D;
 
-O3D.Base = new Class({
+O3D.base = new Class({
   //array of { x, y, z } of float
   vertices: [],
   //array of { a, b, c, d? } of int
@@ -22,15 +22,16 @@ O3D.Base = new Class({
   updateMatrix: function() {
     var pos = this.position,
         rot = this.rotation,
-        scale = this.scale;
+        scale = this.scale,
+        matrix = this.matrix;
     
-    this.matrix.identity();
+    matrix.identity();
   
-    this.matrix.$multiply( Matrix4.translationMatrix( pos.x, pos.y, pos.z ) );
-    //this.matrix.$multiply( Matrix4.rotationXMatrix( rot.x ) );
-    //this.matrix.$multiply( Matrix4.rotationYMatrix( rot.y ) );
-    //this.matrix.$multiply( Matrix4.rotationZMatrix( rot.z ) );
-    this.matrix.$multiply( Matrix4.scaleMatrix( scale.x, scale.y, scale.z ) );
+    matrix.$multiply( Matrix4.translationMatrix( pos.x, pos.y, pos.z ) );
+    //matrix.$multiply( Matrix4.rotationXMatrix( rot.x ) );
+    //matrix.$multiply( Matrix4.rotationYMatrix( rot.y ) );
+    //matrix.$multiply( Matrix4.rotationZMatrix( rot.z ) );
+    matrix.$multiply( Matrix4.scaleMatrix( scale.x, scale.y, scale.z ) );
   }
 });
 
@@ -59,17 +60,19 @@ function IsoCube() {
 }
 
 //Cube
-O3D.Cube = new Class({
-  Implements: O3D,
+O3D.cube = new Class({
+  Implements: O3D.base,
   
-  initialize: function(node) {
+  initialize: function() {
     IsoCube.call(this);
   },
   
   update: function(obj) {
-   /*
-    * Use obj.getData('dim'), obj.getData('width'), etc to set the inner matrix properties. 
-    * Also set the current object position with the node position.
-    */  
+    var dim = obj.getData('dim'),
+        pos = obj.pos;
+    
+    this.position.setc(pos.x, pos.y, pos.z);
+    this.scale.setc(dim, dim, dim);
+    this.updateMatrix();
   }
 });

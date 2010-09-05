@@ -442,6 +442,7 @@ function init(){
   var fd = new $jit.ForceDirected3D({
     //id of the visualization container
     injectInto: 'infovis',
+    type: '3D',
     //Enable zooming and panning
     //by scrolling and DnD
     Navigation: {
@@ -457,22 +458,26 @@ function init(){
     // with dollar prefixed data-properties in the
     // JSON structure.
     Node: {
-      overridable: true
+      overridable: false,
+      type: 'cube',
+      dim: 5,
+      color: '#dd1111'
     },
     Edge: {
-      overridable: true,
+      overridable: false,
+      type: 'none',
       color: '#23A4FF',
       lineWidth: 0.4
     },
     //Native canvas text styling
     Label: {
-      type: labelType, //Native or HTML
+      type: 'HTML', //Native or HTML
       size: 10,
       style: 'bold'
     },
     //Add Tips
     Tips: {
-      enable: true,
+      enable: false,
       onShow: function(tip, node) {
         //count connections
         var count = 0;
@@ -484,7 +489,7 @@ function init(){
     },
     // Add node events
     Events: {
-      enable: true,
+      enable: false,
       type: 'Native',
       //Change cursor style when hovering a node
       onMouseEnter: function() {
@@ -554,7 +559,7 @@ function init(){
     onComplete: function(){
       Log.write('done');
       fd.animate({
-        modes: ['linear3'],
+        modes: ['linear3D'],
         transition: $jit.Trans.Elastic.easeOut,
         duration: 2500
       });

@@ -369,7 +369,7 @@ var Canvas;
   });
   //base canvas wrapper
   Canvas.Base = {};
-  Canvas.Base.2D = new Class({
+  Canvas.Base['2D'] = new Class({
     translateOffsetX: 0,
     translateOffsetY: 0,
     scaleOffsetX: 1,

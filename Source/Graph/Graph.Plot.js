@@ -663,13 +663,145 @@ Graph.Plot3D = $.merge(Graph.Plot, {
     }
   },
   
-  plotNode: function(node, canvas) {
-    if(!node.geometry) {
-      
-    }
+  /*
+    Method: plot
+  
+    Plots a <Graph>.
+  
+    Parameters:
+  
+    opt - (optional) Plotting options. Most of them are described in <Options.Fx>.
+  
+    Example:
+  
+    (start code js)
+    var viz = new $jit.Viz(options);
+    viz.fx.plot(); 
+    (end code)
+  
+  */
+  plot: function(opt, animating) {
+   var viz = this.viz, 
+       aGraph = viz.graph, 
+       canvas = viz.canvas, 
+       id = viz.root, 
+       that = this, 
+       ctx = canvas.getCtx(), 
+       min = Math.min,
+       opt = opt || this.viz.controller;
+   
+   opt.clearCanvas && canvas.clear();
+     
+   var root = aGraph.getNode(id);
+   if(!root) return;
+   
+   var T = !!root.visited;
+   aGraph.eachNode(function(node) {
+     var nodeAlpha = node.getData('alpha');
+     node.eachAdjacency(function(adj) {
+       var nodeTo = adj.nodeTo;
+       if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
+         !animating && opt.onBeforePlotLine(adj);
+         that.plotLine(adj, canvas, animating);
+         !animating && opt.onAfterPlotLine(adj);
+       }
+     });
+     if(node.drawn) {
+       !animating && opt.onBeforePlotNode(node);
+       that.plotNode(node, canvas, animating);
+       !animating && opt.onAfterPlotNode(node);
+     }
+     if(!that.labelsHidden && opt.withLabels) {
+       if(node.drawn && nodeAlpha >= 0.95) {
+         that.labels.plotLabel(canvas, node, opt);
+       } else {
+         that.labels.hideLabel(node, false);
+       }
+     }
+     node.visited = !T;
+   });
   },
   
-  plotEdge: function(adj, canvas) {
+  plotNode: function(node, canvas) {
+    if(node.getData('type') == 'none') return;
+    this.plotElement(node, canvas, {
+      getAlpha: function() {
+        return node.getData('alpha');
+      }
+    });
+  },
+  
+  plotLine: function(adj, canvas) {
+    if(adj.getData('type') == 'none') return;
+    this.plotElement(adj, canvas, {
+      getAlpha: function() {
+        return Math.min(adj.nodeFrom.getData('alpha'),
+                        adj.nodeTo.getData('alpha'),
+                        adj.getData('alpha'));
+      }
+    });
+  },
+  
+  plotElement: function(elem, canvas, opt) {
+    var gl = canvas.getCtx(),
+        viewMatrix = new Matrix4,
+        wcanvas = canvas.canvases[0],
+        program = wcanvas.program,
+        camera = wcanvas.camera;
     
+    if(!elem.geometry) {
+      elem.geometry = new O3D[elem.getData('type')];
+    }
+    elem.geometry.update(elem);
+    if(!elem.webGLVertexBuffer) {
+      var vertices = [],
+          faces = [],
+          vertexIndex = 0,
+          geom = elem.geometry;
+      
+      for(var i=0, vs = geom.vertices, fs=geom.faces, fsl=fs.length; i<fsl; i++) {
+        var face = fs[i],
+            v1 = vs[face.a],
+            v2 = vs[face.b],
+            v3 = vs[face.c],
+            v4 = face.d? vs[face.d] : false;
+        
+        vertices.push(v1.x, v1.y, v1.z);
+        vertices.push(v2.x, v2.y, v2.z);
+        vertices.push(v3.x, v3.y, v3.z);
+        if(v4) vertices.push(v4.x, v4.y, v4.z);
+            
+        faces.push(vertexIndex, vertexIndex +1, vertexIndex +2);
+        if(v4) {
+          faces.push(vertexIndex, vertexIndex +2, vertexIndex +3);
+          vertexIndex += 4;
+        } else {
+          vertexIndex += 3;
+        }
+      }
+      //create and store vertex data
+      elem.webGLVertexBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.webGLVertexBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      //create and store faces index data
+      elem.webGLFaceBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elem.webGLFaceBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(faces), gl.STATIC_DRAW);
+      elem.webGLFaceCount = faces.length;
+    }
+    viewMatrix.multiply(camera.matrix, elem.geometry.matrix);
+    //send matrix data
+    gl.uniformMatrix4fv(program.viewMatrix, false, viewMatrix.flatten());
+    gl.uniformMatrix4fv(program.projectionMatrix, false, camera.projectionMatrix.flatten());
+    //send color data
+    var color = $.hexToRgb(elem.getData('color'));
+    color.push(opt.getAlpha() * 255);
+    gl.uniform4f(program.color, color[0], color[1], color[2], color[3]);
+    //send vertices data
+    gl.bindBuffer(gl.ARRAY_BUFFER, elem.webGLVertexBuffer);
+    gl.vertexAttribPointer(program.position, 3, gl.FLOAT, false, 0, 0);
+    //draw!
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elem.webGLFaceBuffer );
+    gl.drawElements(gl.TRIANGLES, elem.webGLFaceCount, gl.UNSIGNED_SHORT, 0);
   }
 });

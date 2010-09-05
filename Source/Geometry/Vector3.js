@@ -170,14 +170,14 @@ Vector3.prototype = {
 	},
 
 	normalize: function () {
+	  var len = this.norm();
+		if ( len > 0 ) {
 
-		if ( this.length() > 0 ) {
-
-			this.multiplyScalar( 1 / this.length() );
+			this.$scale( 1 / len );
 
 		} else {
 
-			this.multiplyScalar( 0 );
+			this.$scale( 0 );
 
 		}
 		return this;

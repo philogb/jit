@@ -243,7 +243,7 @@ $jit.ForceDirected3D.$extend = true;
   */
   ForceDirected3D.Plot = new Class( {
 
-    Implements: Graph.Plot
+    Implements: Graph.Plot3D
 
   });
 

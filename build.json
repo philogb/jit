@@ -6,6 +6,9 @@
     ],
     "Canvas": [
       "Core"
+    ],
+    "Canvas3D": [
+      "Core", "Canvas", "Camera"
     ]
   },
 
@@ -20,7 +23,9 @@
       "Vector4"
     ],
     "Vector3": [],
-    "Vector4": []
+    "Vector4": [],
+    "Camera": ["Vector3", "Matrix4"],
+    "O3D": ["Vector3", "Matrix4"]
   },
 
   "Extras": {
@@ -244,7 +249,8 @@
         "Options.Controller",
         "Extras",
         "Canvas",
-        "Vector3",
+        "Canvas3D",
+        "O3D",
         "Graph.Op",
         "Graph.Plot",
         "Graph.Label",

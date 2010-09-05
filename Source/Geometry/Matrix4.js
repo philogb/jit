@@ -8,9 +8,9 @@
 
 var Matrix4 = function () {
 
-	this._x = new Vector4();
-	this._y = new Vector4();
-	this._z = new Vector4();
+	this._x = new Vector3();
+	this._y = new Vector3();
+	this._z = new Vector3();
 
 };
 
@@ -113,7 +113,7 @@ Matrix4.prototype = {
 
 	},
 
-	multiplySelf: function ( m ) {
+	$multiply: function ( m ) {
 
 		var n11 = this.n11, n12 = this.n12, n13 = this.n13, n14 = this.n14,
 		n21 = this.n21, n22 = this.n22, n23 = this.n23, n24 = this.n24,
