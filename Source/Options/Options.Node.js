@@ -49,7 +49,7 @@
   type - (string) Default's *circle*. Node's shape. Node built-in types include 'circle', 'rectangle', 'square', 'ellipse', 'triangle', 'star'. The default Node type might vary in each visualization. You can also implement (non built-in) custom Node types into your visualizations.
   color - (string) Default's *#ccb*. Node color.
   alpha - (number) Default's *1*. The Node's alpha value. *1* is for full opacity.
-  dim - (number) Default's *3*. An extra parameter used by 'circle', 'square', 'triangle' and 'star' node types. The radius of a circle. Half the length of the side of a square. Half the base and half the height of a triangle. The length of a side of a star (concave decagon).
+  dim - (number) Default's *3*. An extra parameter used by 'circle', 'square', 'triangle' and 'star' node types. Depending on each shape, this parameter can set the radius of a circle, half the length of the side of a square, half the base and half the height of a triangle or the length of a side of a star (concave decagon).
   height - (number) Default's *20*. Used by 'rectangle' and 'ellipse' node types. The height of the node shape.
   width - (number) Default's *90*. Used by 'rectangle' and 'ellipse' node types. The width of the node shape.
   autoHeight - (boolean) Default's *false*. Whether to set an auto height for the node depending on the content of the Node's label.

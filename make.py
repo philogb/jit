@@ -24,9 +24,9 @@ def main():
 
 def make_docs():
     if not path.exists(NATURALDOCS):
-		print "Requires NaturalDocs %s." % NATURALDOCS_VER
-		print "http://www.naturaldocs.org/download.html"
-		return
+  		print "Requires NaturalDocs %s." % NATURALDOCS_VER
+  		print "http://www.naturaldocs.org/download.html"
+  		return
 
     if not path.exists(NATURALDOCS + '/img'):
         mkdir(NATURALDOCS + '/img')
