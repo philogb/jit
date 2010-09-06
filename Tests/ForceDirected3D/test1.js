@@ -437,6 +437,7 @@ function init(){
         "name": "graphnode20"
       }
   ];
+  
   // end
   // init ForceDirected3D
   var fd = new $jit.ForceDirected3D({
@@ -460,14 +461,14 @@ function init(){
     Node: {
       overridable: false,
       type: 'cube',
-      dim: 5,
+      dim: 7,
       color: '#dd1111'
     },
     Edge: {
       overridable: false,
-      type: 'none',
-      color: '#23A4FF',
-      lineWidth: 0.4
+      type: 'tube',
+      color: '#111',
+      lineWidth: 3
     },
     //Native canvas text styling
     Label: {
@@ -475,78 +476,28 @@ function init(){
       size: 10,
       style: 'bold'
     },
-    //Add Tips
-    Tips: {
-      enable: false,
-      onShow: function(tip, node) {
-        //count connections
-        var count = 0;
-        node.eachAdjacency(function() { count++; });
-        //display node info in tooltip
-        tip.innerHTML = "<div class=\"tip-title\">" + node.name + "</div>"
-          + "<div class=\"tip-text\"><b>connections:</b> " + count + "</div>";
-      }
-    },
     // Add node events
     Events: {
-      enable: false,
+      enable: true,
       type: 'Native',
-      //Change cursor style when hovering a node
-      onMouseEnter: function() {
-        fd.canvas.getElement().style.cursor = 'move';
+      onMouseMove: function(node, eventInfo, e) {
+       // console.log(eventInfo.getPos());
+        var pos = eventInfo.getPos();
+        cameraPosition.x += (pos.x - cameraPosition.x) * 0.5;
+        cameraPosition.y += (-pos.y - cameraPosition.y) * 0.5;
+        fd.plot();
       },
-      onMouseLeave: function() {
-        fd.canvas.getElement().style.cursor = '';
-      },
-      //Update node positions when dragged
-      onDragMove: function(node, eventInfo, e) {
-          var pos = eventInfo.getPos();
-          node.pos.setc(pos.x, pos.y);
-          fd.plot();
-      },
-      //Implement the same handler for touchscreens
-      onTouchMove: function(node, eventInfo, e) {
-        $jit.util.event.stop(e); //stop default touchmove event
-        this.onDragMove(node, eventInfo, e);
-      },
-      //Add also a click handler to nodes
-      onClick: function(node) {
-        if(!node) return;
-        // Build the right column relations list.
-        // This is done by traversing the clicked node connections.
-        var html = "<h4>" + node.name + "</h4><b> connections:</b><ul><li>",
-            list = [];
-        node.eachAdjacency(function(adj){
-          list.push(adj.nodeTo.name);
-        });
-        //append connections information
-        $jit.id('inner-details').innerHTML = html + list.join("</li><li>") + "</li></ul>";
+      onMouseWheel: function(delta) {
+        cameraPosition.z += -delta * 20;
+        fd.plot();
       }
     },
     //Number of iterations for the FD algorithm
     iterations: 200,
     //Edge length
-    levelDistance: 130,
-    // Add text to the labels. This method is only triggered
-    // on label creation and only for DOM labels (not native canvas ones).
-    onCreateLabel: function(domElement, node){
-      domElement.innerHTML = node.name;
-      var style = domElement.style;
-      style.fontSize = "0.8em";
-      style.color = "#ddd";
-    },
-    // Change node styles when DOM labels are placed
-    // or moved.
-    onPlaceLabel: function(domElement, node){
-      var style = domElement.style;
-      var left = parseInt(style.left);
-      var top = parseInt(style.top);
-      var w = domElement.offsetWidth;
-      style.left = (left - w / 2) + 'px';
-      style.top = (top + 10) + 'px';
-      style.display = '';
-    }
+    levelDistance: 130
   });
+  var cameraPosition = fd.canvas.canvases[0].camera.position;
   // load JSON data.
   fd.loadJSON(json);
   // compute positions incrementally and animate.

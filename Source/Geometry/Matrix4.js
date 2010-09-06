@@ -142,13 +142,36 @@ Matrix4.prototype = {
 
 	},
 
-	multiplyScalar: function ( s ) {
+	$scale: function ( s ) {
 
 		this.n11 *= s; this.n12 *= s; this.n13 *= s; this.n14 *= s;
 		this.n21 *= s; this.n22 *= s; this.n23 *= s; this.n24 *= s;
 		this.n31 *= s; this.n32 *= s; this.n33 *= s; this.n34 *= s;
 		this.n41 *= s; this.n42 *= s; this.n43 *= s; this.n44 *= s;
+		return this;
 
+	},
+	
+	$add: function(m) {
+	  
+	  this.n11 += m.n11;
+	  this.n12 += m.n12;
+	  this.n13 += m.n13;
+	  this.n14 += m.n14;
+	  this.n21 += m.n21;
+	  this.n22 += m.n22;
+	  this.n23 += m.n23;
+	  this.n24 += m.n24;
+	  this.n31 += m.n31;
+	  this.n32 += m.n32;
+	  this.n33 += m.n33;
+	  this.n34 += m.n34;
+	  this.n41 += m.n41;
+	  this.n42 += m.n42;
+	  this.n43 += m.n43;
+	  this.n44 += m.n44;
+	  return this;
+	
 	},
 
 	determinant: function () {
