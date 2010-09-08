@@ -211,6 +211,18 @@ Matrix4.prototype = {
 
 	},
 
+  $transpose: function () {
+
+	  this.n21 = this.n12;
+	  this.n31 = this.n13;
+	  this.n32 = this.n23;
+	  this.n41 = this.n14;
+	  this.n42 = this.n24;
+	  this.n43 = this.n34;
+	  return this;
+	  
+  },
+  
 	clone: function () {
 
 		var m = new Matrix4();

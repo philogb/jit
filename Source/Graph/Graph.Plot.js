@@ -756,20 +756,27 @@ Graph.Plot3D = $.merge(Graph.Plot, {
     if(!elem.webGLVertexBuffer) {
       var vertices = [],
           faces = [],
+          normals = [],
           vertexIndex = 0,
           geom = elem.geometry;
       
-      for(var i=0, vs = geom.vertices, fs=geom.faces, fsl=fs.length; i<fsl; i++) {
+      for(var i=0, vs=geom.vertices, fs=geom.faces, fsl=fs.length; i<fsl; i++) {
         var face = fs[i],
             v1 = vs[face.a],
             v2 = vs[face.b],
             v3 = vs[face.c],
-            v4 = face.d? vs[face.d] : false;
+            v4 = face.d? vs[face.d] : false,
+            n = face.normal;
         
         vertices.push(v1.x, v1.y, v1.z);
         vertices.push(v2.x, v2.y, v2.z);
         vertices.push(v3.x, v3.y, v3.z);
         if(v4) vertices.push(v4.x, v4.y, v4.z);
+            
+        normals.push(n.x, n.y, n.z);
+        normals.push(n.x, n.y, n.z);
+        normals.push(n.x, n.y, n.z);
+        if(v4) normals.push(n.x, n.y, n.z);
             
         faces.push(vertexIndex, vertexIndex +1, vertexIndex +2);
         if(v4) {
@@ -788,11 +795,19 @@ Graph.Plot3D = $.merge(Graph.Plot, {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elem.webGLFaceBuffer);
       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(faces), gl.STATIC_DRAW);
       elem.webGLFaceCount = faces.length;
+      //calculate vertex normals and store them
+      elem.webGLNormalBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, elem.webGLNormalBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
     }
     viewMatrix.multiply(camera.matrix, elem.geometry.matrix);
     //send matrix data
     gl.uniformMatrix4fv(program.viewMatrix, false, viewMatrix.flatten());
     gl.uniformMatrix4fv(program.projectionMatrix, false, camera.projectionMatrix.flatten());
+    //send normal matrix for lighting
+    var normalMatrix = viewMatrix.inverse();
+    normalMatrix.$transpose();
+    gl.uniformMatrix4fv(program.normalMatrix, false, normalMatrix.flatten());
     //send color data
     var color = $.hexToRgb(elem.getData('color'));
     color.push(opt.getAlpha());
@@ -800,6 +815,9 @@ Graph.Plot3D = $.merge(Graph.Plot, {
     //send vertices data
     gl.bindBuffer(gl.ARRAY_BUFFER, elem.webGLVertexBuffer);
     gl.vertexAttribPointer(program.position, 3, gl.FLOAT, false, 0, 0);
+    //send normals data
+    gl.bindBuffer(gl.ARRAY_BUFFER, elem.webGLNormalBuffer);
+    gl.vertexAttribPointer(program.normal, 3, gl.FLOAT, false, 0, 0);
     //draw!
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elem.webGLFaceBuffer );
     gl.drawElements(gl.TRIANGLES, elem.webGLFaceCount, gl.UNSIGNED_SHORT, 0);

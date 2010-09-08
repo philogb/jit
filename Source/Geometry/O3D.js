@@ -32,6 +32,25 @@ O3D.base = new Class({
     matrix.$multiply( Matrix4.rotationYMatrix( rot.y ) );
     matrix.$multiply( Matrix4.rotationZMatrix( rot.z ) );
     matrix.$multiply( Matrix4.scaleMatrix( scale.x, scale.y, scale.z ) );
+  },
+  //compute faces normals
+  computeNormals: function () {
+    for (var f=0, vs=this.vertices, fs=this.faces, len=fs.length; f < len; f++) {
+      var va = vs[fs[f].a],
+          vb = vs[fs[f].b],
+          vc = vs[fs[f].c],
+          cb = new Vector3,
+          ab = new Vector3,
+          normal = new Vector3;
+      
+      cb.sub(vc, vb);
+      ab.sub(va, vb);
+      cb.$cross(ab);
+
+      if (!cb.isZero()) cb.normalize();
+      
+      fs[f].normal = cb;
+    }
   }
 });
 
@@ -65,6 +84,7 @@ O3D.cube = new Class({
   
   initialize: function() {
     IsoCube.call(this);
+    this.computeNormals();
   },
   
   update: function(obj) {
@@ -131,6 +151,7 @@ O3D.tube = new Class({
           2 * numSegs + 1);
       }
     }
+    this.computeNormals();
   },
   
   update: function(obj) {

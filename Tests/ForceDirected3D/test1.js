@@ -437,7 +437,10 @@ function init(){
         "name": "graphnode20"
       }
   ];
+<<<<<<< HEAD
   
+=======
+>>>>>>> 83dd65b...  * added compute normals method in O3D
   // end
   // init ForceDirected3D
   var fd = new $jit.ForceDirected3D({

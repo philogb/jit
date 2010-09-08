@@ -54,5 +54,20 @@ Options.Canvas = {
     height: false,
     useCanvas: false,
     withLabels: true,
-    background: false
+    background: false,
+    
+    Scene: {
+      Lighting: {
+        enable: false,
+        Ambient: {
+          color: '#ffccdd'
+        },
+        Directional: [
+          {
+            position: { x: 100, y: 100, z: 100 },
+            color: '#ffddcc'
+          }
+        ]
+      }
+    },
 };
