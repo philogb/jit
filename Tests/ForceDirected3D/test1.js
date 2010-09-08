@@ -443,6 +443,9 @@ function init(){
 >>>>>>> 83dd65b...  * added compute normals method in O3D
   // end
   // init ForceDirected3D
+  var n = 0, prefix = 'newnode',
+      stop = true, add = false, remove = true;
+  
   var fd = new $jit.ForceDirected3D({
     //id of the visualization container
     injectInto: 'infovis',
@@ -475,12 +478,12 @@ function init(){
       overridable: true,
       type: 'sphere',
       dim: 15,
-      color: '#dd1111'
+      color: '#ff1111'
     },
     Edge: {
       overridable: false,
       type: 'tube',
-      color: '#eee',
+      color: '#111',
       lineWidth: 3
     },
     //Native canvas text styling
@@ -495,7 +498,7 @@ function init(){
       type: 'Native',
       i: 0,
       onMouseMove: function(node, eventInfo, e) {
-        if(this.i++ % 5) return;
+        //if(this.i++ % 3) return;
         var pos = eventInfo.getPos();
         cameraPosition.x += (pos.x - cameraPosition.x) * 0.5;
         cameraPosition.y += (-pos.y - cameraPosition.y) * 0.5;
@@ -504,12 +507,21 @@ function init(){
       onMouseWheel: function(delta) {
         cameraPosition.z += -delta * 20;
         fd.plot();
+      },
+      onClick: function() {
+        stop = !stop;
+        if(!stop) {
+          add = !add;
+          remove = !remove;
+          add && addNodes();
+          remove && removeNodes();
+        }
       }
     },
     //Number of iterations for the FD algorithm
     iterations: 200,
     //Edge length
-    levelDistance: 130
+    levelDistance: 100
   });
   var cameraPosition = fd.canvas.canvases[0].camera.position;
   // load JSON data.
@@ -524,11 +536,47 @@ function init(){
     onComplete: function(){
       Log.write('done');
       fd.animate({
-        modes: ['linear3D'],
+        modes: ['linear'],
         transition: $jit.Trans.Elastic.easeOut,
-        duration: 2500
+        duration: 2500,
+        onComplete: function() {
+        }
       });
     }
   });
+  
+  function addNodes() {
+    fd.config.iterations = 50;
+    fd.op.sum([{ 
+      'id': prefix + n++, 
+      'name': '',
+      'adjacencies': ['graphnode' + (n % 20)]
+    }], {
+      type: "fade:con",
+      transition: $jit.Trans.Quart.easeOut,
+      duration: 300,
+      onComplete: function() {
+        add && !stop && addNodes();
+      }
+    });
+  }
+
+  function removeNodes() {
+    fd.config.iterations = 50;
+    var nodeid = "";
+    fd.graph.eachNode(function(n) {
+      nodeid = n.id;
+    });
+    fd.op.removeNode(nodeid, {
+      type: 'fade:seq',
+      transition: $jit.Trans.Quart.easeOut,
+      duration: 300,
+      onComplete: function() {
+        console.log(remove && !stop);
+        remove && !stop && removeNodes();
+      }
+    });
+  }
+  
   // end
 }

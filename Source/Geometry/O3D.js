@@ -175,9 +175,8 @@ O3D.sphere = new Class({
 O3D.tube = new Class({
   Implements: O3D.base,
   
-  numSegs: 8,
+  numSegs: 10,
   dim: 1,
-  
   initialize: function() {
     var vs = this.vertices,
         f4 = this.faces,
@@ -222,7 +221,7 @@ O3D.tube = new Class({
       for (var i = numSegs + (numSegs / 2); i < 2 * numSegs; i++) {
         f4p((2 * i - 2 * numSegs + 2) % numSegs + numSegs,
           (2 * i - 2 * numSegs + 1) % numSegs + numSegs,
-          (2 * i - 2 * numSegs) % numSegs+numSegs, 
+          (2 * i - 2 * numSegs) % numSegs + numSegs, 
           2 * numSegs + 1);
       }
     }

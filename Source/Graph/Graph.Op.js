@@ -105,6 +105,7 @@ Graph.Op = {
                     modes: ['node-property:alpha', 'linear'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
+                        options.onComplete && options.onComplete();
                     }
                 }));
                 break;
@@ -303,11 +304,11 @@ Graph.Op = {
                         }
                     }));
                 } else {
-                    viz.graph.eachNode(function(elem) {
-                        if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
-                          elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
-                        }
-                    });
+//                    viz.graph.eachNode(function(elem) {
+//                        if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
+//                          elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
+//                        }
+//                    });
                     viz.fx.animate($.merge(options, {
                         modes: ['linear'].concat(modes)
                     }));

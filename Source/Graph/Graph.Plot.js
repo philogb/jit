@@ -359,7 +359,7 @@ Graph.Plot = {
       
       //animate
       if(opt.hideLabels) this.labels.hideLabels(true);
-      animation.setOptions($.merge(opt, {
+      animation.setOptions($.extend(opt, {
         $animating: false,
         compute: function(delta) {
           graph.eachNode(function(node) { 
@@ -654,7 +654,7 @@ Graph.Plot = {
 */
 Graph.Plot3D = $.merge(Graph.Plot, {
   Interpolator: {
-    'linear3D': function(elem, props, delta) {
+    'linear': function(elem, props, delta) {
       var from = elem.startPos.getc(true);
       var to = elem.endPos.getc(true);
       elem.pos.setc(this.compute(from.x, to.x, delta), 
