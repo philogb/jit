@@ -745,6 +745,7 @@ Graph.Plot3D = $.merge(Graph.Plot, {
   plotElement: function(elem, canvas, opt) {
     var gl = canvas.getCtx(),
         viewMatrix = new Matrix4,
+        lighting = canvas.config.Scene.Lighting,
         wcanvas = canvas.canvases[0],
         program = wcanvas.program,
         camera = wcanvas.camera;
@@ -805,10 +806,33 @@ Graph.Plot3D = $.merge(Graph.Plot, {
     gl.uniformMatrix4fv(program.viewMatrix, false, viewMatrix.flatten());
     gl.uniformMatrix4fv(program.projectionMatrix, false, camera.projectionMatrix.flatten());
     //send normal matrix for lighting
-    var normalMatrix = viewMatrix.inverse();
+    var normalMatrix = Matrix4.makeInvert(viewMatrix);
     normalMatrix.$transpose();
     gl.uniformMatrix4fv(program.normalMatrix, false, normalMatrix.flatten());
     //send color data
+    var color = $.hexToRgb(elem.getData('color'));
+    color.push(opt.getAlpha());
+    gl.uniform4f(program.color, color[0] / 255, color[1] / 255, color[2] / 255, color[3]);
+    //send lighting data
+    gl.uniform1i(program.enableLighting, lighting.enable);
+    if(lighting.enable) {
+      //set ambient light color
+      if(lighting.ambient) {
+        console.log('ambient');
+        var acolor = lighting.ambient;
+        gl.uniform3f(program.ambientColor, acolor[0], acolor[1], acolor[2]);
+      }
+      //set directional light
+      if(lighting.directional) {
+        console.log('dir');
+        var dir = lighting.directional,
+            color = dir.color,
+            pos = dir.direction,
+            vd = new Vector3(pos.x, pos.y, pos.z).normalize().$scale(-1);
+        gl.uniform3f(program.lightingDirection, vd.x, vd.y, vd.z);
+        gl.uniform3f(program.directionalColor, color[0], color[1], color[2]);
+      }
+    }
     var color = $.hexToRgb(elem.getData('color'));
     color.push(opt.getAlpha());
     gl.uniform4f(program.color, color[0] / 255, color[1] / 255, color[2] / 255, color[3]);

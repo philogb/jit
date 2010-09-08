@@ -34,8 +34,16 @@ Canvas.Base['3D'] = new Class({
     $.extend(program, {
       'viewMatrix': gl.getUniformLocation(program, 'viewMatrix'),
       'projectionMatrix': gl.getUniformLocation(program, 'projectionMatrix'),
+      'normalMatrix': gl.getUniformLocation(program, 'normalMatrix'),
       'color': gl.getUniformLocation(program, 'color'),
-      'position': gl.getAttribLocation(program, 'position')
+      
+      'enableLighting': gl.getUniformLocation(program, 'enableLighting'),
+      'ambientColor': gl.getUniformLocation(program, 'ambientColor'),
+      'directionalColor': gl.getUniformLocation(program, 'directionalColor'),
+      'lightingDirection': gl.getUniformLocation(program, 'lightingDirection'),
+      
+      'position': gl.getAttribLocation(program, 'position'),
+      'normal': gl.getAttribLocation(program, 'normal'),
     });
     gl.enableVertexAttribArray(program.position);
     this.program = program;
@@ -165,8 +173,8 @@ Canvas.Base['3D'].VertexShader = [
     "} else {",
       "vec4 transformedNormal = normalMatrix * vec4(normal, 1.0);",
       "float directionalLightWeighting = max(dot(transformedNormal.xyz, lightingDirection), 0.0);",
-      "lightWeighting = ambientColor + directionalColor * directionalLightWeighting;"
-    "}"
+      "lightWeighting = ambientColor + directionalColor * directionalLightWeighting;",
+    "}",
     
     "vcolor = color;",
     "gl_Position = projectionMatrix * viewMatrix * vec4( position, 1.0 );",

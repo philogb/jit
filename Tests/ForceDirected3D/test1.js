@@ -44,7 +44,7 @@ function init(){
         ],
         "data": {
           "$color": "#83548B",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 10
         },
         "id": "graphnode0",
@@ -139,7 +139,7 @@ function init(){
         ],
         "data": {
           "$color": "#EBB056",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 11
         },
         "id": "graphnode1",
@@ -168,7 +168,7 @@ function init(){
         ],
         "data": {
           "$color": "#416D9C",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 7
         },
         "id": "graphnode2",
@@ -203,7 +203,7 @@ function init(){
         ],
         "data": {
           "$color": "#416D9C",
-          "$type": "square",
+          //"$type": "square",
           "$dim": 10
         },
         "id": "graphnode3",
@@ -212,7 +212,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#83548B",
-          "$type": "square",
+          //"$type": "square",
           "$dim": 11
         },
         "id": "graphnode4",
@@ -229,7 +229,7 @@ function init(){
         ],
         "data": {
           "$color": "#C74243",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 8
         },
         "id": "graphnode5",
@@ -252,7 +252,7 @@ function init(){
         ],
         "data": {
           "$color": "#83548B",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 11
         },
         "id": "graphnode6",
@@ -261,7 +261,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#EBB056",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 12
         },
         "id": "graphnode7",
@@ -270,7 +270,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#C74243",
-          "$type": "star",
+          //"$type": "star",
           "$dim": 10
         },
         "id": "graphnode8",
@@ -279,7 +279,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#83548B",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 12
         },
         "id": "graphnode9",
@@ -296,7 +296,7 @@ function init(){
         ],
         "data": {
           "$color": "#70A35E",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 11
         },
         "id": "graphnode10",
@@ -305,7 +305,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#70A35E",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 11
         },
         "id": "graphnode11",
@@ -314,7 +314,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#83548B",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 10
         },
         "id": "graphnode12",
@@ -331,7 +331,7 @@ function init(){
         ],
         "data": {
           "$color": "#EBB056",
-          "$type": "star",
+          //"$type": "star",
           "$dim": 7
         },
         "id": "graphnode13",
@@ -340,7 +340,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#EBB056",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 12
         },
         "id": "graphnode14",
@@ -363,7 +363,7 @@ function init(){
         ],
         "data": {
           "$color": "#83548B",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 11
         },
         "id": "graphnode15",
@@ -380,7 +380,7 @@ function init(){
         ],
         "data": {
           "$color": "#C74243",
-          "$type": "star",
+          //"$type": "star",
           "$dim": 7
         },
         "id": "graphnode16",
@@ -389,7 +389,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#416D9C",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 7
         },
         "id": "graphnode17",
@@ -412,7 +412,7 @@ function init(){
         ],
         "data": {
           "$color": "#EBB056",
-          "$type": "triangle",
+          //"$type": "triangle",
           "$dim": 9
         },
         "id": "graphnode18",
@@ -421,7 +421,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#70A35E",
-          "$type": "circle",
+          //"$type": "circle",
           "$dim": 8
         },
         "id": "graphnode19",
@@ -430,7 +430,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#C74243",
-          "$type": "star",
+          //"$type": "star",
           "$dim": 8
         },
         "id": "graphnode20",
@@ -447,6 +447,11 @@ function init(){
     //id of the visualization container
     injectInto: 'infovis',
     type: '3D',
+    Scene: {
+      Lighting: {
+        enable: false
+      }
+    },
     //Enable zooming and panning
     //by scrolling and DnD
     Navigation: {
@@ -462,7 +467,7 @@ function init(){
     // with dollar prefixed data-properties in the
     // JSON structure.
     Node: {
-      overridable: false,
+      overridable: true,
       type: 'cube',
       dim: 7,
       color: '#dd1111'
@@ -470,7 +475,7 @@ function init(){
     Edge: {
       overridable: false,
       type: 'tube',
-      color: '#111',
+      color: '#113',
       lineWidth: 3
     },
     //Native canvas text styling

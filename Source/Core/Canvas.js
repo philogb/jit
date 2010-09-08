@@ -84,7 +84,7 @@ var Canvas;
     
     initialize: function(viz, opt) {
       this.viz = viz;
-      this.opt = opt;
+      this.opt = this.config = opt;
       var id = $.type(opt.injectInto) == 'string'? 
           opt.injectInto:opt.injectInto.id,
           type = opt.type,

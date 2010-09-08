@@ -59,15 +59,11 @@ Options.Canvas = {
     Scene: {
       Lighting: {
         enable: false,
-        Ambient: {
-          color: '#ffccdd'
-        },
-        Directional: [
-          {
-            position: { x: 100, y: 100, z: 100 },
-            color: '#ffddcc'
-          }
-        ]
+        ambient: [1, 1, 1],
+        directional: {
+          direction: { x: -1, y: -1, z: -1 },
+          color: [0.5, 0.3, 0.1]
+        }
       }
     },
 };

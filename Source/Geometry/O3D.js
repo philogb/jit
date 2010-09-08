@@ -40,8 +40,7 @@ O3D.base = new Class({
           vb = vs[fs[f].b],
           vc = vs[fs[f].c],
           cb = new Vector3,
-          ab = new Vector3,
-          normal = new Vector3;
+          ab = new Vector3;
       
       cb.sub(vc, vb);
       ab.sub(va, vb);
@@ -100,7 +99,7 @@ O3D.cube = new Class({
 O3D.tube = new Class({
   Implements: O3D.base,
   
-  numSegs: 10,
+  numSegs: 20,
   dim: 1,
   
   initialize: function() {
