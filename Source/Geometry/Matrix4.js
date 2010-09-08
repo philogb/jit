@@ -212,13 +212,18 @@ Matrix4.prototype = {
 	},
 
   $transpose: function () {
-
-	  this.n21 = this.n12;
-	  this.n31 = this.n13;
-	  this.n32 = this.n23;
-	  this.n41 = this.n14;
-	  this.n42 = this.n24;
-	  this.n43 = this.n34;
+	  function swap(obj, p1, p2) {
+	    var aux = obj[p1];
+	    obj[p1] = obj[p2];
+	    obj[p2] = aux;
+	  }
+	  
+	  swap(this, 'n21', 'n12');
+	  swap(this, 'n31', 'n13');
+	  swap(this, 'n32', 'n23');
+	  swap(this, 'n41', 'n14');
+	  swap(this, 'n42', 'n24');
+	  swap(this, 'n43', 'n34');
 	  return this;
 	  
   },

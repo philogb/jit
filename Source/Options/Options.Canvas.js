@@ -61,7 +61,7 @@ Options.Canvas = {
         enable: false,
         ambient: [1, 1, 1],
         directional: {
-          direction: { x: -1, y: -1, z: -1 },
+          direction: { x: -100, y: -100, z: -100 },
           color: [0.5, 0.3, 0.1]
         }
       }

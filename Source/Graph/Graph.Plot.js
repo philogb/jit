@@ -818,13 +818,11 @@ Graph.Plot3D = $.merge(Graph.Plot, {
     if(lighting.enable) {
       //set ambient light color
       if(lighting.ambient) {
-        console.log('ambient');
         var acolor = lighting.ambient;
         gl.uniform3f(program.ambientColor, acolor[0], acolor[1], acolor[2]);
       }
       //set directional light
       if(lighting.directional) {
-        console.log('dir');
         var dir = lighting.directional,
             color = dir.color,
             pos = dir.direction,

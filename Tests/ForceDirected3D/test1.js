@@ -44,7 +44,7 @@ function init(){
         ],
         "data": {
           "$color": "#83548B",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 10
         },
         "id": "graphnode0",
@@ -139,7 +139,7 @@ function init(){
         ],
         "data": {
           "$color": "#EBB056",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 11
         },
         "id": "graphnode1",
@@ -168,7 +168,7 @@ function init(){
         ],
         "data": {
           "$color": "#416D9C",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 7
         },
         "id": "graphnode2",
@@ -203,7 +203,7 @@ function init(){
         ],
         "data": {
           "$color": "#416D9C",
-          //"$type": "square",
+          "$type": "cube",
           "$dim": 10
         },
         "id": "graphnode3",
@@ -212,7 +212,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#83548B",
-          //"$type": "square",
+          "$type": "cube",
           "$dim": 11
         },
         "id": "graphnode4",
@@ -229,7 +229,7 @@ function init(){
         ],
         "data": {
           "$color": "#C74243",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 8
         },
         "id": "graphnode5",
@@ -252,7 +252,7 @@ function init(){
         ],
         "data": {
           "$color": "#83548B",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 11
         },
         "id": "graphnode6",
@@ -261,7 +261,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#EBB056",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 12
         },
         "id": "graphnode7",
@@ -270,7 +270,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#C74243",
-          //"$type": "star",
+          "$type": "sphere",
           "$dim": 10
         },
         "id": "graphnode8",
@@ -279,7 +279,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#83548B",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 12
         },
         "id": "graphnode9",
@@ -296,7 +296,7 @@ function init(){
         ],
         "data": {
           "$color": "#70A35E",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 11
         },
         "id": "graphnode10",
@@ -305,7 +305,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#70A35E",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 11
         },
         "id": "graphnode11",
@@ -314,7 +314,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#83548B",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 10
         },
         "id": "graphnode12",
@@ -331,7 +331,7 @@ function init(){
         ],
         "data": {
           "$color": "#EBB056",
-          //"$type": "star",
+          "$type": "sphere",
           "$dim": 7
         },
         "id": "graphnode13",
@@ -340,7 +340,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#EBB056",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 12
         },
         "id": "graphnode14",
@@ -363,7 +363,7 @@ function init(){
         ],
         "data": {
           "$color": "#83548B",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 11
         },
         "id": "graphnode15",
@@ -380,7 +380,7 @@ function init(){
         ],
         "data": {
           "$color": "#C74243",
-          //"$type": "star",
+          "$type": "sphere",
           "$dim": 7
         },
         "id": "graphnode16",
@@ -389,7 +389,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#416D9C",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 7
         },
         "id": "graphnode17",
@@ -412,7 +412,7 @@ function init(){
         ],
         "data": {
           "$color": "#EBB056",
-          //"$type": "triangle",
+          "$type": "cube",
           "$dim": 9
         },
         "id": "graphnode18",
@@ -421,7 +421,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#70A35E",
-          //"$type": "circle",
+          "$type": "sphere",
           "$dim": 8
         },
         "id": "graphnode19",
@@ -430,7 +430,7 @@ function init(){
         "adjacencies": [],
         "data": {
           "$color": "#C74243",
-          //"$type": "star",
+          "$type": "sphere",
           "$dim": 8
         },
         "id": "graphnode20",
@@ -449,7 +449,12 @@ function init(){
     type: '3D',
     Scene: {
       Lighting: {
-        enable: false
+        enable: true,
+        ambient: [0.6, 0.6, 0.6],
+        directional: {
+          direction: { x: 1, y: 0, z: 0 },
+          color: [0.8, 0.1, 0.1]
+        }
       }
     },
     //Enable zooming and panning
@@ -468,14 +473,14 @@ function init(){
     // JSON structure.
     Node: {
       overridable: true,
-      type: 'cube',
-      dim: 7,
+      type: 'sphere',
+      dim: 15,
       color: '#dd1111'
     },
     Edge: {
       overridable: false,
       type: 'tube',
-      color: '#113',
+      color: '#eee',
       lineWidth: 3
     },
     //Native canvas text styling
@@ -488,8 +493,9 @@ function init(){
     Events: {
       enable: true,
       type: 'Native',
+      i: 0,
       onMouseMove: function(node, eventInfo, e) {
-       // console.log(eventInfo.getPos());
+        if(this.i++ % 5) return;
         var pos = eventInfo.getPos();
         cameraPosition.x += (pos.x - cameraPosition.x) * 0.5;
         cameraPosition.y += (-pos.y - cameraPosition.y) * 0.5;

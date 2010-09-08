@@ -96,10 +96,86 @@ O3D.cube = new Class({
   }
 });
 
+O3D.sphere = new Class({
+  Implements: O3D.base,
+  
+  radius: 1,
+  segments_width: 10,
+  segments_height: 10,
+  
+  initialize: function() {
+    var radius = this.radius,
+        segments_width = this.segments_width,
+        segments_height = this.segments_height,
+        gridX = segments_width || 8,
+        gridY = segments_height || 6,
+        cos = Math.cos,
+        sin = Math.sin,
+        max = Math.max,
+        pi = Math.PI;
+  
+    var iHor = max(3, gridX),
+        iVer = max(2, gridY),
+        aVtc = [];
+  
+    for (var j=0; j < (iVer + 1) ; j++) {
+      var fRad1 = j / iVer,
+          fZ = radius * cos(fRad1 * pi),
+          fRds = radius * sin(fRad1 * pi),
+          aRow = [],
+          oVtx = 0;
+
+      for (var i=0; i<iHor; i++) {
+        var fRad2 = 2 * i / iHor,
+            fX = fRds * Math.sin(fRad2 * pi),
+            fY = fRds * Math.cos(fRad2 * pi);
+        if (!(( j == 0 || j == iVer) && i > 0)) {
+          oVtx = this.vertices.push({ x: fY, y: fZ, z: fX}) - 1;
+        }
+        aRow.push(oVtx);
+      }
+      aVtc.push(aRow);
+    }
+  
+    var iVerNum = aVtc.length;
+    for (var j=0; j<iVerNum; j++) {
+      var iHorNum = aVtc[j].length;
+      if (j > 0) {
+        for (var i = 0; i<iHorNum; i++ ) {
+          var bEnd = i == ( iHorNum - 1 );
+          var aP1 = aVtc[ j ][ bEnd ? 0 : i + 1 ];
+          var aP2 = aVtc[ j ][ ( bEnd ? iHorNum - 1 : i ) ];
+          var aP3 = aVtc[ j - 1 ][ ( bEnd ? iHorNum - 1 : i ) ];
+          var aP4 = aVtc[ j - 1 ][ bEnd ? 0 : i + 1 ];
+  
+          if ( j < ( aVtc.length - 1 ) ) {
+            this.faces.push({ a: aP1, b: aP2, c: aP3 });
+          }
+          if ( j > 1 ) {
+            this.faces.push({ a: aP1, b: aP3, c: aP4 });
+          }
+        }
+      }
+    }
+    this.computeNormals();
+  },
+  
+  update: function(obj) {
+    var dim = obj.getData('dim'),
+        pos = obj.pos;
+    
+    this.position.setc(pos.x, pos.y, pos.z);
+    this.scale.setc(dim, dim, dim);
+    this.updateMatrix();
+  }
+
+});
+
+
 O3D.tube = new Class({
   Implements: O3D.base,
   
-  numSegs: 20,
+  numSegs: 8,
   dim: 1,
   
   initialize: function() {
