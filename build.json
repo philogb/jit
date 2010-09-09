@@ -19,11 +19,8 @@
     "Polar": [
       "Complex"
     ],
-    "Matrix4": [
-      "Vector4"
-    ],
+    "Matrix4": [],
     "Vector3": [],
-    "Vector4": [],
     "Camera": ["Vector3", "Matrix4"],
     "O3D": ["Vector3", "Matrix4"]
   },
