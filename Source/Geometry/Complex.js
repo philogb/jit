@@ -370,6 +370,17 @@ Complex.prototype = {
         var sq = pos.squaredNorm();
         this.x = x * pos.x + y * pos.y; this.y = y * pos.x - x * pos.y;
         return this.$scale(1 / sq);
+    },
+
+    /*
+      Method: isZero
+   
+      Returns *true* if the number is zero.
+   
+   */
+    isZero: function () {
+      var almostZero = 0.0001, abs = Math.abs;
+      return abs(this.x) < almostZero && abs(this.y) < almostZero;
     }
 };
 

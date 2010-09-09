@@ -438,9 +438,31 @@ function init(){
       }
   ];
 <<<<<<< HEAD
+<<<<<<< HEAD
   
 =======
 >>>>>>> 83dd65b...  * added compute normals method in O3D
+=======
+  
+  var json = [
+    {
+      id: 'node0',
+      name: '',
+      data: {
+        '$type': 'none'
+      },
+      adjacencies: ['node1']
+    },
+    {
+      id: 'node1',
+      name: '',
+      data: {
+        '$type': 'none'
+      },
+      adjacencies: ['node0']
+    }
+  ];
+>>>>>>> 8f7fb8a... Implement isZero to Complex/Polar classes
   // end
   // init ForceDirected3D
   var n = 0, prefix = 'newnode',
@@ -568,11 +590,10 @@ function init(){
       nodeid = n.id;
     });
     fd.op.removeNode(nodeid, {
-      type: 'fade:seq',
+      type: 'fade:con',
       transition: $jit.Trans.Quart.easeOut,
       duration: 300,
       onComplete: function() {
-        console.log(remove && !stop);
         remove && !stop && removeNodes();
       }
     });

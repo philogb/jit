@@ -261,6 +261,17 @@ Polar.prototype = {
     },
     
     /*
+      Method: isZero
+   
+      Returns *true* if the number is zero.
+   
+   */
+    isZero: function () {
+      var almostZero = 0.0001, abs = Math.abs;
+      return abs(this.theta) < almostZero && abs(this.rho) < almostZero;
+    },
+
+    /*
        Method: interpolate
     
         Calculates a polar interpolation between two points at a given delta moment.

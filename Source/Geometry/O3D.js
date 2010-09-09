@@ -181,7 +181,8 @@ O3D.tube = new Class({
     var vs = this.vertices,
         f4 = this.faces,
         vsp = function(x, y, z) { vs.push({ x: x, y: y, z: z }); },
-        f4p = function(a, b, c, d) { f4.push({ a: a, b: b, c: c, d: d }); };
+        f4p = function(a, b, c, d) { f4.push({ a: a, b: b, c: c, d: d }); },
+        f3p = function(a, b, c) { f4.push({ a: a, b: b, c: c }); };
 
     var scope = this,
         sin = Math.sin,
@@ -203,28 +204,28 @@ O3D.tube = new Class({
     // Faces
     // Body 
     for (var i = 0; i < numSegs; i++) {
-      f4p(i, i + numSegs, numSegs + (i + 1) % numSegs, (i + 1) % numSegs);
+      f4p(i, i + numSegs, (i + 1) % numSegs + numSegs, (i + 1) % numSegs);
     }
-    // Bottom circle
-    if (botRad != 0) {
-      vsp(0, 0, -0.5);
-      for (var i = numSegs; i < numSegs + (numSegs / 2); i++) {
-        f4p(2 * numSegs,
-        (2 * i - 2 * numSegs) % numSegs,
-        (2 * i - 2 * numSegs + 1) % numSegs,
-        (2 * i - 2 * numSegs + 2) % numSegs);
-      }
-    }
-    // Top circle
-    if (topRad != 0) {
-      vsp(0, 0, 0.5);
-      for (var i = numSegs + (numSegs / 2); i < 2 * numSegs; i++) {
-        f4p((2 * i - 2 * numSegs + 2) % numSegs + numSegs,
-          (2 * i - 2 * numSegs + 1) % numSegs + numSegs,
-          (2 * i - 2 * numSegs) % numSegs + numSegs, 
-          2 * numSegs + 1);
-      }
-    }
+//    // Bottom circle 
+//    if (botRad != 0) {
+//      vsp(0, 0, -0.5);
+//      for (var i = numSegs; i < numSegs + (numSegs / 2); i++) {
+//        f4p(2 * numSegs,
+//        (2 * i - 2 * numSegs) % numSegs,
+//        (2 * i - 2 * numSegs + 1) % numSegs,
+//        (2 * i - 2 * numSegs + 2) % numSegs);
+//      }
+//    }
+//    // Top circle
+//    if (topRad != 0) {
+//      vsp(0, 0, 0.5);
+//      for (var i = numSegs + (numSegs / 2); i < 2 * numSegs; i++) {
+//        f4p((2 * i - 2 * numSegs + 2) % numSegs + numSegs,
+//          (2 * i - 2 * numSegs + 1) % numSegs + numSegs,
+//          (2 * i - 2 * numSegs) % numSegs + numSegs, 
+//          2 * numSegs + 1);
+//      }
+//    }
     this.computeNormals();
   },
   
