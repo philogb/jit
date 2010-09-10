@@ -1,4 +1,5 @@
 function init(){
+  document.getElementById('center-container').style.backgroundColor = '#111';
   // init data
   var json = [
       {
@@ -437,53 +438,7 @@ function init(){
         "name": "graphnode20"
       }
   ];
-<<<<<<< HEAD
-<<<<<<< HEAD
   
-=======
->>>>>>> 83dd65b...  * added compute normals method in O3D
-=======
-  
-<<<<<<< HEAD
-  var json = [
-    {
-      id: 'node0',
-      name: '',
-      data: {
-        '$type': 'none'
-      },
-      adjacencies: ['node1']
-    },
-    {
-      id: 'node1',
-      name: '',
-      data: {
-        '$type': 'none'
-      },
-      adjacencies: ['node0']
-    }
-  ];
->>>>>>> 8f7fb8a... Implement isZero to Complex/Polar classes
-=======
-//  var json = [
-//    {
-//      id: 'node0',
-//      name: '',
-//      data: {
-//        '$type': 'none'
-//      },
-//      adjacencies: ['node1']
-//    },
-//    {
-//      id: 'node1',
-//      name: '',
-//      data: {
-//        '$type': 'none'
-//      },
-//      adjacencies: ['node0']
-//    }
-//  ];
->>>>>>> 7c6f606... adding new examples
   // end
   // init ForceDirected3D
   var n = 0, prefix = 'newnode',
@@ -496,10 +451,10 @@ function init(){
     Scene: {
       Lighting: {
         enable: true,
-        ambient: [0.5, 0.5, 0.5],
+        ambient: [0.6, 0.6, 0.6],
         directional: {
           direction: { x: 1, y: 0, z: 0 },
-          color: [0.9, 0.1, 0.1]
+          color: [0.8, 0.1, 0.1]
         }
       }
     },
@@ -524,9 +479,8 @@ function init(){
       color: '#ff1111'
     },
     Edge: {
-      overridable: false,
       type: 'tube',
-      color: '#111',
+      color: '#ddd',
       lineWidth: 3
     },
     //Native canvas text styling

@@ -827,6 +827,7 @@ Graph.Plot3D = $.merge(Graph.Plot, {
             color = dir.color,
             pos = dir.direction,
             vd = new Vector3(pos.x, pos.y, pos.z).normalize().$scale(-1);
+        //console.log(color, pos);
         gl.uniform3f(program.lightingDirection, vd.x, vd.y, vd.z);
         gl.uniform3f(program.directionalColor, color[0], color[1], color[2]);
       }

@@ -62,7 +62,7 @@ Canvas.Base['3D'] = new Class({
   
   initCamera: function() {
     var size = this.getSize();
-    var camera = new Camera(75, size.width / size.height, 1, 100000);
+    var camera = new Camera(75, size.width / size.height, 1, 1000);
     camera.position.z = 500;
     this.camera = camera;
   },
