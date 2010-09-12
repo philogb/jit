@@ -450,7 +450,7 @@ function init(){
     type: '3D',
     Scene: {
       Lighting: {
-        enable: true,
+        enable: false,
         ambient: [0.6, 0.6, 0.6],
         directional: {
           direction: { x: 1, y: 0, z: 0 },

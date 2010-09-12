@@ -223,6 +223,8 @@ O3D.tube = new Class({
     dvec.sub(nodeToPos, nodeFromPos).normalize();
     
     var c = dvec.dot(currentDir),
+        xc = dvec.dot(new Vector3(1, 0, 0)),
+        yc = dvec.dot(new Vector3(0, 1, 0)),
         t = 1 - c,
         rotAngle = Math.acos(c),
         s = Math.sin(rotAngle),
@@ -232,7 +234,7 @@ O3D.tube = new Class({
         z = rotAxis.z;
     
     var rot = new Matrix4();
-    rot.n11 = t * x * x;
+    rot.n11 = t * x * x + c;
     rot.n12 = t * x * y - s * z;
     rot.n13 = t * x * z + s * y;
     rot.n21 = t * x * y + s * z;
@@ -241,7 +243,6 @@ O3D.tube = new Class({
     rot.n31 = t * x * z - s * y;
     rot.n32 = t * y * z + s * x;
     rot.n33 = t * z * z + c;
-    
     this.rotationMatrix = rot;
     this.scale.setc(lineWidth, lineWidth, dist);
     this.position.setc(middle.x, middle.y, middle.z);

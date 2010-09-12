@@ -439,6 +439,7 @@ function init(){
   ];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   
 =======
 >>>>>>> 83dd65b...  * added compute normals method in O3D
@@ -484,6 +485,8 @@ function init(){
 //    }
 //  ];
 >>>>>>> 7c6f606... adding new examples
+=======
+>>>>>>> 00a4206... * BUG FIX: rotation matrix calculation from vector and angle.
   // end
   // init ForceDirected3D
   var n = 0, prefix = 'newnode',
@@ -581,7 +584,7 @@ function init(){
       fd.animate({
         modes: ['linear'],
         transition: $jit.Trans.Elastic.easeOut,
-        duration: 2500,
+        duration: 1500,
         onComplete: function() {
         }
       });
