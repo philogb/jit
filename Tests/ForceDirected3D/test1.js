@@ -437,56 +437,6 @@ function init(){
         "name": "graphnode20"
       }
   ];
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  
-=======
->>>>>>> 83dd65b...  * added compute normals method in O3D
-=======
-  
-<<<<<<< HEAD
-  var json = [
-    {
-      id: 'node0',
-      name: '',
-      data: {
-        '$type': 'none'
-      },
-      adjacencies: ['node1']
-    },
-    {
-      id: 'node1',
-      name: '',
-      data: {
-        '$type': 'none'
-      },
-      adjacencies: ['node0']
-    }
-  ];
->>>>>>> 8f7fb8a... Implement isZero to Complex/Polar classes
-=======
-//  var json = [
-//    {
-//      id: 'node0',
-//      name: '',
-//      data: {
-//        '$type': 'none'
-//      },
-//      adjacencies: ['node1']
-//    },
-//    {
-//      id: 'node1',
-//      name: '',
-//      data: {
-//        '$type': 'none'
-//      },
-//      adjacencies: ['node0']
-//    }
-//  ];
->>>>>>> 7c6f606... adding new examples
-=======
->>>>>>> 00a4206... * BUG FIX: rotation matrix calculation from vector and angle.
   // end
   // init ForceDirected3D
   var n = 0, prefix = 'newnode',
@@ -499,7 +449,7 @@ function init(){
     Scene: {
       Lighting: {
         enable: true,
-        ambient: [0.5, 0.5, 0.5],
+        ambient: [0.7, 0.7, 0.7],
         directional: {
           direction: { x: 1, y: 0, z: 0 },
           color: [0.9, 0.1, 0.1]
@@ -584,7 +534,7 @@ function init(){
       fd.animate({
         modes: ['linear'],
         transition: $jit.Trans.Elastic.easeOut,
-        duration: 1500,
+        duration: 2000,
         onComplete: function() {
         }
       });
