@@ -18,6 +18,20 @@ O3D.base = new Class({
   scale: new Vector3(1, 1, 1),
   //intrinsic coordinates
   matrix: new Matrix4,
+  
+  update: function(elem) {
+    if(elem.nodeFrom && elem.nodeTo) {
+      this.updateEdge(elem);
+    } else {
+      this.updateNode(elem);
+    }
+  },
+  
+  updateNode: $.empty,
+  
+  updateEdge: function(elem) {
+    this.updateNode(elem);
+  },
 
   updateMatrix: function() {
     var pos = this.position,
@@ -86,7 +100,7 @@ O3D.cube = new Class({
     this.computeNormals();
   },
   
-  update: function(obj) {
+  updateNode: function(obj) {
     var dim = obj.getData('dim'),
         pos = obj.pos;
     
@@ -160,7 +174,7 @@ O3D.sphere = new Class({
     this.computeNormals();
   },
   
-  update: function(obj) {
+  updateNode: function(obj) {
     var dim = obj.getData('dim'),
         pos = obj.pos;
     
@@ -208,7 +222,7 @@ O3D.tube = new Class({
     this.computeNormals();
   },
   
-  update: function(obj) {
+  updateEdge: function(obj) {
     var lineWidth = obj.getData('lineWidth'),
         nodeFrom = obj.nodeFrom,
         nodeTo = obj.nodeTo,
