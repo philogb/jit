@@ -1,6 +1,5 @@
-/**
- * @author mr.doob / http://mrdoob.com/
- * @author kile / http://kile.stravaganza.org/
+/*
+ * Some of the geometries where inspired by three.js http://github.com/mrdoob/three.js, Copyright (c) Mr.doob http://mrdoob.com/, MIT License http://github.com/mrdoob/three.js/blob/master/LICENSE 
  */
 
 var O3D = {};
@@ -132,14 +131,14 @@ O3D.sphere = new Class({
         iVer = max(2, gridY),
         aVtc = [];
   
-    for (var j=0; j < (iVer + 1) ; j++) {
+    for(var j=0; j < (iVer + 1) ; j++) {
       var fRad1 = j / iVer,
           fZ = radius * cos(fRad1 * pi),
           fRds = radius * sin(fRad1 * pi),
           aRow = [],
           oVtx = 0;
 
-      for (var i=0; i<iHor; i++) {
+      for(var i=0; i<iHor; i++) {
         var fRad2 = 2 * i / iHor,
             fX = fRds * Math.sin(fRad2 * pi),
             fY = fRds * Math.cos(fRad2 * pi);
@@ -157,15 +156,15 @@ O3D.sphere = new Class({
       if (j > 0) {
         for (var i = 0; i<iHorNum; i++ ) {
           var bEnd = i == ( iHorNum - 1 );
-          var aP1 = aVtc[ j ][ bEnd ? 0 : i + 1 ];
-          var aP2 = aVtc[ j ][ ( bEnd ? iHorNum - 1 : i ) ];
-          var aP3 = aVtc[ j - 1 ][ ( bEnd ? iHorNum - 1 : i ) ];
-          var aP4 = aVtc[ j - 1 ][ bEnd ? 0 : i + 1 ];
+          var aP1 = aVtc[j][ bEnd ? 0 : i + 1 ];
+          var aP2 = aVtc[j][ ( bEnd ? iHorNum - 1 : i ) ];
+          var aP3 = aVtc[j -1][ ( bEnd ? iHorNum - 1 : i ) ];
+          var aP4 = aVtc[j -1][ bEnd ? 0 : i + 1 ];
   
-          if ( j < ( aVtc.length - 1 ) ) {
+          if(j < ( aVtc.length - 1)) {
             this.faces.push({ a: aP1, b: aP2, c: aP3 });
           }
-          if ( j > 1 ) {
+          if(j > 1) {
             this.faces.push({ a: aP1, b: aP3, c: aP4 });
           }
         }
@@ -214,7 +213,6 @@ O3D.tube = new Class({
     for (var i = 0; i < numSegs; i++) {
       vsp(sin(pi2 * i / numSegs) * botRad, cos(pi2 * i / numSegs) * botRad, 0.5);
     }
-    // Faces
     // Body 
     for (var i = 0; i < numSegs; i++) {
       f4p(i, (i + 1) % numSegs, numSegs + (i + 1) % numSegs, i + numSegs);
