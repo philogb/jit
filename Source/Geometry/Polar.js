@@ -33,8 +33,8 @@
 */
 
 var Polar = function(theta, rho) {
-  this.theta = theta;
-  this.rho = rho;
+  this.theta = theta || 0;
+  this.rho = rho || 0;
 };
 
 $jit.Polar = Polar;
