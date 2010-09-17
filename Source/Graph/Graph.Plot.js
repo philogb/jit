@@ -496,52 +496,46 @@ Graph.Plot = {
        (end code)
 
     */
-    plot: function(opt, animating) {
-      var viz = this.viz, 
-      aGraph = viz.graph, 
-      canvas = viz.canvas, 
-      id = viz.root, 
-      that = this, 
-      ctx = canvas.getCtx(), 
-      min = Math.min,
-      opt = opt || this.viz.controller;
-      opt.clearCanvas && canvas.clear();
-        
-      var root = aGraph.getNode(id);
-      if(!root) return;
-      
-      var T = !!root.visited;
-      aGraph.eachNode(function(node) {
-        var nodeAlpha = node.getData('alpha');
-        node.eachAdjacency(function(adj) {
-          var nodeTo = adj.nodeTo;
-          if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
-            !animating && opt.onBeforePlotLine(adj);
-            ctx.save();
-            ctx.globalAlpha = min(nodeAlpha, 
-                nodeTo.getData('alpha'), 
-                adj.getData('alpha'));
-            that.plotLine(adj, canvas, animating);
-            ctx.restore();
-            !animating && opt.onAfterPlotLine(adj);
-          }
-        });
-        ctx.save();
-        if(node.drawn) {
-          !animating && opt.onBeforePlotNode(node);
-          that.plotNode(node, canvas, animating);
-          !animating && opt.onAfterPlotNode(node);
-        }
-        if(!that.labelsHidden && opt.withLabels) {
-          if(node.drawn && nodeAlpha >= 0.95) {
-            that.labels.plotLabel(canvas, node, opt);
-          } else {
-            that.labels.hideLabel(node, false);
-          }
-        }
-        ctx.restore();
-        node.visited = !T;
-      });
+   plot: function(opt, animating) {
+     var viz = this.viz, 
+         aGraph = viz.graph, 
+         canvas = viz.canvas, 
+         id = viz.root, 
+         that = this, 
+         ctx = canvas.getCtx(), 
+         min = Math.min,
+         opt = opt || this.viz.controller;
+     
+     opt.clearCanvas && canvas.clear();
+       
+     var root = aGraph.getNode(id);
+     if(!root) return;
+     
+     var T = !!root.visited;
+     aGraph.eachNode(function(node) {
+       var nodeAlpha = node.getData('alpha');
+       node.eachAdjacency(function(adj) {
+         var nodeTo = adj.nodeTo;
+         if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
+           !animating && opt.onBeforePlotLine(adj);
+           that.plotLine(adj, canvas, animating);
+           !animating && opt.onAfterPlotLine(adj);
+         }
+       });
+       if(node.drawn) {
+         !animating && opt.onBeforePlotNode(node);
+         that.plotNode(node, canvas, animating);
+         !animating && opt.onAfterPlotNode(node);
+       }
+       if(!that.labelsHidden && opt.withLabels) {
+         if(node.drawn && nodeAlpha >= 0.95) {
+           that.labels.plotLabel(canvas, node, opt);
+         } else {
+           that.labels.hideLabel(node, false);
+         }
+       }
+       node.visited = !T;
+     });
     },
 
   /*
@@ -596,7 +590,7 @@ Graph.Plot = {
               color = node.getData('color'),
               alpha = node.getData('alpha'),
               ctx = canvas.getCtx();
-          
+          ctx.save();
           ctx.lineWidth = width;
           ctx.fillStyle = ctx.strokeStyle = color;
           ctx.globalAlpha = alpha;
@@ -606,6 +600,7 @@ Graph.Plot = {
           }
 
           this.nodeTypes[f].render.call(this, node, canvas, animating);
+          ctx.restore();
         }
     },
     
@@ -626,16 +621,23 @@ Graph.Plot = {
       if(f != 'none') {
         var width = adj.getData('lineWidth'),
             color = adj.getData('color'),
-            ctx = canvas.getCtx();
+            ctx = canvas.getCtx(),
+            nodeFrom = adj.nodeFrom,
+            nodeTo = adj.nodeTo;
         
+        ctx.save();
         ctx.lineWidth = width;
         ctx.fillStyle = ctx.strokeStyle = color;
+        ctx.globalAlpha = Math.min(nodeFrom.getData('alpha'), 
+            nodeTo.getData('alpha'), 
+            adj.getData('alpha'));
         
         for(var s in ctxObj) {
           ctx[s] = adj.getCanvasStyle(s);
         }
 
         this.edgeTypes[f].render.call(this, adj, canvas, animating);
+        ctx.restore();
       }
     }    
   
@@ -661,65 +663,6 @@ Graph.Plot3D = $.merge(Graph.Plot, {
                     this.compute(from.y, to.y, delta),
                     this.compute(from.z, to.z, delta));
     }
-  },
-  
-  /*
-    Method: plot
-  
-    Plots a <Graph>.
-  
-    Parameters:
-  
-    opt - (optional) Plotting options. Most of them are described in <Options.Fx>.
-  
-    Example:
-  
-    (start code js)
-    var viz = new $jit.Viz(options);
-    viz.fx.plot(); 
-    (end code)
-  
-  */
-  plot: function(opt, animating) {
-   var viz = this.viz, 
-       aGraph = viz.graph, 
-       canvas = viz.canvas, 
-       id = viz.root, 
-       that = this, 
-       ctx = canvas.getCtx(), 
-       min = Math.min,
-       opt = opt || this.viz.controller;
-   
-   opt.clearCanvas && canvas.clear();
-     
-   var root = aGraph.getNode(id);
-   if(!root) return;
-   
-   var T = !!root.visited;
-   aGraph.eachNode(function(node) {
-     var nodeAlpha = node.getData('alpha');
-     node.eachAdjacency(function(adj) {
-       var nodeTo = adj.nodeTo;
-       if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
-         !animating && opt.onBeforePlotLine(adj);
-         that.plotLine(adj, canvas, animating);
-         !animating && opt.onAfterPlotLine(adj);
-       }
-     });
-     if(node.drawn) {
-       !animating && opt.onBeforePlotNode(node);
-       that.plotNode(node, canvas, animating);
-       !animating && opt.onAfterPlotNode(node);
-     }
-     if(!that.labelsHidden && opt.withLabels) {
-       if(node.drawn && nodeAlpha >= 0.95) {
-         that.labels.plotLabel(canvas, node, opt);
-       } else {
-         that.labels.hideLabel(node, false);
-       }
-     }
-     node.visited = !T;
-   });
   },
   
   plotNode: function(node, canvas) {
