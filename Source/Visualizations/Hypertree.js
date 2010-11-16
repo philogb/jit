@@ -628,7 +628,7 @@ $jit.Hypertree.$extend = true;
         var width = node.getData('width'),
             height = node.getData('height'),
             npos = node.pos.getc().$scale(node.scale);
-        return this.nodeHelper.square.contains(npos, pos, width, height);
+        return this.nodeHelper.rectangle.contains(npos, pos, width, height);
       }
     },
     'triangle': {
