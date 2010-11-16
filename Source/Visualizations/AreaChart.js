@@ -479,17 +479,18 @@ $jit.AreaChart = new Class({
   
   <AreaChart.restore>.
  */  
-  filter: function() {
+  filter: function(filters, callback) {
     if(this.busy) return;
     this.busy = true;
     if(this.config.Tips.enable) this.st.tips.hide();
     this.select(false, false, false);
-    var args = Array.prototype.slice.call(arguments);
+    var args = $.splat(filters);
     var rt = this.st.graph.getNode(this.st.root);
     var that = this;
+    this.normalizeDims();
     rt.eachAdjacency(function(adj) {
       var n = adj.nodeTo, 
-          dimArray = n.getData('dimArray'),
+          dimArray = n.getData('dimArray', 'end'),
           stringArray = n.getData('stringArray');
       n.setData('dimArray', $.map(dimArray, function(d, i) {
         return ($.indexOf(args, stringArray[i]) > -1)? d:[0, 0];
@@ -500,6 +501,7 @@ $jit.AreaChart = new Class({
       duration:1500,
       onComplete: function() {
         that.busy = false;
+        callback && callback.onComplete();
       }
     });
   },
@@ -519,7 +521,7 @@ $jit.AreaChart = new Class({
   
   <AreaChart.filter>.
  */  
-  restore: function() {
+  restore: function(callback) {
     if(this.busy) return;
     this.busy = true;
     if(this.config.Tips.enable) this.st.tips.hide();
@@ -531,6 +533,7 @@ $jit.AreaChart = new Class({
       duration:1500,
       onComplete: function() {
         that.busy = false;
+        callback && callback.onComplete();
       }
     });
   },
