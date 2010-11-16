@@ -683,7 +683,7 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example':True
         },
-                {
+        {
             'Title': 'Sunburst of a Directory Tree',
             'Description': 
             """
@@ -694,6 +694,15 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example':True
         },
+        {
+            'Title': 'Mono node Sunburst',
+            'Description': 
+            """
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': False
+        },
+
 
   ],
 
