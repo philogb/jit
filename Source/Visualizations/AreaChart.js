@@ -413,32 +413,32 @@ $jit.AreaChart = new Class({
         labels = json.label && $.splat(json.label),
         values = json.values,
         animate = this.config.animate,
-        that = this;
-    $.each(values, function(v) {
-      var n = graph.getByName(v.label);
-      if(n) {
+        that = this,
+        hashValues = {};
+
+    //convert the whole thing into a hash
+    for (var i = 0, l = values.length; i < l; i++) {
+      hashValues[values[i].label] = values[i];
+    }
+  
+    graph.eachNode(function(n) {
+      var v = hashValues[n.name],
+          stringArray = n.getData('stringArray'),
+          valArray = n.getData('valueArray'),
+          next = n.getData('next');
+      
+      if (v) {
         v.values = $.splat(v.values);
-        var stringArray = n.getData('stringArray'),
-            valArray = n.getData('valueArray');
         $.each(valArray, function(a, i) {
           a[0] = v.values[i];
           if(labels) stringArray[i] = labels[i];
         });
         n.setData('valueArray', valArray);
-        var prev = n.getData('prev'),
-            next = n.getData('next'),
-            nextNode = graph.getByName(next);
-        if(prev) {
-          var p = graph.getByName(prev);
-          if(p) {
-            var valArray = p.getData('valueArray');
-            $.each(valArray, function(a, i) {
-              a[1] = v.values[i];
-            });
-          }
-        }
-        if(!nextNode) {
-          var valArray = n.getData('valueArray');
+      }
+     
+      if(next) {
+        v = hashValues[next];
+        if(v) {
           $.each(valArray, function(a, i) {
             a[1] = v.values[i];
           });
