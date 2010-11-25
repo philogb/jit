@@ -865,9 +865,9 @@ function init(){
     //parent box title heights
     titleHeight: 15,
     //enable animations
-    animate: animate,
+    animate: true,
     //box offsets
-    offset: 1,
+    offset: 0,
     //Attach left and right click events
     Events: {
       enable: true,
@@ -881,28 +881,6 @@ function init(){
     Label: {
       type: 'HTML',
       useCSS3: true
-    },
-    //Enable tips
-    Tips: {
-      enable: true,
-      //add positioning offsets
-      offsetX: 20,
-      offsetY: 20,
-      //implement the onShow method to
-      //add content to the tooltip when a node
-      //is hovered
-      onShow: function(tip, node, isLeaf, domElement) {
-        var html = "<div class=\"tip-title\">" + node.name 
-          + "</div><div class=\"tip-text\">";
-        var data = node.data;
-        if(data.playcount) {
-          html += "play count: " + data.playcount;
-        }
-        if(data.image) {
-          html += "<img src=\""+ data.image +"\" class=\"album\" />";
-        }
-        tip.innerHTML =  html; 
-      }  
     },
     
     onBeforeAnimateLabel: function(domElement, node) {},

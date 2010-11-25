@@ -492,6 +492,22 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': True
         },
+        {
+            'Title': 'Icicle with CSS3 label animations',
+            'Description': 
+            """
+            <p>A static JSON tree representing a file system tree is loaded into
+            an Icicle Tree.</p>
+            <p>
+              <b>Left click</b> to set a node as root for the visualization.
+            </p>
+            <p>
+              <b>Right click</b> to set the parent node as root for the visualization.
+            </p>
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': False
+        },
    ],
 
     'ForceDirected': [

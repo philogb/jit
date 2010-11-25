@@ -326,27 +326,68 @@ Graph.Label.HTML = new Class({
     prefixesStyles: ['-webkit-', '-moz-', '-o-', ''],
     
     prepareForAnimation: function(node, modes, opt) {
-      if (!this.viz.config.Label.useCSS3) return;
-      
+      if (!this.config.Label.useCSS3) return;
       var css3Props = this.css3Props,
           canvas = this.viz.canvas,
+          size = canvas.getSize(),
           nodeProps = modes['node-property'] || [],
-          label = this.plotLabel(null, node, opt),
-          style = label.style,
-          pos = node.getPos('end').getc(true);
+          pos = node.getPos('end').getc(true),
+          posStart = node.getPos('start').getc(true),
+          startWidth = node.getData('width', 'start'),
+          startHeight = node.getData('height', 'start'),
+          endWidth = node.getData('width', 'end'),
+          endHeight = node.getData('height', 'end'),
+          alpha = node.getData('alpha'),
+          alphaEnd = node.getData('alpha', 'end');
 
-      //set label transition properties.
-      $.each(this.prefixesStyles, function(p) {
-        style[p + 'transition-property'] = css3Props.join();
-        style[p + 'transition-duration'] = opt.duration + 'ms';
-      });
-      //generally labels will move
-      style.top = pos.y + canvas.height /2;
-      style.left = pos.x - canvas.width /2;
+        var label = this.getOrCreateLabel(node),
+            style = label.style,
+            pref = this.prefixes;
+        
+        //animating alpha
+        if (alpha != alphaEnd) {
+          style.visibility = 'visible';
+          style.opacity = String(alpha);
+          //set properties
+          $.each(this.prefixesStyles, function(p) {
+            style[p + 'transition-property'] = 'opacity';
+            //TODO(nico) add transition
+            style[p + 'transition-duration'] = opt.duration + 'ms';
+            style[p + 'transition-delay'] = '200ms';
+            style[p + 'transition-timing-function'] = 'ease-in-out';
+          });
+          style.opacity = String(alphaEnd);
+          var wte = function() {
+            $.each(pref, function(p) {
+              label.removeEventListener(p + 'TransitionEnd', wte);
+              style.visibility = 'hidden';
+            });
+          };
+          if (alphaEnd == 0 && alpha == 1) {
+            $.each(pref, function(p) {
+              label.addEventListener(p + 'TransitionEnd', wte, false);
+            });
+          }
+          //changing the position or dimensions...
+        } else if (pos.x != posStart.x || pos.y != posStart.y || startWidth != endWidth || startHeight != endHeight) {
+          //set label transition properties.
+          $.each(this.prefixesStyles, function(p) {
+            style[p + 'transition-property'] = css3Props.join();
+            style[p + 'transition-duration'] = opt.duration + 'ms';
+            style[p + 'transition-delay'] = '200ms';
+            //TODO(nico) add transition
+            style[p + 'transition-timing-function'] = 'ease-in-out';
+          });
+    
+          style.top = ((pos.y + size.height /2) >> 0) + 'px';
+          style.left = ((pos.x + size.width /2) >> 0) + 'px';
+          style.width = (endWidth >> 0) + 'px';
+          style.height = (endHeight >> 0) + 'px';
+      }
       opt.onBeforeAnimateLabel(label, node);
    },
- 
-    /*
+
+   /*
       Method: getOrCreateLabel
   
       Calls _getLabel_, if not label is found it creates a new one.
@@ -376,7 +417,7 @@ Graph.Label.HTML = new Class({
        tag.id = id;
        tag.className = 'node';
        tag.style.position = 'absolute';
-       this.config.onCreateLabel(tag, node);
+       this.viz.config.onCreateLabel(tag, node);
        container.appendChild(tag);
        this.labels[node.id] = tag;
      }

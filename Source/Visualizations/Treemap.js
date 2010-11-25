@@ -653,68 +653,6 @@ TM.Label.HTML = new Class( {
     this.leaf = viz.leaf;
   },
 
-  prepareForAnimation: function(node, modes, opt) {
-    if (!this.config.Label.useCSS3) return;
-    var css3Props = this.css3Props,
-        canvas = this.viz.canvas,
-        size = canvas.getSize(),
-        nodeProps = modes['node-property'] || [],
-        pos = node.getPos('end').getc(true),
-        posStart = node.getPos('start').getc(true),
-        startWidth = node.getData('width', 'start'),
-        startHeight = node.getData('height', 'start'),
-        endWidth = node.getData('width', 'end'),
-        endHeight = node.getData('height', 'end'),
-        alpha = node.getData('alpha'),
-        alphaEnd = node.getData('alpha', 'end');
-
-      var label = this.getOrCreateLabel(node),
-          style = label.style,
-          pref = this.prefixes;
-      
-      //animating alpha
-      if (alpha != alphaEnd) {
-        style.visibility = 'visible';
-        style.opacity = String(alpha);
-        //set properties
-        $.each(this.prefixesStyles, function(p) {
-          style[p + 'transition-property'] = 'opacity';
-          //TODO(nico) add transition
-          style[p + 'transition-duration'] = opt.duration + 'ms';
-          style[p + 'transition-delay'] = '200ms';
-          style[p + 'transition-timing-function'] = 'ease-in-out';
-        });
-        style.opacity = String(alphaEnd);
-        var wte = function() {
-          $.each(pref, function(p) {
-            label.removeEventListener(p + 'TransitionEnd', wte);
-            style.visibility = 'hidden';
-          });
-        };
-        if (alphaEnd == 0 && alpha == 1) {
-          $.each(pref, function(p) {
-            label.addEventListener(p + 'TransitionEnd', wte, false);
-          });
-        }
-        //changing the position or dimensions...
-      } else if (pos.x != posStart.x || pos.y != posStart.y || startWidth != endWidth || startHeight != endHeight) {
-        //set label transition properties.
-        $.each(this.prefixesStyles, function(p) {
-          style[p + 'transition-property'] = css3Props.join();
-          style[p + 'transition-duration'] = opt.duration + 'ms';
-          style[p + 'transition-delay'] = '200ms';
-          //TODO(nico) add transition
-          style[p + 'transition-timing-function'] = 'ease-in-out';
-        });
-  
-        style.top = ((pos.y + size.height /2) >> 0) + 'px';
-        style.left = ((pos.x + size.width /2) >> 0) + 'px';
-        style.width = (endWidth >> 0) + 'px';
-        style.height = (endHeight >> 0) + 'px';
-    }
-  //  opt.onBeforeAnimateLabel(label, node);
- },
-
   /* 
     placeLabel
   

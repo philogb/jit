@@ -126,13 +126,27 @@ $jit.Icicle = new Class({
     Computes positions and plots the tree.
   */
   refresh: function(){
-    var labelType = this.config.Label.type;
-    if(labelType != 'Native') {
-      var that = this;
-      this.graph.eachNode(function(n) { that.labels.hideLabel(n, false); });
+    if(this.busy) return;
+    this.busy = true;
+    var that = this;
+    if(this.config.animate) {
+      this.compute('end');
+      this.fx.animate($.merge(this.config, {
+        modes: ['linear', 'node-property:width:height'],
+        onComplete: function() {
+          that.busy = false;
+        }
+      }));
+    } else {
+      var labelType = this.config.Label.type;
+      if(labelType != 'Native') {
+        var that = this;
+        this.graph.eachNode(function(n) { that.labels.hideLabel(n, false); });
+      }
+      this.busy = false;
+      this.compute();
+      this.plot();
     }
-    this.compute();
-    this.plot();
   },
 
   /* 
@@ -170,11 +184,9 @@ $jit.Icicle = new Class({
           that.compute();
 
         if(config.animate) {
-          that.graph.nodeList.setDataset(['current', 'end'], {
-            'alpha': [1, 0] //fade nodes
-          });
+          that.graph.nodeList.setData('alpha', 0, 'end');
 
-          Graph.Util.eachSubgraph(node, function(n) {
+          node.eachSubgraph(function(n) {
             n.setData('alpha', 1, 'end');
           }, "ignore");
 
@@ -270,10 +282,20 @@ $jit.Icicle = new Class({
           //animate the parent subtree
           that.clickedNode = clickedNode;
           //change nodes alpha
-          graph.nodeList.setDataset(['current', 'end'], {
-            'alpha': [0, 1]
-          });
-          GUtil.eachSubgraph(previousClickedNode, function(node) {
+          if (clickedNode) {
+            clickedNode.eachSubgraph(function(n) {
+              n.setDataset(['current', 'end'], {
+                'alpha': [0, 1]
+              });
+            }, "ignore");
+          } else {
+            graph.eachNode(function(n) {
+              n.setDataset(['current', 'end'], {
+                'alpha': [0, 1]
+              });
+            }, "ignore");
+          }
+          previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
           that.fx.animate({
@@ -525,6 +547,7 @@ $jit.Icicle.Label.HTML = new Class( {
 
   initialize: function(viz){
     this.viz = viz;
+    this.config = viz.config;
   },
 
   /*
@@ -539,19 +562,29 @@ $jit.Icicle.Label.HTML = new Class( {
     controller - A configuration/controller object passed to the visualization.
    */
   placeLabel: function(tag, node, controller){
-    var pos = node.pos.getc(true), canvas = this.viz.canvas;
-    var radius = canvas.getSize();
-    var labelPos = {
-      x: Math.round(pos.x + radius.width / 2),
-      y: Math.round(pos.y + radius.height / 2)
-    };
+    if (!this.config.Label.useCSS3) {
+      tag.style.display = '';
+      var pos = node.pos.getc(true), 
+        canvas = this.viz.canvas,
+        ox = canvas.translateOffsetX,
+        oy = canvas.translateOffsetY,
+        sx = canvas.scaleOffsetX,
+        sy = canvas.scaleOffsetY,
+        radius = canvas.getSize();
+      var labelPos = {
+        x: Math.round(pos.x * sx + ox + radius.width / 2),
+        y: Math.round(pos.y * sy + oy + radius.height / 2)
+      };
 
-    var style = tag.style;
-    style.left = labelPos.x + 'px';
-    style.top = labelPos.y + 'px';
-    style.display = '';
-
-    controller.onPlaceLabel(tag, node);
+      var style = tag.style;
+      style.left = labelPos.x + 'px';
+      style.top = labelPos.y + 'px';
+      style.width = node.getData('width') * sx + 'px';
+      style.height = node.getData('height') * sy + 'px';
+      style.zIndex = node._depth * 100;
+      style.display = '';
+      controller.onPlaceLabel(tag, node);
+    }
   }
 });
 
