@@ -905,16 +905,13 @@ function init(){
       }  
     },
     
-    onBeforeAnimateLabel: function(domElement, node) {
-//      var style = domElement.style;
-//      console.log(style.width, style.height, style.top, style.left, 'on before animate label');
-    },
+    onBeforeAnimateLabel: function(domElement, node) {},
+
     //Add the name of the node in the correponding label
     //This method is called once, on label creation.
     onCreateLabel: function(domElement, node){
         domElement.innerHTML = node.name;
         var style = domElement.style;
-      //  style.display = '';
         style.border = '1px solid transparent';
         style.backgroundColor = node.getData('color');
         style.backgroundImage = '-webkit-gradient(linear, left top, right bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.2)))'; 
@@ -924,8 +921,6 @@ function init(){
   tm.refresh();
 
   tm.fx.plot = function() {};
- //tm.fx.plotNode = function() {};
- //tm.fx.plotEdge = function() {};
 
   //end
   //add events to radio buttons

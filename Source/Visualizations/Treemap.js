@@ -671,9 +671,10 @@ TM.Label.HTML = new Class( {
       var label = this.getOrCreateLabel(node),
           style = label.style,
           pref = this.prefixes;
-
+      
       //animating alpha
       if (alpha != alphaEnd) {
+        style.visibility = 'visible';
         style.opacity = String(alpha);
         //set properties
         $.each(this.prefixesStyles, function(p) {
@@ -683,12 +684,11 @@ TM.Label.HTML = new Class( {
           style[p + 'transition-delay'] = '200ms';
           style[p + 'transition-timing-function'] = 'ease-in-out';
         });
-        style.display = 'block';
         style.opacity = String(alphaEnd);
         var wte = function() {
-          style.opacity = '0';
           $.each(pref, function(p) {
             label.removeEventListener(p + 'TransitionEnd', wte);
+            style.visibility = 'hidden';
           });
         };
         if (alphaEnd == 0 && alpha == 1) {
@@ -696,6 +696,7 @@ TM.Label.HTML = new Class( {
             label.addEventListener(p + 'TransitionEnd', wte, false);
           });
         }
+        //changing the position or dimensions...
       } else if (pos.x != posStart.x || pos.y != posStart.y || startWidth != endWidth || startHeight != endHeight) {
         //set label transition properties.
         $.each(this.prefixesStyles, function(p) {
