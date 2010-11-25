@@ -236,8 +236,10 @@ Graph.Plot = {
        <Animation>, <Graph.Plot.animate>
 
     */
-    prepare: function(modes) {
-      var graph = this.viz.graph,
+    prepare: function(modes, opt) {
+      var viz = this.viz,
+          graph = viz.graph,
+          labels = viz.labels,
           accessors = {
             'node-property': {
               'getter': 'getData',
@@ -287,13 +289,14 @@ Graph.Plot = {
         $.each(['edge-property', 'edge-style'], function(p) {
           if(p in m) {
             var prop = m[p];
-            node.eachAdjacency(function(adj) {
+            node.eachAdjacency(function(adj) { 
               for(var i=0, l=prop.length; i < l; i++) {
                 adj[accessors[p].setter](prop[i], adj[accessors[p].getter](prop[i]), 'start');
               }
             });
           }
         });
+        labels.prepareForAnimation(node, m, opt);
       });
       return m;
     },
@@ -355,7 +358,7 @@ Graph.Plot = {
           interp = this.Interpolator,
           animation =  opt.type === 'nodefx'? this.nodeFxAnimation : this.animation;
       //prepare graph values
-      var m = this.prepare(opt.modes);
+      var m = this.prepare(opt.modes, opt);
       
       //animate
       if(opt.hideLabels) this.labels.hideLabels(true);
@@ -552,7 +555,6 @@ Graph.Plot = {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
              var adj = node.getAdjacency(elem.id);
              !animating && opt.onBeforePlotLine(adj);
-             ctx.globalAlpha = Math.min(nodeAlpha, elem.getData('alpha'));
              that.plotLine(adj, canvas, animating);
              !animating && opt.onAfterPlotLine(adj);
              that.plotTree(elem, opt, animating);
@@ -598,7 +600,6 @@ Graph.Plot = {
           for(var s in ctxObj) {
             ctx[s] = node.getCanvasStyle(s);
           }
-
           this.nodeTypes[f].render.call(this, node, canvas, animating);
           ctx.restore();
         }

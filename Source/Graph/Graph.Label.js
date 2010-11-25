@@ -29,6 +29,9 @@ Graph.Label = {};
    Implements labels natively, using the Canvas text API.
 */
 Graph.Label.Native = new Class({
+    //prepare a label for an animation.
+    prepareForAnimation: $.empty,
+    
     /*
        Method: plotLabel
 
@@ -100,6 +103,8 @@ Graph.Label.DOM = new Class({
     labelContainer: false,
     //Label elements hash.
     labels: {},
+    //For preparing animations
+    prepareForAnimation: $.empty,
 
     /*
        Method: getLabelContainer
@@ -151,6 +156,32 @@ Graph.Label.DOM = new Class({
         this.labels[id] :
         this.labels[id] = document.getElementById(id);
     },
+    
+    /*
+      Method: plotLabel
+  
+      Plots a label for a given node.
+  
+      Parameters:
+  
+      canvas - (object) A <Canvas> instance.
+      node - (object) A <Graph.Node>.
+      controller - (object) A configuration object.
+      
+     Example:
+      
+      (start code js)
+      var viz = new $jit.Viz(options);
+      var node = viz.graph.getNode('nodeId');
+      viz.labels.plotLabel(viz.canvas, node, viz.config);
+      (end code)
+  
+  
+   */
+   plotLabel: function(canvas, node, controller) {
+     var id = node.id, tag = this.getOrCreateLabel(node);
+     this.placeLabel(tag, node, controller);
+   },
 
     /*
        Method: hideLabels
@@ -245,7 +276,7 @@ Graph.Label.DOM = new Class({
       node = $.splat(node);
       var st = show ? "" : "none", lab, that = this;
       $.each(node, function(n) {
-        var lab = that.getLabel(n.id);
+        lab = that.getLabel(n.id);
         if (lab) {
           lab.style.display = st;
         }
@@ -288,43 +319,69 @@ Graph.Label.DOM = new Class({
 Graph.Label.HTML = new Class({
     Implements: Graph.Label.DOM,
 
+    css3Props: ['width', 'height', 'top', 'left', 'color', 'opacity'],
+
+    prefixes: ['webkit', 'moz', 'o', ''],
+    
+    prefixesStyles: ['-webkit-', '-moz-', '-o-', ''],
+    
+    prepareForAnimation: function(node, modes, opt) {
+      if (!this.viz.config.Label.useCSS3) return;
+      
+      var css3Props = this.css3Props,
+          canvas = this.viz.canvas,
+          nodeProps = modes['node-property'] || [],
+          label = this.plotLabel(null, node, opt),
+          style = label.style,
+          pos = node.getPos('end').getc(true);
+
+      //set label transition properties.
+      $.each(this.prefixesStyles, function(p) {
+        style[p + 'transition-property'] = css3Props.join();
+        style[p + 'transition-duration'] = opt.duration + 'ms';
+      });
+      //generally labels will move
+      style.top = pos.y + canvas.height /2;
+      style.left = pos.x - canvas.width /2;
+      opt.onBeforeAnimateLabel(label, node);
+   },
+ 
     /*
-       Method: plotLabel
-
-       Plots a label for a given node.
-
-       Parameters:
-
-       canvas - (object) A <Canvas> instance.
-       node - (object) A <Graph.Node>.
-       controller - (object) A configuration object.
-       
+      Method: getOrCreateLabel
+  
+      Calls _getLabel_, if not label is found it creates a new one.
+  
+      Parameters:
+  
+      id - (string) The label id (which is also a <Graph.Node> id).
+  
+      Returns:
+  
+      The label element.
+  
       Example:
-       
-       (start code js)
+  
+     (start code js)
        var viz = new $jit.Viz(options);
-       var node = viz.graph.getNode('nodeId');
-       viz.labels.plotLabel(viz.canvas, node, viz.config);
-       (end code)
-
-
-    */
-    plotLabel: function(canvas, node, controller) {
-      var id = node.id, tag = this.getLabel(id);
-
-      if(!tag && !(tag = document.getElementById(id))) {
-        tag = document.createElement('div');
-        var container = this.getLabelContainer();
-        tag.id = id;
-        tag.className = 'node';
-        tag.style.position = 'absolute';
-        controller.onCreateLabel(tag, node);
-        container.appendChild(tag);
-        this.labels[node.id] = tag;
-      }
-
-      this.placeLabel(tag, node, controller);
-    }
+       var label = viz.labels.getOrCreateLabel('someid');
+       alert(label.innerHTML);
+     (end code)
+  
+   */
+   getOrCreateLabel: function(node) {
+     var id = node.id, tag = this.getLabel(id);
+     if(!tag && !(tag = document.getElementById(id))) {
+       tag = document.createElement('div');
+       var container = this.getLabelContainer();
+       tag.id = id;
+       tag.className = 'node';
+       tag.style.position = 'absolute';
+       this.config.onCreateLabel(tag, node);
+       container.appendChild(tag);
+       this.labels[node.id] = tag;
+     }
+     return tag;
+   }
 });
 
 /*
@@ -340,41 +397,41 @@ Graph.Label.SVG = new Class({
     Implements: Graph.Label.DOM,
 
     /*
-       Method: plotLabel
+    Method: getOrCreateLabel
 
-       Plots a label for a given node.
+    Calls _getLabel_, if not label is found it creates a new one.
 
-       Parameters:
+    Parameters:
 
-       canvas - (object) A <Canvas> instance.
-       node - (object) A <Graph.Node>.
-       controller - (object) A configuration object.
-       
-       Example:
-       
-       (start code js)
-       var viz = new $jit.Viz(options);
-       var node = viz.graph.getNode('nodeId');
-       viz.labels.plotLabel(viz.canvas, node, viz.config);
-       (end code)
+    id - (string) The label id (which is also a <Graph.Node> id).
 
+    Returns:
 
-    */
-    plotLabel: function(canvas, node, controller) {
-      var id = node.id, tag = this.getLabel(id);
-      if(!tag && !(tag = document.getElementById(id))) {
-        var ns = 'http://www.w3.org/2000/svg';
-          tag = document.createElementNS(ns, 'svg:text');
-        var tspan = document.createElementNS(ns, 'svg:tspan');
-        tag.appendChild(tspan);
-        var container = this.getLabelContainer();
-        tag.setAttribute('id', id);
-        tag.setAttribute('class', 'node');
-        container.appendChild(tag);
-        controller.onCreateLabel(tag, node);
-        this.labels[node.id] = tag;
-      }
-      this.placeLabel(tag, node, controller);
-    }
+    The label element.
+
+    Example:
+
+   (start code js)
+     var viz = new $jit.Viz(options);
+     var label = viz.labels.getOrCreateLabel('someid');
+   (end code)
+
+ */
+ getOrCreateLabel: function(node) {
+   var id = node.id, tag = this.getLabel(id);
+   if(!tag && !(tag = document.getElementById(id))) {
+     var ns = 'http://www.w3.org/2000/svg';
+     tag = document.createElementNS(ns, 'svg:text');
+     var tspan = document.createElementNS(ns, 'svg:tspan');
+     tag.appendChild(tspan);
+     var container = this.getLabelContainer();
+     tag.setAttribute('id', id);
+     tag.setAttribute('class', 'node');
+     container.appendChild(tag);
+     this.viz.controller.onCreateLabel(tag, node);
+     this.labels[node.id] = tag;
+   }
+   return tag;
+ }
 });
 

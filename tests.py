@@ -450,6 +450,14 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
         },
+        {
+            'Title': 'CSS3 label animations',
+            'Description': 
+            """
+            Trying to use CSS3 to animate the treemap labels.           
+            """,
+            'Extras': ['excanvas.js']
+        },
    ],
 
     'Icicle': [

@@ -77,6 +77,7 @@ Options.Controller = {
   
   onBeforeCompute: $.empty,
   onAfterCompute:  $.empty,
+  onBeforeAnimateLabel: $.empty,
   onCreateLabel:   $.empty,
   onPlaceLabel:    $.empty,
   onComplete:      $.empty,

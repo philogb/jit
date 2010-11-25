@@ -331,11 +331,19 @@ TM.Base = {
           //animate the parent subtree
           that.clickedNode = clickedNode;
           //change nodes alpha
-          graph.eachNode(function(n) {
-            n.setDataset(['current', 'end'], {
-              'alpha': [0, 1]
-            });
-          }, "ignore");
+          if (clickedNode) {
+            clickedNode.eachSubgraph(function(n) {
+              n.setDataset(['current', 'end'], {
+                'alpha': [0, 1]
+              });
+            }, "ignore");
+          } else {
+            graph.eachNode(function(n) {
+              n.setDataset(['current', 'end'], {
+                'alpha': [0, 1]
+              });
+            }, "ignore");
+          }
           previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
@@ -561,7 +569,7 @@ TM.Label.Native = new Class({
         height = node.getData('height'),
         x = pos.x + width/2,
         y = pos.y;
-        
+
     ctx.fillText(node.name, x, y, width);
   }
 });
@@ -641,9 +649,70 @@ TM.Label.HTML = new Class( {
 
   initialize: function(viz){
     this.viz = viz;
-    this.leaf = viz.leaf;
     this.config = viz.config;
+    this.leaf = viz.leaf;
   },
+
+  prepareForAnimation: function(node, modes, opt) {
+    if (!this.config.Label.useCSS3) return;
+    var css3Props = this.css3Props,
+        canvas = this.viz.canvas,
+        size = canvas.getSize(),
+        nodeProps = modes['node-property'] || [],
+        pos = node.getPos('end').getc(true),
+        posStart = node.getPos('start').getc(true),
+        startWidth = node.getData('width', 'start'),
+        startHeight = node.getData('height', 'start'),
+        endWidth = node.getData('width', 'end'),
+        endHeight = node.getData('height', 'end'),
+        alpha = node.getData('alpha'),
+        alphaEnd = node.getData('alpha', 'end');
+
+      var label = this.getOrCreateLabel(node),
+          style = label.style,
+          pref = this.prefixes;
+
+      //animating alpha
+      if (alpha != alphaEnd) {
+        style.opacity = String(alpha);
+        //set properties
+        $.each(this.prefixesStyles, function(p) {
+          style[p + 'transition-property'] = 'opacity';
+          //TODO(nico) add transition
+          style[p + 'transition-duration'] = opt.duration + 'ms';
+          style[p + 'transition-delay'] = '200ms';
+          style[p + 'transition-timing-function'] = 'ease-in-out';
+        });
+        style.display = 'block';
+        style.opacity = String(alphaEnd);
+        var wte = function() {
+          style.opacity = '0';
+          $.each(pref, function(p) {
+            label.removeEventListener(p + 'TransitionEnd', wte);
+          });
+        };
+        if (alphaEnd == 0 && alpha == 1) {
+          $.each(pref, function(p) {
+            label.addEventListener(p + 'TransitionEnd', wte, false);
+          });
+        }
+      } else if (pos.x != posStart.x || pos.y != posStart.y || startWidth != endWidth || startHeight != endHeight) {
+        //set label transition properties.
+        $.each(this.prefixesStyles, function(p) {
+          style[p + 'transition-property'] = css3Props.join();
+          style[p + 'transition-duration'] = opt.duration + 'ms';
+          style[p + 'transition-delay'] = '200ms';
+          //TODO(nico) add transition
+          style[p + 'transition-timing-function'] = 'ease-in-out';
+        });
+  
+        style.top = ((pos.y + size.height /2) >> 0) + 'px';
+        style.left = ((pos.x + size.width /2) >> 0) + 'px';
+        style.width = (endWidth >> 0) + 'px';
+        style.height = (endHeight >> 0) + 'px';
+    }
+  //  opt.onBeforeAnimateLabel(label, node);
+ },
 
   /* 
     placeLabel
@@ -658,31 +727,33 @@ TM.Label.HTML = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
-    var pos = node.pos.getc(true), 
+    if (!this.config.Label.useCSS3) {
+      tag.style.display = '';
+      var pos = node.pos.getc(true), 
         canvas = this.viz.canvas,
         ox = canvas.translateOffsetX,
         oy = canvas.translateOffsetY,
         sx = canvas.scaleOffsetX,
         sy = canvas.scaleOffsetY,
         radius = canvas.getSize();
-    var labelPos = {
-      x: Math.round(pos.x * sx + ox + radius.width / 2),
-      y: Math.round(pos.y * sy + oy + radius.height / 2)
-    };
+      var labelPos = {
+        x: Math.round(pos.x * sx + ox + radius.width / 2),
+        y: Math.round(pos.y * sy + oy + radius.height / 2)
+      };
 
-    var style = tag.style;
-    style.left = labelPos.x + 'px';
-    style.top = labelPos.y + 'px';
-    style.width = node.getData('width') * sx + 'px';
-    style.height = node.getData('height') * sy + 'px';
-    style.zIndex = node._depth * 100;
-    style.display = '';
-
-    if(!this.leaf(node) && !this.config.titleHeight) {
-      tag.style.display = 'none';
+      var style = tag.style;
+      style.left = labelPos.x + 'px';
+      style.top = labelPos.y + 'px';
+      style.width = node.getData('width') * sx + 'px';
+      style.height = node.getData('height') * sy + 'px';
+      style.zIndex = node._depth * 100;
+      style.display = '';
+      if(!this.leaf(node) && !this.config.titleHeight) {
+        tag.style.display = 'none';
+      } 
+      controller.onPlaceLabel(tag, node);
     }
-    controller.onPlaceLabel(tag, node);
-  }
+ }
 });
 
 /*

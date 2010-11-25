@@ -18,7 +18,8 @@
       family: 'sans-serif',
       textAlign: 'center',
       textBaseline: 'alphabetic',
-      color: '#fff'
+      color: '#fff',
+      CSS3Anim: false
     };
   (end code)
   
@@ -53,5 +54,6 @@ Options.Label = {
   family: 'sans-serif',
   textAlign: 'center',
   textBaseline: 'alphabetic',
-  color: '#fff'
+  color: '#fff',
+  useCSS3: false
 };
