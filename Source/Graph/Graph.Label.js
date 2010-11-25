@@ -326,7 +326,7 @@ Graph.Label.HTML = new Class({
     prefixesStyles: ['-webkit-', '-moz-', '-o-', ''],
     
     prepareForAnimation: function(node, modes, opt) {
-      if (!this.config.Label.useCSS3) return;
+      if (!this.viz.config.Label.useCSS3) return;
       var css3Props = this.css3Props,
           canvas = this.viz.canvas,
           size = canvas.getSize(),
