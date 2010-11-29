@@ -774,9 +774,6 @@ Graph.Plot3D = $.merge(Graph.Plot, {
         gl.uniform3f(program.directionalColor, color[0], color[1], color[2]);
       }
     }
-    var color = $.hexToRgb(elem.getData('color'));
-    color.push(opt.getAlpha());
-    gl.uniform4f(program.color, color[0] / 255, color[1] / 255, color[2] / 255, color[3]);
     //send vertices data
     gl.bindBuffer(gl.ARRAY_BUFFER, elem.webGLVertexBuffer);
     gl.vertexAttribPointer(program.position, 3, gl.FLOAT, false, 0, 0);
