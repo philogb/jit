@@ -46,6 +46,7 @@ Canvas.Base['3D'] = new Class({
       'normal': gl.getAttribLocation(program, 'normal'),
     });
     gl.enableVertexAttribArray(program.position);
+    gl.enableVertexAttribArray(program.normal);
     this.program = program;
     //set general rendering options
     gl.clearColor(0, 0, 0, 0);
