@@ -450,11 +450,11 @@ function init(){
     type: '3D',
     Scene: {
       Lighting: {
-        enable: false,
-        ambient: [0.6, 0.6, 0.6],
+        enable: true,
+        ambient: [0.7, 0.6, 0.6],
         directional: {
           direction: { x: 1, y: 0, z: 0 },
-          color: [0.8, 0.1, 0.1]
+          color: [0.8, 0.8, 0.8]
         }
       }
     },

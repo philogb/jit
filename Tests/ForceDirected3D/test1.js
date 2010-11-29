@@ -448,11 +448,11 @@ function init(){
     type: '3D',
     Scene: {
       Lighting: {
-        enable: true,
-        ambient: [0.7, 0.7, 0.7],
+        enable: false,
+        ambient: [0.5, 0.5, 0.5],
         directional: {
-          direction: { x: 1, y: 0, z: 0 },
-          color: [0.9, 0.1, 0.1]
+          direction: { x: 1, y: 0, z: -1 },
+          color: [0.9, 0.9, 0.9]
         }
       }
     },
