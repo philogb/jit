@@ -645,946 +645,950 @@ $jit.ST= (function() {
 
 $jit.ST.$extend = true;
 
-/*
-   Class: ST.Op
-    
-   Custom extension of <Graph.Op>.
-
-   Extends:
-
-   All <Graph.Op> methods
-   
-   See also:
-   
-   <Graph.Op>
-
-*/
-$jit.ST.Op = new Class({
-
-  Implements: Graph.Op
-    
-});
+(function(ST) {
 
 /*
+	   Class: ST.Op
     
-     Performs operations on group of nodes.
+	   Custom extension of <Graph.Op>.
+
+	   Extends:
+
+	   All <Graph.Op> methods
+   
+	   See also:
+   
+	   <Graph.Op>
 
 */
-$jit.ST.Group = new Class({
-    
-    initialize: function(viz) {
-        this.viz = viz;
-        this.canvas = viz.canvas;
-        this.config = viz.config;
-        this.animation = new Animation;
-        this.nodes = null;
-    },
-    
-    /*
-    
-       Calls the request method on the controller to request a subtree for each node. 
-    */
-    requestNodes: function(nodes, controller) {
-        var counter = 0, len = nodes.length, nodeSelected = {};
-        var complete = function() { controller.onComplete(); };
-        var viz = this.viz;
-        if(len == 0) complete();
-        for(var i=0; i<len; i++) {
-            nodeSelected[nodes[i].id] = nodes[i];
-            controller.request(nodes[i].id, nodes[i]._level, {
-                onComplete: function(nodeId, data) {
-                    if(data && data.children) {
-                        data.id = nodeId;
-                        viz.op.sum(data, { type: 'nothing' });
-                    }
-                    if(++counter == len) {
-                        viz.graph.computeLevels(viz.root, 0);
-                        complete();
-                    }
-                }
-            });
-        }
-    },
-    
-    /*
-    
-       Collapses group of nodes. 
-    */
-    contract: function(nodes, controller) {
-        var viz = this.viz;
-        var that = this;
+	ST.Op = new Class({
 
-        nodes = this.prepare(nodes);
-        this.animation.setOptions($.merge(controller, {
-            $animating: false,
-            compute: function(delta) {
-              if(delta == 1) delta = 0.99;
-              that.plotStep(1 - delta, controller, this.$animating);
-              this.$animating = 'contract';
-            },
-            
-            complete: function() {
-                that.hide(nodes, controller);
-            }       
-        })).start();
-    },
+	  Implements: Graph.Op
     
-    hide: function(nodes, controller) {
-        var viz = this.viz;
-        for(var i=0; i<nodes.length; i++) {
-            // TODO nodes are requested on demand, but not
-            // deleted when hidden. Would that be a good feature?
-            // Currently that feature is buggy, so I'll turn it off
-            // Actually this feature is buggy because trimming should take
-            // place onAfterCompute and not right after collapsing nodes.
-            if (true || !controller || !controller.request) {
-                nodes[i].eachLevel(1, false, function(elem){
-                    if (elem.exist) {
-                        $.extend(elem, {
-                            'drawn': false,
-                            'exist': false
-                        });
-                    }
-                });
-            } else {
-                var ids = [];
-                nodes[i].eachLevel(1, false, function(n) {
-                    ids.push(n.id);
-                });
-                viz.op.removeNode(ids, { 'type': 'nothing' });
-                viz.labels.clearLabels();
-            }
-        }
-        controller.onComplete();
-    },    
+	});
+
+/*
+    
+	     Performs operations on group of nodes.
+
+*/
+	ST.Group = new Class({
+    
+	    initialize: function(viz) {
+	        this.viz = viz;
+	        this.canvas = viz.canvas;
+	        this.config = viz.config;
+	        this.animation = new Animation;
+	        this.nodes = null;
+	    },
+    
+	    /*
+    
+	       Calls the request method on the controller to request a subtree for each node. 
+	    */
+	    requestNodes: function(nodes, controller) {
+	        var counter = 0, len = nodes.length, nodeSelected = {};
+	        var complete = function() { controller.onComplete(); };
+	        var viz = this.viz;
+	        if(len == 0) complete();
+	        for(var i=0; i<len; i++) {
+	            nodeSelected[nodes[i].id] = nodes[i];
+	            controller.request(nodes[i].id, nodes[i]._level, {
+	                onComplete: function(nodeId, data) {
+	                    if(data && data.children) {
+	                        data.id = nodeId;
+	                        viz.op.sum(data, { type: 'nothing' });
+	                    }
+	                    if(++counter == len) {
+	                        viz.graph.computeLevels(viz.root, 0);
+	                        complete();
+	                    }
+	                }
+	            });
+	        }
+	    },
+    
+	    /*
+    
+	       Collapses group of nodes. 
+	    */
+	    contract: function(nodes, controller) {
+	        var viz = this.viz;
+	        var that = this;
+
+	        nodes = this.prepare(nodes);
+	        this.animation.setOptions($.merge(controller, {
+	            $animating: false,
+	            compute: function(delta) {
+	              if(delta == 1) delta = 0.99;
+	              that.plotStep(1 - delta, controller, this.$animating);
+	              this.$animating = 'contract';
+	            },
+            
+	            complete: function() {
+	                that.hide(nodes, controller);
+	            }       
+	        })).start();
+	    },
+    
+	    hide: function(nodes, controller) {
+	        var viz = this.viz;
+	        for(var i=0; i<nodes.length; i++) {
+	            // TODO nodes are requested on demand, but not
+	            // deleted when hidden. Would that be a good feature?
+	            // Currently that feature is buggy, so I'll turn it off
+	            // Actually this feature is buggy because trimming should take
+	            // place onAfterCompute and not right after collapsing nodes.
+	            if (true || !controller || !controller.request) {
+	                nodes[i].eachLevel(1, false, function(elem){
+	                    if (elem.exist) {
+	                        $.extend(elem, {
+	                            'drawn': false,
+	                            'exist': false
+	                        });
+	                    }
+	                });
+	            } else {
+	                var ids = [];
+	                nodes[i].eachLevel(1, false, function(n) {
+	                    ids.push(n.id);
+	                });
+	                viz.op.removeNode(ids, { 'type': 'nothing' });
+	                viz.labels.clearLabels();
+	            }
+	        }
+	        controller.onComplete();
+	    },    
     
 
-    /*
-       Expands group of nodes. 
-    */
-    expand: function(nodes, controller) {
-        var that = this;
-        this.show(nodes);
-        this.animation.setOptions($.merge(controller, {
-            $animating: false,
-            compute: function(delta) {
-                that.plotStep(delta, controller, this.$animating);
-                this.$animating = 'expand';
-            },
+	    /*
+	       Expands group of nodes. 
+	    */
+	    expand: function(nodes, controller) {
+	        var that = this;
+	        this.show(nodes);
+	        this.animation.setOptions($.merge(controller, {
+	            $animating: false,
+	            compute: function(delta) {
+	                that.plotStep(delta, controller, this.$animating);
+	                this.$animating = 'expand';
+	            },
             
-            complete: function() {
-                that.plotStep(undefined, controller, false);
-                controller.onComplete();
-            }       
-        })).start();
+	            complete: function() {
+	                that.plotStep(undefined, controller, false);
+	                controller.onComplete();
+	            }       
+	        })).start();
         
-    },
+	    },
     
-    show: function(nodes) {
-        var config = this.config;
-        this.prepare(nodes);
-        $.each(nodes, function(n) {
-        	// check for root nodes if multitree
-        	if(config.multitree && !('$orn' in n.data)) {
-        		delete n.data.$orns;
-        		var orns = ' ';
-        		n.eachSubnode(function(ch) {
-        			if(('$orn' in ch.data) 
-        					&& orns.indexOf(ch.data.$orn) < 0 
-        					&& ch.exist && !ch.drawn) {
-        				orns += ch.data.$orn + ' ';
-        			}
-        		});
-        		n.data.$orns = orns;
-        	}
-            n.eachLevel(0, config.levelsToShow, function(n) {
-            	if(n.exist) n.drawn = true;
-            });     
-        });
-    },
+	    show: function(nodes) {
+	        var config = this.config;
+	        this.prepare(nodes);
+	        $.each(nodes, function(n) {
+	        	// check for root nodes if multitree
+	        	if(config.multitree && !('$orn' in n.data)) {
+	        		delete n.data.$orns;
+	        		var orns = ' ';
+	        		n.eachSubnode(function(ch) {
+	        			if(('$orn' in ch.data) 
+	        					&& orns.indexOf(ch.data.$orn) < 0 
+	        					&& ch.exist && !ch.drawn) {
+	        				orns += ch.data.$orn + ' ';
+	        			}
+	        		});
+	        		n.data.$orns = orns;
+	        	}
+	            n.eachLevel(0, config.levelsToShow, function(n) {
+	            	if(n.exist) n.drawn = true;
+	            });     
+	        });
+	    },
     
-    prepare: function(nodes) {
-        this.nodes = this.getNodesWithChildren(nodes);
-        return this.nodes;
-    },
+	    prepare: function(nodes) {
+	        this.nodes = this.getNodesWithChildren(nodes);
+	        return this.nodes;
+	    },
     
-    /*
-       Filters an array of nodes leaving only nodes with children.
-    */
-    getNodesWithChildren: function(nodes) {
-        var ans = [], config = this.config, root = this.viz.root;
-        nodes.sort(function(a, b) { return (a._depth <= b._depth) - (a._depth >= b._depth); });
-        for(var i=0; i<nodes.length; i++) {
-            if(nodes[i].anySubnode("exist")) {
-            	for (var j = i+1, desc = false; !desc && j < nodes.length; j++) {
-                    if(!config.multitree || '$orn' in nodes[j].data) {
-                		desc = desc || nodes[i].isDescendantOf(nodes[j].id);                    	
-                    }
-                }
-                if(!desc) ans.push(nodes[i]);
-            }
-        }
-        return ans;
-    },
+	    /*
+	       Filters an array of nodes leaving only nodes with children.
+	    */
+	    getNodesWithChildren: function(nodes) {
+	        var ans = [], config = this.config, root = this.viz.root;
+	        nodes.sort(function(a, b) { return (a._depth <= b._depth) - (a._depth >= b._depth); });
+	        for(var i=0; i<nodes.length; i++) {
+	            if(nodes[i].anySubnode("exist")) {
+	            	for (var j = i+1, desc = false; !desc && j < nodes.length; j++) {
+	                    if(!config.multitree || '$orn' in nodes[j].data) {
+	                		desc = desc || nodes[i].isDescendantOf(nodes[j].id);                    	
+	                    }
+	                }
+	                if(!desc) ans.push(nodes[i]);
+	            }
+	        }
+	        return ans;
+	    },
     
-    plotStep: function(delta, controller, animating) {
-        var viz = this.viz,
-        config = this.config,
-        canvas = viz.canvas, 
-        ctx = canvas.getCtx(),
-        nodes = this.nodes;
-        var i, node;
-        // hide nodes that are meant to be collapsed/expanded
-        var nds = {};
-        for(i=0; i<nodes.length; i++) {
-          node = nodes[i];
-          nds[node.id] = [];
-          var root = config.multitree && !('$orn' in node.data);
-          var orns = root && node.data.$orns;
-          node.eachSubgraph(function(n) { 
-            // TODO(nico): Cleanup
-        	  // special check for root node subnodes when
-        	  // multitree is checked.
-        	  if(root && orns && orns.indexOf(n.data.$orn) > 0 
-        			  && n.drawn) {
-        		  n.drawn = false;
-                  nds[node.id].push(n);
-              } else if((!root || !orns) && n.drawn) {
-                n.drawn = false;
-                nds[node.id].push(n);
-              }
-            });	
-            node.drawn = true;
-        }
-        // plot the whole (non-scaled) tree
-        if(nodes.length > 0) viz.fx.plot();
-        // show nodes that were previously hidden
-        for(i in nds) {
-          $.each(nds[i], function(n) { n.drawn = true; });
-        }
-        // plot each scaled subtree
-        for(i=0; i<nodes.length; i++) {
-          node = nodes[i];
-          ctx.save();
-          viz.fx.plotSubtree(node, controller, delta, animating);                
-          ctx.restore();
-        }
-      },
+	    plotStep: function(delta, controller, animating) {
+	        var viz = this.viz,
+	        config = this.config,
+	        canvas = viz.canvas, 
+	        ctx = canvas.getCtx(),
+	        nodes = this.nodes;
+	        var i, node;
+	        // hide nodes that are meant to be collapsed/expanded
+	        var nds = {};
+	        for(i=0; i<nodes.length; i++) {
+	          node = nodes[i];
+	          nds[node.id] = [];
+	          var root = config.multitree && !('$orn' in node.data);
+	          var orns = root && node.data.$orns;
+	          node.eachSubgraph(function(n) { 
+	            // TODO(nico): Cleanup
+	        	  // special check for root node subnodes when
+	        	  // multitree is checked.
+	        	  if(root && orns && orns.indexOf(n.data.$orn) > 0 
+	        			  && n.drawn) {
+	        		  n.drawn = false;
+	                  nds[node.id].push(n);
+	              } else if((!root || !orns) && n.drawn) {
+	                n.drawn = false;
+	                nds[node.id].push(n);
+	              }
+	            });	
+	            node.drawn = true;
+	        }
+	        // plot the whole (non-scaled) tree
+	        if(nodes.length > 0) viz.fx.plot();
+	        // show nodes that were previously hidden
+	        for(i in nds) {
+	          $.each(nds[i], function(n) { n.drawn = true; });
+	        }
+	        // plot each scaled subtree
+	        for(i=0; i<nodes.length; i++) {
+	          node = nodes[i];
+	          ctx.save();
+	          viz.fx.plotSubtree(node, controller, delta, animating);                
+	          ctx.restore();
+	        }
+	      },
 
-      getSiblings: function(nodes) {
-        var siblings = {};
-        $.each(nodes, function(n) {
-            var par = n.getParents();
-            if (par.length == 0) {
-                siblings[n.id] = [n];
-            } else {
-                var ans = [];
-                par[0].eachSubnode(function(sn) {
-                    ans.push(sn);
-                });
-                siblings[n.id] = ans;
-            }
-        });
-        return siblings;
-    }
-});
+	      getSiblings: function(nodes) {
+	        var siblings = {};
+	        $.each(nodes, function(n) {
+	            var par = n.getParents();
+	            if (par.length == 0) {
+	                siblings[n.id] = [n];
+	            } else {
+	                var ans = [];
+	                par[0].eachSubnode(function(sn) {
+	                    ans.push(sn);
+	                });
+	                siblings[n.id] = ans;
+	            }
+	        });
+	        return siblings;
+	    }
+	});
 
 /*
-   ST.Geom
+	   ST.Geom
 
-   Performs low level geometrical computations.
+	   Performs low level geometrical computations.
 
-   Access:
+	   Access:
 
-   This instance can be accessed with the _geom_ parameter of the st instance created.
+	   This instance can be accessed with the _geom_ parameter of the st instance created.
 
-   Example:
+	   Example:
 
-   (start code js)
-    var st = new ST(canvas, config);
-    st.geom.translate //or can also call any other <ST.Geom> method
-   (end code)
+	   (start code js)
+	    var st = new ST(canvas, config);
+	    st.geom.translate //or can also call any other <ST.Geom> method
+	   (end code)
 
 */
 
-$jit.ST.Geom = new Class({
-    Implements: Graph.Geom,
-    /*
-       Changes the tree current orientation to the one specified.
+	ST.Geom = new Class({
+	    Implements: Graph.Geom,
+	    /*
+	       Changes the tree current orientation to the one specified.
 
-       You should usually use <ST.switchPosition> instead.
-    */  
-    switchOrientation: function(orn) {
-    	this.config.orientation = orn;
-    },
+	       You should usually use <ST.switchPosition> instead.
+	    */  
+	    switchOrientation: function(orn) {
+	    	this.config.orientation = orn;
+	    },
 
-    /*
-       Makes a value dispatch according to the current layout
-       Works like a CSS property, either _top-right-bottom-left_ or _top|bottom - left|right_.
-     */
-    dispatch: function() {
-    	  // TODO(nico) should store Array.prototype.slice.call somewhere.
-        var args = Array.prototype.slice.call(arguments);
-        var s = args.shift(), len = args.length;
-        var val = function(a) { return typeof a == 'function'? a() : a; };
-        if(len == 2) {
-            return (s == "top" || s == "bottom")? val(args[0]) : val(args[1]);
-        } else if(len == 4) {
-            switch(s) {
-                case "top": return val(args[0]);
-                case "right": return val(args[1]);
-                case "bottom": return val(args[2]);
-                case "left": return val(args[3]);
-            }
-        }
-        return undefined;
-    },
+	    /*
+	       Makes a value dispatch according to the current layout
+	       Works like a CSS property, either _top-right-bottom-left_ or _top|bottom - left|right_.
+	     */
+	    dispatch: function() {
+	    	  // TODO(nico) should store Array.prototype.slice.call somewhere.
+	        var args = Array.prototype.slice.call(arguments);
+	        var s = args.shift(), len = args.length;
+	        var val = function(a) { return typeof a == 'function'? a() : a; };
+	        if(len == 2) {
+	            return (s == "top" || s == "bottom")? val(args[0]) : val(args[1]);
+	        } else if(len == 4) {
+	            switch(s) {
+	                case "top": return val(args[0]);
+	                case "right": return val(args[1]);
+	                case "bottom": return val(args[2]);
+	                case "left": return val(args[3]);
+	            }
+	        }
+	        return undefined;
+	    },
 
-    /*
-       Returns label height or with, depending on the tree current orientation.
-    */  
-    getSize: function(n, invert) {
-        var data = n.data, config = this.config;
-        var siblingOffset = config.siblingOffset;
-        var s = (config.multitree 
-        		&& ('$orn' in data) 
-        		&& data.$orn) || config.orientation;
-        var w = n.getData('width') + siblingOffset;
-        var h = n.getData('height') + siblingOffset;
-        if(!invert)
-            return this.dispatch(s, h, w);
-        else
-            return this.dispatch(s, w, h);
-    },
+	    /*
+	       Returns label height or with, depending on the tree current orientation.
+	    */  
+	    getSize: function(n, invert) {
+	        var data = n.data, config = this.config;
+	        var siblingOffset = config.siblingOffset;
+	        var s = (config.multitree 
+	        		&& ('$orn' in data) 
+	        		&& data.$orn) || config.orientation;
+	        var w = n.getData('width') + siblingOffset;
+	        var h = n.getData('height') + siblingOffset;
+	        if(!invert)
+	            return this.dispatch(s, h, w);
+	        else
+	            return this.dispatch(s, w, h);
+	    },
     
-    /*
-       Calculates a subtree base size. This is an utility function used by _getBaseSize_
-    */  
-    getTreeBaseSize: function(node, level, leaf) {
-        var size = this.getSize(node, true), baseHeight = 0, that = this;
-        if(leaf(level, node)) return size;
-        if(level === 0) return 0;
-        node.eachSubnode(function(elem) {
-            baseHeight += that.getTreeBaseSize(elem, level -1, leaf);
-        });
-        return (size > baseHeight? size : baseHeight) + this.config.subtreeOffset;
-    },
+	    /*
+	       Calculates a subtree base size. This is an utility function used by _getBaseSize_
+	    */  
+	    getTreeBaseSize: function(node, level, leaf) {
+	        var size = this.getSize(node, true), baseHeight = 0, that = this;
+	        if(leaf(level, node)) return size;
+	        if(level === 0) return 0;
+	        node.eachSubnode(function(elem) {
+	            baseHeight += that.getTreeBaseSize(elem, level -1, leaf);
+	        });
+	        return (size > baseHeight? size : baseHeight) + this.config.subtreeOffset;
+	    },
 
 
-    /*
-       getEdge
+	    /*
+	       getEdge
        
-       Returns a Complex instance with the begin or end position of the edge to be plotted.
+	       Returns a Complex instance with the begin or end position of the edge to be plotted.
 
-       Parameters:
+	       Parameters:
 
-       node - A <Graph.Node> that is connected to this edge.
-       type - Returns the begin or end edge position. Possible values are 'begin' or 'end'.
+	       node - A <Graph.Node> that is connected to this edge.
+	       type - Returns the begin or end edge position. Possible values are 'begin' or 'end'.
 
-       Returns:
+	       Returns:
 
-       A <Complex> number specifying the begin or end position.
-    */  
-    getEdge: function(node, type, s) {
-    	var $C = function(a, b) { 
-          return function(){
-            return node.pos.add(new Complex(a, b));
-          }; 
-        };
-        var dim = this.node;
-        var w = node.getData('width');
-        var h = node.getData('height');
+	       A <Complex> number specifying the begin or end position.
+	    */  
+	    getEdge: function(node, type, s) {
+	    	var $C = function(a, b) { 
+	          return function(){
+	            return node.pos.add(new Complex(a, b));
+	          }; 
+	        };
+	        var dim = this.node;
+	        var w = node.getData('width');
+	        var h = node.getData('height');
 
-        if(type == 'begin') {
-            if(dim.align == "center") {
-                return this.dispatch(s, $C(0, h/2), $C(-w/2, 0),
-                                     $C(0, -h/2),$C(w/2, 0));
-            } else if(dim.align == "left") {
-                return this.dispatch(s, $C(0, h), $C(0, 0),
-                                     $C(0, 0), $C(w, 0));
-            } else if(dim.align == "right") {
-                return this.dispatch(s, $C(0, 0), $C(-w, 0),
-                                     $C(0, -h),$C(0, 0));
-            } else throw "align: not implemented";
+	        if(type == 'begin') {
+	            if(dim.align == "center") {
+	                return this.dispatch(s, $C(0, h/2), $C(-w/2, 0),
+	                                     $C(0, -h/2),$C(w/2, 0));
+	            } else if(dim.align == "left") {
+	                return this.dispatch(s, $C(0, h), $C(0, 0),
+	                                     $C(0, 0), $C(w, 0));
+	            } else if(dim.align == "right") {
+	                return this.dispatch(s, $C(0, 0), $C(-w, 0),
+	                                     $C(0, -h),$C(0, 0));
+	            } else throw "align: not implemented";
             
             
-        } else if(type == 'end') {
-            if(dim.align == "center") {
-                return this.dispatch(s, $C(0, -h/2), $C(w/2, 0),
-                                     $C(0, h/2),  $C(-w/2, 0));
-            } else if(dim.align == "left") {
-                return this.dispatch(s, $C(0, 0), $C(w, 0),
-                                     $C(0, h), $C(0, 0));
-            } else if(dim.align == "right") {
-                return this.dispatch(s, $C(0, -h),$C(0, 0),
-                                     $C(0, 0), $C(-w, 0));
-            } else throw "align: not implemented";
-        }
-    },
+	        } else if(type == 'end') {
+	            if(dim.align == "center") {
+	                return this.dispatch(s, $C(0, -h/2), $C(w/2, 0),
+	                                     $C(0, h/2),  $C(-w/2, 0));
+	            } else if(dim.align == "left") {
+	                return this.dispatch(s, $C(0, 0), $C(w, 0),
+	                                     $C(0, h), $C(0, 0));
+	            } else if(dim.align == "right") {
+	                return this.dispatch(s, $C(0, -h),$C(0, 0),
+	                                     $C(0, 0), $C(-w, 0));
+	            } else throw "align: not implemented";
+	        }
+	    },
 
-    /*
-       Adjusts the tree position due to canvas scaling or translation.
-    */  
-    getScaledTreePosition: function(node, scale) {
-        var dim = this.node;
-        var w = node.getData('width');
-        var h = node.getData('height');
-        var s = (this.config.multitree 
-        		&& ('$orn' in node.data) 
-        		&& node.data.$orn) || this.config.orientation;
+	    /*
+	       Adjusts the tree position due to canvas scaling or translation.
+	    */  
+	    getScaledTreePosition: function(node, scale) {
+	        var dim = this.node;
+	        var w = node.getData('width');
+	        var h = node.getData('height');
+	        var s = (this.config.multitree 
+	        		&& ('$orn' in node.data) 
+	        		&& node.data.$orn) || this.config.orientation;
 
-        var $C = function(a, b) { 
-          return function(){
-            return node.pos.add(new Complex(a, b)).$scale(1 - scale);
-          }; 
-        };
-        if(dim.align == "left") {
-            return this.dispatch(s, $C(0, h), $C(0, 0),
-                                 $C(0, 0), $C(w, 0));
-        } else if(dim.align == "center") {
-            return this.dispatch(s, $C(0, h / 2), $C(-w / 2, 0),
-                                 $C(0, -h / 2),$C(w / 2, 0));
-        } else if(dim.align == "right") {
-            return this.dispatch(s, $C(0, 0), $C(-w, 0),
-                                 $C(0, -h),$C(0, 0));
-        } else throw "align: not implemented";
-    },
+	        var $C = function(a, b) { 
+	          return function(){
+	            return node.pos.add(new Complex(a, b)).$scale(1 - scale);
+	          }; 
+	        };
+	        if(dim.align == "left") {
+	            return this.dispatch(s, $C(0, h), $C(0, 0),
+	                                 $C(0, 0), $C(w, 0));
+	        } else if(dim.align == "center") {
+	            return this.dispatch(s, $C(0, h / 2), $C(-w / 2, 0),
+	                                 $C(0, -h / 2),$C(w / 2, 0));
+	        } else if(dim.align == "right") {
+	            return this.dispatch(s, $C(0, 0), $C(-w, 0),
+	                                 $C(0, -h),$C(0, 0));
+	        } else throw "align: not implemented";
+	    },
 
-    /*
-       treeFitsInCanvas
+	    /*
+	       treeFitsInCanvas
        
-       Returns a Boolean if the current subtree fits in canvas.
+	       Returns a Boolean if the current subtree fits in canvas.
 
-       Parameters:
+	       Parameters:
 
-       node - A <Graph.Node> which is the current root of the subtree.
-       canvas - The <Canvas> object.
-       level - The depth of the subtree to be considered.
-    */  
-    treeFitsInCanvas: function(node, canvas, level) {
-        var csize = canvas.getSize();
-        var s = (this.config.multitree 
-        		&& ('$orn' in node.data) 
-        		&& node.data.$orn) || this.config.orientation;
+	       node - A <Graph.Node> which is the current root of the subtree.
+	       canvas - The <Canvas> object.
+	       level - The depth of the subtree to be considered.
+	    */  
+	    treeFitsInCanvas: function(node, canvas, level) {
+	        var csize = canvas.getSize();
+	        var s = (this.config.multitree 
+	        		&& ('$orn' in node.data) 
+	        		&& node.data.$orn) || this.config.orientation;
 
-        var size = this.dispatch(s, csize.width, csize.height);
-        var baseSize = this.getTreeBaseSize(node, level, function(level, node) { 
-          return level === 0 || !node.anySubnode();
-        });
-        return (baseSize < size);
-    }
-});
+	        var size = this.dispatch(s, csize.width, csize.height);
+	        var baseSize = this.getTreeBaseSize(node, level, function(level, node) { 
+	          return level === 0 || !node.anySubnode();
+	        });
+	        return (baseSize < size);
+	    }
+	});
 
 /*
-  Class: ST.Plot
+	  Class: ST.Plot
   
-  Custom extension of <Graph.Plot>.
+	  Custom extension of <Graph.Plot>.
 
-  Extends:
+	  Extends:
 
-  All <Graph.Plot> methods
+	  All <Graph.Plot> methods
   
-  See also:
+	  See also:
   
-  <Graph.Plot>
+	  <Graph.Plot>
 
 */
-$jit.ST.Plot = new Class({
+	ST.Plot = new Class({
     
-    Implements: Graph.Plot,
+	    Implements: Graph.Plot,
     
-    /*
-       Plots a subtree from the spacetree.
-    */
-    plotSubtree: function(node, opt, scale, animating) {
-        var viz = this.viz, canvas = viz.canvas, config = viz.config;
-        scale = Math.min(Math.max(0.001, scale), 1);
-        if(scale >= 0) {
-            node.drawn = false;     
-            var ctx = canvas.getCtx();
-            var diff = viz.geom.getScaledTreePosition(node, scale);
-            ctx.translate(diff.x, diff.y);
-            ctx.scale(scale, scale);
-        }
-        this.plotTree(node, $.merge(opt, {
-          'withLabels': true,
-          'hideLabels': !!scale,
-          'plotSubtree': function(n, ch) {
-            var root = config.multitree && !('$orn' in node.data);
-            var orns = root && node.getData('orns');
-            return !root || orns.indexOf(elem.getData('orn')) > -1;
-          }
-        }), animating);
-        if(scale >= 0) node.drawn = true;
-    },   
+	    /*
+	       Plots a subtree from the spacetree.
+	    */
+	    plotSubtree: function(node, opt, scale, animating) {
+	        var viz = this.viz, canvas = viz.canvas, config = viz.config;
+	        scale = Math.min(Math.max(0.001, scale), 1);
+	        if(scale >= 0) {
+	            node.drawn = false;     
+	            var ctx = canvas.getCtx();
+	            var diff = viz.geom.getScaledTreePosition(node, scale);
+	            ctx.translate(diff.x, diff.y);
+	            ctx.scale(scale, scale);
+	        }
+	        this.plotTree(node, $.merge(opt, {
+	          'withLabels': true,
+	          'hideLabels': !!scale,
+	          'plotSubtree': function(n, ch) {
+	            var root = config.multitree && !('$orn' in node.data);
+	            var orns = root && node.getData('orns');
+	            return !root || orns.indexOf(elem.getData('orn')) > -1;
+	          }
+	        }), animating);
+	        if(scale >= 0) node.drawn = true;
+	    },   
    
-    /*
-        Method: getAlignedPos
+	    /*
+	        Method: getAlignedPos
         
-        Returns a *x, y* object with the position of the top/left corner of a <ST> node.
+	        Returns a *x, y* object with the position of the top/left corner of a <ST> node.
         
-        Parameters:
+	        Parameters:
         
-        pos - (object) A <Graph.Node> position.
-        width - (number) The width of the node.
-        height - (number) The height of the node.
+	        pos - (object) A <Graph.Node> position.
+	        width - (number) The width of the node.
+	        height - (number) The height of the node.
         
-     */
-    getAlignedPos: function(pos, width, height) {
-        var nconfig = this.node;
-        var square, orn;
-        if(nconfig.align == "center") {
-            square = {
-                x: pos.x - width / 2,
-                y: pos.y - height / 2
-            };
-        } else if (nconfig.align == "left") {
-            orn = this.config.orientation;
-            if(orn == "bottom" || orn == "top") {
-                square = {
-                    x: pos.x - width / 2,
-                    y: pos.y
-                };
-            } else {
-                square = {
-                    x: pos.x,
-                    y: pos.y - height / 2
-                };
-            }
-        } else if(nconfig.align == "right") {
-            orn = this.config.orientation;
-            if(orn == "bottom" || orn == "top") {
-                square = {
-                    x: pos.x - width / 2,
-                    y: pos.y - height
-                };
-            } else {
-                square = {
-                    x: pos.x - width,
-                    y: pos.y - height / 2
-                };
-            }
-        } else throw "align: not implemented";
+	     */
+	    getAlignedPos: function(pos, width, height) {
+	        var nconfig = this.node;
+	        var square, orn;
+	        if(nconfig.align == "center") {
+	            square = {
+	                x: pos.x - width / 2,
+	                y: pos.y - height / 2
+	            };
+	        } else if (nconfig.align == "left") {
+	            orn = this.config.orientation;
+	            if(orn == "bottom" || orn == "top") {
+	                square = {
+	                    x: pos.x - width / 2,
+	                    y: pos.y
+	                };
+	            } else {
+	                square = {
+	                    x: pos.x,
+	                    y: pos.y - height / 2
+	                };
+	            }
+	        } else if(nconfig.align == "right") {
+	            orn = this.config.orientation;
+	            if(orn == "bottom" || orn == "top") {
+	                square = {
+	                    x: pos.x - width / 2,
+	                    y: pos.y - height
+	                };
+	            } else {
+	                square = {
+	                    x: pos.x - width,
+	                    y: pos.y - height / 2
+	                };
+	            }
+	        } else throw "align: not implemented";
         
-        return square;
-    },
+	        return square;
+	    },
     
-    getOrientation: function(adj) {
-    	var config = this.config;
-    	var orn = config.orientation;
+	    getOrientation: function(adj) {
+	    	var config = this.config;
+	    	var orn = config.orientation;
 
-    	if(config.multitree) {
-        	var nodeFrom = adj.nodeFrom;
-        	var nodeTo = adj.nodeTo;
-    		orn = (('$orn' in nodeFrom.data) 
-        		&& nodeFrom.data.$orn) 
-        		|| (('$orn' in nodeTo.data) 
-        		&& nodeTo.data.$orn);
-    	}
+	    	if(config.multitree) {
+	        	var nodeFrom = adj.nodeFrom;
+	        	var nodeTo = adj.nodeTo;
+	    		orn = (('$orn' in nodeFrom.data) 
+	        		&& nodeFrom.data.$orn) 
+	        		|| (('$orn' in nodeTo.data) 
+	        		&& nodeTo.data.$orn);
+	    	}
 
-    	return orn; 
-    }
-});
-
-/*
-  Class: ST.Label
-
-  Custom extension of <Graph.Label>. 
-  Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
-
-  Extends:
-
-  All <Graph.Label> methods and subclasses.
-
-  See also:
-
-  <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
- */ 
-$jit.ST.Label = {};
+	    	return orn; 
+	    }
+	});
 
 /*
-   ST.Label.Native
+	  Class: ST.Label
 
-   Custom extension of <Graph.Label.Native>.
+	  Custom extension of <Graph.Label>. 
+	  Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
 
-   Extends:
+	  Extends:
 
-   All <Graph.Label.Native> methods
+	  All <Graph.Label> methods and subclasses.
 
-   See also:
+	  See also:
 
-   <Graph.Label.Native>
+	  <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
+	 */ 
+	ST.Label = {};
+
+/*
+	   ST.Label.Native
+
+	   Custom extension of <Graph.Label.Native>.
+
+	   Extends:
+
+	   All <Graph.Label.Native> methods
+
+	   See also:
+
+	   <Graph.Label.Native>
 */
-$jit.ST.Label.Native = new Class({
-  Implements: Graph.Label.Native,
+	ST.Label.Native = new Class({
+	  Implements: Graph.Label.Native,
 
-  renderLabel: function(canvas, node, controller) {
-    var ctx = canvas.getCtx();
-    var coord = node.pos.getc(true);
-    ctx.fillText(node.name, coord.x, coord.y);
-  }
-});
+	  renderLabel: function(canvas, node, controller) {
+	    var ctx = canvas.getCtx();
+	    var coord = node.pos.getc(true);
+	    ctx.fillText(node.name, coord.x, coord.y);
+	  }
+	});
 
-$jit.ST.Label.DOM = new Class({
-  Implements: Graph.Label.DOM,
+	ST.Label.DOM = new Class({
+	  Implements: Graph.Label.DOM,
 
-  /* 
-      placeLabel
+	  /* 
+	      placeLabel
 
-      Overrides abstract method placeLabel in <Graph.Plot>.
+	      Overrides abstract method placeLabel in <Graph.Plot>.
 
-      Parameters:
+	      Parameters:
 
-      tag - A DOM label element.
-      node - A <Graph.Node>.
-      controller - A configuration/controller object passed to the visualization.
+	      tag - A DOM label element.
+	      node - A <Graph.Node>.
+	      controller - A configuration/controller object passed to the visualization.
      
-    */
-    placeLabel: function(tag, node, controller) {
-        var pos = node.pos.getc(true), 
-            config = this.viz.config, 
-            dim = config.Node, 
-            canvas = this.viz.canvas,
-            w = node.getData('width'),
-            h = node.getData('height'),
-            radius = canvas.getSize(),
-            labelPos, orn;
+	    */
+	    placeLabel: function(tag, node, controller) {
+	        var pos = node.pos.getc(true), 
+	            config = this.viz.config, 
+	            dim = config.Node, 
+	            canvas = this.viz.canvas,
+	            w = node.getData('width'),
+	            h = node.getData('height'),
+	            radius = canvas.getSize(),
+	            labelPos, orn;
         
-        var ox = canvas.translateOffsetX,
-            oy = canvas.translateOffsetY,
-            sx = canvas.scaleOffsetX,
-            sy = canvas.scaleOffsetY,
-            posx = pos.x * sx + ox,
-            posy = pos.y * sy + oy;
+	        var ox = canvas.translateOffsetX,
+	            oy = canvas.translateOffsetY,
+	            sx = canvas.scaleOffsetX,
+	            sy = canvas.scaleOffsetY,
+	            posx = pos.x * sx + ox,
+	            posy = pos.y * sy + oy;
 
-        if(dim.align == "center") {
-            labelPos= {
-                x: Math.round(posx - w / 2 + radius.width/2),
-                y: Math.round(posy - h / 2 + radius.height/2)
-            };
-        } else if (dim.align == "left") {
-            orn = config.orientation;
-            if(orn == "bottom" || orn == "top") {
-                labelPos= {
-                    x: Math.round(posx - w / 2 + radius.width/2),
-                    y: Math.round(posy + radius.height/2)
-                };
-            } else {
-                labelPos= {
-                    x: Math.round(posx + radius.width/2),
-                    y: Math.round(posy - h / 2 + radius.height/2)
-                };
-            }
-        } else if(dim.align == "right") {
-            orn = config.orientation;
-            if(orn == "bottom" || orn == "top") {
-                labelPos= {
-                    x: Math.round(posx - w / 2 + radius.width/2),
-                    y: Math.round(posy - h + radius.height/2)
-                };
-            } else {
-                labelPos= {
-                    x: Math.round(posx - w + radius.width/2),
-                    y: Math.round(posy - h / 2 + radius.height/2)
-                };
-            }
-        } else throw "align: not implemented";
+	        if(dim.align == "center") {
+	            labelPos= {
+	                x: Math.round(posx - w / 2 + radius.width/2),
+	                y: Math.round(posy - h / 2 + radius.height/2)
+	            };
+	        } else if (dim.align == "left") {
+	            orn = config.orientation;
+	            if(orn == "bottom" || orn == "top") {
+	                labelPos= {
+	                    x: Math.round(posx - w / 2 + radius.width/2),
+	                    y: Math.round(posy + radius.height/2)
+	                };
+	            } else {
+	                labelPos= {
+	                    x: Math.round(posx + radius.width/2),
+	                    y: Math.round(posy - h / 2 + radius.height/2)
+	                };
+	            }
+	        } else if(dim.align == "right") {
+	            orn = config.orientation;
+	            if(orn == "bottom" || orn == "top") {
+	                labelPos= {
+	                    x: Math.round(posx - w / 2 + radius.width/2),
+	                    y: Math.round(posy - h + radius.height/2)
+	                };
+	            } else {
+	                labelPos= {
+	                    x: Math.round(posx - w + radius.width/2),
+	                    y: Math.round(posy - h / 2 + radius.height/2)
+	                };
+	            }
+	        } else throw "align: not implemented";
 
-        var style = tag.style;
-        style.left = labelPos.x + 'px';
-        style.top  = labelPos.y + 'px';
-        style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
-        controller.onPlaceLabel(tag, node);
-    }
-});
-
-/*
-  ST.Label.SVG
-
-  Custom extension of <Graph.Label.SVG>.
-
-  Extends:
-
-  All <Graph.Label.SVG> methods
-
-  See also:
-
-  <Graph.Label.SVG>
-*/
-$jit.ST.Label.SVG = new Class({
-  Implements: [$jit.ST.Label.DOM, Graph.Label.SVG],
-
-  initialize: function(viz) {
-    this.viz = viz;
-  }
-});
+	        var style = tag.style;
+	        style.left = labelPos.x + 'px';
+	        style.top  = labelPos.y + 'px';
+	        style.display = this.fitsInCanvas(labelPos, canvas)? '' : 'none';
+	        controller.onPlaceLabel(tag, node);
+	    }
+	});
 
 /*
-   ST.Label.HTML
+	  ST.Label.SVG
 
-   Custom extension of <Graph.Label.HTML>.
+	  Custom extension of <Graph.Label.SVG>.
 
-   Extends:
+	  Extends:
 
-   All <Graph.Label.HTML> methods.
+	  All <Graph.Label.SVG> methods
 
-   See also:
+	  See also:
 
-   <Graph.Label.HTML>
+	  <Graph.Label.SVG>
+*/
+	ST.Label.SVG = new Class({
+	  Implements: [$jit.ST.Label.DOM, Graph.Label.SVG],
+
+	  initialize: function(viz) {
+	    this.viz = viz;
+	  }
+	});
+
+/*
+	   ST.Label.HTML
+
+	   Custom extension of <Graph.Label.HTML>.
+
+	   Extends:
+
+	   All <Graph.Label.HTML> methods.
+
+	   See also:
+
+	   <Graph.Label.HTML>
 
 */
-$jit.ST.Label.HTML = new Class({
-  Implements: [$jit.ST.Label.DOM, Graph.Label.HTML],
+	ST.Label.HTML = new Class({
+	  Implements: [$jit.ST.Label.DOM, Graph.Label.HTML],
 
-  initialize: function(viz) {
-    this.viz = viz;
-  }
-});
+	  initialize: function(viz) {
+	    this.viz = viz;
+	  }
+	});
 
 
 /*
-  Class: ST.Plot.NodeTypes
+	  Class: ST.Plot.NodeTypes
 
-  This class contains a list of <Graph.Node> built-in types. 
-  Node types implemented are 'none', 'circle', 'rectangle', 'ellipse' and 'square'.
+	  This class contains a list of <Graph.Node> built-in types. 
+	  Node types implemented are 'none', 'circle', 'rectangle', 'ellipse' and 'square'.
 
-  You can add your custom node types, customizing your visualization to the extreme.
+	  You can add your custom node types, customizing your visualization to the extreme.
 
-  Example:
+	  Example:
 
-  (start code js)
-    ST.Plot.NodeTypes.implement({
-      'mySpecialType': {
-        'render': function(node, canvas) {
-          //print your custom node to canvas
-        },
-        //optional
-        'contains': function(node, pos) {
-          //return true if pos is inside the node or false otherwise
-        }
-      }
-    });
-  (end code)
+	  (start code js)
+	    ST.Plot.NodeTypes.implement({
+	      'mySpecialType': {
+	        'render': function(node, canvas) {
+	          //print your custom node to canvas
+	        },
+	        //optional
+	        'contains': function(node, pos) {
+	          //return true if pos is inside the node or false otherwise
+	        }
+	      }
+	    });
+	  (end code)
 
 */
-$jit.ST.Plot.NodeTypes = new Class({
-  'none': {
-    'render': $.empty,
-    'contains': $.lambda(false)
-  },
-  'circle': {
-    'render': function(node, canvas) {
-      var dim  = node.getData('dim'),
-          pos = this.getAlignedPos(node.pos.getc(true), dim, dim),
-          dim2 = dim/2;
-      this.nodeHelper.circle.render('fill', {x:pos.x+dim2, y:pos.y+dim2}, dim2, canvas);
-    },
-    'contains': function(node, pos) {
-      var dim  = node.getData('dim'),
-          npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
-          dim2 = dim/2;
-      this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, dim2);
-    }
-  },
-  'square': {
-    'render': function(node, canvas) {
-      var dim  = node.getData('dim'),
-          dim2 = dim/2,
-          pos = this.getAlignedPos(node.pos.getc(true), dim, dim);
-      this.nodeHelper.square.render('fill', {x:pos.x+dim2, y:pos.y+dim2}, dim2, canvas);
-    },
-    'contains': function(node, pos) {
-      var dim  = node.getData('dim'),
-          npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
-          dim2 = dim/2;
-      this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, dim2);
-    }
-  },
-  'ellipse': {
-    'render': function(node, canvas) {
-      var width = node.getData('width'),
-          height = node.getData('height'),
-          pos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.ellipse.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, canvas);
-    },
-    'contains': function(node, pos) {
-      var width = node.getData('width'),
-          height = node.getData('height'),
-          npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height, canvas);
-    }
-  },
-  'rectangle': {
-    'render': function(node, canvas) {
-      var width = node.getData('width'),
-          height = node.getData('height'),
-          pos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.rectangle.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, canvas);
-    },
-    'contains': function(node, pos) {
-      var width = node.getData('width'),
-          height = node.getData('height'),
-          npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height, canvas);
-    }
-  }
-});
+	ST.Plot.NodeTypes = new Class({
+	  'none': {
+	    'render': $.empty,
+	    'contains': $.lambda(false)
+	  },
+	  'circle': {
+	    'render': function(node, canvas) {
+	      var dim  = node.getData('dim'),
+	          pos = this.getAlignedPos(node.pos.getc(true), dim, dim),
+	          dim2 = dim/2;
+	      this.nodeHelper.circle.render('fill', {x:pos.x+dim2, y:pos.y+dim2}, dim2, canvas);
+	    },
+	    'contains': function(node, pos) {
+	      var dim  = node.getData('dim'),
+	          npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
+	          dim2 = dim/2;
+	      return this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
+	    }
+	  },
+	  'square': {
+	    'render': function(node, canvas) {
+	      var dim  = node.getData('dim'),
+	          dim2 = dim/2,
+	          pos = this.getAlignedPos(node.pos.getc(true), dim, dim);
+	      this.nodeHelper.square.render('fill', {x:pos.x+dim2, y:pos.y+dim2}, dim2, canvas);
+	    },
+	    'contains': function(node, pos) {
+	      var dim  = node.getData('dim'),
+	          npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
+	          dim2 = dim/2;
+	      return this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
+	    }
+	  },
+	  'ellipse': {
+	    'render': function(node, canvas) {
+	      var width = node.getData('width'),
+	          height = node.getData('height'),
+	          pos = this.getAlignedPos(node.pos.getc(true), width, height);
+	      this.nodeHelper.ellipse.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, canvas);
+	    },
+	    'contains': function(node, pos) {
+	      var width = node.getData('width'),
+	          height = node.getData('height'),
+	          npos = this.getAlignedPos(node.pos.getc(true), width, height);
+	      return this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
+	    }
+	  },
+	  'rectangle': {
+	    'render': function(node, canvas) {
+	      var width = node.getData('width'),
+	          height = node.getData('height'),
+	          pos = this.getAlignedPos(node.pos.getc(true), width, height);
+	      this.nodeHelper.rectangle.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, canvas);
+	    },
+	    'contains': function(node, pos) {
+	      var width = node.getData('width'),
+	          height = node.getData('height'),
+	          npos = this.getAlignedPos(node.pos.getc(true), width, height);
+	      return this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
+	    }
+	  }
+	});
 
 /*
-  Class: ST.Plot.EdgeTypes
+	  Class: ST.Plot.EdgeTypes
 
-  This class contains a list of <Graph.Adjacence> built-in types. 
-  Edge types implemented are 'none', 'line', 'arrow', 'quadratic:begin', 'quadratic:end', 'bezier'.
+	  This class contains a list of <Graph.Adjacence> built-in types. 
+	  Edge types implemented are 'none', 'line', 'arrow', 'quadratic:begin', 'quadratic:end', 'bezier'.
 
-  You can add your custom edge types, customizing your visualization to the extreme.
+	  You can add your custom edge types, customizing your visualization to the extreme.
 
-  Example:
+	  Example:
 
-  (start code js)
-    ST.Plot.EdgeTypes.implement({
-      'mySpecialType': {
-        'render': function(adj, canvas) {
-          //print your custom edge to canvas
-        },
-        //optional
-        'contains': function(adj, pos) {
-          //return true if pos is inside the arc or false otherwise
-        }
-      }
-    });
-  (end code)
+	  (start code js)
+	    ST.Plot.EdgeTypes.implement({
+	      'mySpecialType': {
+	        'render': function(adj, canvas) {
+	          //print your custom edge to canvas
+	        },
+	        //optional
+	        'contains': function(adj, pos) {
+	          //return true if pos is inside the arc or false otherwise
+	        }
+	      }
+	    });
+	  (end code)
 
 */
-$jit.ST.Plot.EdgeTypes = new Class({
-    'none': $.empty,
-    'line': {
-      'render': function(adj, canvas) {
-        var orn = this.getOrientation(adj),
-            nodeFrom = adj.nodeFrom, 
-            nodeTo = adj.nodeTo,
-            rel = nodeFrom._depth < nodeTo._depth,
-            from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
-            to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
-        this.edgeHelper.line.render(from, to, canvas);
-      },
-      'contains': function(adj, pos) {
-        var orn = this.getOrientation(adj),
-            nodeFrom = adj.nodeFrom, 
-            nodeTo = adj.nodeTo,
-            rel = nodeFrom._depth < nodeTo._depth,
-            from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
-            to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
-        return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);
-      }
-    },
-     'arrow': {
-       'render': function(adj, canvas) {
-         var orn = this.getOrientation(adj),
-             node = adj.nodeFrom, 
-             child = adj.nodeTo,
-             dim = adj.getData('dim'),
-             from = this.viz.geom.getEdge(node, 'begin', orn),
-             to = this.viz.geom.getEdge(child, 'end', orn),
-             direction = adj.data.$direction,
-             inv = (direction && direction.length>1 && direction[0] != node.id);
-         this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
-       },
-       'contains': function(adj, pos) {
-         var orn = this.getOrientation(adj),
-             nodeFrom = adj.nodeFrom, 
-             nodeTo = adj.nodeTo,
-             rel = nodeFrom._depth < nodeTo._depth,
-             from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
-             to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
-         return this.edgeHelper.arrow.contains(from, to, pos, this.edge.epsilon);
-       }
-     },
-    'quadratic:begin': {
-       'render': function(adj, canvas) {
-          var orn = this.getOrientation(adj);
-          var nodeFrom = adj.nodeFrom, 
-              nodeTo = adj.nodeTo,
-              rel = nodeFrom._depth < nodeTo._depth,
-              begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
-              end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
-              dim = adj.getData('dim'),
-              ctx = canvas.getCtx();
-          ctx.beginPath();
-          ctx.moveTo(begin.x, begin.y);
-          switch(orn) {
-            case "left":
-              ctx.quadraticCurveTo(begin.x + dim, begin.y, end.x, end.y);
-              break;
-            case "right":
-              ctx.quadraticCurveTo(begin.x - dim, begin.y, end.x, end.y);
-              break;
-            case "top":
-              ctx.quadraticCurveTo(begin.x, begin.y + dim, end.x, end.y);
-              break;
-            case "bottom":
-              ctx.quadraticCurveTo(begin.x, begin.y - dim, end.x, end.y);
-              break;
-          }
-          ctx.stroke();
-        }
-     },
-    'quadratic:end': {
-       'render': function(adj, canvas) {
-          var orn = this.getOrientation(adj);
-          var nodeFrom = adj.nodeFrom, 
-              nodeTo = adj.nodeTo,
-              rel = nodeFrom._depth < nodeTo._depth,
-              begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
-              end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
-              dim = adj.getData('dim'),
-              ctx = canvas.getCtx();
-          ctx.beginPath();
-          ctx.moveTo(begin.x, begin.y);
-          switch(orn) {
-            case "left":
-              ctx.quadraticCurveTo(end.x - dim, end.y, end.x, end.y);
-              break;
-            case "right":
-              ctx.quadraticCurveTo(end.x + dim, end.y, end.x, end.y);
-              break;
-            case "top":
-              ctx.quadraticCurveTo(end.x, end.y - dim, end.x, end.y);
-              break;
-            case "bottom":
-              ctx.quadraticCurveTo(end.x, end.y + dim, end.x, end.y);
-              break;
-          }
-          ctx.stroke();
-       }
-     },
-    'bezier': {
-       'render': function(adj, canvas) {
-         var orn = this.getOrientation(adj),
-             nodeFrom = adj.nodeFrom, 
-             nodeTo = adj.nodeTo,
-             rel = nodeFrom._depth < nodeTo._depth,
-             begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
-             end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
-             dim = adj.getData('dim'),
-             ctx = canvas.getCtx();
-         ctx.beginPath();
-         ctx.moveTo(begin.x, begin.y);
-         switch(orn) {
-           case "left":
-             ctx.bezierCurveTo(begin.x + dim, begin.y, end.x - dim, end.y, end.x, end.y);
-             break;
-           case "right":
-             ctx.bezierCurveTo(begin.x - dim, begin.y, end.x + dim, end.y, end.x, end.y);
-             break;
-           case "top":
-             ctx.bezierCurveTo(begin.x, begin.y + dim, end.x, end.y - dim, end.x, end.y);
-             break;
-           case "bottom":
-             ctx.bezierCurveTo(begin.x, begin.y - dim, end.x, end.y + dim, end.x, end.y);
-             break;
-         }
-         ctx.stroke();
-       }
-    }
-});
+	$jit.ST.Plot.EdgeTypes = new Class({
+	    'none': $.empty,
+	    'line': {
+	      'render': function(adj, canvas) {
+	        var orn = this.getOrientation(adj),
+	            nodeFrom = adj.nodeFrom, 
+	            nodeTo = adj.nodeTo,
+	            rel = nodeFrom._depth < nodeTo._depth,
+	            from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+	            to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
+	        this.edgeHelper.line.render(from, to, canvas);
+	      },
+	      'contains': function(adj, pos) {
+	        var orn = this.getOrientation(adj),
+	            nodeFrom = adj.nodeFrom, 
+	            nodeTo = adj.nodeTo,
+	            rel = nodeFrom._depth < nodeTo._depth,
+	            from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+	            to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
+	        return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);
+	      }
+	    },
+	     'arrow': {
+	       'render': function(adj, canvas) {
+	         var orn = this.getOrientation(adj),
+	             node = adj.nodeFrom, 
+	             child = adj.nodeTo,
+	             dim = adj.getData('dim'),
+	             from = this.viz.geom.getEdge(node, 'begin', orn),
+	             to = this.viz.geom.getEdge(child, 'end', orn),
+	             direction = adj.data.$direction,
+	             inv = (direction && direction.length>1 && direction[0] != node.id);
+	         this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
+	       },
+	       'contains': function(adj, pos) {
+	         var orn = this.getOrientation(adj),
+	             nodeFrom = adj.nodeFrom, 
+	             nodeTo = adj.nodeTo,
+	             rel = nodeFrom._depth < nodeTo._depth,
+	             from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+	             to =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn);
+	         return this.edgeHelper.arrow.contains(from, to, pos, this.edge.epsilon);
+	       }
+	     },
+	    'quadratic:begin': {
+	       'render': function(adj, canvas) {
+	          var orn = this.getOrientation(adj);
+	          var nodeFrom = adj.nodeFrom, 
+	              nodeTo = adj.nodeTo,
+	              rel = nodeFrom._depth < nodeTo._depth,
+	              begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+	              end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
+	              dim = adj.getData('dim'),
+	              ctx = canvas.getCtx();
+	          ctx.beginPath();
+	          ctx.moveTo(begin.x, begin.y);
+	          switch(orn) {
+	            case "left":
+	              ctx.quadraticCurveTo(begin.x + dim, begin.y, end.x, end.y);
+	              break;
+	            case "right":
+	              ctx.quadraticCurveTo(begin.x - dim, begin.y, end.x, end.y);
+	              break;
+	            case "top":
+	              ctx.quadraticCurveTo(begin.x, begin.y + dim, end.x, end.y);
+	              break;
+	            case "bottom":
+	              ctx.quadraticCurveTo(begin.x, begin.y - dim, end.x, end.y);
+	              break;
+	          }
+	          ctx.stroke();
+	        }
+	     },
+	    'quadratic:end': {
+	       'render': function(adj, canvas) {
+	          var orn = this.getOrientation(adj);
+	          var nodeFrom = adj.nodeFrom, 
+	              nodeTo = adj.nodeTo,
+	              rel = nodeFrom._depth < nodeTo._depth,
+	              begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+	              end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
+	              dim = adj.getData('dim'),
+	              ctx = canvas.getCtx();
+	          ctx.beginPath();
+	          ctx.moveTo(begin.x, begin.y);
+	          switch(orn) {
+	            case "left":
+	              ctx.quadraticCurveTo(end.x - dim, end.y, end.x, end.y);
+	              break;
+	            case "right":
+	              ctx.quadraticCurveTo(end.x + dim, end.y, end.x, end.y);
+	              break;
+	            case "top":
+	              ctx.quadraticCurveTo(end.x, end.y - dim, end.x, end.y);
+	              break;
+	            case "bottom":
+	              ctx.quadraticCurveTo(end.x, end.y + dim, end.x, end.y);
+	              break;
+	          }
+	          ctx.stroke();
+	       }
+	     },
+	    'bezier': {
+	       'render': function(adj, canvas) {
+	         var orn = this.getOrientation(adj),
+	             nodeFrom = adj.nodeFrom, 
+	             nodeTo = adj.nodeTo,
+	             rel = nodeFrom._depth < nodeTo._depth,
+	             begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
+	             end =  this.viz.geom.getEdge(rel? nodeTo:nodeFrom, 'end', orn),
+	             dim = adj.getData('dim'),
+	             ctx = canvas.getCtx();
+	         ctx.beginPath();
+	         ctx.moveTo(begin.x, begin.y);
+	         switch(orn) {
+	           case "left":
+	             ctx.bezierCurveTo(begin.x + dim, begin.y, end.x - dim, end.y, end.x, end.y);
+	             break;
+	           case "right":
+	             ctx.bezierCurveTo(begin.x - dim, begin.y, end.x + dim, end.y, end.x, end.y);
+	             break;
+	           case "top":
+	             ctx.bezierCurveTo(begin.x, begin.y + dim, end.x, end.y - dim, end.x, end.y);
+	             break;
+	           case "bottom":
+	             ctx.bezierCurveTo(begin.x, begin.y - dim, end.x, end.y + dim, end.x, end.y);
+	             break;
+	         }
+	         ctx.stroke();
+	       }
+	    }
+	});
+
+})($jit.ST);
 
