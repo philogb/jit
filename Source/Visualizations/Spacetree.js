@@ -1383,7 +1383,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var dim  = node.getData('dim'),
           npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
           dim2 = dim/2;
-      this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, dim2);
+      this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
     }
   },
   'square': {
@@ -1397,7 +1397,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var dim  = node.getData('dim'),
           npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
           dim2 = dim/2;
-      this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, dim2);
+      this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
     }
   },
   'ellipse': {
@@ -1411,7 +1411,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var width = node.getData('width'),
           height = node.getData('height'),
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height);
+      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
     }
   },
   'rectangle': {
@@ -1425,7 +1425,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var width = node.getData('width'),
           height = node.getData('height'),
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height);
+      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
     }
   }
 });
