@@ -1411,7 +1411,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var width = node.getData('width'),
           height = node.getData('height'),
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height, canvas);
+      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height);
     }
   },
   'rectangle': {
@@ -1425,7 +1425,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var width = node.getData('width'),
           height = node.getData('height'),
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height, canvas);
+      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, width, height);
     }
   }
 });
