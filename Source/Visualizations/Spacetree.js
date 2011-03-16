@@ -1219,9 +1219,12 @@ $jit.ST.Label.Native = new Class({
   Implements: Graph.Label.Native,
 
   renderLabel: function(canvas, node, controller) {
-    var ctx = canvas.getCtx();
-    var coord = node.pos.getc(true);
-    ctx.fillText(node.name, coord.x, coord.y);
+    var ctx = canvas.getCtx(),
+        coord = node.pos.getc(true),
+        width = node.getData('width'),
+        height = node.getData('height'),
+        pos = this.viz.fx.getAlignedPos(coord, width, height);
+    ctx.fillText(node.name, pos.x + width / 2, pos.y + height / 2);
   }
 });
 

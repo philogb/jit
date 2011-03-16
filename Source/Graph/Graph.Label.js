@@ -29,6 +29,10 @@ Graph.Label = {};
    Implements labels natively, using the Canvas text API.
 */
 Graph.Label.Native = new Class({
+    initialize: function(viz) {
+      this.viz = viz;
+    },
+
     /*
        Method: plotLabel
 
