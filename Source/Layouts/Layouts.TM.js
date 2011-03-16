@@ -37,13 +37,13 @@ Layouts.TM.SliceAndDice = new Class({
     var config = this.config,
         offst = config.offset,
         width  = par.getData('width', prop),
-        height = par.getData('height', prop) - config.titleHeight,
-        fact = par == ch? 1: (ch.getData('area', prop) / totalArea);
-    
+        height = Math.max(par.getData('height', prop) - config.titleHeight, 0),
+        fact = par == ch? 1 : (ch.getData('area', prop) / totalArea);
+
     var otherSize, size, dim, pos, pos2, posth, pos2th;
     var horizontal = (orn == "h");
     if(horizontal) {
-      orn = 'v';    
+      orn = 'v';
       otherSize = height;
       size = width * fact;
       dim = 'height';
@@ -240,7 +240,8 @@ Layouts.TM.Squarified = new Class({
  Implements: Layouts.TM.Area,
  
  computePositions: function(node, coord, prop) {
-   var config = this.config;
+   var config = this.config, 
+       max = Math.max;
    
    if (coord.width >= coord.height) 
      this.layout.orientation = 'h';
@@ -251,11 +252,12 @@ Layouts.TM.Squarified = new Class({
    if(ch.length > 0) {
      this.processChildrenLayout(node, ch, coord, prop);
      for(var i=0, l=ch.length; i<l; i++) {
-       var chi = ch[i]; 
-       var offst = config.offset,
-           height = chi.getData('height', prop) - offst - config.titleHeight,
-           width = chi.getData('width', prop) - offst;
-       var chipos = chi.getPos(prop);
+       var chi = ch[i], 
+           offst = config.offset,
+           height = max(chi.getData('height', prop) - offst - config.titleHeight, 0),
+           width = max(chi.getData('width', prop) - offst, 0),
+           chipos = chi.getPos(prop);
+
        coord = {
          'width': width,
          'height': height,
@@ -399,14 +401,16 @@ Layouts.TM.Strip = new Class({
        coord - A coordinates object specifying width, height, left and top style properties.
     */
     computePositions: function(node, coord, prop) {
-     var ch = node.getSubnodes([1, 1], "ignore"), config = this.config;
+     var  ch = node.getSubnodes([1, 1], "ignore"), 
+          config = this.config,
+          max = Math.max;
      if(ch.length > 0) {
        this.processChildrenLayout(node, ch, coord, prop);
        for(var i=0, l=ch.length; i<l; i++) {
          var chi = ch[i];
          var offst = config.offset,
-             height = chi.getData('height', prop) - offst - config.titleHeight,
-             width  = chi.getData('width', prop)  - offst;
+             height = max(chi.getData('height', prop) - offst - config.titleHeight, 0),
+             width  = max(chi.getData('width', prop)  - offst, 0);
          var chipos = chi.getPos(prop);
          coord = {
            'width': width,
