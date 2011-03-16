@@ -1112,7 +1112,7 @@ $jit.ST.Plot = new Class({
           'plotSubtree': function(n, ch) {
             var root = config.multitree && !('$orn' in node.data);
             var orns = root && node.getData('orns');
-            return !root || orns.indexOf(elem.getData('orn')) > -1;
+            return !root || orns.indexOf(node.getData('orn')) > -1;
           }
         }), animating);
         if(scale >= 0) node.drawn = true;
