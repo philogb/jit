@@ -371,6 +371,7 @@ Graph.Op = {
     
     */
     morph: function(json, opt, extraModes) {
+        extraModes = extraModes || {};
         var viz = this.viz;
         var options = $.merge(this.options, viz.controller, opt), root = viz.root;
         var graph;
@@ -424,7 +425,7 @@ Graph.Op = {
                 graph = viz.construct(json);
                 //preprocessing for nodes to delete.
                 //get node property modes to interpolate
-                var nodeModes = extraModes && ('node-property' in extraModes) 
+                var nodeModes = ('node-property' in extraModes) 
                   && $.map($.splat(extraModes['node-property']), 
                       function(n) { return '$' + n; });
                 viz.graph.eachNode(function(elem) {
@@ -468,23 +469,28 @@ Graph.Op = {
                                         ['node-property:alpha', 
                                          'edge-property:alpha'];
                 //Append extra node-property animations (if any)
-                modes[0] = modes[0] + ((extraModes && ('node-property' in extraModes))? 
+                modes[0] = modes[0] + (('node-property' in extraModes)? 
                     (':' + $.splat(extraModes['node-property']).join(':')) : '');
                 //Append extra edge-property animations (if any)
-                modes[1] = (modes[1] || 'edge-property:alpha') + ((extraModes && ('edge-property' in extraModes))? 
+                modes[1] = (modes[1] || 'edge-property:alpha') + (('edge-property' in extraModes)? 
                     (':' + $.splat(extraModes['edge-property']).join(':')) : '');
                 //Add label-property animations (if any)
-                if(extraModes && ('label-property' in extraModes)) {
+                if('label-property' in extraModes) {
                   modes.push('label-property:' + $.splat(extraModes['label-property']).join(':'))
                 }
-                viz.reposition();
+                //only use reposition if its implemented.
+                if (viz.reposition) {
+                  viz.reposition();
+                } else {
+                  viz.compute('end');
+                }
                 viz.graph.eachNode(function(elem) {
                     if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
                       elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
                     }
                 });
                 viz.fx.animate($.merge(options, {
-                    modes: ['polar'].concat(modes),
+                    modes: [extraModes.position || 'polar'].concat(modes),
                     onComplete: function() {
                         viz.graph.eachNode(function(elem) {
                             if(elem.ignore) viz.graph.removeNode(elem.id);
