@@ -55,7 +55,7 @@ Layouts.Icicle = new Class({
     root.setData('height', height, posType);
 
     var nodeLength, prevNodeLength = 0, totalDim = 0;
-    var children = Graph.Util.getSubnodes(root, [1, 1]); // next level from this node
+    var children = Graph.Util.getSubnodes(root, [1, 1], 'ignore'); // next level from this node
 
     if(!children.length)
       return;

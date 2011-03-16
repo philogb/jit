@@ -85,8 +85,9 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.font = label.style + ' ' + label.size + 'px ' + label.family;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          if(aggregates(node.name, valLeft, valRight, node)) {
-            ctx.fillText(valAcum, x, y - acumLeft - config.labelOffset - label.size/2, width);
+          var aggValue = aggregates(node.name, valLeft, valRight, node, valAcum);
+          if(aggValue !== false) {
+            ctx.fillText(aggValue !== true? aggValue : valAcum, x, y - acumLeft - config.labelOffset - label.size/2, width);
           }
           if(showLabels(node.name, valLeft, valRight, node)) {
             ctx.fillText(node.name, x, y + label.size/2 + config.labelOffset);
@@ -169,6 +170,8 @@ $jit.AreaChart = new Class({
 
     var st = new $jit.ST({
       injectInto: config.injectInto,
+      width: config.width,
+      height: config.height,
       orientation: "bottom",
       levelDistance: 0,
       siblingOffset: 0,

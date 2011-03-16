@@ -74,13 +74,15 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.fillStyle = ctx.strokeStyle = label.color;
           ctx.font = label.style + ' ' + label.size + 'px ' + label.family;
           ctx.textBaseline = 'middle';
-          if(aggregates(node.name, valAcum)) {
+          var aggValue = aggregates(node.name, valAcum, node);
+          if(aggValue !== false) {
+            aggValue = aggValue !== true? aggValue : valAcum;
             if(horz) {
               ctx.textAlign = 'right';
-              ctx.fillText(valAcum, x + acum - config.labelOffset, y + height/2);
+              ctx.fillText(aggValue, x + acum - config.labelOffset, y + height/2);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(valAcum, x + width/2, y - height - label.size/2 - config.labelOffset);
+              ctx.fillText(aggValue, x + width/2, y - height - label.size/2 - config.labelOffset);
             }
           }
           if(showLabels(node.name, valAcum, node)) {
@@ -340,6 +342,8 @@ $jit.BarChart = new Class({
     
     var st = new $jit.ST({
       injectInto: config.injectInto,
+      width: config.width,
+      height: config.height,
       orientation: horz? 'left' : 'bottom',
       levelDistance: 0,
       siblingOffset: config.barsOffset,
@@ -602,7 +606,7 @@ $jit.BarChart = new Class({
   updateJSON: function(json, onComplete) {
     if(this.busy) return;
     this.busy = true;
-    
+    this.select(false, false, false);
     var st = this.st;
     var graph = st.graph;
     var values = json.values;

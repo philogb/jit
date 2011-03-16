@@ -163,6 +163,8 @@ $jit.PieChart = new Class({
     var nodeType = config.type.split(":")[0];
     var sb = new $jit.Sunburst({
       injectInto: config.injectInto,
+      width: config.width,
+      height: config.height,
       useCanvas: config.useCanvas,
       withLabels: config.Label.type != 'Native',
       Label: {
