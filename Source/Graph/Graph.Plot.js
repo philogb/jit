@@ -374,7 +374,8 @@ Graph.Plot = {
           if(opt.hideLabels) that.labels.hideLabels(false);
           that.plot(opt);
           opt.onComplete();
-          opt.onAfterCompute();
+          //TODO(nico): This shouldn't be here!
+          //opt.onAfterCompute();
         }       
       })).start();
     },

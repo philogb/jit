@@ -619,7 +619,7 @@ $jit.json = {
   getSubtree: function(tree, id) {
     if (tree.id == id)
       return tree;
-    for ( var i = 0, ch = tree.children; i < ch.length; i++) {
+    for ( var i = 0, ch = tree.children; ch && i < ch.length; i++) {
       var t = this.getSubtree(ch[i], id);
       if (t != null)
         return t;
