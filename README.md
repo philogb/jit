@@ -1,4 +1,5 @@
-JavaScript InfoVis Toolkit / http://thejit.org
+JavaScript InfoVis Toolkit
+(http://thejit.org)
 ==========================
 
 The JavaScript InfoVis Toolkit provides tools for creating Interactive Data 
