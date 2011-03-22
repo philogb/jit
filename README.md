@@ -1,5 +1,4 @@
 JavaScript InfoVis Toolkit
-(http://thejit.org)
 ==========================
 
 The JavaScript InfoVis Toolkit provides tools for creating Interactive Data 
@@ -7,9 +6,12 @@ Visualizations for the Web.
 
 This is the Dev project, users should download the project from http://thejit.org.
 
-The blog's at http://blog.thejit.org
-
-
+Useful links:
+--
+  [jit homepage](http://thejit.org)
+  [jit's blog](http://blog.thejit.org)
+  
+  
 How to
 ------
 
