@@ -8,8 +8,8 @@ This is the Dev project, users should download the project from http://thejit.or
 
 Useful links:
 --
-  [jit homepage](http://thejit.org)
-  [jit's blog](http://blog.thejit.org)
+  - [jit homepage](http://thejit.org)
+  - [jit's blog](http://blog.thejit.org)
   
   
 How to
