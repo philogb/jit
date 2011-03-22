@@ -168,7 +168,7 @@ $jit.AreaChart = new Class({
         nodeType = config.type.split(":")[0],
         nodeLabels = {};
 
-    var st = new $jit.ST({
+    var delegate = new $jit.ST({
       injectInto: config.injectInto,
       width: config.width,
       height: config.height,
@@ -309,13 +309,13 @@ $jit.AreaChart = new Class({
       }
     });
     
-    var size = st.canvas.getSize(),
+    var size = delegate.canvas.getSize(),
         margin = config.Margin;
-    st.config.offsetY = -size.height/2 + margin.bottom 
+    delegate.config.offsetY = -size.height/2 + margin.bottom 
       + (config.showLabels && (config.labelOffset + config.Label.size));
-    st.config.offsetX = (margin.right - margin.left)/2;
-    this.st = st;
-    this.canvas = this.st.canvas;
+    delegate.config.offsetX = (margin.right - margin.left)/2;
+    this.delegate = delegate;
+    this.canvas = this.delegate.canvas;
   },
   
  /*
@@ -336,7 +336,7 @@ $jit.AreaChart = new Class({
   loadJSON: function(json) {
     var prefix = $.time(), 
         ch = [], 
-        st = this.st,
+        delegate = this.delegate,
         name = $.splat(json.label), 
         color = $.splat(json.color || this.colors),
         config = this.config,
@@ -374,13 +374,13 @@ $jit.AreaChart = new Class({
       },
       'children': ch
     };
-    st.loadJSON(root);
+    delegate.loadJSON(root);
     
     this.normalizeDims();
-    st.compute();
-    st.select(st.root);
+    delegate.compute();
+    delegate.select(delegate.root);
     if(animate) {
-      st.fx.animate({
+      delegate.fx.animate({
         modes: ['node-property:height:dimArray'],
         duration:1500
       });
@@ -411,8 +411,8 @@ $jit.AreaChart = new Class({
     if(this.busy) return;
     this.busy = true;
     
-    var st = this.st,
-        graph = st.graph,
+    var delegate = this.delegate,
+        graph = delegate.graph,
         labels = json.label && $.splat(json.label),
         values = json.values,
         animate = this.config.animate,
@@ -449,10 +449,10 @@ $jit.AreaChart = new Class({
       }
     });
     this.normalizeDims();
-    st.compute();
-    st.select(st.root);
+    delegate.compute();
+    delegate.select(delegate.root);
     if(animate) {
-      st.fx.animate({
+      delegate.fx.animate({
         modes: ['node-property:height:dimArray'],
         duration:1500,
         onComplete: function() {
@@ -485,10 +485,10 @@ $jit.AreaChart = new Class({
   filter: function(filters, callback) {
     if(this.busy) return;
     this.busy = true;
-    if(this.config.Tips.enable) this.st.tips.hide();
+    if(this.config.Tips.enable) this.delegate.tips.hide();
     this.select(false, false, false);
     var args = $.splat(filters);
-    var rt = this.st.graph.getNode(this.st.root);
+    var rt = this.delegate.graph.getNode(this.delegate.root);
     var that = this;
     this.normalizeDims();
     rt.eachAdjacency(function(adj) {
@@ -499,7 +499,7 @@ $jit.AreaChart = new Class({
         return ($.indexOf(args, stringArray[i]) > -1)? d:[0, 0];
       }), 'end');
     });
-    this.st.fx.animate({
+    this.delegate.fx.animate({
       modes: ['node-property:dimArray'],
       duration:1500,
       onComplete: function() {
@@ -527,11 +527,11 @@ $jit.AreaChart = new Class({
   restore: function(callback) {
     if(this.busy) return;
     this.busy = true;
-    if(this.config.Tips.enable) this.st.tips.hide();
+    if(this.config.Tips.enable) this.delegate.tips.hide();
     this.select(false, false, false);
     this.normalizeDims();
     var that = this;
-    this.st.fx.animate({
+    this.delegate.fx.animate({
       modes: ['node-property:height:dimArray'],
       duration:1500,
       onComplete: function() {
@@ -549,16 +549,16 @@ $jit.AreaChart = new Class({
       s.id = id;
       s.name = name;
       s.index = index;
-      this.st.graph.eachNode(function(n) {
+      this.delegate.graph.eachNode(function(n) {
         n.setData('border', false);
       });
       if(id) {
-        var n = this.st.graph.getNode(id);
+        var n = this.delegate.graph.getNode(id);
         n.setData('border', s);
         var link = index === 0? 'prev':'next';
         link = n.getData(link);
         if(link) {
-          n = this.st.graph.getByName(link);
+          n = this.delegate.graph.getByName(link);
           if(n) {
             n.setData('border', {
               name: name,
@@ -567,7 +567,7 @@ $jit.AreaChart = new Class({
           }
         }
       }
-      this.st.plot();
+      this.delegate.plot();
     }
   },
   
@@ -585,7 +585,7 @@ $jit.AreaChart = new Class({
   getLegend: function() {
     var legend = {};
     var n;
-    this.st.graph.getNode(this.st.root).eachAdjacency(function(adj) {
+    this.delegate.graph.getNode(this.delegate.root).eachAdjacency(function(adj) {
       n = adj.nodeTo;
     });
     var colors = n.getData('colorArray'),
@@ -624,7 +624,7 @@ $jit.AreaChart = new Class({
 */  
   getMaxValue: function() {
     var maxValue = 0;
-    this.st.graph.eachNode(function(n) {
+    this.delegate.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acumLeft = 0, acumRight = 0;
       $.each(valArray, function(v) { 
@@ -639,12 +639,12 @@ $jit.AreaChart = new Class({
   
   normalizeDims: function() {
     //number of elements
-    var root = this.st.graph.getNode(this.st.root), l=0;
+    var root = this.delegate.graph.getNode(this.delegate.root), l=0;
     root.eachAdjacency(function() {
       l++;
     });
     var maxValue = this.getMaxValue() || 1,
-        size = this.st.canvas.getSize(),
+        size = this.delegate.canvas.getSize(),
         config = this.config,
         margin = config.Margin,
         labelOffset = config.labelOffset + config.Label.size,
@@ -652,7 +652,7 @@ $jit.AreaChart = new Class({
         animate = config.animate,
         height = size.height - (margin.top + margin.bottom) - (config.showAggregates && labelOffset) 
           - (config.showLabels && labelOffset);
-    this.st.graph.eachNode(function(n) {
+    this.delegate.graph.eachNode(function(n) {
       var acumLeft = 0, acumRight = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acumLeft += +v[0];

@@ -161,7 +161,7 @@ $jit.PieChart = new Class({
   initializeViz: function() {
     var config = this.config, that = this;
     var nodeType = config.type.split(":")[0];
-    var sb = new $jit.Sunburst({
+    var delegate = new $jit.Sunburst({
       injectInto: config.injectInto,
       width: config.width,
       height: config.height,
@@ -253,12 +253,12 @@ $jit.PieChart = new Class({
       }
     });
     
-    var size = sb.canvas.getSize(),
+    var size = delegate.canvas.getSize(),
         min = Math.min;
-    sb.config.levelDistance = min(size.width, size.height)/2 
+    delegate.config.levelDistance = min(size.width, size.height)/2 
       - config.offset - config.sliceOffset;
-    this.sb = sb;
-    this.canvas = this.sb.canvas;
+    this.delegate = delegate;
+    this.canvas = this.delegate.canvas;
     this.canvas.getCtx().globalCompositeOperation = 'lighter';
   },
   
@@ -280,7 +280,7 @@ $jit.PieChart = new Class({
   loadJSON: function(json) {
     var prefix = $.time(), 
         ch = [], 
-        sb = this.sb,
+        delegate = this.delegate,
         name = $.splat(json.label),
         nameLength = name.length,
         color = $.splat(json.color || this.colors),
@@ -318,12 +318,12 @@ $jit.PieChart = new Class({
       },
       'children': ch
     };
-    sb.loadJSON(root);
+    delegate.loadJSON(root);
     
     this.normalizeDims();
-    sb.refresh();
+    delegate.refresh();
     if(animate) {
-      sb.fx.animate({
+      delegate.fx.animate({
         modes: ['node-property:dimArray'],
         duration:1500
       });
@@ -354,8 +354,8 @@ $jit.PieChart = new Class({
     if(this.busy) return;
     this.busy = true;
     
-    var sb = this.sb;
-    var graph = sb.graph;
+    var delegate = this.delegate;
+    var graph = delegate.graph;
     var values = json.values;
     var animate = this.config.animate;
     var that = this;
@@ -372,8 +372,8 @@ $jit.PieChart = new Class({
     });
     this.normalizeDims();
     if(animate) {
-      sb.compute('end');
-      sb.fx.animate({
+      delegate.compute('end');
+      delegate.fx.animate({
         modes: ['node-property:dimArray:span', 'linear'],
         duration:1500,
         onComplete: function() {
@@ -382,7 +382,7 @@ $jit.PieChart = new Class({
         }
       });
     } else {
-      sb.refresh();
+      delegate.refresh();
     }
   },
     
@@ -394,14 +394,14 @@ $jit.PieChart = new Class({
       s.id = id;
       s.name = name;
       s.color = this.config.hoveredColor;
-      this.sb.graph.eachNode(function(n) {
+      this.delegate.graph.eachNode(function(n) {
         if(id == n.id) {
           n.setData('border', s);
         } else {
           n.setData('border', false);
         }
       });
-      this.sb.plot();
+      this.delegate.plot();
     }
   },
   
@@ -419,7 +419,7 @@ $jit.PieChart = new Class({
   getLegend: function() {
     var legend = {};
     var n;
-    this.sb.graph.getNode(this.sb.root).eachAdjacency(function(adj) {
+    this.delegate.graph.getNode(this.delegate.root).eachAdjacency(function(adj) {
       n = adj.nodeTo;
     });
     var colors = n.getData('colorArray'),
@@ -458,7 +458,7 @@ $jit.PieChart = new Class({
   */  
   getMaxValue: function() {
     var maxValue = 0;
-    this.sb.graph.eachNode(function(n) {
+    this.delegate.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acum = 0;
       $.each(valArray, function(v) { 
@@ -471,15 +471,15 @@ $jit.PieChart = new Class({
   
   normalizeDims: function() {
     //number of elements
-    var root = this.sb.graph.getNode(this.sb.root), l=0;
+    var root = this.delegate.graph.getNode(this.delegate.root), l=0;
     root.eachAdjacency(function() {
       l++;
     });
     var maxValue = this.getMaxValue() || 1,
         config = this.config,
         animate = config.animate,
-        rho = this.sb.config.levelDistance;
-    this.sb.graph.eachNode(function(n) {
+        rho = this.delegate.config.levelDistance;
+    this.delegate.graph.eachNode(function(n) {
       var acum = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acum += +v;

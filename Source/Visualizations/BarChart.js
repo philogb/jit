@@ -340,7 +340,7 @@ $jit.BarChart = new Class({
         horz = config.orientation == 'horizontal',
         nodeLabels = {};
     
-    var st = new $jit.ST({
+    var delegate = new $jit.ST({
       injectInto: config.injectInto,
       width: config.width,
       height: config.height,
@@ -482,19 +482,19 @@ $jit.BarChart = new Class({
       }
     });
     
-    var size = st.canvas.getSize(),
+    var size = delegate.canvas.getSize(),
         margin = config.Margin;
     if(horz) {
-      st.config.offsetX = size.width/2 - margin.left
+      delegate.config.offsetX = size.width/2 - margin.left
         - (config.showLabels && (config.labelOffset + config.Label.size));    
-      st.config.offsetY = (margin.bottom - margin.top)/2;
+      delegate.config.offsetY = (margin.bottom - margin.top)/2;
     } else {
-      st.config.offsetY = -size.height/2 + margin.bottom 
+      delegate.config.offsetY = -size.height/2 + margin.bottom 
         + (config.showLabels && (config.labelOffset + config.Label.size));
-      st.config.offsetX = (margin.right - margin.left)/2;
+      delegate.config.offsetX = (margin.right - margin.left)/2;
     }
-    this.st = st;
-    this.canvas = this.st.canvas;
+    this.delegate = delegate;
+    this.canvas = this.delegate.canvas;
   },
   
   /*
@@ -518,7 +518,7 @@ $jit.BarChart = new Class({
     
     var prefix = $.time(), 
         ch = [], 
-        st = this.st,
+        delegate = this.delegate,
         name = $.splat(json.label), 
         color = $.splat(json.color || this.colors),
         config = this.config,
@@ -555,14 +555,14 @@ $jit.BarChart = new Class({
       },
       'children': ch
     };
-    st.loadJSON(root);
+    delegate.loadJSON(root);
     
     this.normalizeDims();
-    st.compute();
-    st.select(st.root);
+    delegate.compute();
+    delegate.select(delegate.root);
     if(animate) {
       if(horz) {
-        st.fx.animate({
+        delegate.fx.animate({
           modes: ['node-property:width:dimArray'],
           duration:1500,
           onComplete: function() {
@@ -570,7 +570,7 @@ $jit.BarChart = new Class({
           }
         });
       } else {
-        st.fx.animate({
+        delegate.fx.animate({
           modes: ['node-property:height:dimArray'],
           duration:1500,
           onComplete: function() {
@@ -607,8 +607,8 @@ $jit.BarChart = new Class({
     if(this.busy) return;
     this.busy = true;
     this.select(false, false, false);
-    var st = this.st;
-    var graph = st.graph;
+    var delegate = this.delegate;
+    var graph = delegate.graph;
     var values = json.values;
     var animate = this.config.animate;
     var that = this;
@@ -623,11 +623,11 @@ $jit.BarChart = new Class({
       }
     });
     this.normalizeDims();
-    st.compute();
-    st.select(st.root);
+    delegate.compute();
+    delegate.select(delegate.root);
     if(animate) {
       if(horz) {
-        st.fx.animate({
+        delegate.fx.animate({
           modes: ['node-property:width:dimArray'],
           duration:1500,
           onComplete: function() {
@@ -636,7 +636,7 @@ $jit.BarChart = new Class({
           }
         });
       } else {
-        st.fx.animate({
+        delegate.fx.animate({
           modes: ['node-property:height:dimArray'],
           duration:1500,
           onComplete: function() {
@@ -656,14 +656,14 @@ $jit.BarChart = new Class({
       s.id = id;
       s.name = name;
       s.color = this.config.hoveredColor;
-      this.st.graph.eachNode(function(n) {
+      this.delegate.graph.eachNode(function(n) {
         if(id == n.id) {
           n.setData('border', s);
         } else {
           n.setData('border', false);
         }
       });
-      this.st.plot();
+      this.delegate.plot();
     }
   },
   
@@ -681,7 +681,7 @@ $jit.BarChart = new Class({
   getLegend: function() {
     var legend = {};
     var n;
-    this.st.graph.getNode(this.st.root).eachAdjacency(function(adj) {
+    this.delegate.graph.getNode(this.delegate.root).eachAdjacency(function(adj) {
       n = adj.nodeTo;
     });
     var colors = n.getData('colorArray'),
@@ -720,7 +720,7 @@ $jit.BarChart = new Class({
   */  
   getMaxValue: function() {
     var maxValue = 0, stacked = this.config.type.split(':')[0] == 'stacked';
-    this.st.graph.eachNode(function(n) {
+    this.delegate.graph.eachNode(function(n) {
       var valArray = n.getData('valueArray'),
           acum = 0;
       if(!valArray) return;
@@ -738,17 +738,17 @@ $jit.BarChart = new Class({
   
   setBarType: function(type) {
     this.config.type = type;
-    this.st.config.Node.type = 'barchart-' + type.split(':')[0];
+    this.delegate.config.Node.type = 'barchart-' + type.split(':')[0];
   },
   
   normalizeDims: function() {
     //number of elements
-    var root = this.st.graph.getNode(this.st.root), l=0;
+    var root = this.delegate.graph.getNode(this.delegate.root), l=0;
     root.eachAdjacency(function() {
       l++;
     });
     var maxValue = this.getMaxValue() || 1,
-        size = this.st.canvas.getSize(),
+        size = this.delegate.canvas.getSize(),
         config = this.config,
         margin = config.Margin,
         marginWidth = margin.left + margin.right,
@@ -761,7 +761,7 @@ $jit.BarChart = new Class({
           - (config.showLabels && (config.Label.size + config.labelOffset)),
         dim1 = horz? 'height':'width',
         dim2 = horz? 'width':'height';
-    this.st.graph.eachNode(function(n) {
+    this.delegate.graph.eachNode(function(n) {
       var acum = 0, animateValue = [];
       $.each(n.getData('valueArray'), function(v) {
         acum += +v;
