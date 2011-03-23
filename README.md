@@ -6,10 +6,11 @@ Visualizations for the Web.
 
 This is the Dev project, users should download the project from http://thejit.org.
 
-Useful links:
---
+Useful links
+------
   - [jit homepage](http://thejit.org)
   - [jit's blog](http://blog.thejit.org)
+  - [Getting Started with the Source](https://github.com/philogb/jit/wiki/Getting-Started)
   
   
 How to
