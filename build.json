@@ -398,6 +398,13 @@
         "Options.BarChart",
         "Options.Margin",
         "Spacetree"
+    ],
+    
+    "Voronoi": [
+        "Core",
+        "Canvas",
+        "Extras",
+        "Treemap"
     ]
   }
 }
