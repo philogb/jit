@@ -92,7 +92,8 @@ TM.Base = {
         //right, Firefox?
         width: 3,
         height: 3,
-        color: '#444'
+        color: '#444',
+        props: 'node-property:width:height'
       },
       Label: {
         textAlign: 'center',
@@ -120,7 +121,10 @@ TM.Base = {
         }, canvasConfig.background);
       }
       this.canvas = new Canvas(this, canvasConfig);
-      this.config.labelContainer = (typeof canvasConfig.injectInto == 'string'? canvasConfig.injectInto : canvasConfig.injectInto.id) + '-label';
+      this.config.labelContainer = (
+        typeof canvasConfig.injectInto == 'string'? 
+        canvasConfig.injectInto : 
+        canvasConfig.injectInto.id) + '-label';
     }
 
     this.graphOptions = {
@@ -158,7 +162,7 @@ TM.Base = {
       this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
           && this.clickedNode.id || this.root));
       this.fx.animate($.merge(this.config, {
-        modes: ['linear', 'node-property:width:height'],
+        modes: ['linear', this.config.Node.props],
         onComplete: function() {
           that.busy = false;
         }
@@ -216,7 +220,6 @@ TM.Base = {
   enter: function(n){
     if(this.busy) return;
     this.busy = true;
-    
     var that = this,
         config = this.config,
         graph = this.graph,
@@ -248,7 +251,7 @@ TM.Base = {
               //TODO(nico) commenting this line didn't seem to throw errors...
               that.clickedNode = previousClickedNode;
               that.fx.animate({
-                modes:['linear', 'node-property:width:height'],
+                modes:['linear', that.config.Node.props],
                 duration: 1000,
                 onComplete: function() { 
                   that.busy = false;
@@ -297,7 +300,7 @@ TM.Base = {
       return;
     }
     //final plot callback
-    callback = {
+    var callback = {
       onComplete: function() {
         that.clickedNode = parent;
         if(config.request) {
@@ -325,7 +328,7 @@ TM.Base = {
       //animate the visible subtree only
       this.clickedNode = previousClickedNode;
       this.fx.animate({
-        modes:['linear', 'node-property:width:height'],
+        modes:['linear', this.config.Node.props],
         duration: 1000,
         onComplete: function() {
           //animate the parent subtree
@@ -561,7 +564,6 @@ TM.Label.Native = new Class({
         height = node.getData('height'),
         x = pos.x + width/2,
         y = pos.y;
-        
     ctx.fillText(node.name, x, y, width);
   }
 });

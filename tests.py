@@ -449,9 +449,35 @@ tests_model = {
             Test Morphing Treemaps
             """,
             'Extras': ['excanvas.js'],
-        },
+        }
+        
    ],
-
+   
+  'Voronoi' : [
+    {
+      'Title': 'Voronoi Treemaps -- Infrastractures',
+      'Description':
+      """
+      Test Voronoi Treemap Infrastractures
+      """,
+      'Extras': ['excanvas.js'],
+    }, {
+      'Title': 'Voronoi Treemaps',
+      'Description':
+      """
+      Test Voronoi Treemap
+      """,
+      'Extras': ['excanvas.js'],
+    }, {
+      'Title': 'Voronoi Treemaps',
+      'Description':
+      """
+      Test Voronoi Treemap
+      """,
+      'Extras': ['excanvas.js'],
+    }
+  ],
+   
     'Icicle': [
         {
             'Title': 'Icicle Tree with static JSON data',
