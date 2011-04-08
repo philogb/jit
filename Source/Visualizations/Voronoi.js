@@ -41,6 +41,7 @@
    * @param p1, p2, p3 [x,y]
    */
   var cross = $jit.Voronoi.cross = function(p1, p2, p3) {
+    if (!p1 || !p2 || !p3) debugger;
     return p1.x * p2.y + p2.x * p3.y + p3.x * p1.y -
       p1.x * p3.y - p2.x * p1.y - p3.x * p2.y;
   }
@@ -86,6 +87,16 @@
     return result;
   }
   
+  
+  var area = $jit.Voronoi.area = function(p) {
+    if (p.length < 3) return 0;
+    var sum = 0;
+    for(var i = 2; i < p.length; i++) {
+      sum += cross(p[0], p[i - 1], p[i]);
+    }
+    return sum / 2;
+  }
+
   var convexIntersect = $jit.Voronoi.convexIntersect = function(c1, c2) {
     if (c1.length < 3) return [];
     if (c2.length < 3) return [];
@@ -110,8 +121,7 @@
     var det = l1[0]*l2[1] - l1[1] * l2[0];
     if(det == 0) 
       if(l1[0] * l2[2] - l1[2] * l2[0] == 0) return l1;
-    else
-      return;
+    else return;
     return new $jit.Complex(
       -(l1[2] * l2[1] - l1[1] * l2[2]) / det,
       -(l1[0] * l2[2] - l1[2] * l2[0]) / det
@@ -130,11 +140,8 @@
     var Sites = {
       list: vertices
         .map(function(v, i) {
-          return {
-            index: i,
-            x: v[0],
-            y: v[1]
-          };
+          v.index = i;
+          return v;
         })
         .sort(function(a, b) {
           return a.y < b.y ? -1
@@ -466,8 +473,8 @@
   
   /**
    * Voronoi Tessellation with Fortune's algorithm
-   * @param vertices [[x1, y1], [x2, y2], ...]
-   * @returns polygons [[[x1, y1], [x2, y2], ...], ...]
+   * @param vertices [p1,p2,p3, ...]
+   * @returns polygons [[p1,p2,p3,...], ...]
    */
   var voronoiFortune = function (vertices, boundary) {
     if (vertices.length == 1)
@@ -475,10 +482,10 @@
     else if (vertices.length == 2) {
       var v1 = vertices[0];
       var v2 = vertices[1];
-      var cx = (v1[0] + v2[0]) / 2;
+      var cx = (v1.x + v2.x) / 2;
       var cy = (v1[1] + v2[1]) / 2;
-      var dx = v1[0] - cx;
-      var dy = v1[0] - cy;
+      var dx = v1.x - cx;
+      var dy = v1.x - cy;
       var l1 = new c(cx - dy, cy + dx);
       var l2 = new c(cx + dy, cy - dx);
       return [convexCut(boundary, [l1,l2]), convexCut(boundary, [l2,l1])];
@@ -518,7 +525,7 @@
   
     // Reconnect the polygon segments into counterclockwise loops.
     polygons = polygons.map(function(polygon, i) {
-      var cx = vertices[i][0],
+      var cx = vertices[i].x,
           cy = vertices[i][1];
       polygon.forEach(function(v) {
         v.angle = Math.atan2(v.x - cx, v.y - cy);
@@ -539,13 +546,121 @@
   };
   $jit.Voronoi.voronoiFortune = voronoiFortune;
 
+  var offsetLine = $jit.Voronoi.offsetLine = function (l, offset) {
+    var dx = l[1].x - l[0].x;
+    var dy = l[1].y - l[0].y;
+    var r = dx * dx + dy * dy;
+    r = Math.sqrt(r);
+    r = offset / r;
+    dx *= r;
+    dy *= r;
+    return [new c(l[0].x - dy, l[0].y + dx), new c(l[1].x - dy, l[1].y + dx)];
+  };
+  
+  var intersection = $jit.Voronoi.intersection = function (l1, l2) {
+    var c1 = cross(l1[0], l2[0], l2[1]);
+    var c2 = cross(l1[1], l2[0], l2[1]);
+    if (c1 == c2) return;
+    var k = c1 / (c1 - c2);
+    return new c(k*(l1[1].x - l1[0].x) + l1[0].x, k*(l1[1].y - l1[0].y) + l1[0].y);
+  };
+  
+  var centroid3 = $jit.Voronoi.centroid3 = function (triangle) {
+    var c1 = new c((triangle[0].x + triangle[1].x) / 2, (triangle[0].y + triangle[1].y) / 2);
+    var c2 = new c((triangle[0].x + triangle[2].x) / 2, (triangle[0].y + triangle[2].y) / 2);
+    return intersection([triangle[2], c1], [triangle[1], c2]);
+  }
+  
+  var centroid = $jit.Voronoi.centroid = function (convex) {
+    if(convex.length == 1) return convex[0];
+    var c3s = new c(0, 0);
+    var total = 0;
+    for (var i = 2; i < convex.length; i++) {
+      var a = area(convex[0], convex[i - 1], convex[i - 2]);
+      var c3 = centroid3(convex[0], convex[i - 1], convex[i - 2]);
+      total += a;
+      c3s.x += a * c3.x;
+      c3s.y += a * c3.y;
+    }
+    c3s.x /= total;
+    c3s.y /= total;
+    return c3s;
+  }
+  
+  var offsetConvex = $jit.Voronoi.offsetConvex = function (convex, offset) {
+    if (convex.length < 3) return [];
+    var inversed = function (l) {
+      var dx = l.line[1].x - l.line[0].x;
+      var cdx = l.cline[1].x - l.cline[0].x;
+      if (dx == cdx && dx == 0) {
+        var dy = l.line[1].y - l.line[0].y;
+        var cdy = l.cline[1].y - l.cline[0].y;
+        return ((dy > 0) ^ (cdy > 0));
+      } else return ((dx > 0) ^ (cdx > 0));
+    };
+    if (area(convex) > 0) convex = convex.reverse();
+    var last_line, first_line, cnt = 0;
+    // Offset edges
+    for (var i = 0; i < convex.length; i++) {
+      var start = convex[i];
+      var stop = convex[i + 1] || convex[0];
+      if (start.x == stop.x && start.y == stop.y) continue;
+      var line = { line : offsetLine([start, stop], -offset), cline: [-1, -1] };
+      line.prev = last_line;
+      if (last_line) last_line.next = line;
+      else first_line = line;
+      last_line = line;
+      cnt ++;
+    }
+    last_line.next = first_line;
+    first_line.prev = last_line;
+    
+    if (cnt < 3) return [];
+    // Connect all the edges
+    for (var start = first_line, stop = start.next; 
+      true;
+      start = stop, stop = stop.next) {
+      var inters = intersection(start.line, stop.line);
+      stop.cline[0] = start.cline[1] = inters;
+      if (stop == first_line) break; 
+    }
+    // Delete inversed edges
+//    var cont = false;
+//    do {
+//      var cont = false;
+//      var l = first_line
+//      while (true) {
+//        while (inversed(l)) {
+//          l.prev.next = l.next;
+//          l.next.prev = l.prev;
+//          cnt--;
+//          if (cnt < 3) return [];
+//          var inters = intersection(l.prev.cline, l.next.cline);
+//          l.prev.cline[1] = inters;
+//          l.next.cline[0] = inters;
+//          if (l == first_line) first_line = l.next;
+//          l = l.next;
+//          cont = true;
+//          
+//        }
+//        l = l.next;
+//        if (l == first_line) break;
+//      }
+//    } while (cont);
+    
+    var result = [];
+    result.push(first_line.cline[1]);
+    for (var i = first_line.next; i != first_line; i = i.next ) {
+      result.push(i.cline[1]);
+    }
+    return result;
+  }
   
   TM.Plot.NodeTypes.implement({
   'polygon' : {
     'render' : function(node, canvas, animating) {
       var leaf = this.viz.leaf(node), config = this.config,
       border = node.getData('border'),
-      // offset = config.offset,
       vertics = node.getData('vertics'), ctx = canvas.getCtx(),
       titleHeight = config.titleHeight;
       if (!vertics) {
@@ -554,8 +669,7 @@
       if (vertics.length == 0) return;
       var pts = vertics.slice(0);
       if (leaf) {
-        // TODO: Implement the offset config
-        // Create cushion gradient
+        if (pts.length == 0) return;
         if (config.cushion) {
           var x = 0, y = 0, minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
           $jit.util.each(pts, function(pt) {
@@ -587,7 +701,7 @@
         // Fill polygon
         ctx.beginPath();
         ctx.moveTo(pts[0].x, pts[0].y);
-        for (var i = 1; i < vertics.length; i++) {
+        for (var i = 1; i < pts.length; i++) {
           ctx.lineTo(pts[i].x, pts[i].y);
         }
         ctx.closePath();
@@ -631,14 +745,15 @@
       this.controller.onBeforeCompute(root);
       var size = this.canvas.getSize(),
           config = this.config,
-          width = size.width,
-          height = size.height;
+          offset = config.offset,
+          width = size.width - offset * 2,
+          height = size.height - offset * 2;
       this.graph.computeLevels(this.root, 0, 0);
       //set root position and dimensions
       root.getPos(prop).setc(-5, -5);
       if(!root.histoPos) 
         root.histoPos = [];
-      root.histoPos[0] = [0, 0];
+      root.histoPos[0] = new c(0, 0);
       var bound = [
           new c(-width/2,-height/2),
           new c(width/2,-height/2),
@@ -656,9 +771,10 @@
       // FIXME: Where can i find the level of each node?
       var chs = node.getSubnodes([1, 1], "ignore"), 
           config = this.config,
+          offset = config.offset,
           max = Math.max;
       var extent = [0, 0, 0, 0];
-      var histoPos = node.histoPos[level] || [0, 0];
+      var histoPos = node.histoPos[level] || c(0, 0);
       $jit.util.each(bound, function(p) {
         if(extent[0] > p.x) extent[0] = p.x;
         if(extent[1] > p.y) extent[1] = p.y;
@@ -669,27 +785,38 @@
       node.setData('height' , extent[3] - extent[1], prop);
       node.getPos(prop).setc(histoPos[0] - (extent[2] - extent[0]) / 2, histoPos[1]);
       if (chs.length > 0) {
-        var sites = $jit.util.map(chs, function(ch) {
-          if(!ch.histoPos) ch.histoPos = [];
-          if(ch.histoPos[level + 1]) {
-            return ch.histoPos[level + 1];
-          }
-          var c = new $jit.Complex(
-            Math.random() * (extent[2] - extent[0]) + extent[0],
-            Math.random() * (extent[3] - extent[1]) + extent[1]
-            );
-          while(!pointInPolygon([c], bound)[0]) {
-            c = new $jit.Complex(
-            Math.random() * (extent[2] - extent[0]) + extent[0],
-            Math.random() * (extent[3] - extent[1]) + extent[1]
-            );
-          }
-          return ch.histoPos[level + 1] = [c.x, c.y];
-        });
-        var polygons = voronoiFortune(sites, bound);
+        if (!chs[0].histoPos || !chs[0].histoPos[level + 1]) {
+          var sites = $jit.util.map(chs, function(ch) {
+            var point = new $jit.Complex(
+              Math.random() * (extent[2] - extent[0]) + extent[0],
+              Math.random() * (extent[3] - extent[1]) + extent[1]
+              );
+            while(!pointInPolygon([point], bound)[0]) {
+              point = new $jit.Complex(
+              Math.random() * (extent[2] - extent[0]) + extent[0],
+              Math.random() * (extent[3] - extent[1]) + extent[1]
+              );
+            }
+            return new c(point.x, point.y);
+          });
+          
+//          sites = polygons.map(function(p) { return centroid(p); });
+//          polygons = voronoiFortune(sites, bound);
+//          sites = polygons.map(function(p) { return centroid(p); });
+//          polygons = voronoiFortune(sites, bound);
+//          sites = polygons.map(function(p) { return centroid(p); });
+          $jit.util.each(sites, function(p, i) {
+            if (!chs[i].histoPos) chs[i].histoPos = [];
+            chs[i].histoPos[level + 1] = [p.x, p.y];
+          });
+        }
+        var polygons = voronoiFortune(chs.map(function(ch){return ch.histoPos[level + 1];}), bound);
+        debugger;
         var self = this;
         $jit.util.each(chs, function(ch, i) {
           var vertics = polygons[i];
+          if (offset)
+            vertics = offsetConvex(vertics, offset);
           ch.setData('vertics', vertics, prop);
           self.computePositions(ch, vertics, prop, level + 1);
         });

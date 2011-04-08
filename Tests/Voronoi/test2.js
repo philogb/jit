@@ -9,7 +9,7 @@ function init(){
     //show only one tree level
     levelsToShow: 1,
     //parent box title heights
-    titleHeight: 0,
+    titleHeight: 4,
     //enable animations
     animate: animate,
     //box offsets
