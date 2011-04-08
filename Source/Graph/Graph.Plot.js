@@ -197,8 +197,6 @@ Graph.Plot = {
               while(from.length > to.length) {
                 to.push(to[0]);
               }
-              from = from.map(function(t){ return t || new $jit.Complex(0, 0);});
-              to = to.map(function(t){ return t || new $jit.Complex(0, 0);});
               if (from.length == 0) return;
               var l = from.length;
               var minDist = 1e300;
