@@ -117,7 +117,18 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':False
-        } 
+        },
+        {
+            'Title': 'Test',
+            'Description': 
+            """
+            Testing new Node Event system.
+            Triggered registered events should be logged in FFs console.
+            
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':False
+        }         
     ],
 
     
