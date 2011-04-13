@@ -140,8 +140,9 @@
     var Sites = {
       list: vertices
         .map(function(v, i) {
-          v.index = i;
-          return v;
+          var cp = new c(v.x, v.y);
+          cp.index = i;
+          return cp;
         })
         .sort(function(a, b) {
           return a.y < b.y ? -1
@@ -277,10 +278,7 @@
           (!rightOfSite && (el.side == "r"))) {
           return null;
         }
-        return {
-          x: xint,
-          y: yint
-        };
+        return new c(xint, yint);
       },
   
       rightOf: function(he, p) {
@@ -380,10 +378,7 @@
   
       min: function() {
         var elem = EventQueue.list[0];
-        return {
-          x: elem.vertex.x,
-          y: elem.ystar
-        };
+        return new $jit.Complex(elem.vertex.x, elem.ystar);
       },
   
       extractMin: function() {
@@ -493,12 +488,7 @@
     var polygons = vertices.map(function() { return []; });
     // Note: we expect the caller to clip the polygons, if needed.
     d3_voronoi_tessellate(vertices, function(e) {
-      var s1,
-          s2,
-          x1,
-          x2,
-          y1,
-          y2;
+      var s1, s2, x1, x2, y1, y2;
       if (e.a == 1 && e.b >= 0) {
         s1 = e.ep.r;
         s2 = e.ep.l;
@@ -522,11 +512,11 @@
       polygons[e.region.l.index].push(v1, v2);
       polygons[e.region.r.index].push(v1, v2);
     });
-  
+
     // Reconnect the polygon segments into counterclockwise loops.
     polygons = polygons.map(function(polygon, i) {
       var cx = vertices[i].x,
-          cy = vertices[i][1];
+          cy = vertices[i].y;
       polygon.forEach(function(v) {
         v.angle = Math.atan2(v.x - cx, v.y - cy);
       });
@@ -566,21 +556,25 @@
   };
   
   var centroid3 = $jit.Voronoi.centroid3 = function (triangle) {
+    // intersection of two
     var c1 = new c((triangle[0].x + triangle[1].x) / 2, (triangle[0].y + triangle[1].y) / 2);
     var c2 = new c((triangle[0].x + triangle[2].x) / 2, (triangle[0].y + triangle[2].y) / 2);
     return intersection([triangle[2], c1], [triangle[1], c2]);
   }
   
   var centroid = $jit.Voronoi.centroid = function (convex) {
+    if (area(convex) > 0) convex.reverse();
     if(convex.length == 1) return convex[0];
     var c3s = new c(0, 0);
     var total = 0;
     for (var i = 2; i < convex.length; i++) {
-      var a = area(convex[0], convex[i - 1], convex[i - 2]);
-      var c3 = centroid3(convex[0], convex[i - 1], convex[i - 2]);
-      total += a;
-      c3s.x += a * c3.x;
-      c3s.y += a * c3.y;
+      var a = area([convex[0], convex[i - 1], convex[i - 2]]);
+      if(a>1e-5){
+          var c3 = centroid3([convex[0], convex[i - 1], convex[i - 2]]);
+          total += a;
+          c3s.x += a * c3.x;
+          c3s.y += a * c3.y;
+      }
     }
     c3s.x /= total;
     c3s.y /= total;
@@ -598,7 +592,7 @@
         return ((dy > 0) ^ (cdy > 0));
       } else return ((dx > 0) ^ (cdx > 0));
     };
-    if (area(convex) > 0) convex = convex.reverse();
+    if (area(convex) > 0) convex.reverse();
     var last_line, first_line, cnt = 0;
     // Offset edges
     for (var i = 0; i < convex.length; i++) {
@@ -668,6 +662,7 @@
       }
       if (vertics.length == 0) return;
       var pts = vertics.slice(0);
+      if(area(pts) < 0) pts.reverse();
       if (leaf) {
         if (pts.length == 0) return;
         if (config.cushion) {
@@ -699,6 +694,7 @@
           ctx.fillStyle = lg;
         }
         // Fill polygon
+        
         ctx.beginPath();
         ctx.moveTo(pts[0].x, pts[0].y);
         for (var i = 1; i < pts.length; i++) {
@@ -728,13 +724,10 @@
       }
     },
     'contains' : function(node, pos) {
-      if(!this.viz.leaf(node)) return false;
-      if(this.viz.clickedNode && !node.isDescendantOf(this.viz.clickedNode.id) || node.ignore) return false;
-      var ps = node.getData('vertics').slice(0);
-      $jit.util.each(ps, function(pt, i) {
-            ps[i] = pt.getc(true);
-          });
-      return pointInPolygon([pos], ps)[0];
+      if(node.ignore) return false;
+      var curr = this.viz.clickedNode ? this.viz.clickedNode.id : this.viz.root;
+      if(node.getParents().length == 0 || node.getParents()[0].id != curr) return false;
+      return pointInPolygon([pos], node.getData('vertics'))[0];
     }
   }});
   
@@ -755,10 +748,14 @@
         root.histoPos = [];
       root.histoPos[0] = new c(0, 0);
       var bound = [
-          new c(-width/2,-height/2),
-          new c(width/2,-height/2),
-          new c(width/2,height/2),
-          new c(-width/2,height/2)
+//          new c(-width/2,-height/2),
+//          new c(width/2,-height/2),
+//          new c(width/2,height/2),
+//          new c(-width/2,height/2)
+          new c(0,-height/2),
+          new c(width/2,0),
+          new c(0,height/2),
+          new c(-width/2,0)
         ];
       root.setData('vertics', bound, prop);
       root.setData('width', width, prop);
@@ -783,7 +780,7 @@
       });
       node.setData('width' , extent[2] - extent[0], prop);
       node.setData('height' , extent[3] - extent[1], prop);
-      node.getPos(prop).setc(histoPos[0] - (extent[2] - extent[0]) / 2, histoPos[1]);
+      node.getPos(prop).setc(histoPos.x - (extent[2] - extent[0]) / 2, histoPos.y);
       if (chs.length > 0) {
         if (!chs[0].histoPos || !chs[0].histoPos[level + 1]) {
           var sites = $jit.util.map(chs, function(ch) {
@@ -791,30 +788,33 @@
               Math.random() * (extent[2] - extent[0]) + extent[0],
               Math.random() * (extent[3] - extent[1]) + extent[1]
               );
+            if (extent[2] == extent[0]) return point;
+            if (extent[3] == extent[1]) return point;
             while(!pointInPolygon([point], bound)[0]) {
               point = new $jit.Complex(
               Math.random() * (extent[2] - extent[0]) + extent[0],
               Math.random() * (extent[3] - extent[1]) + extent[1]
               );
             }
-            return new c(point.x, point.y);
+            return point;
           });
-          
-//          sites = polygons.map(function(p) { return centroid(p); });
-//          polygons = voronoiFortune(sites, bound);
-//          sites = polygons.map(function(p) { return centroid(p); });
-//          polygons = voronoiFortune(sites, bound);
-//          sites = polygons.map(function(p) { return centroid(p); });
+          var polygons = voronoiFortune(sites, bound);
+          sites = $jit.util.map(polygons, function(p) { return centroid(p); });
+          polygons = voronoiFortune(sites, bound);
+          sites = $jit.util.map(polygons, function(p) { return centroid(p); });
+          polygons = voronoiFortune(sites, bound);
+          sites = $jit.util.map(polygons, function(p) { return centroid(p); });
           $jit.util.each(sites, function(p, i) {
             if (!chs[i].histoPos) chs[i].histoPos = [];
-            chs[i].histoPos[level + 1] = [p.x, p.y];
+            chs[i].histoPos[level + 1] = p;
           });
         }
-        var polygons = voronoiFortune(chs.map(function(ch){return ch.histoPos[level + 1];}), bound);
-        debugger;
+        var sites = chs.map(function(ch){return ch.histoPos[level + 1];});
+        var polygons = voronoiFortune(sites, bound);
         var self = this;
         $jit.util.each(chs, function(ch, i) {
           var vertics = polygons[i];
+          if (area(vertics) < 0) vertics.reverse();
           if (offset)
             vertics = offsetConvex(vertics, offset);
           ch.setData('vertics', vertics, prop);

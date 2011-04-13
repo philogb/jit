@@ -896,7 +896,7 @@ function init(){
       },
       onMouseLeave: function(node) {
         if(node) {
-          node.removeData('color');
+          // node.removeData('color');
           node.removeCanvasStyle('shadowBlur');
           tm.plot();
         }
@@ -906,6 +906,7 @@ function init(){
     //Enable tips
     Tips: {
       enable: true,
+      type: 'Native',
       //add positioning offsets
       offsetX: 20,
       offsetY: 20,
