@@ -195,7 +195,7 @@ Graph.Plot = {
                 from.push(from[0]);
               }
               while(from.length > to.length) {
-                to.push(to[0]);
+                to.push(to[0] || new $jit.Complex(0, 0));
               }
               if (from.length == 0) return;
               var l = from.length;
