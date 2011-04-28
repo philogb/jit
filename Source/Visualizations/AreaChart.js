@@ -287,7 +287,8 @@ $jit.AreaChart = new Class({
           } else {
             labelStyle.display = 'none';
           }
-          if(config.showAggregates(node.name, acumLeft, acumRight, node)) {
+          var aggValue = config.showAggregates(node.name, acumLeft, acumRight, node);
+          if(aggValue !== false) {
             aggregateStyle.display = '';
           } else {
             aggregateStyle.display = 'none';
@@ -304,7 +305,7 @@ $jit.AreaChart = new Class({
           labelStyle.top = (config.labelOffset + leftAcum) + 'px';
           domElement.style.top = parseInt(domElement.style.top, 10) - leftAcum + 'px';
           domElement.style.height = wrapperStyle.height = leftAcum + 'px';
-          labels.aggregate.innerHTML = acum;
+          labels.aggregate.innerHTML = aggValue !== true? aggValue : acum;
         }
       }
     });
