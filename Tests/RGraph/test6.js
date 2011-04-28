@@ -279,7 +279,12 @@ function init(){
         onCreateLabel: function(domElement, node){
             domElement.innerHTML = node.name;
             domElement.onclick = function () {
-                rgraph.onClick(node.id, { hideLabels: false });
+                rgraph.onClick(node.id, { 
+                    hideLabels: false,
+                    onComplete: function() {
+                        Log.write("done");
+                    }
+                });
             };
             var style = domElement.style;
             style.cursor = 'pointer';
@@ -294,12 +299,7 @@ function init(){
             var left = parseInt(style.left);
             var w = domElement.offsetWidth;
             style.left = (left - w / 2) + 'px';
-        },
-        
-        onAfterCompute: function(){
-            Log.write("done");
         }
-        
     });
     //load graph.
     rgraph.loadJSON(json, 1);
@@ -308,6 +308,6 @@ function init(){
     rgraph.refresh();
     //end
     rgraph.controller.onBeforeCompute(rgraph.graph.getNode(rgraph.root));
-    rgraph.controller.onAfterCompute();
+    Log.write('done');
     
 }

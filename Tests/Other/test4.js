@@ -391,9 +391,6 @@ function init(){
             document.getElementById('inner-details').innerHTML = node.data.relation;
         },
         
-        onAfterCompute: function(){
-            Log.write("done");
-        },
         //Add the name of the node in the correponding label
         //and a click handler to move the graph.
         //This method is called once, on label creation.
@@ -403,7 +400,10 @@ function init(){
                 .createTextNode(node.name));
             domElement.onclick = function(){
                 rgraph.onClick(node.id, {
-                  hideLabels: false
+                  hideLabels: false,
+                  onComplete: function() {
+                    Log.write('done');
+                  }
                 });
             };
         },

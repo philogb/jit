@@ -348,7 +348,11 @@ function init(){
       onCreateLabel: function(domElement, node){
           domElement.innerHTML = node.name;
           $jit.util.addEvent(domElement, 'click', function () {
-              ht.onClick(node.id);
+              ht.onClick(node.id, {
+                  onComplete: function() {
+                      ht.controller.onComplete();
+                  }
+              });
           });
       },
       //Change node styles when labels are placed
@@ -374,7 +378,7 @@ function init(){
           style.left = (left - w / 2) + 'px';
       },
       
-      onAfterCompute: function(){
+      onComplete: function(){
           Log.write("done");
           
           //Build the right column relations list.
@@ -399,5 +403,5 @@ function init(){
     //compute positions and plot.
     ht.refresh();
     //end
-    ht.controller.onAfterCompute();
+    ht.controller.onComplete();
 }

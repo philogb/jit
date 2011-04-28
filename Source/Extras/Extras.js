@@ -264,9 +264,9 @@ Extras.Classes.Events = new Class({
     var evt = $.event.get(e, win);
     if(!this.moved) {
       if(isRightClick) {
-        this.hovered && this.config.onRightClick(this.hovered, event, evt);
+        this.config.onRightClick(this.hovered, event, evt);
       } else {
-        this.pressed && this.config.onClick(this.pressed, event, evt);
+        this.config.onClick(this.pressed, event, evt);
       }
     }
     if(this.pressed) {
@@ -447,7 +447,7 @@ Extras.Classes.Tips = new Class({
   onMouseOver: function(e, win) {
     //mouseover a label
     var label;
-    if(this.dom && (label = this.isLabel(e, win, true))) {
+    if(this.dom && (label = this.isLabel(e, win, false))) {
       this.node = this.viz.graph.getNode(label.id);
       this.config.onShow(this.tip, this.node, label);
     }
