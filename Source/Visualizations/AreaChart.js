@@ -471,12 +471,17 @@ $jit.AreaChart = new Class({
   
   Parameters:
   
-  Variable strings arguments with the name of the stacks.
+  filters - (array) An array of strings with the name of the stacks to be filtered.
+  callback - (object) An object with an *onComplete* callback method. 
   
   Example:
   
   (start code js)
-  areaChart.filter('label A', 'label C');
+  areaChart.filter(['label A', 'label C'], {
+      onComplete: function() {
+          console.log('done!');
+      }
+  });
   (end code)
   
   See also:
