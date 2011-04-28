@@ -1,4 +1,4 @@
-from os import system, walk, path, mkdir
+from os import system, walk, path, mkdir, makedirs
 from shutil import copy
 import sys, re
 
@@ -14,7 +14,12 @@ EXCLUDES = ['Source/Extras',
             'Source/Graph/Graph.Geom.js']
 NATURALDOCS_VER = "1.4"
 NATURALDOCS = "NaturalDocs-%s" % NATURALDOCS_VER
-
+BUILD_DIR = {
+    "jit": "Jit",
+    "examples": path.join("Jit", "Examples"),
+    "docs": "Docs",
+    "extras": path.join("Jit", "Extras"),
+}
 
 def main():
     if 'docs' in sys.argv: make_docs()
@@ -34,8 +39,8 @@ def make_docs():
     if not path.exists(natural_docs_dir):
         mkdir(natural_docs_dir)
     
-    if not path.exists('Docs'):
-        mkdir('Docs')
+    if not path.exists(BUILD_DIR["docs"]):
+        mkdir(BUILD_DIR["docs"])
     
     # If we can't use 'docstyle' then fallback to 'Default'
     docstyle = 'docstyle'
@@ -46,50 +51,48 @@ def make_docs():
         + NATURALDOCS + "/NaturalDocs -r "
         + " -i Source/"
         + " -xi " + " -xi ".join(EXCLUDES)
-        + " -o HTML Docs/"
+        + " -o HTML " + BUILD_DIR["docs"] + "/"
         + " -p " + NATURALDOCS
         + " -img " + NATURALDOCS + "/img"
         + " -s " + docstyle)
 
 
 def make_examples(fancy=False):
-    if not path.exists('Examples'):
-        mkdir('Examples')
+    if not path.exists(BUILD_DIR["examples"]):
+        makedirs(BUILD_DIR["examples"])
     
     #clean examples folders
-    system("rm -rf Examples/*")
+    system("rm -rf " + BUILD_DIR["examples"] + "/*")
     
     #copy css base files
-    system('cp -r Tests/css Examples/css')
+    system('cp -r Tests/css ' + BUILD_DIR["examples"] + '/css')
     
-    #iterate over the examples
     has_example = lambda x: 'Example' in x and x['Example']
     
+    #iterate over the examples
     for viz, tests in tests_model.items():
-    #create example folder
         if filter(has_example, tests):
-            system('mkdir Examples/' + viz)
-            count = 1
+            #create example folder
+            mkdir(path.join(BUILD_DIR["examples"], viz))
             for i, model in enumerate(tests):
                 if has_example(model):
-                    make_example(viz, model, i, count, fancy)
-                    count += 1
+                    make_example(viz, model, i, fancy)
     
     #copy some extra files
     if fancy:
-        system('cp -r Extras/sh Examples/')
-        system('cp Extras/code.css Examples/css/code.css')
+        system('cp -r Extras/sh ' + BUILD_DIR["examples"] + '/')
+        system('cp Extras/code.css ' + BUILD_DIR["examples"] + '/css/code.css')
 
 
-def make_example(viz, ex, i, count, fancy):
+def make_example(viz, ex, i, fancy):
     
     name = viz
     stri = str(i + 1)
     model = ex
     title = model['Title']
     extras = model['Extras'][:]
-    example = 'example' + str(count)
-    strdir = 'Examples/' + viz + '/'
+    example = 'example' + stri
+    strdir = BUILD_DIR["examples"] + '/' + viz + '/'
     
     #insert the example js file
     fcommon = open('Tests/js/common.js', 'r')
@@ -134,27 +137,28 @@ def make_example(viz, ex, i, count, fancy):
 
 
 def make_build(fancy=False):
-    system('rm -rf Jit/*')
+    system('rm -rf ' + BUILD_DIR["jit"] + '/*')
     print "Building Examples..."
     make_examples(fancy)
-    system('cp -r Examples Jit/')
     print "Done. Building Extras..."
-    system('mkdir Jit/Extras && cp Extras/excanvas.js Jit/Extras/excanvas.js')
+    system('mkdir ' + BUILD_DIR["extras"] + ' && cp Extras/excanvas.js ' + path.join(BUILD_DIR["extras"], 'excanvas.js'))
     print "Done. Building Library..."
     lib = Build().build()
     license = open('LICENSE', 'r').read()
-    f = open('Jit/jit.js', 'w')
+    jit_path = path.join(BUILD_DIR["jit"], "jit.js")
+    f = open(jit_path, 'w')
     f.write(license)
     f.write(lib)
     f.close()
     print "Done. Compressing Library..."
-    f = open('Jit/jit-yc.js', 'w')
+    jit_yc_path = path.join(BUILD_DIR["jit"], "jit-yc.js")
+    f = open(jit_yc_path, 'w')
     f.write(license)
     f.close()
-    system('java -jar Extras/' + YC + ' Jit/jit.js >> Jit/jit-yc.js')
+    system('java -jar Extras/' + YC + ' ' + jit_path + ' >> ' + jit_yc_path)
     print "Done. Zipping..."
     system('rm Jit.zip')
-    system('zip -r Jit.zip Jit/')
+    system('zip -r Jit.zip ' + BUILD_DIR["jit"] + "/")
     print "Done, I guess."
     
 
