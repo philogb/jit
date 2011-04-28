@@ -88,7 +88,7 @@ $jit.Graph = new Class({
  /*
      Method: get
     
-     An alias for <Graph.Node.getNode>. Returns a node by *id*.
+     An alias for <Graph.Util.getNode>. Returns a node by *id*.
     
      Parameters:
     

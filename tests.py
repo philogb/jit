@@ -582,7 +582,7 @@ tests_model = {
             The JSON static data is customized to provide different node types, colors and widths.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
         },
         {
             'Title': 'Force Directed Static Graph',
@@ -595,7 +595,7 @@ tests_model = {
             The JSON static data is customized to provide different node types, colors and widths.
             """,
             'Extras': ['excanvas.js'],
-            'Example':True
+            'Example':False
         },
     ],
     
