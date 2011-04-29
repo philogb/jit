@@ -19,7 +19,7 @@ window.$jit = function(w) {
   }
 };
 
-$jit.version = '2.0.0';
+$jit.version = '2.0.1';
 /*
   Object: $jit.id
   
