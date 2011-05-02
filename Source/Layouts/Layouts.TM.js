@@ -339,7 +339,7 @@ Layouts.TM.Squarified = new Class({
  layoutV: function(ch, w, coord, prop) {
    var totalArea = 0, rnd = function(x) { return x; }; 
    $.each(ch, function(elem) { totalArea += elem._area; });
-   var width = rnd(totalArea / w), top =  0; 
+   var width = w == 0 ? 0 : rnd(totalArea / w), top =  0;
    for(var i=0, l=ch.length; i<l; i++) {
      var h = rnd(ch[i]._area / width);
      var chi = ch[i];
@@ -363,13 +363,13 @@ Layouts.TM.Squarified = new Class({
  layoutH: function(ch, w, coord, prop) {
    var totalArea = 0; 
    $.each(ch, function(elem) { totalArea += elem._area; });
-   var height = totalArea / w,
+   var height = w == 0 ? 0 : totalArea / w,
        top = coord.top, 
        left = 0;
    
    for(var i=0, l=ch.length; i<l; i++) {
      var chi = ch[i];
-     var w = chi._area / height;
+     var w = height == 0 ? 0 : chi._area / height;
      chi.getPos(prop).setc(coord.left + left, top);
      chi.setData('width', w, prop);
      chi.setData('height', height, prop);
