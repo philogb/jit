@@ -292,11 +292,18 @@ $jit.ST= (function() {
 
        reposition: function() {
             this.graph.computeLevels(this.root, 0, "ignore");
-             this.geom.setRightLevelToShow(this.clickedNode, this.canvas);
+            this.geom.setRightLevelToShow(this.clickedNode, this.canvas);
             this.graph.eachNode(function(n) {
                 if(n.exist) n.drawn = true;
             });
             this.compute('end');
+            if (this.clickedNode) {
+              var offset = {
+                  x: this.config.offsetX || 0,
+                  y: this.config.offsetY || 0
+              };
+              this.geom.translate(this.clickedNode.endPos.add(offset).$scale(-1), 'end');
+            }
         },
         
         requestNodes: function(node, onComplete) {
