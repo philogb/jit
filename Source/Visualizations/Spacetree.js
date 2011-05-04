@@ -341,6 +341,8 @@ $jit.ST= (function() {
             };
             if(move.enable) {
                 this.geom.translate(node.endPos.add(offset).$scale(-1), "end");
+            } else {
+                this.geom.translate($C(offset.x, offset.y).$scale(-1), "end");
             }
             this.fx.animate($.merge(this.controller, { modes: ['linear'] }, onComplete));
          },
