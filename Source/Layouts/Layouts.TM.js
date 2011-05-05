@@ -336,12 +336,12 @@ Layouts.TM.Squarified = new Class({
    }
  },
  
- layoutV: function(ch, w, coord, prop) {
-   var totalArea = 0, rnd = function(x) { return x; }; 
+layoutV: function(ch, w, coord, prop) {
+   var totalArea = 0, rnd = function(x) { return x; };
    $.each(ch, function(elem) { totalArea += elem._area; });
-   var width = w == 0 ? 0 : rnd(totalArea / w), top =  0;
+   var width = rnd(totalArea / w) || 0, top =  0;
    for(var i=0, l=ch.length; i<l; i++) {
-     var h = width == 0 ? 0 : rnd(ch[i]._area / width);
+     var h = rnd(ch[i]._area / width) || 0;
      var chi = ch[i];
      chi.getPos(prop).setc(coord.left, coord.top + top);
      chi.setData('width', width, prop);
@@ -359,17 +359,17 @@ Layouts.TM.Squarified = new Class({
    if(ans.dim != ans.height) this.layout.change();
    return ans;
  },
- 
+
  layoutH: function(ch, w, coord, prop) {
-   var totalArea = 0; 
+   var totalArea = 0;
    $.each(ch, function(elem) { totalArea += elem._area; });
-   var height = w == 0 ? 0 : totalArea / w,
-       top = coord.top, 
+   var height = totalArea / w || 0,
+       top = coord.top,
        left = 0;
-   
+
    for(var i=0, l=ch.length; i<l; i++) {
      var chi = ch[i];
-     var w = height == 0 ? 0 : chi._area / height;
+     var w = chi._area / height || 0;
      chi.getPos(prop).setc(coord.left + left, top);
      chi.setData('width', w, prop);
      chi.setData('height', height, prop);
