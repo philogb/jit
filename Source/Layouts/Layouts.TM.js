@@ -341,7 +341,7 @@ Layouts.TM.Squarified = new Class({
    $.each(ch, function(elem) { totalArea += elem._area; });
    var width = w == 0 ? 0 : rnd(totalArea / w), top =  0;
    for(var i=0, l=ch.length; i<l; i++) {
-     var h = rnd(ch[i]._area / width);
+     var h = width == 0 ? 0 : rnd(ch[i]._area / width);
      var chi = ch[i];
      chi.getPos(prop).setc(coord.left, coord.top + top);
      chi.setData('width', width, prop);
