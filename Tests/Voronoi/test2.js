@@ -13,7 +13,8 @@ function init(){
     //enable animations
     animate: animate,
     //box offsets
-    offset: 1,
+    offset: 2,
+    border: 1,
     //use canvas text
     Label: {
       type: labelType,
@@ -45,7 +46,7 @@ function init(){
           node.setCanvasStyle('shadowBlur', 7);
           node.setData('color', '#888');
           tm.fx.plotNode(node, tm.canvas);
-          tm.labels.plotLabel(tm.canvas, node);
+          tm.labels.plotLabel(tm.canvas, node, tm.controller);
         }
       },
       onMouseLeave: function(node) {
@@ -103,7 +104,7 @@ function init(){
   });
   
   var pjson = eval('(' + json + ')');  
-  $jit.json.prune(pjson, 1);
+  //$jit.json.prune(pjson, 1);
   
   tm.loadJSON(pjson);
   tm.refresh();
