@@ -239,7 +239,9 @@ TM.Base = {
           graph.nodeList.setData('alpha', 0, 'end');
           n.eachSubgraph(function(n) {
             n.setData('alpha', 1, 'end');
+            n.selected = false;
           }, "ignore");
+          clickedNode.selected = true;
           that.fx.animate({
             duration: 500,
             modes:['node-property:alpha'],
@@ -299,10 +301,13 @@ TM.Base = {
       this.busy = false;
       return;
     }
+    parent.selected = true;
     //final plot callback
     var callback = {
       onComplete: function() {
+        previousClickedNode.selected = false;
         that.clickedNode = parent;
+
         if(config.request) {
           that.requestNodes(parent, {
             onComplete: function() {
@@ -334,7 +339,7 @@ TM.Base = {
           //animate the parent subtree
           that.clickedNode = clickedNode;
           //change nodes alpha
-          graph.eachNode(function(n) {
+          clickedNode.eachSubgraph(function(n) {
             n.setDataset(['current', 'end'], {
               'alpha': [0, 1]
             });
@@ -562,9 +567,12 @@ TM.Label.Native = new Class({
         ctx = canvas.getCtx(),
         width = node.getData('width'),
         height = node.getData('height'),
-        x = pos.x + width/2,
+        x = pos.x + width / 2,
         y = pos.y;
-    ctx.fillText(node.name, x, y, width);
+    if (isNaN(width) || width == 0) 
+      ctx.fillText(node.name, x, y);
+    else
+      ctx.fillText(node.name, x, y, width);
   }
 });
 
@@ -603,6 +611,7 @@ TM.Label.SVG = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
+  	controller = controller || this.viz.controller;
     var pos = node.pos.getc(true), 
         canvas = this.viz.canvas,
         ox = canvas.translateOffsetX,
@@ -660,6 +669,7 @@ TM.Label.HTML = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
+  	controller = controller || this.viz.controller;
     var pos = node.pos.getc(true), 
         canvas = this.viz.canvas,
         ox = canvas.translateOffsetX,
