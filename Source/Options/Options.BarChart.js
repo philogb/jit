@@ -47,8 +47,8 @@
   type - (string) Default's *'stacked'*. Stack or grouped styles. Posible values are 'stacked', 'grouped', 'stacked:gradient', 'grouped:gradient' to add gradients.
   hoveredColor - (boolean|string) Default's *'#9fd4ff'*. Sets the selected color for a hovered bar stack.
   orientation - (string) Default's 'horizontal'. Sets the direction of the bars. Possible options are 'vertical' or 'horizontal'.
-  showAggregates - (boolean) Default's *true*. Display the sum of the values of the different stacks.
-  showLabels - (boolean) Default's *true*. Display the name of the slots.
+  showAggregates - (boolean, function) Default's *true*. Display the sum the values of each bar. Can also be a function that returns *true* or *false* to display the value of the bar or not. That same function can also return a string with the formatted data to be added.
+  showLabels - (boolean, function) Default's *true*. Display the name of the slots. Can also be a function that returns *true* or *false* for each bar to decide whether to show the label or not.
   
 */
 

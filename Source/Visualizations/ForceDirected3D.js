@@ -1,49 +1,3 @@
-/*
- * File: ForceDirected3D.js
- */
-
-/*
-   Class: ForceDirected3D
-      
-   A visualization that lays graphs using a Force-Directed layout algorithm.
-   
-   Inspired by:
-  
-   Force-Directed Drawing Algorithms (Stephen G. Kobourov) <http://www.cs.brown.edu/~rt/gdhandbook/chapters/force-directed.pdf>
-   
-  Implements:
-  
-  All <Loader> methods
-  
-   Constructor Options:
-   
-   Inherits options from
-   
-   - <Options.Canvas>
-   - <Options.Controller>
-   - <Options.Node>
-   - <Options.Edge>
-   - <Options.Label>
-   - <Options.Events>
-   - <Options.Tips>
-   - <Options.NodeStyles>
-   - <Options.Navigation>
-   
-   Additionally, there are two parameters
-   
-   levelDistance - (number) Default's *50*. The natural length desired for the edges.
-   iterations - (number) Default's *50*. The number of iterations for the spring layout simulation. Depending on the browser's speed you could set this to a more 'interesting' number, like *200*. 
-     
-   Instance Properties:
-
-   canvas - Access a <Canvas> instance.
-   graph - Access a <Graph> instance.
-   op - Access a <ForceDirected3D.Op> instance.
-   fx - Access a <ForceDirected3D.Plot> instance.
-   labels - Access a <ForceDirected3D.Label> interface implementation.
-
-*/
-
 $jit.ForceDirected3D = new Class( {
 
   Implements: [ Loader, Extras, Layouts.ForceDirected3D ],
@@ -93,7 +47,7 @@ $jit.ForceDirected3D = new Class( {
   },
 
   /* 
-    Method: refresh 
+    refresh 
     
     Computes positions and plots the tree.
   */
@@ -107,7 +61,7 @@ $jit.ForceDirected3D = new Class( {
   },
 
 /*
-  Method: computeIncremental
+  computeIncremental
   
   Performs the Force Directed algorithm incrementally.
   
@@ -183,7 +137,7 @@ $jit.ForceDirected3D = new Class( {
   },
 
   /*
-    Method: plot
+    plot
    
     Plots the ForceDirected3D graph. This is a shortcut to *fx.plot*.
    */
@@ -192,7 +146,7 @@ $jit.ForceDirected3D = new Class( {
   },
 
   /*
-     Method: animate
+     animate
     
      Animates the graph from the current positions to the 'end' node positions.
   */
@@ -208,7 +162,7 @@ $jit.ForceDirected3D.$extend = true;
 (function(ForceDirected3D) {
 
   /*
-     Class: ForceDirected3D.Op
+     ForceDirected3D.Op
      
      Custom extension of <Graph.Op>.
 
@@ -228,7 +182,7 @@ $jit.ForceDirected3D.$extend = true;
   });
 
   /*
-    Class: ForceDirected3D.Plot
+    ForceDirected3D.Plot
     
     Custom extension of <Graph.Plot>.
   
@@ -248,7 +202,7 @@ $jit.ForceDirected3D.$extend = true;
   });
 
   /*
-    Class: ForceDirected3D.Label
+    ForceDirected3D.Label
     
     Custom extension of <Graph.Label>. 
     Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
@@ -388,7 +342,7 @@ $jit.ForceDirected3D.$extend = true;
   });
 
   /*
-    Class: ForceDirected3D.Plot.NodeTypes
+    ForceDirected3D.Plot.NodeTypes
 
     This class contains a list of <Graph.Node> built-in types. 
     Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
@@ -496,7 +450,7 @@ $jit.ForceDirected3D.$extend = true;
   });
 
   /*
-    Class: ForceDirected3D.Plot.EdgeTypes
+    ForceDirected3D.Plot.EdgeTypes
   
     This class contains a list of <Graph.Adjacence> built-in types. 
     Edge types implemented are 'none', 'line' and 'arrow'.

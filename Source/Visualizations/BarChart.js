@@ -224,13 +224,15 @@ $jit.ST.Plot.NodeTypes.implement({
           ctx.fillStyle = ctx.strokeStyle = label.color;
           ctx.font = label.style + ' ' + label.size + 'px ' + label.family;
           ctx.textBaseline = 'middle';
-          if(aggregates(node.name, valAcum)) {
+          var aggValue = aggregates(node.name, valAcum, node);
+          if(aggValue !== false) {
+            aggValue = aggValue !== true? aggValue : valAcum;
             if(horz) {
               ctx.textAlign = 'right';
-              ctx.fillText(valAcum, x + Math.max.apply(null, dimArray) - config.labelOffset, y + height/2);
+              ctx.fillText(aggValue, x + Math.max.apply(null, dimArray) - config.labelOffset, y + height/2);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(valAcum, x + width/2, y - Math.max.apply(null, dimArray) - label.size/2 - config.labelOffset);
+              ctx.fillText(aggValue, x + width/2, y - Math.max.apply(null, dimArray) - label.size/2 - config.labelOffset);
             }
           }
           if(showLabels(node.name, valAcum, node)) {
@@ -460,7 +462,8 @@ $jit.BarChart = new Class({
           } else {
             labelStyle.display = 'none';
           }
-          if(config.showAggregates(node.name, acum, node)) {
+          var aggValue = config.showAggregates(node.name, acum, node);
+          if(aggValue !== false) {
             aggregateStyle.display = '';
           } else {
             aggregateStyle.display = 'none';
@@ -477,7 +480,7 @@ $jit.BarChart = new Class({
             domElement.style.top = parseInt(domElement.style.top, 10) - height + 'px';
             domElement.style.height = wrapperStyle.height = height + 'px';
           }
-          labels.aggregate.innerHTML = acum;
+          labels.aggregate.innerHTML = aggValue !== true? aggValue : acum;
         }
       }
     });

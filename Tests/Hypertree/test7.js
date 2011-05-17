@@ -250,7 +250,12 @@ function init(){
             domElement.innerHTML = node.name;
             domElement.style.cursor = "pointer";
             domElement.onclick = function () {
-                ht.onClick(node.id, { hideLabels: false });
+                ht.onClick(node.id, { 
+                    hideLabels: false,
+                    onComplete: function() {
+                      ht.controller.onComplete();
+                    }
+                });
             };
         },
         //This method is called when moving/placing a label.
@@ -262,7 +267,7 @@ function init(){
             domElement.style.left = intX + 'px';
         },
         
-        onAfterCompute: function(){
+        onComplete: function(){
             Log.write("done");
 
             //Make the relations list shown in the right column.
@@ -283,5 +288,5 @@ function init(){
     ht.refresh();
     //end
     ht.controller.onBeforeCompute(ht.graph.getNode(ht.root));
-    ht.controller.onAfterCompute();
+    ht.controller.onComplete();
 }

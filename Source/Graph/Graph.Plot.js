@@ -606,7 +606,6 @@ Graph.Plot = {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
              var adj = node.getAdjacency(elem.id);
              !animating && opt.onBeforePlotLine(adj);
-             ctx.globalAlpha = Math.min(nodeAlpha, elem.getData('alpha'));
              that.plotLine(adj, canvas, animating);
              !animating && opt.onAfterPlotLine(adj);
              that.plotTree(elem, opt, animating);

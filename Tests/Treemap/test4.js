@@ -10,7 +10,7 @@ function init(){
                "artist": "A Perfect Circle", 
                "playcount": "276", 
                "$color": "#8E7032", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/11403219.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/11403219.jpg", 
                "$area": 276
              }, 
              "id": "album-Thirteenth Step", 
@@ -22,7 +22,7 @@ function init(){
                "artist": "A Perfect Circle", 
                "playcount": "271", 
                "$color": "#906E32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/11393921.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/11393921.jpg", 
                "$area": 271
              }, 
              "id": "album-Mer De Noms", 
@@ -44,7 +44,7 @@ function init(){
                "artist": "Mad Season", 
                "playcount": "209", 
                "$color": "#AA5532", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/32349839.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/32349839.jpg", 
                "$area": 209
              }, 
              "id": "album-Above", 
@@ -66,7 +66,7 @@ function init(){
                "artist": "Stone Temple Pilots", 
                "playcount": "260", 
                "$color": "#956932", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/38753425.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/38753425.jpg", 
                "$area": 260
              }, 
              "id": "album-Tiny Music... Songs From the Vatican Gift Shop", 
@@ -78,7 +78,7 @@ function init(){
                "artist": "Stone Temple Pilots", 
                "playcount": "254", 
                "$color": "#976732", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B000002IU3.01.LZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B000002IU3.01.LZZZZZZZ.jpg", 
                "$area": 254
              }, 
              "id": "album-Core", 
@@ -100,7 +100,7 @@ function init(){
                "artist": "Bush", 
                "playcount": "181", 
                "$color": "#B54932", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8673371.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8673371.jpg", 
                "$area": 181
              }, 
              "id": "album-The Science of Things", 
@@ -122,7 +122,7 @@ function init(){
                "artist": "Foo Fighters", 
                "playcount": "229", 
                "$color": "#A15D32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/32579429.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/32579429.jpg", 
                "$area": 229
              }, 
              "id": "album-Echoes, Silence, Patience &amp; Grace", 
@@ -134,7 +134,7 @@ function init(){
                "artist": "Foo Fighters", 
                "playcount": "185", 
                "$color": "#B34B32", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B0009HLDFU.01.MZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B0009HLDFU.01.MZZZZZZZ.jpg", 
                "$area": 185
              }, 
              "id": "album-In Your Honor (disc 2)", 
@@ -156,7 +156,7 @@ function init(){
                "artist": "Luis Alberto Spinetta", 
                "playcount": "398", 
                "$color": "#5DA132", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B00005LNP5.01._SCMZZZZZZZ_.jpg", 
+               "image": "http://images.amazon.com/images/P/B00005LNP5.01._SCMZZZZZZZ_.jpg", 
                "$area": 398
              }, 
              "id": "album-Elija Y Gane", 
@@ -168,7 +168,7 @@ function init(){
                "artist": "Luis Alberto Spinetta", 
                "playcount": "203", 
                "$color": "#AC5232", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B0000B193V.01._SCMZZZZZZZ_.jpg", 
+               "image": "http://images.amazon.com/images/P/B0000B193V.01._SCMZZZZZZZ_.jpg", 
                "$area": 203
              }, 
              "id": "album-Para los Arboles", 
@@ -190,7 +190,7 @@ function init(){
                "artist": "Alice in Chains", 
                "playcount": "224", 
                "$color": "#A35B32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/26497553.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/26497553.jpg", 
                "$area": 224
              }, 
              "id": "album-Music Bank", 
@@ -202,7 +202,7 @@ function init(){
                "artist": "Alice in Chains", 
                "playcount": "217", 
                "$color": "#A65832", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B0000296JW.01.MZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B0000296JW.01.MZZZZZZZ.jpg", 
                "$area": 217
              }, 
              "id": "album-Music Bank (disc 1)", 
@@ -214,7 +214,7 @@ function init(){
                "artist": "Alice in Chains", 
                "playcount": "215", 
                "$color": "#A75732", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B0000296JW.01.MZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B0000296JW.01.MZZZZZZZ.jpg", 
                "$area": 215
              }, 
              "id": "album-Music Bank (disc 2)", 
@@ -226,7 +226,7 @@ function init(){
                "artist": "Alice in Chains", 
                "playcount": "181", 
                "$color": "#B54932", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B0000296JW.01.MZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B0000296JW.01.MZZZZZZZ.jpg", 
                "$area": 181
              }, 
              "id": "album-Music Bank (disc 3)", 
@@ -248,7 +248,7 @@ function init(){
                "artist": "Tool", 
                "playcount": "627", 
                "$color": "#00FF32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8480501.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8480501.jpg", 
                "$area": 627
              }, 
              "id": "album-10,000 Days", 
@@ -270,7 +270,7 @@ function init(){
                "artist": "Chris Cornell", 
                "playcount": "261", 
                "$color": "#946A32", 
-               "image": "http:\/\/cdn.last.fm\/flatness\/catalogue\/noimage\/2\/default_album_medium.png", 
+               "image": "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png", 
                "$area": 261
              }, 
              "id": "album-2006-09-07: O-Bar, Stockholm, Sweden", 
@@ -282,7 +282,7 @@ function init(){
                "artist": "Chris Cornell", 
                "playcount": "211", 
                "$color": "#A95532", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/25402479.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/25402479.jpg", 
                "$area": 211
              }, 
              "id": "album-Lost and Found", 
@@ -304,7 +304,7 @@ function init(){
                "artist": "Disturbed", 
                "playcount": "197", 
                "$color": "#AE5032", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8634627.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8634627.jpg", 
                "$area": 197
              }, 
              "id": "album-The Sickness", 
@@ -326,7 +326,7 @@ function init(){
                "artist": "Erykah Badu", 
                "playcount": "493", 
                "$color": "#36C832", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8591345.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8591345.jpg", 
                "$area": 493
              }, 
              "id": "album-Mama's Gun", 
@@ -348,7 +348,7 @@ function init(){
                "artist": "Audioslave", 
                "playcount": "249", 
                "$color": "#996532", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/32070871.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/32070871.jpg", 
                "$area": 249
              }, 
              "id": "album-Audioslave", 
@@ -370,7 +370,7 @@ function init(){
                "artist": "Soda Stereo", 
                "playcount": "359", 
                "$color": "#6C9232", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/15858421.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/15858421.jpg", 
                "$area": 359
              }, 
              "id": "album-Comfort y M\u00fasica Para Volar", 
@@ -392,7 +392,7 @@ function init(){
                "artist": "Sinch", 
                "playcount": "302", 
                "$color": "#847A32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8776205.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8776205.jpg", 
                "$area": 302
              }, 
              "id": "album-Clearing the Channel", 
@@ -414,7 +414,7 @@ function init(){
                "artist": "Dave Matthews Band", 
                "playcount": "177", 
                "$color": "#B74732", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/32457599.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/32457599.jpg", 
                "$area": 177
              }, 
              "id": "album-Crash", 
@@ -436,7 +436,7 @@ function init(){
                "artist": "Pearl Jam", 
                "playcount": "207", 
                "$color": "#AA5432", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/30352203.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/30352203.jpg", 
                "$area": 207
              }, 
              "id": "album-Vs.", 
@@ -458,7 +458,7 @@ function init(){
                "artist": "Kr\u00f8m", 
                "playcount": "486", 
                "$color": "#39C532", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/26053425.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/26053425.jpg", 
                "$area": 486
              }, 
              "id": "album-It All Makes Sense Now", 
@@ -470,7 +470,7 @@ function init(){
                "artist": "Agua de Annique", 
                "playcount": "251", 
                "$color": "#986632", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/9658733.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/9658733.jpg", 
                "$area": 251
              }, 
              "id": "album-Air", 
@@ -492,7 +492,7 @@ function init(){
                "artist": "Temple of the Dog", 
                "playcount": "345", 
                "$color": "#728C32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8605651.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8605651.jpg", 
                "$area": 345
              }, 
              "id": "album-Temple Of The Dog", 
@@ -514,7 +514,7 @@ function init(){
                "artist": "Nine Inch Nails", 
                "playcount": "318", 
                "$color": "#7D8132", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/29274729.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/29274729.jpg", 
                "$area": 318
              }, 
              "id": "album-And All That Could Have Been (Still)", 
@@ -536,7 +536,7 @@ function init(){
                "artist": "Tryo", 
                "playcount": "256", 
                "$color": "#966832", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/32595059.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/32595059.jpg", 
                "$area": 256
              }, 
              "id": "album-Mamagubida", 
@@ -548,7 +548,7 @@ function init(){
                "artist": "Tryo", 
                "playcount": "220", 
                "$color": "#A55932", 
-               "image": "http:\/\/cdn.last.fm\/flatness\/catalogue\/noimage\/2\/default_album_medium.png", 
+               "image": "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png", 
                "$area": 220
              }, 
              "id": "album-Reggae \u00e0 Coup de Cirque", 
@@ -560,7 +560,7 @@ function init(){
                "artist": "Tryo", 
                "playcount": "181", 
                "$color": "#B54932", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/16799743.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/16799743.jpg", 
                "$area": 181
              }, 
              "id": "album-Grain de sable", 
@@ -582,7 +582,7 @@ function init(){
                "artist": "Sublime", 
                "playcount": "258", 
                "$color": "#966832", 
-               "image": "http:\/\/cdn.last.fm\/flatness\/catalogue\/noimage\/2\/default_album_medium.png", 
+               "image": "http://cdn.last.fm/flatness/catalogue/noimage/2/default_album_medium.png", 
                "$area": 258
              }, 
              "id": "album-Best Of", 
@@ -594,7 +594,7 @@ function init(){
                "artist": "Sublime", 
                "playcount": "176", 
                "$color": "#B74732", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/5264426.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/5264426.jpg", 
                "$area": 176
              }, 
              "id": "album-Robbin' The Hood", 
@@ -616,7 +616,7 @@ function init(){
                "artist": "Red Hot Chili Peppers", 
                "playcount": "418", 
                "$color": "#55AA32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8590493.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8590493.jpg", 
                "$area": 418
              }, 
              "id": "album-One Hot Minute", 
@@ -638,7 +638,7 @@ function init(){
                "artist": "Guns N' Roses", 
                "playcount": "275", 
                "$color": "#8F6F32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/17597653.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/17597653.jpg", 
                "$area": 275
              }, 
              "id": "album-Chinese Democracy", 
@@ -650,7 +650,7 @@ function init(){
                "artist": "Guns N' Roses", 
                "playcount": "203", 
                "$color": "#AC5232", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/15231979.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/15231979.jpg", 
                "$area": 203
              }, 
              "id": "album-Use Your Illusion II", 
@@ -672,7 +672,7 @@ function init(){
                "artist": "Wax Tailor", 
                "playcount": "208", 
                "$color": "#AA5432", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B0007LCNNE.01.MZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B0007LCNNE.01.MZZZZZZZ.jpg", 
                "$area": 208
              }, 
              "id": "album-Tales of the Forgotten Melodies", 
@@ -694,7 +694,7 @@ function init(){
                "artist": "Radiohead", 
                "playcount": "208", 
                "$color": "#AA5432", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/7862623.png", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/7862623.png", 
                "$area": 208
              }, 
              "id": "album-In Rainbows", 
@@ -716,7 +716,7 @@ function init(){
                "artist": "Soundgarden", 
                "playcount": "317", 
                "$color": "#7E8032", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8600371.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8600371.jpg", 
                "$area": 317
              }, 
              "id": "album-Down On The Upside", 
@@ -728,7 +728,7 @@ function init(){
                "artist": "Soundgarden", 
                "playcount": "290", 
                "$color": "#897532", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8590515.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8590515.jpg", 
                "$area": 290
              }, 
              "id": "album-Superunknown", 
@@ -750,7 +750,7 @@ function init(){
                "artist": "Blind Melon", 
                "playcount": "247", 
                "$color": "#9A6432", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/15113951.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/15113951.jpg", 
                "$area": 247
              }, 
              "id": "album-Nico", 
@@ -762,7 +762,7 @@ function init(){
                "artist": "Blind Melon", 
                "playcount": "218", 
                "$color": "#A65832", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/45729417.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/45729417.jpg", 
                "$area": 218
              }, 
              "id": "album-Soup", 
@@ -774,7 +774,7 @@ function init(){
                "artist": "Blind Melon", 
                "playcount": "197", 
                "$color": "#AE5032", 
-               "image": "http:\/\/images.amazon.com\/images\/P\/B00005V5PW.01.MZZZZZZZ.jpg", 
+               "image": "http://images.amazon.com/images/P/B00005V5PW.01.MZZZZZZZ.jpg", 
                "$area": 197
              }, 
              "id": "album-Classic Masters", 
@@ -786,7 +786,7 @@ function init(){
                "artist": "Blind Melon", 
                "playcount": "194", 
                "$color": "#B04E32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/15157989.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/15157989.jpg", 
                "$area": 194
              }, 
              "id": "album-Blind Melon", 
@@ -808,7 +808,7 @@ function init(){
                "artist": "Incubus", 
                "playcount": "537", 
                "$color": "#24DA32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/17594883.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/17594883.jpg", 
                "$area": 537
              }, 
              "id": "album-Make Yourself", 
@@ -820,7 +820,7 @@ function init(){
                "artist": "Incubus", 
                "playcount": "258", 
                "$color": "#966832", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/31550385.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/31550385.jpg", 
                "$area": 258
              }, 
              "id": "album-Light Grenades", 
@@ -832,7 +832,7 @@ function init(){
                "artist": "Incubus", 
                "playcount": "181", 
                "$color": "#B54932", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/32309285.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/32309285.jpg", 
                "$area": 181
              }, 
              "id": "album-Morning View", 
@@ -854,7 +854,7 @@ function init(){
                "artist": "Jack Johnson", 
                "playcount": "198", 
                "$color": "#AE5032", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/8599099.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/8599099.jpg", 
                "$area": 198
              }, 
              "id": "album-On And On", 
@@ -866,7 +866,7 @@ function init(){
                "artist": "Jack Johnson", 
                "playcount": "186", 
                "$color": "#B34B32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/30082075.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/30082075.jpg", 
                "$area": 186
              }, 
              "id": "album-Brushfire Fairytales", 
@@ -888,7 +888,7 @@ function init(){
                "artist": "Mother Love Bone", 
                "playcount": "349", 
                "$color": "#718D32", 
-               "image": "http:\/\/userserve-ak.last.fm\/serve\/300x300\/21881921.jpg", 
+               "image": "http://userserve-ak.last.fm/serve/300x300/21881921.jpg", 
                "$area": 349
              }, 
              "id": "album-Mother Love Bone", 

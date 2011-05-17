@@ -3389,8 +3389,8 @@ function init(){
         if (node) {
           //hide tips and selections
           icicle.tips.hide();
-          if(icicle.events.hoveredNode)
-            this.onMouseLeave(icicle.events.hoveredNode);
+          if(icicle.events.hovered)
+            this.onMouseLeave(icicle.events.hovered);
           //perform the enter animation
           icicle.enter(node);
         }
@@ -3398,8 +3398,8 @@ function init(){
       onRightClick: function(){
         //hide tips and selections
         icicle.tips.hide();
-        if(icicle.events.hoveredNode)
-          this.onMouseLeave(icicle.events.hoveredNode);
+        if(icicle.events.hovered)
+          this.onMouseLeave(icicle.events.hovered);
         //perform the out animation
         icicle.out();
       }

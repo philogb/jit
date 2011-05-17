@@ -11,7 +11,8 @@ EXCLUDES = ['Source/Extras',
             'Source/Layouts',
             'Source/Options/Options.js'
             'Source/Core/Fx.js',
-            'Source/Graph/Graph.Geom.js']
+            'Source/Graph/Graph.Geom.js',
+            'Source/Visualizations/ForceDirected3D.js']
 NATURALDOCS_VER = "1.4"
 NATURALDOCS = "NaturalDocs-%s" % NATURALDOCS_VER
 

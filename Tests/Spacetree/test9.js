@@ -788,7 +788,7 @@ function init(){
                         //remove the subtree
                         st.removeSubtree(label.id, true, 'animate', {
                             hideLabels: false,
-                            onAfterCompute: function() {
+                            onComplete: function() {
                               removing = false;
                               Log.write("subtree removed");   
                             }
@@ -828,7 +828,7 @@ function init(){
         //add the subtree
         st.addSubtree(subtree, type, {
             hideLabels: false,
-            onAfterCompute: function() {
+            onComplete: function() {
                 Log.write("subtree added");
             }
         });
