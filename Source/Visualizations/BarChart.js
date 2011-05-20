@@ -235,15 +235,17 @@ $jit.ST.Plot.NodeTypes.implement({
               ctx.fillText(aggValue, x + width/2, y - Math.max.apply(null, dimArray) - label.size/2 - config.labelOffset);
             }
           }
-          if(showLabels(node.name, valAcum, node)) {
+          var labValue = showLabels(node.name, valAcum, node);
+          if(labValue !== false) {
+            labValue = labValue !== true? labValue : node.name;
             if(horz) {
               ctx.textAlign = 'center';
               ctx.translate(x - config.labelOffset - label.size/2, y + height/2);
               ctx.rotate(Math.PI / 2);
-              ctx.fillText(node.name, 0, 0);
+              ctx.fillText(labValue, 0, 0);
             } else {
               ctx.textAlign = 'center';
-              ctx.fillText(node.name, x + width/2, y + label.size/2 + config.labelOffset);
+              ctx.fillText(labValue, x + width/2, y + label.size/2 + config.labelOffset);
             }
           }
           ctx.restore();
