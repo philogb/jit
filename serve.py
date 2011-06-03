@@ -4,7 +4,7 @@ from tests import tests_model
 from build import Build
 
 urls = (
-    '/testcase/(RGraph|Treemap|Icicle|Hypertree|Spacetree|ForceDirected|ForceDirected3D|Sunburst|AreaChart|BarChart|PieChart|TimeGraph|HeatMap|Other)/([0-9]+)/?', 'testcase',
+    '/testcase/(RGraph|Treemap|Icicle|Hypertree|Spacetree|ForceDirected|ForceDirected3D|Sunburst|AreaChart|BarChart|PieChart|TimeGraph|HeatMap|Scatter|Other)/([0-9]+)/?', 'testcase',
 )
 
 app = web.application(urls, globals())
@@ -13,7 +13,7 @@ render = {
     'TestCases': template.render('Templates/'),
 }
 
-class testcase:
+class testcase(object):
     def GET(self, type, number):
         number_int = int(number)
         max = len(tests_model[type])
@@ -39,4 +39,5 @@ class testcase:
         
         return render['TestCases'].basetests(name, title, extras, test, build, includes)
 
-if __name__ == "__main__": app.run()
+if __name__ == "__main__":
+    app.run()
