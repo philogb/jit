@@ -248,17 +248,17 @@ function init() {
         console.log(node);
       }
     },
-    // background: {
-    //   type: 'Grid',
-    //   CanvasStyles: {
-    //     fillStyle: 'white',
-    //     font: 'bold 12px Arial'
-    //   },
-    //   angleLegendX: Math.PI/4,
-    //   angleLegendY: 0,
-    //   marginLegendX: 10,
-    //   marginLegendY: 10
-    // },
+    background: {
+      type: 'Grid',
+      CanvasStyles: {
+        fillStyle: 'white',
+        font: 'bold 12px Arial'
+      },
+      angleLegendX: Math.PI/4,
+      angleLegendY: 0,
+      marginLegendX: 10,
+      marginLegendY: 10
+    },
     Margin: {
       top: 0,
       left: 70,
