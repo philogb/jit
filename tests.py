@@ -817,7 +817,7 @@ tests_model = {
             """,
             'Extras': ['excanvas.js']
         },
-    ],    
+    ],
    'HeatMap': [
         {
             'Title': 'HeatMap Example',
@@ -827,5 +827,16 @@ tests_model = {
             """,
             'Extras': ['excanvas.js']
         },
-    ]    
+    ],
+    
+    'Scatter': [
+         {
+             'Title': 'HeatMap Example',
+             'Description': 
+             """
+             A static HeatMap Example.
+             """,
+             'Extras': ['excanvas.js']
+         },
+     ]
 }   

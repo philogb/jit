@@ -1,16 +1,3 @@
-$def with (model, type, number, max)
+$def with (model)
 
-$if number > 1:
-    <a href="/testcase/$type/${number -1}/" title="previous">previous</a>
-$if number < max:
-    <a href="/testcase/$type/${number +1}/" title="next">next</a>
-
-
-        <div class="text">
-        <h4>
-$model['Title']    
-        </h4> 
-$:model['Description']
-        </div>
-
-        <div id="id-list"></div>
+<div id="inner-details"></div>

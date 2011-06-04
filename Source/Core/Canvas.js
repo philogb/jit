@@ -506,4 +506,39 @@ var Canvas;
       //TODO(nico): print labels too!
     }
   });
+  
+  Canvas.Background.Grid = new Class({
+    initialize: function(viz, options) {
+      this.viz = viz;
+      this.config = $.merge({
+        idSuffix: '-bkcanvas',
+        levelDistance: 100,
+        numberOfDivisions: 8,
+        CanvasStyles: {},
+        offset: 0
+      }, options);
+    },
+    resize: function(width, height, base) {
+      this.plot(base);
+    },
+    plot: function(base) {
+      var canvas = base.canvas,
+          ctx = base.getCtx(),
+          conf = this.config,
+          styles = conf.CanvasStyles;
+      //set canvas styles
+      for(var s in styles) ctx[s] = styles[s];
+      var n = conf.numberOfDivisions,
+          rho = conf.levelDistance,
+          heightDivision = canvas.height / n;
+      for(var i=1; i<=n; i++) {
+        ctx.beginPath();
+        ctx.rect(canvas.width/-2, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      //TODO(nico): print labels too!
+    }
+  });
+  
 })();
