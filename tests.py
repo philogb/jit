@@ -831,10 +831,10 @@ tests_model = {
     
     'Scatter': [
          {
-             'Title': 'HeatMap Example',
+             'Title': 'Scatter Example',
              'Description': 
              """
-             A static HeatMap Example.
+             A static Scatter Example.
              """,
              'Extras': ['excanvas.js']
          },
