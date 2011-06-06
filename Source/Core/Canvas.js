@@ -515,6 +515,8 @@ var Canvas;
         levelDistance: 100,
         numberOfDivisions: 8,
         CanvasStyles: {},
+        oddColor: '#f2f2f2',
+        evenColor: '#ffffff',
         offset: 0
       }, options);
     },
@@ -527,17 +529,23 @@ var Canvas;
           conf = this.config,
           styles = conf.CanvasStyles;
       //set canvas styles
+      colors = [conf.oddColor, conf.evenColor];
       for(var s in styles) ctx[s] = styles[s];
       var n = conf.numberOfDivisions,
           rho = conf.levelDistance,
-          heightDivision = canvas.height / n;
+          heightDivision = canvas.height / n,
+          oldColor = ctx.fillStyle;
+      
       for(var i=1; i<=n; i++) {
+        ctx.fillStyle = ctx.strokeStyle = colors[i%2];
+        ctx.save()
         ctx.beginPath();
-        ctx.rect(canvas.width/-2, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
+        ctx.fillRect(canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
         ctx.stroke();
         ctx.closePath();
       }
-      //TODO(nico): print labels too!
+      ctx.fillStyle = ctx.strokeStyle = oldColor;
+      ctx.save()
     }
   });
   

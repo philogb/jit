@@ -6,7 +6,7 @@ default_visualizations = ['AreaChart', 'BarChart', 'PieChart',
                           'Treemap', 'Spacetree', 'RGraph',
                           'Hypertree']
 #build model
-class Build():
+class Build(object):
     def __init__(self):
         self.sources = prefix('Source/')
         
