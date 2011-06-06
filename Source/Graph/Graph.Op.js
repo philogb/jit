@@ -115,7 +115,7 @@ Graph.Op = {
                 viz.fx.sequence({
                     condition: function() { return n.length != 0; },
                     step: function() { that.removeNode(n.shift(), { type: 'nothing' });  viz.labels.clearLabels(); },
-                    onComplete: function() { options.onComplete(); },
+                    onComplete: function() { options.onComplete && options.onComplete(); },
                     duration: Math.ceil(options.duration / n.length)
                 });
                 break;

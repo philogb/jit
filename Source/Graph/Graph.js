@@ -86,6 +86,25 @@ $jit.Graph = new Class({
  },
 
  /*
+     Method: get
+    
+     An alias for <Graph.Util.getNode>. Returns a node by *id*.
+    
+     Parameters:
+    
+     id - (string) A <Graph.Node> id.
+    
+     Example:
+    
+     (start code js)
+       var node = graph.get('nodeId');
+     (end code)
+*/  
+  get: function(id) {
+    return this.getNode(id);
+  },
+
+ /*
    Method: getByName
   
    Returns a <Graph.Node> by *name*.
@@ -910,6 +929,35 @@ Graph.Util = {
     },
     
     /*
+      Method: each
+   
+      Iterates over <Graph> nodes performing an *action*. It's an alias for <Graph.Util.eachNode>.
+      
+      Also implemented by:
+      
+      <Graph>.
+  
+      Parameters:
+  
+      graph - (object) A <Graph> instance.
+      action - (function) A callback function having a <Graph.Node> as first formal parameter.
+  
+      Example:
+      (start code js)
+        $jit.Graph.Util.each(graph, function(node) {
+         alert(node.name);
+        });
+        //or...
+        graph.each(function(node) {
+          alert(node.name);
+        });
+      (end code)
+   */
+   each: function(graph, action, flags) {
+      this.eachNode(graph, action, flags); 
+   },
+
+ /*
        Method: eachAdjacency
     
        Iterates over <Graph.Node> adjacencies applying the *action* function.
@@ -1322,7 +1370,7 @@ Graph.Util = {
 };
 
 //Append graph methods to <Graph>
-$.each(['getNode', 'eachNode', 'computeLevels', 'eachBFS', 'clean', 'getClosestNodeToPos', 'getClosestNodeToOrigin'], function(m) {
+$.each(['get', 'getNode', 'each', 'eachNode', 'computeLevels', 'eachBFS', 'clean', 'getClosestNodeToPos', 'getClosestNodeToOrigin'], function(m) {
   Graph.prototype[m] = function() {
     return Graph.Util[m].apply(Graph.Util, [this].concat(Array.prototype.slice.call(arguments)));
   };

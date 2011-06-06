@@ -292,11 +292,18 @@ $jit.ST= (function() {
 
        reposition: function() {
             this.graph.computeLevels(this.root, 0, "ignore");
-             this.geom.setRightLevelToShow(this.clickedNode, this.canvas);
+            this.geom.setRightLevelToShow(this.clickedNode, this.canvas);
             this.graph.eachNode(function(n) {
                 if(n.exist) n.drawn = true;
             });
             this.compute('end');
+            if (this.clickedNode) {
+              var offset = {
+                  x: this.config.offsetX || 0,
+                  y: this.config.offsetY || 0
+              };
+              this.geom.translate(this.clickedNode.endPos.add(offset).$scale(-1), 'end');
+            }
         },
         
         requestNodes: function(node, onComplete) {
@@ -334,6 +341,8 @@ $jit.ST= (function() {
             };
             if(move.enable) {
                 this.geom.translate(node.endPos.add(offset).$scale(-1), "end");
+            } else {
+                this.geom.translate($C(offset.x, offset.y).$scale(-1), "end");
             }
             this.fx.animate($.merge(this.controller, { modes: ['linear'] }, onComplete));
          },
