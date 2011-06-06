@@ -33,8 +33,8 @@ Layouts.Scatter = new Class({
       var x = n.getData('x'),
           y = n.getData('y');
           
-      var posx = x * size.width / x_range,
-          posy = -y * size.height / y_range;
+      var posx = (x * size.width) / x_range;
+          posy = (-y * size.height) / y_range;
           // y works different in canvas, if it is positive, is below center, and above is negative.
       console.log(posx);
       console.log(posy);
