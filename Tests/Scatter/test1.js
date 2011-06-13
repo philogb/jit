@@ -260,14 +260,12 @@ function init() {
       marginLegendY: 10
     },
     Margin: {
-      top: 0,
-      left: 70,
-      bottom: 70,
+      top: 10,
+      left: 0,
+      bottom: 0,
       right: 0
     }
   });
-
   sp.loadJSON(json);
   sp.refresh();
-  // sp.canvas.canvases[1].plot();
 }
