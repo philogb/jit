@@ -30,9 +30,8 @@ Layouts.Scatter = new Class({
     
     this.graph.eachNode(function(n) {
       var x = n.getData('x'),
-          y = n.getData('y');
-          
-      var posx = (x * size.width / x_range) + margin.left - margin.right;
+          y = n.getData('y'),
+          posx = (x * size.width / x_range) + margin.left - margin.right,
           posy = (-y * size.height / y_range) + margin.top - margin.bottom;
           // y works different in canvas, if it is positive, is below center, and above is negative.
       n.getPos(prop).setc(posx, posy);
