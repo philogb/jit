@@ -263,7 +263,7 @@ Scatter.Label.HTML = new Class( {
   Scatter.Plot.NodeTypes
   
   This class contains a list of <Graph.Node> built-in types. 
-  Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
+  Node types implemented are 'none', 'rectangle', 'circle' and 'square'.
   
   You can add your custom node types, customizing your visualization to the extreme.
   
@@ -316,9 +316,23 @@ Scatter.Plot.NodeTypes = new Class({
           {x:pos.x-dim, y:pos.y-dim}, dim, canvas);
     },
     'contains': function(node, pos){
-      var npos = node.pos.getc(true), 
+      var npos = node.pos.getc(true),
           dim = node.getData('dim') || 5;
       return this.nodeHelper.square.contains({x: npos.x - dim , y: npos.y - dim}, pos, dim, dim);
+    }
+  },
+  'circle': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          config = this.viz.config,
+          dim = node.getData('dim') || 5;
+      this.nodeHelper.circle.render('fill',
+          {x:pos.x-dim, y:pos.y-dim}, dim, canvas);
+    },
+    'contains': function(node, pos){
+      var npos = node.pos.getc(true),
+          dim = node.getData('dim') || 5;
+      return this.nodeHelper.circle.contains({x: npos.x - dim , y: npos.y - dim}, pos, dim, dim);
     }
   }
 });

@@ -19,7 +19,9 @@ var json = [
       "$legendY": "category2",
       "$x": 100,
       "$y": 12,
-      "$color": "#4f5f6f"
+      "$color": "#4f5f6f",
+      "$type":"circle",
+      "$dim":10,
     }
   },
   {
