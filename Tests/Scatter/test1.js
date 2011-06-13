@@ -7,7 +7,8 @@ var json = [
       "$legendY": "category0",
       "$x": 10,
       "$y": -50,
-      "$color": "#ccc"
+      "$color": "#ccc",
+      "$type":"rectangle"
     }
   },
   {
@@ -258,6 +259,9 @@ function init() {
       angleLegendY: 0,
       marginLegendX: 10,
       marginLegendY: 10
+    },
+    Node: {
+      overridable:true
     },
     Margin: {
       top: 10,

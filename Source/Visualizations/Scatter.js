@@ -311,16 +311,14 @@ Scatter.Plot.NodeTypes = new Class({
     'render': function(node, canvas){
       var pos = node.pos.getc(true),
           config = this.viz.config,
-          width = node.getData('width'),
-          height = node.getData('height');
+          dim = node.getData('dim') || 5;
       this.nodeHelper.square.render('fill',
-          {x:pos.x-5, y:pos.y-5}, 5, canvas);
+          {x:pos.x-dim, y:pos.y-dim}, dim, canvas);
     },
     'contains': function(node, pos){
       var npos = node.pos.getc(true), 
-          width = node.getData('width'), 
-          height = node.getData('height');
-      return this.nodeHelper.square.contains({x: npos.x + width/2, y: npos.y + height/2}, pos, width, height);
+          dim = node.getData('dim') || 5;
+      return this.nodeHelper.square.contains({x: npos.x - dim , y: npos.y - dim}, pos, dim, dim);
     }
   }
 });

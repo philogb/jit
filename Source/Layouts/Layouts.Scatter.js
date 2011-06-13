@@ -14,7 +14,6 @@ Layouts.Scatter = new Class({
         maxY = 0,
         minX = 0,
         minY = 0;
-    console.log(size);
     this.graph.eachNode(function(n) {
       var x = n.getData('x'),
           y = n.getData('y');
@@ -36,12 +35,9 @@ Layouts.Scatter = new Class({
       var posx = (x * size.width / x_range) + margin.left - margin.right;
           posy = (-y * size.height / y_range) + margin.top - margin.bottom;
           // y works different in canvas, if it is positive, is below center, and above is negative.
-      console.log(posx);
-      console.log(posy);
       n.getPos(prop).setc(posx, posy);
-      console.log(n);
-      n.setData('width', elemWidth);
-      n.setData('height', elemHeight);
+      // n.setData('width', elemWidth);
+      // n.setData('height', elemHeight);
     });
     // console.log(maxX);
     // console.log(minX);
