@@ -515,6 +515,8 @@ var Canvas;
         levelDistance: 100,
         numberOfDivisions: 8,
         CanvasStyles: {},
+        orientation: 'vertical',
+        filled: 'no',
         oddColor: '#f2f2f2',
         evenColor: '#ffffff',
         offset: 0
@@ -534,18 +536,22 @@ var Canvas;
       var n = conf.numberOfDivisions,
           rho = conf.levelDistance,
           heightDivision = canvas.height / n,
+          widthDivision = canvas.width / n,
           oldColor = ctx.fillStyle;
-      
+      // TODO(dio): Put background without fill using ctx.rect
       for(var i=1; i<=n; i++) {
         ctx.fillStyle = ctx.strokeStyle = colors[i%2];
-        ctx.save()
+        ctx.save();
         ctx.beginPath();
-        ctx.fillRect(canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
+        if (conf.orientation == 'vertical')
+            ctx.fillRect(canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
+        else if (conf.orientation == 'horizontal')
+            ctx.fillRect(canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
         ctx.stroke();
         ctx.closePath();
       }
       ctx.fillStyle = ctx.strokeStyle = oldColor;
-      ctx.save()
+      ctx.save();
     }
   });
   
