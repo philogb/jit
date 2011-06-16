@@ -516,7 +516,7 @@ var Canvas;
         numberOfDivisions: 8,
         CanvasStyles: {},
         orientation: 'vertical',
-        filled: 'no',
+        filled: 'yes',
         oddColor: '#f2f2f2',
         evenColor: '#ffffff',
         offset: 0
@@ -531,22 +531,22 @@ var Canvas;
           conf = this.config,
           styles = conf.CanvasStyles;
       //set canvas styles
-      colors = [conf.oddColor, conf.evenColor];
       for(var s in styles) ctx[s] = styles[s];
       var n = conf.numberOfDivisions,
           rho = conf.levelDistance,
+          fill = (conf.filled == 'no') ? 'rect' : 'fillRect';
           heightDivision = canvas.height / n,
           widthDivision = canvas.width / n,
+          colors = [conf.oddColor, conf.evenColor],
           oldColor = ctx.fillStyle;
-      // TODO(dio): Put background without fill using ctx.rect
       for(var i=1; i<=n; i++) {
         ctx.fillStyle = ctx.strokeStyle = colors[i%2];
         ctx.save();
         ctx.beginPath();
         if (conf.orientation == 'vertical')
-            ctx.fillRect(canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
+            ctx[fill](canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
         else if (conf.orientation == 'horizontal')
-            ctx.fillRect(canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
+            ctx[fill](canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
         ctx.stroke();
         ctx.closePath();
       }
