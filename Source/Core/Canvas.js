@@ -516,7 +516,7 @@ var Canvas;
         numberOfDivisions: 8,
         CanvasStyles: {},
         orientation: 'vertical',
-        filled: 'yes',
+        filled: true,
         oddColor: '#f2f2f2',
         evenColor: '#ffffff',
         offset: 0
@@ -534,7 +534,7 @@ var Canvas;
       for(var s in styles) ctx[s] = styles[s];
       var n = conf.numberOfDivisions,
           rho = conf.levelDistance,
-          fill = (conf.filled == 'no') ? 'rect' : 'fillRect';
+          fill = (conf.filled) ? 'fillRect' : 'rect';
           heightDivision = canvas.height / n,
           widthDivision = canvas.width / n,
           colors = [conf.oddColor, conf.evenColor],
