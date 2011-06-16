@@ -262,7 +262,8 @@ Scatter.Label.HTML = new Class( {
 /*
   Scatter.Plot.NodeTypes
   
-  This class contains a list of <Graph.Node> built-in types. 
+  This class contains a list of <Graph.Node> built-in types.
+  
   Node types implemented are 'none', 'rectangle', 'circle' and 'square'.
   
   You can add your custom node types, customizing your visualization to the extreme.

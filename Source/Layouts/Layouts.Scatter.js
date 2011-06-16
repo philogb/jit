@@ -35,13 +35,7 @@ Layouts.Scatter = new Class({
           posy = (-y * size.height / y_range) + margin.top - margin.bottom;
           // y works different in canvas, if it is positive, is below center, and above is negative.
       n.getPos(prop).setc(posx, posy);
-      // n.setData('width', elemWidth);
-      // n.setData('height', elemHeight);
     });
-    // console.log(maxX);
-    // console.log(minX);
-    // console.log(maxY);
-    // console.log(minY);
     this.controller.onAfterCompute();
   },
   
