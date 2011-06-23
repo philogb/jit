@@ -5,6 +5,7 @@ $jit.Scatter = new Class({
     var opt = {
       legendX: [],
       legendY: [],
+      animate: false,
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
       showNodeNames: false,
@@ -63,7 +64,65 @@ $jit.Scatter = new Class({
   
   reposition: function() {
     this.compute('end');
-  }
+  },
+  
+  /*
+    Method: updateJSON
+   
+    Use this method when updating values for the current JSON data. If the items specified by the JSON data already exist in the graph then their values will be updated.
+    
+    Parameters:
+    
+    json - (object) JSON data to be updated.
+    onComplete - (object) A callback object to be called when the animation transition when updating the data end.
+    
+    Example:
+    
+    (start code js)
+    scatter.updateJSON(json, {
+      onComplete: function() {
+        alert('update complete!');
+      }
+    });
+    (end code)
+  */  
+  updateJSON: function(json, onComplete) {
+    if(this.busy) return;
+    this.busy = true;
+    
+    var graph = this.graph;
+    var animate = this.config.animate;
+    var that = this;
+    $.each(json, function(v) {
+      var n = graph.getByName(v.name);
+      if(n) {
+        n.setData('x', v.data.$x);
+        n.setData('y', v.data.$y);
+        // n.setData('width', v.data.$width);
+        // n.setData('height', v.data.$height);
+        // n.setData('dim', v.data.$dim);
+      }
+    });
+    // this.refresh();
+    // this.normalizeDims();
+    if(animate) {
+      this.compute('end');
+      this.fx.animate({
+        modes: {
+          'node-property': ['width', 'height'],
+          'position':'linear',
+        },
+        duration:1500,
+        onComplete: function() {
+          that.busy = false;
+          onComplete && onComplete.onComplete();
+        }
+      });
+    } else {
+      this.refresh();
+    }
+  },
+  
 });
 
 var Scatter = $jit.Scatter;

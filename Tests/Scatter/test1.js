@@ -146,6 +146,156 @@ var json = [
     }
   }
 ];
+
+var json2 = [
+  {
+    "id": "node0",
+    "name": "event0",
+    "data": {
+      "$legendX": "2010-01-01",
+      "$legendY": "category0",
+      "$x": -10,
+      "$y": 50,
+      "$color": "#ccc",
+      "$type":"square"
+    }
+  },
+  {
+    "id": "node1",
+    "name": "event1",
+    "data": {
+      "$legendX": "2010-01-01",
+      "$legendY": "category2",
+      "$x": 50,
+      "$y": 2,
+      "$color": "#4f5f6f",
+      "$type":"circle",
+      "$dim":10,
+    }
+  },
+  {
+    "id": "node2",
+    "name": "event2",
+    "data": {
+      "$x": -25,
+      "$y": 250,
+      "$legendX": "2010-01-02",
+      "$legendY": "category1",
+      "$color": "#4f5f9f"
+    }
+  },
+  {
+    "id": "node3",
+    "name": "event3",
+    "data": {
+      "$legendX": "2010-01-02",
+      "$legendY": "category2",
+      "$x": -100,
+      "$y": -56,
+      "$color": "#f2ff27"
+    }
+  },
+  {
+    "id": "node4",
+    "name": "event4",
+    "data": {
+      "$legendX": "2010-01-03",
+      "$legendY": "category0",
+      "$x": -200,
+      "$y": -50,
+      "$color": "#c2c3c4"
+    }
+  },
+  {
+    "id": "node5",
+    "name": "event5",
+    "data": {
+      "$legendX": "2010-01-04",
+      "$legendY": "category2",
+      "$x": -14,
+      "$y": 0,
+      "$color": "#f43f2f"
+    }
+  },
+  {
+    "id": "node6",
+    "name": "event6",
+    "data": {
+      "$legendX": "2010-01-05",
+      "$legendY": "category0",
+      "$x": 50,
+      "$y": -10,
+      "$color": "#8974ac"
+    }
+  },
+  {
+    "id": "node7",
+    "name": "event7",
+    "data": {
+      "$legendX": "2010-01-05",
+      "$legendY": "category1",
+      "$x": 93,
+      "$y": 7,
+      "$color": "#f974af"
+    }
+  },
+  {
+    "id": "node8",
+    "name": "event8",
+    "data": {
+      "$legendX": "2010-01-06",
+      "$legendY": "category0",
+      "$x": 46,
+      "$y": 80,
+      "$color": "#29acf4"
+    }
+  },
+  {
+    "id": "node9",
+    "name": "event9",
+    "data": {
+      "$legendX": "2010-01-06",
+      "$legendY": "category1",
+      "$x": 63,
+      "$y": 91,
+      "$color": "#459aca"
+    }
+  },
+  {
+    "id": "node10",
+    "name": "event10",
+    "data": {
+      "$legendX": "2010-01-07",
+      "$legendY": "category1",
+      "$x": 77,
+      "$y": 11,
+      "$color": "#888aaa"
+    }
+  },
+  {
+    "id": "node11",
+    "name": "event11",
+    "data": {
+      "$legendX": "2010-01-08",
+      "$legendY": "category2",
+      "$x": 38,
+      "$y": -45,
+      "$color": "#674fde"
+    }
+  },
+  {
+    "id": "node12",
+    "name": "event12",
+    "data": {
+      "$legendX": "2010-01-09",
+      "$legendY": "category3",
+      "$x": -29,
+      "$y": -30,
+      "$color": "#333111"
+    }
+  }
+];
+
 // 
 // 
 // $jit.Canvas.Background.Grid = new $jit.Class({
@@ -238,6 +388,8 @@ function init() {
       style: 'bold',
       color: '#ccc'
     },
+    // with animation
+    animate: true,
     Events: {
       enable: true,
       type: 'Native',
@@ -274,4 +426,15 @@ function init() {
   });
   sp.loadJSON(json);
   sp.refresh();
+  
+  var list = $jit.id('id-list'),
+      button = $jit.id('update');
+
+  //update json on click
+  var jsoncount = 0;
+  var jsons = [json, json2];
+  $jit.util.addEvent(button, 'click', function() {
+    jsoncount = jsoncount + 1;
+    sp.updateJSON(jsons[jsoncount%2]);
+  });
 }
