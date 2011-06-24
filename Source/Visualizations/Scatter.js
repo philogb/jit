@@ -90,15 +90,12 @@ $jit.Scatter = new Class({
     if(this.busy) return;
     this.busy = true;
     
-    var graph = this.graph;
-    var animate = this.config.animate;
-    var that = this;
+    var graph = this.graph,
+        animate = this.config.animate,
+        that = this;
     $.each(json, function(v) {
       var n = graph.getByName(v.name);
       if(n) {
-        /*
-          TODO: Calculate relative position before set x and y
-        */
         n.setData('x', v.data.$x);
         n.setData('y', v.data.$y);
         // n.setData('width', v.data.$width);
@@ -106,8 +103,7 @@ $jit.Scatter = new Class({
         // n.setData('dim', v.data.$dim);
       }
     });
-    // this.refresh();
-    // this.normalizeDims();
+    
     if(animate) {
       this.compute('end');
       this.fx.animate({
