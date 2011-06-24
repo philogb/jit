@@ -3,8 +3,8 @@ $jit.Scatter = new Class({
   
   initialize: function(config) {
     var opt = {
-      legendX: [],
-      legendY: [],
+      legendX: '',
+      legendY: '',
       animate: false,
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
@@ -96,6 +96,9 @@ $jit.Scatter = new Class({
     $.each(json, function(v) {
       var n = graph.getByName(v.name);
       if(n) {
+        /*
+          TODO: Calculate relative position before set x and y
+        */
         n.setData('x', v.data.$x);
         n.setData('y', v.data.$y);
         // n.setData('width', v.data.$width);
