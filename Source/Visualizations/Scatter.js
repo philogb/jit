@@ -323,7 +323,7 @@ Scatter.Label.HTML = new Class( {
   
   This class contains a list of <Graph.Node> built-in types.
   
-  Node types implemented are 'none', 'rectangle', 'circle' and 'square'.
+  Node types implemented are 'none', 'rectangle', 'circle', 'square', 'triangle', 'star' and 'ellipse'.
   
   You can add your custom node types, customizing your visualization to the extreme.
   
@@ -393,6 +393,44 @@ Scatter.Plot.NodeTypes = new Class({
       var npos = node.pos.getc(true),
           dim = node.getData('dim') || 5;
       return this.nodeHelper.circle.contains({x: npos.x - dim , y: npos.y - dim}, pos, dim, dim);
+    }
+  },
+  'ellipse': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          width = node.getData('width'),
+          height = node.getData('height');
+      this.nodeHelper.ellipse.render('fill', pos, width, height, canvas);
+      },
+    'contains': function(node, pos){
+      var npos = node.pos.getc(true),
+          width = node.getData('width'),
+          height = node.getData('height');
+      return this.nodeHelper.ellipse.contains(npos, pos, width, height);
+    }
+  },
+  'triangle': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          dim = node.getData('dim');
+      this.nodeHelper.triangle.render('fill', pos, dim, canvas);
+    },
+    'contains': function(node, pos) {
+      var npos = node.pos.getc(true),
+          dim = node.getData('dim');
+      return this.nodeHelper.triangle.contains(npos, pos, dim);
+    }
+  },
+  'star': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          dim = node.getData('dim');
+      this.nodeHelper.star.render('fill', pos, dim, canvas);
+    },
+    'contains': function(node, pos) {
+      var npos = node.pos.getc(true),
+          dim = node.getData('dim');
+      return this.nodeHelper.star.contains(npos, pos, dim);
     }
   }
 });

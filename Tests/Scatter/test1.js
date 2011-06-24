@@ -32,7 +32,9 @@ var json = [
       "$y": 56,
       "$legendX": "2010-01-02",
       "$legendY": "category1",
-      "$color": "#4f5f9f"
+      "$dim": 5,
+      "$color": "#4f5f9f",
+      "$type":"star",
     }
   },
   {
@@ -43,7 +45,8 @@ var json = [
       "$legendY": "category2",
       "$x": 89,
       "$y": 56,
-      "$color": "#f2ff27"
+      "$color": "#f2ff27",
+      "$type":"ellipse",
     }
   },
   {
@@ -54,7 +57,9 @@ var json = [
       "$legendY": "category0",
       "$x": 67,
       "$y": 84,
-      "$color": "#c2c3c4"
+      "$color": "#c2c3c4",
+      "$dim": 10,
+      "$type":"triangle"
     }
   },
   {
@@ -181,7 +186,9 @@ var json2 = [
       "$y": 250,
       "$legendX": "2010-01-02",
       "$legendY": "category1",
-      "$color": "#4f5f9f"
+      "$color": "#4f5f9f",
+      "$dim": 5,
+      "$type":"star"
     }
   },
   {
@@ -192,7 +199,8 @@ var json2 = [
       "$legendY": "category2",
       "$x": -100,
       "$y": -56,
-      "$color": "#f2ff27"
+      "$color": "#f2ff27",
+      "$type":"ellipse"
     }
   },
   {
@@ -203,7 +211,9 @@ var json2 = [
       "$legendY": "category0",
       "$x": -200,
       "$y": -50,
-      "$color": "#c2c3c4"
+      "$color": "#c2c3c4",
+      "$dim": 10,
+      "$type":"triangle"
     }
   },
   {
