@@ -539,19 +539,16 @@ var Canvas;
           widthDivision = canvas.width / n,
           colors = [conf.oddColor, conf.evenColor],
           oldColor = ctx.fillStyle;
+      ctx.beginPath();
       for(var i=1; i<=n; i++) {
         ctx.fillStyle = ctx.strokeStyle = colors[i%2];
-        ctx.save();
-        ctx.beginPath();
         if (conf.orientation == 'vertical')
             ctx[fill](canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
         else if (conf.orientation == 'horizontal')
             ctx[fill](canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
-        ctx.stroke();
-        ctx.closePath();
       }
+      ctx.closePath();
       ctx.fillStyle = ctx.strokeStyle = oldColor;
-      ctx.save();
     }
   });
   

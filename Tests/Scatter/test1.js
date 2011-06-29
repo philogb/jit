@@ -306,86 +306,64 @@ var json2 = [
   }
 ];
 
-// 
-// 
-// $jit.Canvas.Background.Grid = new $jit.Class({
-//   initialize: function(viz, options) {
-//     this.viz = viz;
-//     this.config = $jit.util.merge({
-//       idSuffix: '-bkcanvas',
-//       angleLegendX: 0,
-//       angleLegendY: 0,
-//       marginLegendX: 0,
-//       marginLegendY: 0
-//     }, options);
-//   },
-//   resize: function(width, height, base) {
-//     this.plot(base);
-//   },
-//   plot: function(base) {
-//     if(!this.viz.graph) return;
-//     var canvas = base.canvas,
-//         ctx = base.getCtx(),
-//         conf = this.config,
-//         styles = conf.CanvasStyles;
-//     //set canvas styles
-//     for(var s in styles) ctx[s] = styles[s];
-// 
-//     var viz = this.viz,
-//         lx = viz.getLegendX(),
-//         ly = viz.getLegendY(),
-//         config = viz.config,
-//         margin = config.Margin,
-//         size = base.getSize(),
-//         width = size.width - margin.left - margin.right,
-//         height = size.height - margin.top - margin.bottom,
-//         stripeHeight = height / (ly.length || 1),
-//         bandWidth = width / (lx.length || 1);
-//     
-//     ctx.fillStyle = 'white';
-//     ctx.font = 'bold 12px Arial';
-//     if(conf.angleLegendX) {
-//       ctx.textAlign = 'right';
-//       ctx.textBaseline = 'top';
-//     } else {
-//       ctx.textAlign = 'center';
-//       ctx.textBaseline = 'middle';
-//     }
-//     for(var i=0, l=lx.length; i<l; i++) {
-//       if(conf.angleLegendX) {
-//         ctx.save();
-//         ctx.translate(-size.width/2 + margin.left + i * bandWidth + bandWidth/2, 
-//             size.height/2 - margin.bottom + conf.marginLegendX);
-//         ctx.rotate(-conf.angleLegendX);
-//         ctx.fillText(lx[i], 0, 0);
-//         ctx.restore();
-//       } else {
-//         ctx.fillText(lx[i], -size.width/2 + margin.left + i * bandWidth + bandWidth/2, 
-//             size.height/2 - margin.bottom + conf.marginLegendX);
-//       }
-//     }
-//     if(conf.angleLegendY) {
-//       ctx.textAlign = 'right';
-//       ctx.textBaseline = 'bottom';
-//     } else {
-//       ctx.textAlign = 'right';
-//       ctx.textBaseline = 'middle';
-//     }
-//     for(var i=0, l=ly.length; i<l; i++) {
-//       if(conf.angleLegendY) {
-//         ctx.save();
-//         ctx.translate(-size.width/2 + margin.left - conf.marginLegendY, 
-//             -size.height/2 + i * stripeHeight + margin.top + stripeHeight /2);
-//         ctx.rotate(-conf.angleLegendY);
-//         ctx.fillText(ly[i], 0, 0);
-//         ctx.restore();
-//       } else {
-//         ctx.fillText(ly[i], -size.width/2 + margin.left - conf.marginLegendY, 
-//             -size.height/2 + i * stripeHeight + margin.top + stripeHeight /2);
-//       }
-//     }
-//   }
-// });
+$jit.Canvas.Background.Grid_Axis = new $jit.Class({
+  initialize: function(viz, options) {
+    this.viz = viz;
+    this.config = $jit.util.merge({
+      idSuffix: '-bkcanvas',
+      levelDistance: 100,
+      numberOfDivisions: 8,
+      CanvasStyles: {},
+      orientation: 'vertical',
+      filled: true,
+      legendX: 'x',
+      legendY: 'y',
+      oddColor: '#f2f2f2',
+      evenColor: '#ffffff',
+      axisOffset: 20
+    }, options);
+  },
+  resize: function(width, height, base) {
+    this.plot(base);
+  },
+  plot: function(base) {
+    var canvas = base.canvas,
+        ctx = base.getCtx(),
+        conf = this.config,
+        styles = conf.CanvasStyles;
+    //set canvas styles
+    for(var s in styles) ctx[s] = styles[s];
+    var n = conf.numberOfDivisions,
+        rho = conf.levelDistance,
+        fill = (conf.filled) ? 'fillRect' : 'rect';
+        heightDivision = canvas.height / n,
+        widthDivision = (canvas.width - conf.axisOffset) / n,
+        colors = [conf.oddColor, conf.evenColor],
+        oldColor = ctx.fillStyle;
+    ctx.beginPath();
+    // painting background of white
+    ctx.fillStyle = ctx.strokeStyle= '#ffffff';
+    ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
+    
+    for(var i=1; i<=n; i++) {
+      ctx.fillStyle = ctx.strokeStyle = colors[i%2];
+      if (conf.orientation == 'vertical')
+          ctx[fill](canvas.height/2 - (widthDivision * i), canvas.width/-2 - conf.axisOffset, widthDivision, canvas.height);
+      else if (conf.orientation == 'horizontal')
+          ctx[fill](canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
+    }
+    // drawing axis
+    ctx.fillStyle = ctx.strokeStyle = '#000000';
+    ctx.fillText(conf.legendX, 0, canvas.width/2 - 10);
+    ctx.rect(-canvas.width/2 + conf.axisOffset, -canvas.height/2 - conf.axisOffset, canvas.width, canvas.height);
+    ctx.rotate(Math.PI/-2);
+    ctx.fillText(conf.legendY, 0, -canvas.height/2 + conf.axisOffset);
+    ctx.rotate(Math.PI/2);
+    ctx.stroke();
+    ctx.closePath();
+    ctx.fillStyle = ctx.strokeStyle = oldColor;
+  }
+});
 
 function init() {
   var sp = new $jit.Scatter({
@@ -414,15 +392,12 @@ function init() {
       }
     },
     background: {
-      type: 'Grid',
+      type: 'Grid_Axis',
       CanvasStyles: {
         fillStyle: 'white',
         font: 'bold 12px Arial'
       },
-      angleLegendX: Math.PI/4,
-      angleLegendY: 0,
-      marginLegendX: 10,
-      marginLegendY: 10
+      legendX: 'legend X',
     },
     Node: {
       overridable:true
