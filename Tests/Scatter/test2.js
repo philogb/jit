@@ -1,17 +1,5 @@
 var json = [
   {
-    "id": "node0",
-    "name": "event0",
-    "data": {
-      "$legendX": "2010-01-01",
-      "$legendY": "category0",
-      "$x": 10,
-      "$y": -50,
-      "$color": "#ccc",
-      "$type":"rectangle"
-    }
-  },
-  {
     "id": "node1",
     "name": "event1",
     "data": {
@@ -35,18 +23,6 @@ var json = [
       "$dim": 5,
       "$color": "#4f5f9f",
       "$type":"star",
-    }
-  },
-  {
-    "id": "node3",
-    "name": "event3",
-    "data": {
-      "$legendX": "2010-01-02",
-      "$legendY": "category2",
-      "$x": 89,
-      "$y": 56,
-      "$color": "#f2ff27",
-      "$type":"ellipse",
     }
   },
   {
@@ -127,44 +103,10 @@ var json = [
       "$y": 11,
       "$color": "#888aaa"
     }
-  },
-  {
-    "id": "node11",
-    "name": "event11",
-    "data": {
-      "$legendX": "2010-01-08",
-      "$legendY": "category2",
-      "$x": 38,
-      "$y": -45,
-      "$color": "#674fde"
-    }
-  },
-  {
-    "id": "node12",
-    "name": "event12",
-    "data": {
-      "$legendX": "2010-01-09",
-      "$legendY": "category3",
-      "$x": -29,
-      "$y": -30,
-      "$color": "#333111"
-    }
   }
 ];
 
 var json2 = [
-  {
-    "id": "node0",
-    "name": "event0",
-    "data": {
-      "$legendX": "2010-01-01",
-      "$legendY": "category0",
-      "$x": -10,
-      "$y": 50,
-      "$color": "#ccc",
-      "$type":"square"
-    }
-  },
   {
     "id": "node1",
     "name": "event1",
@@ -189,18 +131,6 @@ var json2 = [
       "$color": "#4f5f9f",
       "$dim": 5,
       "$type":"star"
-    }
-  },
-  {
-    "id": "node3",
-    "name": "event3",
-    "data": {
-      "$legendX": "2010-01-02",
-      "$legendY": "category2",
-      "$x": -100,
-      "$y": -56,
-      "$color": "#f2ff27",
-      "$type":"ellipse"
     }
   },
   {
@@ -281,30 +211,96 @@ var json2 = [
       "$y": 11,
       "$color": "#888aaa"
     }
-  },
-  {
-    "id": "node11",
-    "name": "event11",
-    "data": {
-      "$legendX": "2010-01-08",
-      "$legendY": "category2",
-      "$x": 38,
-      "$y": -45,
-      "$color": "#674fde"
-    }
-  },
-  {
-    "id": "node12",
-    "name": "event12",
-    "data": {
-      "$legendX": "2010-01-09",
-      "$legendY": "category3",
-      "$x": -29,
-      "$y": -30,
-      "$color": "#333111"
-    }
   }
 ];
+
+$jit.Canvas.Background.Grid_Axis = new $jit.Class({
+  initialize: function(viz, options) {
+    this.viz = viz;
+    this.config = $jit.util.merge({
+      idSuffix: '-bkcanvas',
+      levelDistance: 100,
+      numberOfDivisions: 8,
+      CanvasStyles: {},
+      filled: true,
+      legendX: 'x',
+      legendY: 'y',
+      oddColor: '#f2f2f2',
+      evenColor: '#ffffff',
+      axisOffset: 50
+    }, options);
+  },
+  resize: function(width, height, base) {
+    this.plot(base);
+  },
+  plot: function(base) {
+    var canvas = base.canvas,
+        ctx = base.getCtx(),
+        conf = this.config,
+        styles = conf.CanvasStyles;
+    //set canvas styles
+    for(var s in styles) ctx[s] = styles[s];
+    var n = conf.numberOfDivisions,
+        rho = conf.levelDistance,
+        fill = (conf.filled) ? 'fillRect' : 'rect';
+        heightDivision = canvas.height / n,
+        widthDivision = (canvas.width - conf.axisOffset) / n,
+        colors = [conf.oddColor, conf.evenColor],
+        xRange = 300,
+        yRange = 600;
+    ctx.beginPath();
+    // painting background of white
+    ctx.fillStyle = ctx.strokeStyle= '#ffffff';
+    ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
+    
+    for(var i=1; i<=n; i++) {
+      ctx.fillStyle = colors[i%2];
+      ctx[fill](canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
+      ctx.fillStyle = ctx.strokeStyle = '#000000';
+      
+      // y axis lines
+      ctx.moveTo(canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i));
+      ctx.lineTo(canvas.width/-2 + conf.axisOffset/1.5, canvas.height/2 - (heightDivision*i));
+      
+      // x axis lines
+      ctx.moveTo(canvas.width/-2 + (widthDivision*i), canvas.height/2 - conf.axisOffset*1.5);
+      ctx.lineTo(canvas.width/-2 + (widthDivision*i), canvas.height/2 - conf.axisOffset);
+    }
+    
+    // DRAWING NUMBERS
+    var interY = yRange / (n-1),
+        startY = -yRange/2,
+        interX = xRange / (n-1),
+        startX = -xRange/2,
+        membersX = [startX],
+        membersY = [startY];
+    for (var i=1; i<n; i++) {
+      startY += interY;
+      startX += interX;
+      membersX.push(Math.round(startX));
+      membersY.push(Math.round(startY));
+    }
+    console.log(membersX);
+    
+    for (var i=1, j=0; i<=n; i++, j++) {
+// aqui
+      ctx.fillText(membersX[j], canvas.width/-2 + (widthDivision*i), canvas.height/2 - conf.axisOffset);
+      ctx.fillText(membersY[j], canvas.width/-2, canvas.height/2 - (heightDivision*i) + 10);
+    }
+    
+    // DRAWING AXIS
+    ctx.fillStyle = ctx.strokeStyle = '#000000';
+    ctx.rect(-canvas.width/2 + conf.axisOffset, -canvas.height/2 - (conf.axisOffset*1.5), canvas.width, canvas.height);
+    
+    // drawing legends
+    ctx.fillText(conf.legendX, 0, canvas.width/2 - 10);
+    ctx.rotate(Math.PI/-2);
+    ctx.fillText(conf.legendY, conf.axisOffset, -canvas.height/2 + conf.axisOffset - 10);
+    ctx.rotate(Math.PI/2);
+    ctx.stroke();
+    ctx.closePath();
+  }
+});
 
 function init() {
   var sp = new $jit.Scatter({
@@ -333,7 +329,7 @@ function init() {
       }
     },
     background: {
-      type: 'Grid',
+      type: 'Grid_Axis',
       CanvasStyles: {
         fillStyle: 'white',
         font: 'bold 12px Arial'
@@ -348,7 +344,23 @@ function init() {
       left: 0,
       bottom: 0,
       right: 0
-    }
+    },
+    // onAfterCompute: function(viz) {
+    //   console.log(viz.canvas);
+    //   var ranges = viz.calculateRanges(),
+    //       canvas = viz.canvas,
+    //       ctx = canvas.getCtx(),
+    //       xRange = ranges[0],
+    //       yRange = ranges[1];
+    //   console.log(viz.canvas);
+    //   console.log('antes');
+    //   for(var i=1; i<=10; i++) {
+    //     console.log('desenhou ');
+    //     ctx.fillText('olaAESUSAEHaaa', 0, 0);
+    //   }
+    //   console.log('depois');
+    //   ctx.fillText(xRange, canvas.width/-2, canvas.height/2 - (heightDivision * i) + 10);
+    // }
   });
   sp.loadJSON(json);
   sp.refresh();

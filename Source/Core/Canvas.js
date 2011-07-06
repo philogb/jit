@@ -516,7 +516,7 @@ var Canvas;
         numberOfDivisions: 8,
         CanvasStyles: {},
         orientation: 'vertical',
-        filled: 'yes',
+        filled: true,
         oddColor: '#f2f2f2',
         evenColor: '#ffffff',
         offset: 0
@@ -534,24 +534,21 @@ var Canvas;
       for(var s in styles) ctx[s] = styles[s];
       var n = conf.numberOfDivisions,
           rho = conf.levelDistance,
-          fill = (conf.filled == 'no') ? 'rect' : 'fillRect';
+          fill = (conf.filled) ? 'fillRect' : 'rect';
           heightDivision = canvas.height / n,
           widthDivision = canvas.width / n,
           colors = [conf.oddColor, conf.evenColor],
           oldColor = ctx.fillStyle;
+      ctx.beginPath();
       for(var i=1; i<=n; i++) {
         ctx.fillStyle = ctx.strokeStyle = colors[i%2];
-        ctx.save();
-        ctx.beginPath();
         if (conf.orientation == 'vertical')
             ctx[fill](canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
         else if (conf.orientation == 'horizontal')
             ctx[fill](canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
-        ctx.stroke();
-        ctx.closePath();
       }
+      ctx.closePath();
       ctx.fillStyle = ctx.strokeStyle = oldColor;
-      ctx.save();
     }
   });
   

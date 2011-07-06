@@ -6,34 +6,20 @@ Layouts.Scatter = new Class({
         margin = config.Margin,
         width = size.width - margin.left - margin.right,
         height = size.height - margin.top - margin.bottom,
-        legendX = this.getLegendX(),
-        legendY = this.getLegendY(),
+        legendX = config.legendX,
+        legendY = config.legendY,
         elemWidth = width / legendX.length,
         elemHeight = height / legendY.length,
-        maxX = 0,
-        maxY = 0,
-        minX = 0,
-        minY = 0;
-    this.graph.eachNode(function(n) {
-      var x = n.getData('x'),
-          y = n.getData('y');
-      maxX = ((x > maxX) ? x : maxX);
-      maxY = ((y > maxY) ? x : maxY);
-      minX = ((x < minX) ? x : minX);
-      minY = ((y < minY) ? y : minY);
-      /*
-        TODO See a way to do this without two iterations in nodes (using eachNode)
-      */
-    });
-    var x_range = (Math.abs(minX) + Math.abs(maxX)),
-        y_range = (Math.abs(minY) + Math.abs(maxY));
+        ranges = this.calculateRanges(),
+        xRange = ranges[0],
+        yRange = ranges[1],
+        that = this;
     
     this.graph.eachNode(function(n) {
       var x = n.getData('x'),
           y = n.getData('y'),
-          posx = (x * size.width / x_range) + margin.left - margin.right,
-          posy = (-y * size.height / y_range) + margin.top - margin.bottom;
-          // y works different in canvas, if it is positive, is below center, and above is negative.
+          posx = that.calculateX(xRange, x),
+          posy = that.calculateY(yRange, y);
       n.getPos(prop).setc(posx, posy);
     });
     this.controller.onAfterCompute();
@@ -62,11 +48,32 @@ Layouts.Scatter = new Class({
     return this._get('legendY');
   },
   
-  getX: function() {
-    return this._get('x');
+  calculateX: function(xRange, x) {
+    var size = this.canvas.getSize();
+    return (x * (size.width/2) / xRange) + this.config.Margin.left - this.config.Margin.right;
   },
   
-  getY: function() {
-    return this._get('Y');
+  calculateY: function(yRange, y) {
+    var size = this.canvas.getSize();
+    return (-y * (size.height/2) / yRange) + this.config.Margin.top - this.config.Margin.bottom;
+  },
+  
+  calculateRanges: function() {
+    var maxX = 0,
+        maxY = 0,
+        minX = 0,
+        minY = 0;
+    this.graph.eachNode(function(n) {
+      var x = n.getData('x'),
+          y = n.getData('y');
+      maxX = ((x > maxX) ? x : maxX);
+      maxY = ((y > maxY) ? y : maxY);
+      minX = ((x < minX) ? x : minX);
+      minY = ((y < minY) ? y : minY);
+    });
+    var xRange = (Math.abs(minX) + Math.abs(maxX)),
+        yRange = (Math.abs(minY) + Math.abs(maxY));
+    return [xRange, yRange];
   }
+  
 });

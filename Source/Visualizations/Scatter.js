@@ -3,8 +3,9 @@ $jit.Scatter = new Class({
   
   initialize: function(config) {
     var opt = {
-      legendX: [],
-      legendY: [],
+      legendX: '',
+      legendY: '',
+      animate: false,
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
       showNodeNames: false,
@@ -48,7 +49,6 @@ $jit.Scatter = new Class({
     this.labels = new $jit.Scatter.Label[this.config.Label.type](this);
     this.fx = new $jit.Scatter.Plot(this, $jit.Scatter);
     this.op = new $jit.Scatter.Op(this);
-
     this.initializeExtras();
   },
   
@@ -63,7 +63,64 @@ $jit.Scatter = new Class({
   
   reposition: function() {
     this.compute('end');
-  }
+  },
+  
+  /*
+    Method: updateJSON
+   
+    Use this method when updating values for the current JSON data. If the items specified by the JSON data already exist in the graph then their values will be updated.
+    
+    Parameters:
+    
+    json - (object) JSON data to be updated.
+    onComplete - (object) A callback object to be called when the animation transition when updating the data end.
+    
+    Example:
+    
+    (start code js)
+    scatter.updateJSON(json, {
+      onComplete: function() {
+        alert('update complete!');
+      }
+    });
+    (end code)
+  */  
+  updateJSON: function(json, onComplete) {
+    if(this.busy) return;
+    this.busy = true;
+    
+    var graph = this.graph,
+        animate = this.config.animate,
+        that = this;
+    $.each(json, function(v) {
+      var n = graph.getByName(v.name);
+      if(n) {
+        n.setData('x', v.data.$x);
+        n.setData('y', v.data.$y);
+        // n.setData('width', v.data.$width);
+        // n.setData('height', v.data.$height);
+        // n.setData('dim', v.data.$dim);
+      }
+    });
+    
+    if(animate) {
+      this.compute('end');
+      this.fx.animate({
+        modes: {
+          'node-property': ['width', 'height'],
+          'position':'linear',
+        },
+        duration:1500,
+        onComplete: function() {
+          that.busy = false;
+          onComplete && onComplete.onComplete();
+        }
+      });
+    } else {
+      this.refresh();
+    }
+  },
+  
 });
 
 var Scatter = $jit.Scatter;
@@ -264,7 +321,7 @@ Scatter.Label.HTML = new Class( {
   
   This class contains a list of <Graph.Node> built-in types.
   
-  Node types implemented are 'none', 'rectangle', 'circle' and 'square'.
+  Node types implemented are 'none', 'rectangle', 'circle', 'square', 'triangle', 'star' and 'ellipse'.
   
   You can add your custom node types, customizing your visualization to the extreme.
   
@@ -334,6 +391,44 @@ Scatter.Plot.NodeTypes = new Class({
       var npos = node.pos.getc(true),
           dim = node.getData('dim') || 5;
       return this.nodeHelper.circle.contains({x: npos.x - dim , y: npos.y - dim}, pos, dim, dim);
+    }
+  },
+  'ellipse': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          width = node.getData('width'),
+          height = node.getData('height');
+      this.nodeHelper.ellipse.render('fill', pos, width, height, canvas);
+      },
+    'contains': function(node, pos){
+      var npos = node.pos.getc(true),
+          width = node.getData('width'),
+          height = node.getData('height');
+      return this.nodeHelper.ellipse.contains(npos, pos, width, height);
+    }
+  },
+  'triangle': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          dim = node.getData('dim');
+      this.nodeHelper.triangle.render('fill', pos, dim, canvas);
+    },
+    'contains': function(node, pos) {
+      var npos = node.pos.getc(true),
+          dim = node.getData('dim');
+      return this.nodeHelper.triangle.contains(npos, pos, dim);
+    }
+  },
+  'star': {
+    'render': function(node, canvas){
+      var pos = node.pos.getc(true),
+          dim = node.getData('dim');
+      this.nodeHelper.star.render('fill', pos, dim, canvas);
+    },
+    'contains': function(node, pos) {
+      var npos = node.pos.getc(true),
+          dim = node.getData('dim');
+      return this.nodeHelper.star.contains(npos, pos, dim);
     }
   }
 });
