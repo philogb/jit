@@ -11,15 +11,15 @@ Layouts.Scatter = new Class({
         elemWidth = width / legendX.length,
         elemHeight = height / legendY.length,
         ranges = this.calculateRanges(),
-        x_range = ranges[0],
-        y_range = ranges[1],
+        xRange = ranges[0],
+        yRange = ranges[1],
         that = this;
     
     this.graph.eachNode(function(n) {
       var x = n.getData('x'),
           y = n.getData('y'),
-          posx = that.calculateX(x_range, x),
-          posy = that.calculateY(y_range, y);
+          posx = that.calculateX(xRange, x),
+          posy = that.calculateY(yRange, y);
       n.getPos(prop).setc(posx, posy);
     });
     this.controller.onAfterCompute();
@@ -48,14 +48,14 @@ Layouts.Scatter = new Class({
     return this._get('legendY');
   },
   
-  calculateX: function(x_range, x) {
+  calculateX: function(xRange, x) {
     var size = this.canvas.getSize();
-    return (x * (size.width/2) / x_range) + this.config.Margin.left - this.config.Margin.right;
+    return (x * (size.width/2) / xRange) + this.config.Margin.left - this.config.Margin.right;
   },
   
-  calculateY: function(y_range, y) {
+  calculateY: function(yRange, y) {
     var size = this.canvas.getSize();
-    return (-y * (size.height/2) / y_range) + this.config.Margin.top - this.config.Margin.bottom;
+    return (-y * (size.height/2) / yRange) + this.config.Margin.top - this.config.Margin.bottom;
   },
   
   calculateRanges: function() {
@@ -71,9 +71,9 @@ Layouts.Scatter = new Class({
       minX = ((x < minX) ? x : minX);
       minY = ((y < minY) ? y : minY);
     });
-    var x_range = (Math.abs(minX) + Math.abs(maxX)),
-        y_range = (Math.abs(minY) + Math.abs(maxY));
-    return [x_range, y_range];
+    var xRange = (Math.abs(minX) + Math.abs(maxX)),
+        yRange = (Math.abs(minY) + Math.abs(maxY));
+    return [xRange, yRange];
   }
   
 });

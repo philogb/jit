@@ -49,7 +49,6 @@ $jit.Scatter = new Class({
     this.labels = new $jit.Scatter.Label[this.config.Label.type](this);
     this.fx = new $jit.Scatter.Plot(this, $jit.Scatter);
     this.op = new $jit.Scatter.Op(this);
-
     this.initializeExtras();
   },
   
