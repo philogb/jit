@@ -22,7 +22,7 @@ Layouts.Scatter = new Class({
           posy = that.calculateY(yRange, y);
       n.getPos(prop).setc(posx, posy);
     });
-    this.controller.onAfterCompute();
+    this.controller.onAfterCompute(this);
   },
   
   _get: function(prop) {
