@@ -507,6 +507,31 @@ var Canvas;
     }
   });
   
+  /*
+   Class: Canvas.Background.Grid
+   
+   Create a Grid Background. This could be oriented vertically or horizontally.
+   
+   How to customize Grid Background
+
+   (start code js)
+   	var viz = new $jit.Viz({
+   		background: {
+   		  //options to customize background
+        type: 'Grid',
+        numberOfDivisions:5,
+        orientation:'vertical',
+  	 });
+   (end code)
+   
+   Options:
+   
+     oddColor - (string) Odd color in RGB;
+     evenColor - (string) Even color in RGB;
+     numberOfDivisions - (int) Numbers of divisions inside the grid;
+     orientation - (string) Orientation of the grid. Can be 'vertical' or 'horizontal';
+   
+   */
   Canvas.Background.Grid = new Class({
     initialize: function(viz, options) {
       this.viz = viz;
