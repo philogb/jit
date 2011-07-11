@@ -93,13 +93,16 @@ $jit.Scatter = new Class({
         animate = this.config.animate,
         that = this;
     $.each(json, function(v) {
-      var n = graph.getByName(v.name);
+      var n = graph.getByName(v.name),
+              end_properties = ['dim', 'width', 'height'];
       if(n) {
-        n.setData('x', v.data.$x);
-        n.setData('y', v.data.$y);
-        // n.setData('width', v.data.$width);
-        // n.setData('height', v.data.$height);
-        // n.setData('dim', v.data.$dim);
+        for (prop in v.data) {
+          var name = prop.slice(1);
+          if (end_properties.indexOf(name) >= 0) {
+            n.setData(name, v.data[prop], 'end');
+          }
+          else n.setData(name, v.data[prop]);
+        }
       }
     });
     
@@ -107,7 +110,7 @@ $jit.Scatter = new Class({
       this.compute('end');
       this.fx.animate({
         modes: {
-          'node-property': ['width', 'height'],
+          'node-property': ['width', 'height', 'dim'],
           'position':'linear',
         },
         duration:1500,

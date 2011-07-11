@@ -55,7 +55,7 @@ var json = [
     "data": {
       "$legendX": "2010-01-05",
       "$legendY": "category0",
-      "$x": 250,
+      "$x": 25,
       "$y": 56,
       "$color": "#8974ac"
     }
@@ -117,7 +117,7 @@ var json2 = [
       "$y": 2,
       "$color": "#4f5f6f",
       "$type":"circle",
-      "$dim":10,
+      "$dim":20,
     }
   },
   {
@@ -129,8 +129,7 @@ var json2 = [
       "$legendX": "2010-01-02",
       "$legendY": "category1",
       "$color": "#4f5f9f",
-      "$dim": 5,
-      "$type":"star"
+      "$dim": 5
     }
   },
   {
@@ -245,14 +244,14 @@ $jit.Canvas.Background.Grid_Axis = new $jit.Class({
         fill = (conf.filled) ? 'fillRect' : 'rect',
         offset = conf.axisOffset,
         heightDivision = canvas.height / n,
-        widthDivision = (canvas.width / n) + 2,
+        widthDivision = (canvas.width - offset) / (n-1),
         colors = [conf.oddColor, conf.evenColor];
     ctx.beginPath();
     // painting background of white
     ctx.fillStyle = ctx.strokeStyle= '#ffffff';
     ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
     
-    for(var i=1; i<=n; i++) {
+    for(var i=0; i<n; i++) {
       ctx.fillStyle = colors[i%2];
       ctx[fill](canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
       ctx.fillStyle = ctx.strokeStyle = '#000000';
@@ -260,8 +259,8 @@ $jit.Canvas.Background.Grid_Axis = new $jit.Class({
       ctx.moveTo(canvas.width/-2 + offset, canvas.height/2 - (heightDivision*i));
       ctx.lineTo(canvas.width/-2 + offset/1.5, canvas.height/2 - (heightDivision*i));
       // x axis lines
-      ctx.moveTo(canvas.width/-2 + (widthDivision*i)-19, canvas.height/2 - offset*1.5);
-      ctx.lineTo(canvas.width/-2 + (widthDivision*i)-19, canvas.height/2 - offset);
+      ctx.moveTo((canvas.width/-2) + offset + (widthDivision*i), canvas.height/2 - offset*1.5);
+      ctx.lineTo((canvas.width/-2) + offset + (widthDivision*i), canvas.height/2 - offset);
     }
     
     // DRAWING AXIS
@@ -321,7 +320,7 @@ function init() {
       bottom: 0,
       right: 0
     },
-    onAfterCompute: function(viz, conf) {
+    onAfterCompute: function(viz) {
       var ranges = viz.calculateRanges(),
           base = viz.canvas.canvases[1],
           conf = viz.config,
@@ -333,7 +332,7 @@ function init() {
           numberOfDivisions = 8,
           heightDivision = canvas.height / numberOfDivisions,
           widthDivision = canvas.width / numberOfDivisions;
-     // DRAWING NUMBERS
+      // DRAWING NUMBERS
       var interY = yRange / (numberOfDivisions-1),
           startY = -yRange/2,
           interX = xRange / (numberOfDivisions-1),
