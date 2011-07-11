@@ -251,7 +251,7 @@ $jit.Canvas.Background.Grid_Axis = new $jit.Class({
     ctx.fillStyle = ctx.strokeStyle= '#ffffff';
     ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
     
-    for(var i=0; i<n; i++) {
+    for(var i=0; i<=n; i++) {
       ctx.fillStyle = colors[i%2];
       ctx[fill](canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
       ctx.fillStyle = ctx.strokeStyle = '#000000';
