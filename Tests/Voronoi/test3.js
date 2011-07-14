@@ -4,16 +4,22 @@ function init(){
   for (var i = 0 ; i < 9; i++) {
   	var c = { id : 'c' + i, name : i, data : { $color : "#fe5d3f" }, children : [] };
   	json.children.push( c );
-  	var cs = Math.random() * 9 + 1;
+  	var cs = Math.random() * 3 + 3;
+  	var sumc = 0;
   	for (var j = 0 ; j < cs; j++) {
   		var d = { id : 'c' + i + '_' + j, name : i + '_' + j, data : { $color : "#9e939f" }, children : [] };
   		c.children.push( d );
-  		var ds = Math.random() * 9 + 1;
+  		var ds = Math.random() * 3 + 3;
+  		var sumd = 0;
   		for (var k = 0 ; k < ds; k++) {
         var e = { id : 'c' + i + '_' + j + '_' + k, name : i + '_' + j + '_' + k, data : { $color : "#f88" } };
+        sumd += (e.data.$area = Math.random() * 30 + 5);
         d.children.push( e );
       }
+      d.data.$area = sumd;
+      sumc += sumd;
   	}
+    c.data.$area = sumc;
   }
   //end
   //init TreeMap
@@ -25,8 +31,10 @@ function init(){
     //enable animations
     animate: animate,
     //box offsets
-    offset: 1,
+    offset: 2,
+    labelsToShow : [1, 2],
     border: "white",
+    centroidType: "presure",
     Node: {
       CanvasStyles: {
         shadowBlur: 0,
@@ -41,23 +49,6 @@ function init(){
       },
       onRightClick: function() {
         tm.out();
-      },
-      //change node styles and canvas styles
-      //when hovering a node
-      onMouseEnter: function(node, eventInfo) {
-        if(node) {
-          //add node selected styles and replot node
-          // node.setCanvasStyle('shadowBlur', 7);
-          tm.fx.plotNode(node, tm.canvas);
-          tm.labels.plotLabel(tm.canvas, node, tm.controller);
-          tm.plot();
-        }
-      },
-      onMouseLeave: function(node) {
-        if(node) {
-          // node.removeCanvasStyle('shadowBlur');
-          tm.plot();
-        }
       }
     },
     duration: 1000,
@@ -80,6 +71,9 @@ function init(){
         }
         if(data.image) {
           html += "<img src=\""+ data.image +"\" class=\"album\" />";
+        }
+        if (data.$area) {
+        	html += "<b>weight/area: "+ (data.$area/$jit.util.area(data.$vertices) * 100).toFixed(2) +"</b><br/>" 
         }
         tip.innerHTML =  html; 
       }  

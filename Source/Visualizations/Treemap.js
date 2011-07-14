@@ -39,10 +39,12 @@ $jit.TM.$extend = true;
   offset - (number) Default's *2*. Boxes offset.
   constrained - (boolean) Default's *false*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
   levelsToShow - (number) Default's *3*. The number of levels to show for a subtree. This number is relative to the selected node.
+  labelsToShow - describe the range of levels to show for labels of sub tree. Default's [1, -1].
   animate - (boolean) Default's *false*. Whether to animate transitions.
   Node.type - Described in <Options.Node>. Default's *rectangle*.
   duration - Described in <Options.Fx>. Default's *700*.
   fps - Described in <Options.Fx>. Default's *45*.
+  
   
   Instance Properties:
   
@@ -83,6 +85,7 @@ TM.Base = {
       titleHeight: 13,
       offset: 2,
       levelsToShow: 0,
+      labelsToShow: [1, -1],
       constrained: false,
       animate: false,
       Node: {
@@ -159,7 +162,7 @@ TM.Base = {
     var that = this;
     if(this.config.animate) {
       this.compute('end');
-      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
+      this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode
           && this.clickedNode.id || this.root));
       this.fx.animate($.merge(this.config, {
         modes: ['linear', this.config.Node.props],
@@ -175,7 +178,7 @@ TM.Base = {
       }
       this.busy = false;
       this.compute();
-      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
+      this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
           && this.clickedNode.id || this.root));
       this.plot();
     }
@@ -229,11 +232,10 @@ TM.Base = {
     var callback = {
       onComplete: function() {
         //ensure that nodes are shown for that level
-        if(config.levelsToShow > 0) {
-          that.geom.setRightLevelToShow(n);
-        }
+        that.geom.setRightLevelToShow(n);
+        
         //compute positions of newly inserted nodes
-        if(config.levelsToShow > 0 || config.request) that.compute();
+        if(config.request) that.compute();
         if(config.animate) {
           //fade nodes
           graph.nodeList.setData('alpha', 0, 'end');
@@ -259,6 +261,7 @@ TM.Base = {
                   that.busy = false;
                   //TODO(nico) check comment above
                   that.clickedNode = clickedNode;
+                  that.geom.setRightLevelToShow(clickedNode);
                 }
               });
             }
@@ -302,12 +305,12 @@ TM.Base = {
       return;
     }
     parent.selected = true;
+    
     //final plot callback
     var callback = {
       onComplete: function() {
         previousClickedNode.selected = false;
         that.clickedNode = parent;
-
         if(config.request) {
           that.requestNodes(parent, {
             onComplete: function() {
@@ -321,11 +324,12 @@ TM.Base = {
           that.plot();
           that.busy = false;
         }
+        that.geom.setRightLevelToShow(parent);
+        that.plot();
       }
     };
     //prune tree
-    if (config.levelsToShow > 0)
-      this.geom.setRightLevelToShow(parent);
+    this.geom.setRightLevelToShow(parent);
     //animate node positions
     if(config.animate) {
       this.clickedNode = clickedNode;
@@ -347,6 +351,7 @@ TM.Base = {
           previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
+          that.geom.setRightLevelToShow(parent);
           that.fx.animate({
             duration: 500,
             modes:['node-property:alpha'],
@@ -384,6 +389,7 @@ TM.Base = {
   }
 };
 
+
 /*
   Class: TM.Op
   
@@ -415,11 +421,15 @@ TM.Geom = new Class({
   },
   
   setRightLevelToShow: function(node) {
-    var level = this.getRightLevelToShow(), 
+    var level = this.getRightLevelToShow(),
+        labelRange = this.viz.config.labelsToShow,
         fx = this.viz.labels;
-    node.eachLevel(0, level+1, function(n) {
+    node.eachLevel(0, false, function(n) {
       var d = n._depth - node._depth;
-      if(d > level) {
+      fx.hideLabel(n, true);
+      if (labelRange[0] >= 0 && d < labelRange[0] || labelRange[1] >= 0 && d > labelRange[1])
+        fx.hideLabel(n, false);
+      if(level > 0 && d > level) {
         n.drawn = false; 
         n.exist = false;
         n.ignore = true;
@@ -562,17 +572,20 @@ TM.Label.Native = new Class({
   },
   
   renderLabel: function(canvas, node, controller){
-    if(!this.leaf(node) && !this.config.titleHeight) return;
-    var pos = node.pos.getc(true), 
+    if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) return;
+    var hl = !node._hideLabel,
+        pos = node.pos.getc(true), 
         ctx = canvas.getCtx(),
         width = node.getData('width'),
         height = node.getData('height'),
         x = pos.x + width / 2,
         y = pos.y;
-    if (isNaN(width) || width == 0) 
-      ctx.fillText(node.name, x, y);
-    else
-      ctx.fillText(node.name, x, y, width);
+    if(hl) {
+      if (isNaN(width) || width == 0) 
+        ctx.fillText(node.name, x, y);
+      else
+        ctx.fillText(node.name, x, y, width);  
+    }
   }
 });
 
