@@ -39,7 +39,7 @@ $jit.TM.$extend = true;
   offset - (number) Default's *2*. Boxes offset.
   constrained - (boolean) Default's *false*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
   levelsToShow - (number) Default's *3*. The number of levels to show for a subtree. This number is relative to the selected node.
-  labelsToShow - describe the range of levels to show for labels of sub tree. Default's [1, -1].
+  labelsToShow - describe the range of levels to show for labels of sub tree. Default's [0, -1].
   animate - (boolean) Default's *false*. Whether to animate transitions.
   Node.type - Described in <Options.Node>. Default's *rectangle*.
   duration - Described in <Options.Fx>. Default's *700*.
@@ -85,7 +85,7 @@ TM.Base = {
       titleHeight: 13,
       offset: 2,
       levelsToShow: 0,
-      labelsToShow: [1, -1],
+      labelsToShow: [0, -1],
       constrained: false,
       animate: false,
       Node: {
@@ -273,6 +273,7 @@ TM.Base = {
         }
       }
     };
+    this.geom.setRightLevelToShow(n);
     if(config.request) {
       this.requestNodes(clickedNode, callback);
     } else {
@@ -337,13 +338,8 @@ TM.Base = {
       //animate the visible subtree only
       this.clickedNode = previousClickedNode;
       this.fx.animate({
-<<<<<<< HEAD
-        modes:['linear', 'node-property:width:height'],
         duration: 2 * this.config.duration / 3,
-=======
         modes:['linear', this.config.Node.props],
-        duration: 1000,
->>>>>>> voronoi prototype
         onComplete: function() {
           //animate the parent subtree
           that.clickedNode = clickedNode;
@@ -429,11 +425,10 @@ TM.Geom = new Class({
     var level = this.getRightLevelToShow(),
         labelRange = this.viz.config.labelsToShow,
         fx = this.viz.labels;
+    var dump = {};
     node.eachLevel(0, false, function(n) {
       var d = n._depth - node._depth;
-      fx.hideLabel(n, true);
-      if (labelRange[0] >= 0 && d < labelRange[0] || labelRange[1] >= 0 && d > labelRange[1])
-        fx.hideLabel(n, false);
+      n._hideLabel = labelRange[0] >= 0 && d < labelRange[0] || labelRange[1] >= 0 && d > labelRange[1];
       if(level > 0 && d > level) {
         n.drawn = false; 
         n.exist = false;
@@ -444,7 +439,9 @@ TM.Geom = new Class({
         n.exist = true;
         delete n.ignore;
       }
+      dump[n.name] = n._hideLabel;
     });
+    console.dir(dump);
     node.drawn = true;
     delete node.ignore;
   }
@@ -578,8 +575,7 @@ TM.Label.Native = new Class({
   
   renderLabel: function(canvas, node, controller){
     if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) return;
-    var hl = !node._hideLabel,
-        pos = node.pos.getc(true), 
+    var pos = node.pos.getc(true), 
         ctx = canvas.getCtx(),
         width = node.getData('width'),
         height = node.getData('height'),
@@ -644,7 +640,7 @@ TM.Label.SVG = new Class( {
     tag.setAttribute('x', labelPos.x);
     tag.setAttribute('y', labelPos.y);
 
-    if(!this.leaf(node) && !this.config.titleHeight) {
+    if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) {
       tag.style.display = 'none';
     }
     controller.onPlaceLabel(tag, node);
@@ -708,7 +704,7 @@ TM.Label.HTML = new Class( {
     style.zIndex = node._depth * 100;
     style.display = '';
 
-    if(!this.leaf(node) && !this.config.titleHeight) {
+    if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) {
       tag.style.display = 'none';
     }
     controller.onPlaceLabel(tag, node);
