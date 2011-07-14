@@ -306,12 +306,12 @@ TM.Base = {
       return;
     }
     parent.selected = true;
+    
     //final plot callback
     var callback = {
       onComplete: function() {
         previousClickedNode.selected = false;
         that.clickedNode = parent;
-
         if(config.request) {
           that.requestNodes(parent, {
             onComplete: function() {
@@ -325,6 +325,8 @@ TM.Base = {
           that.plot();
           that.busy = false;
         }
+        that.geom.setRightLevelToShow(parent);
+        that.plot();
       }
     };
     //prune tree
@@ -350,6 +352,7 @@ TM.Base = {
           previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
+          that.geom.setRightLevelToShow(parent);
           that.fx.animate({
             duration: 500,
             modes:['node-property:alpha'],
@@ -387,6 +390,7 @@ TM.Base = {
   }
 };
 
+
 /*
   Class: TM.Op
   
@@ -418,11 +422,9 @@ TM.Geom = new Class({
   },
   
   setRightLevelToShow: function(node) {
-    console.dir(node.name);
     var level = this.getRightLevelToShow(),
         labelRange = this.viz.config.labelsToShow,
         fx = this.viz.labels;
-    var dump = {};
     node.eachLevel(0, false, function(n) {
       var d = n._depth - node._depth;
       n._hideLabel = labelRange[0] >= 0 && d < labelRange[0] || labelRange[1] >= 0 && d > labelRange[1];
@@ -436,9 +438,7 @@ TM.Geom = new Class({
         n.exist = true;
         delete n.ignore;
       }
-      dump[n.name] = n._hideLabel;
     });
-    console.dir(dump);
     node.drawn = true;
     delete node.ignore;
   }
@@ -572,7 +572,7 @@ TM.Label.Native = new Class({
   
   renderLabel: function(canvas, node, controller){
     if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) return;
-    var pos = node.pos.getc(true), 
+    var pos = node.pos.getc(true),
         ctx = canvas.getCtx(),
         width = node.getData('width'),
         height = node.getData('height'),
@@ -581,7 +581,7 @@ TM.Label.Native = new Class({
     if (isNaN(width) || width == 0) 
       ctx.fillText(node.name, x, y);
     else
-      ctx.fillText(node.name, x, y, width);
+      ctx.fillText(node.name, x, y, width);  
   }
 });
 
