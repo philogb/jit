@@ -486,6 +486,13 @@ tests_model = {
       Test Voronoi Treemap
       """,
       'Extras': ['excanvas.js'],
+    }, {
+      'Title': 'Voronoi Treemaps',
+      'Description':
+      """
+      Test Voronoi Treemap
+      """,
+      'Extras': ['excanvas.js'],
     }
   ],
    
