@@ -44,7 +44,7 @@ Graph.Plot = {
           'span':'number',
           'valueArray':'array-number',
           'dimArray':'array-number',
-          'vertics':'polygon'
+          'vertices':'polygon'
           //'colorArray':'array-color'
         },
         
@@ -218,9 +218,9 @@ Graph.Plot = {
             for(var i=0, l=from.length; i<l; i++) {
               var fromi = from[(i + from.offset) % l], toi = to[i];
               cur.push(new $jit.Complex(
-                  this.compute(fromi.x, toi.x, delta),
-                  this.compute(fromi.y, toi.y, delta)
-                ));
+                this.compute(fromi.x, toi.x, delta),
+                this.compute(fromi.y, toi.y, delta)
+              ));
             }
             elem[setter](prop, cur);
         	}	
@@ -228,13 +228,22 @@ Graph.Plot = {
         	var comp = this.compute;
         	var subSites = sub.map(function(node, i){
         		var fromi = node.getPos('start'), toi = node.getPos('end');
-        	  return new $jit.Complex(
-                  comp(fromi.x, toi.x, delta),
-                  comp(fromi.y, toi.y, delta)
-                );
+        	  var site = new $jit.Complex(
+              comp(fromi.x, toi.x, delta),
+              comp(fromi.y, toi.y, delta)
+            );
+            if (node.data.$area)
+              site.area = node.data.$area;
+            return site;
         	});
-        	var polygons = $jit.Voronoi.voronoiFortune(subSites, elem[getter](prop));
-        	polygons.forEach(function(poly, i) { sub[i][setter](prop, poly); });
+        	var boundary = elem[getter](prop);
+        	var offset = elem.offset;
+        	if (offset) {
+            boundary = $jit.util.offsetConvex(boundary, - offset);
+          }
+        	var polygons = $jit.Voronoi.voronoiFortune(subSites, boundary);
+        	polygons.forEach(function(poly, i) { 
+            sub[i][setter](prop, poly); });
         }
     },
     
@@ -609,10 +618,10 @@ Graph.Plot = {
    */
    plotTree: function(node, opt, animating) {
        var that = this, 
-       viz = this.viz, 
-       canvas = viz.canvas,
-       config = this.config,
-       ctx = canvas.getCtx();
+           viz = this.viz, 
+           canvas = viz.canvas,
+           config = this.config,
+           ctx = canvas.getCtx();
        var nodeAlpha = node.getData('alpha');
        node.eachSubnode(function(elem) {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
