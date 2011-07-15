@@ -231,7 +231,7 @@ var offsetConvex = $jit.util.offsetConvex = function(convex, offset) {
 		return [];
 	if (area(convex) < 0)
 		convex.reverse();
-	var last_line, first_line, cnt = 0;
+	var last_line = null, first_line = null, cnt = 0;
 	// Offset edges
 	for (var i = 0; i < convex.length; i++) {
 		var start = convex[i];
