@@ -846,5 +846,16 @@ tests_model = {
              """,
              'Extras': ['excanvas.js']
          }
+     ],
+     
+     'LineChart': [
+        {
+            'Title':'Line Chart example',
+            'Description':
+            """
+            Line Chart example
+            """,
+            'Extras':['excanvas.js']
+        }
      ]
 }   

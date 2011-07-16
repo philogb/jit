@@ -411,6 +411,31 @@
        "Fx"
    ],
    
+   "LineChart": [
+        "Core",
+        "Options.Canvas",
+        "Options.Margin",
+        "Options.Node",
+        "Options.Edge",
+        "Options.Fx",
+        "Options.Label",
+        "Options.Tips",
+        "Options.Navigation",
+        "Options.NodeStyles",
+        "Options.Events",
+        "Options.Controller",
+        "Extras",
+        "Canvas",
+        "Complex",
+        "Polar",
+        "Graph.Op",
+        "Graph.Plot",
+        "Graph.Label",
+        "Loader",
+        "Layouts.Scatter",
+        "Fx"
+    ],
+    
     "AreaChart": [
         "Options.AreaChart",
         "Options.Margin",
