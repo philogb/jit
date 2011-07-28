@@ -4,22 +4,20 @@ Layouts.Scatter = new Class({
     var size = this.canvas.getSize(),
         config = this.config,
         margin = config.Margin,
-        width = size.width - margin.left - margin.right,
-        height = size.height - margin.top - margin.bottom,
+        offset = this.backgroundConfig.axisOffset | 0,
+        width = size.width + margin.left - margin.right + offset,
+        height = size.height - margin.top + margin.bottom + offset,
         legendX = config.legendX,
         legendY = config.legendY,
-        elemWidth = width / legendX.length,
-        elemHeight = height / legendY.length,
         ranges = this.calculateRanges(),
         xRange = ranges[0],
         yRange = ranges[1],
         that = this;
-    
     this.graph.eachNode(function(n) {
       var x = n.getData('x'),
           y = n.getData('y'),
-          posx = that.calculateX(xRange, x),
-          posy = that.calculateY(yRange, y);
+          posx = that.calculateX(x, xRange, width),
+          posy = that.calculateY(y, yRange, height);
       n.getPos(prop).setc(posx, posy);
     });
     this.controller.onAfterCompute(this);
@@ -48,14 +46,12 @@ Layouts.Scatter = new Class({
     return this._get('legendY');
   },
   
-  calculateX: function(xRange, x) {
-    var size = this.canvas.getSize();
-    return (x * size.width / xRange) + this.config.Margin.left - this.config.Margin.right;
+  calculateX: function(x, xRange, width) {
+    return x * width / xRange;
   },
   
-  calculateY: function(yRange, y) {
-    var size = this.canvas.getSize();
-    return (-y * size.height / yRange) + this.config.Margin.top - this.config.Margin.bottom;
+  calculateY: function(y, yRange, height) {
+    return -y * height / yRange;
   },
   
   calculateRanges: function() {
