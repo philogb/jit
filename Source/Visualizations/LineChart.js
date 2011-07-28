@@ -474,7 +474,6 @@ LineChart.Plot.EdgeTypes = new Class({
   'none': $.empty,
   'line': {
     'render': function(adj, canvas) {
-      console.log('called?');
       var from = adj.nodeFrom,
           fromDim = from.getData('dim'),
           to = adj.nodeTo,
