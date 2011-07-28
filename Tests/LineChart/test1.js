@@ -5,7 +5,8 @@ var json = [
     "data": {
       "$x": -300,
       "$y": 250,
-      "$color": "#ccc"
+      "$color": "#ccc",
+      "$dim":10,
     }
   },
   {
@@ -63,7 +64,8 @@ var json = [
     "data": {
       "$x": 0,
       "$y": -90,
-      "$color": "#8974ac"
+      "$color": "#8974ac",
+      "$dim": 5
     }
   },
   {
@@ -90,16 +92,17 @@ var json = [
     "name": "event9",
     "adjacencies": ["node8", "node10"],
     "data": {
-      "$x": 103,
+      "$x": 133,
       "$y": 91,
-      "$color": "#459aca"
+      "$color": "#459aca",
+      "$dim": 9
     }
   },
   {
     "id": "node10",
     "name": "event10",
     "data": {
-      "$x": 127,
+      "$x": 170,
       "$y": 11,
       "$color": "#888aaa"
     }

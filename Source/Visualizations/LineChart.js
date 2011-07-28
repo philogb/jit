@@ -476,16 +476,18 @@ LineChart.Plot.EdgeTypes = new Class({
     'render': function(adj, canvas) {
       console.log('called?');
       var from = adj.nodeFrom,
+          fromDim = from.getData('dim'),
           to = adj.nodeTo,
+          toDim = to.getData('dim'),
           fromPos = from.pos.getc(true),
           toPos = to.pos.getc(true);
       from = {
-        x: fromPos.x,
-        y: fromPos.y
+        x: fromPos.x - fromDim,
+        y: fromPos.y - fromDim
       };
       to = {
-        x: toPos.x,
-        y: toPos.y
+        x: toPos.x - toDim,
+        y: toPos.y - toDim
       };
       this.edgeHelper.line.render(from, to, canvas);
     },
@@ -493,31 +495,6 @@ LineChart.Plot.EdgeTypes = new Class({
       var from = adj.nodeFrom.pos.getc(true),
           to = adj.nodeTo.pos.getc(true);
       return this.edgeHelper.line.contains(from, to, pos, this.edge.epsilon);
-    }
-  },
-  'arrow': {
-    'render': function(adj, canvas) {
-    var from = adj.nodeFrom,
-        to = adj.nodeTo,
-        fromPos = from.pos.getc(true),
-        toPos = to.pos.getc(true),
-        dim = adj.getData('dim'),
-        direction = adj.data.$direction,
-        inv = (direction && direction.length>1 && direction[0] != from.id);
-      from = {
-        x: fromPos.x,
-        y: fromPos.y
-      };
-      to = {
-        x: toPos.x,
-        y: toPos.y
-      };
-      this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
-    },
-    'contains': function(adj, pos) {
-      var from = adj.nodeFrom.pos.getc(true),
-          to = adj.nodeTo.pos.getc(true);
-      return this.edgeHelper.arrow.contains(from, to, pos, this.edge.epsilon);
     }
   }
 });
