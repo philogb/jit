@@ -126,6 +126,7 @@ var Canvas;
       if(back) {
         var backCanvas = new Canvas.Background[back.type](viz, $.extend(back, canvasOptions));
         this.canvases.push(new Canvas.Base[type](backCanvas));
+        viz.backgroundConfig = backCanvas.config;
       }
       //insert canvases
       var len = this.canvases.length;

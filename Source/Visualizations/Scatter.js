@@ -96,7 +96,10 @@ $jit.Scatter = new Class({
       var n = graph.getByName(v.name),
               end_properties = ['dim', 'width', 'height'];
       if(n) {
-        for (prop in v.data) {
+        for (var prop in v.data) {
+          /*
+            TODO FIX WIDTH AND HEIGHT
+          */
           var name = prop.slice(1);
           if (end_properties.indexOf(name) >= 0) {
             n.setData(name, v.data[prop], 'end');

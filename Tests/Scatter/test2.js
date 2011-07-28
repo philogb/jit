@@ -328,8 +328,8 @@ function init() {
           canvas = base.canvas,
           xRange = ranges[0],
           yRange = ranges[1],
-          offset = 50,
-          numberOfDivisions = 8,
+          offset = viz.backgroundConfig.axisOffset,
+          numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
           heightDivision = canvas.height / numberOfDivisions,
           widthDivision = canvas.width / numberOfDivisions;
       // DRAWING NUMBERS
