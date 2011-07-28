@@ -50,12 +50,12 @@ Layouts.Scatter = new Class({
   
   calculateX: function(xRange, x) {
     var size = this.canvas.getSize();
-    return (x * (size.width/2) / xRange) + this.config.Margin.left - this.config.Margin.right;
+    return (x * size.width / xRange) + this.config.Margin.left - this.config.Margin.right;
   },
   
   calculateY: function(yRange, y) {
     var size = this.canvas.getSize();
-    return (-y * (size.height/2) / yRange) + this.config.Margin.top - this.config.Margin.bottom;
+    return (-y * size.height / yRange) + this.config.Margin.top - this.config.Margin.bottom;
   },
   
   calculateRanges: function() {
@@ -71,8 +71,13 @@ Layouts.Scatter = new Class({
       minX = ((x < minX) ? x : minX);
       minY = ((y < minY) ? y : minY);
     });
-    var xRange = (Math.abs(minX) + Math.abs(maxX)),
-        yRange = (Math.abs(minY) + Math.abs(maxY));
+    var absMinX = Math.abs(minX),
+        absMaxX = Math.abs(maxX),
+        absMinY = Math.abs(minY),
+        absMaxY = Math.abs(maxY);
+    
+    var xRange = ((absMaxX > absMinX) ? absMaxX*2 : absMinX*2),
+        yRange = ((absMaxY > absMinY) ? absMaxY*2 : absMinY*2);
     return [xRange, yRange];
   }
   
