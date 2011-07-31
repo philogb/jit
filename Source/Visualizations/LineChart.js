@@ -28,16 +28,6 @@ $jit.LineChart = new Class({
     var opts = Options("Canvas", "Margin", "Node", "Edge", "Fx", "Tips", "NodeStyles",
         "Events", "Navigation", "Controller", "Label");
     this.controller = this.config = $.merge(opts, opt, config);
-    
-    var canvasConfig = this.config;
-    if (canvasConfig.useCanvas) {
-      this.canvas = canvasConfig.useCanvas;
-      this.config.labelContainer = this.canvas.id + '-label';
-    } else {
-      this.canvas = new Canvas(this, canvasConfig);
-      this.config.labelContainer = (typeof canvasConfig.injectInto == 'string'? canvasConfig.injectInto : canvasConfig.injectInto.id) + '-label';
-    }
-    
     this.graphOptions = {
       'klass': Complex,
       'Node': {
@@ -47,92 +37,83 @@ $jit.LineChart = new Class({
       }
     };
 
-    this.graph = new Graph(
-      this.graphOptions, this.config.Node, this.config.Edge, this.config.Label);
 
-    this.labels = new $jit.LineChart.Label[this.config.Label.type](this);
-    this.fx = new $jit.LineChart.Plot(this, $jit.LineChart);
-    this.op = new $jit.LineChart.Op(this);
-    this.initializeExtras();
+    // this.initializeExtras();
+    this.delegate = new $jit.Scatter({
+      //id of the visualization container
+      injectInto: 'infovis',
+      //Native canvas text styling
+      Label: {
+        type: 'HTML',
+        size: 10,
+        style: 'bold',
+        color: '#ccc'
+      },
+      // with animation
+      animate: true,
+      Events: {
+        enable: true,
+        type: 'Native',
+        onMouseEnter: function(node) {
+          console.log(node);
+        },
+        onMouseLeave: function(node) {
+          console.log(node);
+        },
+        onClick: function(node) {
+          console.log(node);
+        }
+      },
+      background: {
+        type: 'Grid',
+        CanvasStyles: {
+          fillStyle: 'white',
+          font: 'bold 12px Arial'
+        },
+        legendX: 'legend X',
+      },
+      Node: {
+        overridable:true
+      },
+      Margin: {
+        top: 10,
+        left: 0,
+        bottom: 0,
+        right: 0
+      }
+    });
+    this.canvas = this.delegate.canvas;
   },
   
   refresh: function() {
-    this.compute();
-    this.plot();
+    this.delegate.refresh();
   },
-  
-  plot: function() {
-    this.fx.plot();
-  },
-  
-  reposition: function() {
-    this.compute('end');
-  },
-  
-  /*
-    Method: updateJSON
-   
-    Use this method when updating values for the current JSON data. If the items specified by the JSON data already exist in the graph then their values will be updated.
-    
-    Parameters:
-    
-    json - (object) JSON data to be updated.
-    onComplete - (object) A callback object to be called when the animation transition when updating the data end.
-    
-    Example:
-    
-    (start code js)
-    linechart.updateJSON(json, {
-      onComplete: function() {
-        alert('update complete!');
-      }
-    });
-    (end code)
+   /*
+     Method: loadJSON
+
+     Loads JSON data into the visualization. 
+
+     Parameters:
+
+     json - The JSON data format. This format is described in <http://blog.thejit.org/2010/04/24/new-javascript-infovis-toolkit-visualizations/#json-data-format>.
+
+     Example:
+     (start code js)
+     var lineChart = new $jit.LineChart(options);
+     lineChart.loadJSON(json);
+     (end code)
   */  
-  updateJSON: function(json, onComplete) {
-    if(this.busy) return;
-    this.busy = true;
-    
-    var graph = this.graph,
-        animate = this.config.animate,
-        that = this;
-    $.each(json, function(v) {
-      var n = graph.getByName(v.name),
-              end_properties = ['dim', 'width', 'height'];
-      if(n) {
-        for (var prop in v.data) {
-          var name = prop.slice(1);
-          if (end_properties.indexOf(name) >= 0) {
-            /*
-              TODO FIX WIDTH AND HEIGHT
-            */
-            n.setData(name, v.data[prop], 'end');
-          }
-          else n.setData(name, v.data[prop]);
-        }
-      }
-    });
-    
-    this.canvas.clear(1);
-    
-    if(animate) {
-      this.compute('end');
-      this.fx.animate({
-        modes: {
-          'node-property': ['width', 'height', 'dim'],
-          'position':'linear',
-        },
-        duration:1500,
-        onComplete: function() {
-          that.busy = false;
-          onComplete && onComplete.onComplete();
-        }
-      });
-    } else {
-      this.refresh();
-    }
-  },
-  
+   loadJSON: function(json) {
+     var ch = [], 
+         delegate = this.delegate,
+         that = this;
+     console.log(delegate);
+     console.log(this.canvas);
+     console.log('carregou');
+     delegate.loadJSON(json);
+     delegate.compute();
+     delegate.refresh();
+  }
 });
 
 var LineChart = $jit.LineChart;

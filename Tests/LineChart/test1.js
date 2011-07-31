@@ -1,3 +1,21 @@
+var jsonc = {
+    'label': ['label A', 'label B', 'label C'],
+    'values': [
+    {
+      'label': 'date A',
+      'values': [20, 40, 15, 5]
+    }, 
+    {
+      'label': 'date B',
+      'values': [30, 10, 45, 10]
+    }, 
+    {
+      'label': 'date E',
+      'values': [38, 20, 35, 17]
+    }]
+    
+};
+
 var json = [
   {
     "id": "node0",
