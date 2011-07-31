@@ -469,20 +469,18 @@ Scatter.Plot.EdgeTypes = new Class({
   'line': {
     'render': function(adj, canvas) {
       var from = adj.nodeFrom,
+          fromDim = from.getData('dim'),
           to = adj.nodeTo,
-          fromWidth = from.getData('width'),
-          fromHeight = from.getData('height'),
-          toWidth = to.getData('width'),
-          toHeight = to.getData('height'),
+          toDim = to.getData('dim'),
           fromPos = from.pos.getc(true),
           toPos = to.pos.getc(true);
       from = {
-        x: fromPos.x + fromWidth/2,
-        y: fromPos.y + fromHeight/2
+        x: fromPos.x - fromDim,
+        y: fromPos.y - fromDim
       };
       to = {
-        x: toPos.x + toWidth/2,
-        y: toPos.y + toHeight/2
+        x: toPos.x - toDim,
+        y: toPos.y - toDim
       };
       this.edgeHelper.line.render(from, to, canvas);
     },
