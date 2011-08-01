@@ -4,16 +4,15 @@ var json = {
     {
       'label': 'dateA',
       'values': [-100, -40, 55, 105]
-    }, 
+    },
     {
       'label': 'dateB',
       'values': [-80, -10, 45, 100]
-    }, 
+    },
     {
       'label': 'dateC',
       'values': [-38, -10, 125, 150]
     }]
-    
 };
 
 function init() {

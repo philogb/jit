@@ -27,7 +27,7 @@ $jit.LineChart = new Class({
     };
     var opts = Options("Canvas", "Margin", "Node", "Edge", "Fx", "Tips", "NodeStyles",
         "Events", "Navigation", "Controller", "Label");
-    this.controller = this.config = $.merge(opts, opt, config);
+    this.controller = config = this.config = $.merge(opts, opt, config);
     this.graphOptions = {
       'klass': Complex,
       'Node': {
@@ -36,50 +36,37 @@ $jit.LineChart = new Class({
         'drawn': true
       }
     };
-
-
-    // this.initializeExtras();
     this.delegate = new $jit.Scatter({
       //id of the visualization container
-      injectInto: 'infovis',
+      injectInto: config.injectInto,
       //Native canvas text styling
       Label: {
-        type: 'HTML',
-        size: 10,
-        style: 'bold',
-        color: '#ccc'
+        type: config.Label.type,
+        size: config.Label.size,
+        style: config.Label.style,
+        color: config.Label.color
       },
       // with animation
-      animate: true,
+      animate: config.animate,
       Events: {
-        enable: true,
-        type: 'Native',
-        onMouseEnter: function(node) {
-          console.log(node);
-        },
-        onMouseLeave: function(node) {
-          console.log(node);
-        },
-        onClick: function(node) {
-          console.log(node);
-        }
+        enable: config.Events.true,
+        type: config.Events.type,
       },
       background: {
-        type: 'Grid',
+        type: config.background.type,
         CanvasStyles: {
-          fillStyle: 'white',
-          font: 'bold 12px Arial'
+          fillStyle: config.background.CanvasStyles.fillStyle,
+          font: config.background.CanvasStyles.font
         },
-        legendX: 'legend X',
       },
       Node: {
         overridable:true
       },
       Margin: {
-        top: 10,
-        left: 0,
-        bottom: 0,
-        right: 0
+        top: config.Margin.top,
+        left: config.Margin.left,
+        bottom: config.Margin.bottom,
+        right: config.Margin.right
       }
     });
     this.canvas = this.delegate.canvas;
@@ -129,7 +116,6 @@ $jit.LineChart = new Class({
          });
        }
      }
-     console.log(newJSON);
      delegate.loadJSON(newJSON);
      delegate.refresh();
   }

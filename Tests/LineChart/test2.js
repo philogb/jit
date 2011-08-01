@@ -1,74 +1,19 @@
-var json = [
-  {
-    "id": "node0",
-    "name": "event0",
-    "data": {
-      "$x": -300,
-      "$y": 250,
-      "$color": "#ccc",
-      "$dim":10,
-    }
-  },
-  {
-    "id": "node1",
-    "name": "event1",
-    "adjacencies": ["node0", "node2"],
-    "data": {
-      "$x": -240,
-      "$y": 2,
-      "$color": "#4f5f6f"
-    }
-  },
-  {
-    "id": "node2",
-    "name": "event2",
-    "data": {
-      "$x": -150,
-      "$y": 300,
-      "$color": "#4f5f9f",
-      "$dim": 5
-    }
-  },
-  {
-    "id": "node3",
-    "name": "event3",
-    "adjacencies": ["node2", "node4"],
-    "data": {
-      "$x": -100,
-      "$y": -260,
-      "$color": "#f2ff27"
-    }
-  },
-  {
-    "id": "node4",
-    "name": "event4",
-    "data": {
-      "$x": -90,
-      "$y": -50,
-      "$color": "#c2c3c4",
-    }
-  },
-  {
-    "id": "node5",
-    "name": "event5",
-    "adjacencies": ["node4", "node6"],
-    "data": {
-      "$x": -14,
-      "$y": 0,
-      "$color": "#f43f2f"
-    }
-  },
-  {
-    "id": "node6",
-    "name": "event6",
-    "data": {
-      "$x": 0,
-      "$y": -90,
-      "$color": "#8974ac",
-      "$dim": 5
-    }
-  }
-]
+var json = {
+    'label': ['label A', 'label B', 'label C'],
+    'values': [
+    {
+      'label': 'dateA',
+      'values': [-100, -40, 55, 105]
+    },
+    {
+      'label': 'dateB',
+      'values': [-80, -10, 45, 100]
+    },
+    {
+      'label': 'dateC',
+      'values': [-38, -10, 125, 150]
+    }]
+};
 
 $jit.Canvas.Background.Grid_Axis = new $jit.Class({
   initialize: function(viz, options) {
@@ -81,7 +26,7 @@ $jit.Canvas.Background.Grid_Axis = new $jit.Class({
       filled: true,
       legendX: 'x',
       legendY: 'y',
-      oddColor: '#f2f2f2',
+      oddColor: '#f2f5f2',
       evenColor: '#ffffff',
       axisOffset: 50
     }, options);
@@ -150,12 +95,6 @@ function init() {
     Events: {
       enable: true,
       type: 'Native',
-      onMouseEnter: function(node) {
-        console.log(node);
-      },
-      onMouseLeave: function(node) {
-        console.log(node);
-      },
       onClick: function(node) {
         console.log(node);
       }
