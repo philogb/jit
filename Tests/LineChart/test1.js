@@ -3,15 +3,15 @@ var json = {
     'values': [
     {
       'label': 'dateA',
-      'values': [20, 40, 15, 5]
+      'values': [-100, -40, 55, 105]
     }, 
     {
       'label': 'dateB',
-      'values': [30, 10, 45, 10]
+      'values': [-80, -10, 45, 100]
     }, 
     {
-      'label': 'dateE',
-      'values': [38, 20, 35, 17]
+      'label': 'dateC',
+      'values': [-38, -10, 125, 150]
     }]
     
 };
