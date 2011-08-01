@@ -162,6 +162,7 @@ var json2 = [
     "data": {
       "$legendX": "2010-01-05",
       "$legendY": "category0",
+      "$width": 100,
       "$x": 50,
       "$y": -10,
       "$color": "#8974ac"
@@ -250,7 +251,6 @@ $jit.Canvas.Background.Grid_Axis = new $jit.Class({
     // painting background of white
     ctx.fillStyle = ctx.strokeStyle= '#ffffff';
     ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
-    
     for(var i=0; i<=n; i++) {
       ctx.fillStyle = colors[i%2];
       ctx[fill](canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);

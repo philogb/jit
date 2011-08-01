@@ -97,11 +97,11 @@ $jit.Scatter = new Class({
               end_properties = ['dim', 'width', 'height'];
       if(n) {
         for (var prop in v.data) {
-          /*
-            TODO FIX WIDTH AND HEIGHT
-          */
           var name = prop.slice(1);
           if (end_properties.indexOf(name) >= 0) {
+            /*
+              TODO FIX WIDTH AND HEIGHT
+            */
             n.setData(name, v.data[prop], 'end');
           }
           else n.setData(name, v.data[prop]);
