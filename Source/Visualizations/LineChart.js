@@ -27,48 +27,8 @@ $jit.LineChart = new Class({
     };
     var opts = Options("Canvas", "Margin", "Node", "Edge", "Fx", "Tips", "NodeStyles",
         "Events", "Navigation", "Controller", "Label");
-    this.controller = config = this.config = $.merge(opts, opt, config);
-    this.graphOptions = {
-      'klass': Complex,
-      'Node': {
-        'selected': false,
-        'exist': true,
-        'drawn': true
-      }
-    };
-    this.delegate = new $jit.Scatter({
-      //id of the visualization container
-      injectInto: config.injectInto,
-      //Native canvas text styling
-      Label: {
-        type: config.Label.type,
-        size: config.Label.size,
-        style: config.Label.style,
-        color: config.Label.color
-      },
-      // with animation
-      animate: config.animate,
-      Events: {
-        enable: config.Events.true,
-        type: config.Events.type,
-      },
-      background: {
-        type: config.background.type,
-        CanvasStyles: {
-          fillStyle: config.background.CanvasStyles.fillStyle,
-          font: config.background.CanvasStyles.font
-        },
-      },
-      Node: {
-        overridable:true
-      },
-      Margin: {
-        top: config.Margin.top,
-        left: config.Margin.left,
-        bottom: config.Margin.bottom,
-        right: config.Margin.right
-      }
-    });
+    this.controller = this.config = $.merge(opts, opt, config);
+    this.delegate = new $jit.Scatter(this.config);
     this.canvas = this.delegate.canvas;
   },
   
