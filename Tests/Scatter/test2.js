@@ -5,7 +5,7 @@ var json = [
     "data": {
       "$legendX": "2010-01-01",
       "$legendY": "category2",
-      "$x": 100,
+      "$x": -100,
       "$y": 12,
       "$color": "#4f5f6f",
       "$type":"circle",
@@ -239,25 +239,26 @@ $jit.Canvas.Background.Grid_Axis = new $jit.Class({
         styles = conf.CanvasStyles;
     //set canvas styles
     for(var s in styles) ctx[s] = styles[s];
-    var n = conf.numberOfDivisions,
+    var divisions = conf.numberOfDivisions,
         rho = conf.levelDistance,
         fill = (conf.filled) ? 'fillRect' : 'rect',
         offset = conf.axisOffset,
-        heightDivision = canvas.height / n,
-        widthDivision = (canvas.width - offset) / (n-1),
+        heightDivision = canvas.height / divisions,
+        widthDivision = (canvas.width - offset) / (divisions-1),
         colors = [conf.oddColor, conf.evenColor];
     ctx.beginPath();
     // painting background of white
     ctx.fillStyle = ctx.strokeStyle= '#ffffff';
     ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
     
-    for(var i=0; i<=n; i++) {
+    for(var i=0; i<=divisions-1; i++) {
       ctx.fillStyle = colors[i%2];
       ctx[fill](canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
       ctx.fillStyle = ctx.strokeStyle = '#000000';
       // y axis lines
-      ctx.moveTo(canvas.width/-2 + offset, canvas.height/2 - (heightDivision*i));
-      ctx.lineTo(canvas.width/-2 + offset/1.5, canvas.height/2 - (heightDivision*i));
+      ctx.moveTo(canvas.width/-2 + offset, -canvas.height/2 + heightDivision*i);
+      ctx.lineTo(canvas.width/-2 + offset/1.5, -canvas.height/2 + heightDivision*i);
+      
       // x axis lines
       ctx.moveTo((canvas.width/-2) + offset + (widthDivision*i), canvas.height/2 - offset*1.5);
       ctx.lineTo((canvas.width/-2) + offset + (widthDivision*i), canvas.height/2 - offset);
@@ -326,17 +327,22 @@ function init() {
           conf = viz.config,
           ctx = base.getCtx(),
           canvas = base.canvas,
-          xRange = ranges[0],
-          yRange = ranges[1],
+          xRange = ranges.xRange,
+          yRange = ranges.yRange,
           offset = viz.backgroundConfig.axisOffset,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
           heightDivision = canvas.height / numberOfDivisions,
           widthDivision = canvas.width / numberOfDivisions;
+
       // DRAWING NUMBERS
+      var size = sp.canvas.getSize();
+      sp.canvas.getCtx(1).clearRect(-size.width / 2, -size.height / 2, size.width, size.height);
+      base.plot(base);
+
       var interY = yRange / (numberOfDivisions-1),
-          startY = -yRange/2,
+          startY = ranges.minY,
           interX = xRange / (numberOfDivisions-1),
-          startX = -xRange/2,
+          startX = ranges.minX,
           membersX = [startX],
           membersY = [startY];
       for (var i=1; i<numberOfDivisions; i++) {

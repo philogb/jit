@@ -4,20 +4,22 @@ Layouts.Scatter = new Class({
     var size = this.canvas.getSize(),
         config = this.config,
         margin = config.Margin,
-        offset = this.backgroundConfig.axisOffset | 0,
-        width = size.width + margin.left - margin.right + offset,
-        height = size.height - margin.top + margin.bottom + offset,
+        offset = this.backgroundConfig.axisOffset || 0,
+        width = size.width - margin.left - margin.right - offset,
+        height = size.height - margin.top - margin.bottom - offset,
         legendX = config.legendX,
         legendY = config.legendY,
         ranges = this.calculateRanges(),
-        xRange = ranges[0],
-        yRange = ranges[1],
+        xRange = ranges.xRange,
+        yRange = ranges.yRange,
+        minX = ranges.minX,
+        minY = ranges.minY,
         that = this;
     this.graph.eachNode(function(n) {
       var x = n.getData('x'),
           y = n.getData('y'),
-          posx = that.calculateX(x, xRange, width),
-          posy = that.calculateY(y, yRange, height);
+          posx = that.calculateX(x, xRange, width, minX, margin, offset),
+          posy = that.calculateY(y, yRange, height, minY, margin, offset);
       n.getPos(prop).setc(posx, posy);
     });
     this.controller.onAfterCompute(this);
@@ -46,12 +48,14 @@ Layouts.Scatter = new Class({
     return this._get('legendY');
   },
   
-  calculateX: function(x, xRange, width) {
-    return x * width / xRange;
+  calculateX: function(x, xRange, width, minX, margin, offset) {
+    var delta = (x - minX) / xRange; // xRange = (maxX - minX)
+    return (- width / 2 + delta * width) + margin.left + offset;
   },
   
-  calculateY: function(y, yRange, height) {
-    return -y * height / yRange;
+  calculateY: function(y, yRange, height, minY, margin, offset) {
+    var delta = (y - minY) / yRange; // delta will range from 0 to 1
+    return (height / 2 - delta * height) - margin.top - offset;
   },
   
   calculateRanges: function() {
@@ -67,14 +71,15 @@ Layouts.Scatter = new Class({
       minX = ((x < minX) ? x : minX);
       minY = ((y < minY) ? y : minY);
     });
-    var absMinX = Math.abs(minX),
-        absMaxX = Math.abs(maxX),
-        absMinY = Math.abs(minY),
-        absMaxY = Math.abs(maxY);
     
-    var xRange = ((absMaxX > absMinX) ? absMaxX*2 : absMinX*2),
-        yRange = ((absMaxY > absMinY) ? absMaxY*2 : absMinY*2);
-    return [xRange, yRange];
+    return {
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      xRange: maxX - minX,
+      yRange: maxY - minY
+    };
   }
   
 });
