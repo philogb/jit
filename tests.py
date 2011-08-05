@@ -779,7 +779,7 @@ tests_model = {
         },
         {
             'Title': 'Bar Chart Example with events',
-            'Description': 
+            'Description':
             """
             A static vertical Bar Chart example with gradients. The Bar Chart displays tooltips when hovering the stacks. <br /><br />
             Click the Update button to update the JSON data.
@@ -792,7 +792,7 @@ tests_model = {
    'PieChart': [
         {
             'Title': 'Pie Chart Example',
-            'Description': 
+            'Description':
             """
             A static Pie Chart example with gradients that displays tooltips when hovering the stacks.<br /><br />
             Click the Update button to update the JSON data.
@@ -802,7 +802,7 @@ tests_model = {
         },
         {
             'Title': 'Mono Valued PieChart',
-            'Description': 
+            'Description':
             """
             More like a regular PieChart (mono valued).
             """,
@@ -823,21 +823,59 @@ tests_model = {
    'TimeGraph': [
         {
             'Title': 'TimeGraph Example',
-            'Description': 
+            'Description':
             """
             A static TimeGraph Example.
             """,
             'Extras': ['excanvas.js']
         },
-    ],    
+    ],
    'HeatMap': [
         {
             'Title': 'HeatMap Example',
-            'Description': 
+            'Description':
             """
             A static HeatMap Example.
             """,
             'Extras': ['excanvas.js']
         },
-    ]    
+    ],
+    
+    'Scatter': [
+         {
+             'Title': 'Scatter Example',
+             'Description':
+             """
+             A Scatter example.
+             """,
+             'Extras': ['excanvas.js']
+         },
+         {
+             'Title': 'Scatter Example',
+             'Description':
+             """
+             A Scatter example with Axis.
+             """,
+             'Extras': ['excanvas.js']
+         }
+     ],
+     
+     'LineChart': [
+        {
+            'Title':'Line Chart example',
+            'Description':
+            """
+            Line Chart example
+            """,
+            'Extras':['excanvas.js']
+        },
+        {
+            'Title':'Line Chart example with axis',
+            'Description':
+            """
+            Line Chart example with axis
+            """,
+            'Extras':['excanvas.js']
+        }
+     ]
 }   

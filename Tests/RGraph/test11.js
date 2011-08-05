@@ -411,7 +411,7 @@ function init(){
                                     rgraph.onClick(node.id);
                             }
                     }
-            }
+            },
 
 //            onBeforeCompute : function(node) {
 //                    Log.write("centering " + node.name + "...");

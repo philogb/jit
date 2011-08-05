@@ -126,6 +126,7 @@ var Canvas;
       if(back) {
         var backCanvas = new Canvas.Background[back.type](viz, $.extend(back, canvasOptions));
         this.canvases.push(new Canvas.Base[type](backCanvas));
+        viz.backgroundConfig = backCanvas.config;
       }
       //insert canvases
       var len = this.canvases.length;
@@ -506,4 +507,75 @@ var Canvas;
       //TODO(nico): print labels too!
     }
   });
+  
+  /*
+   Class: Canvas.Background.Grid
+   
+   Create a Grid Background. This could be oriented vertically or horizontally.
+   
+   How to customize Grid Background
+
+   (start code js)
+   	var viz = new $jit.Viz({
+   		background: {
+   		  //options to customize background
+        type: 'Grid',
+        numberOfDivisions:5,
+        orientation:'vertical',
+  	 });
+   (end code)
+   
+   Options:
+   
+     oddColor - (string) Odd color in RGB;
+     evenColor - (string) Even color in RGB;
+     numberOfDivisions - (int) Numbers of divisions inside the grid;
+     orientation - (string) Orientation of the grid. Can be 'vertical' or 'horizontal';
+   
+   */
+  Canvas.Background.Grid = new Class({
+    initialize: function(viz, options) {
+      this.viz = viz;
+      this.config = $.merge({
+        idSuffix: '-bkcanvas',
+        levelDistance: 100,
+        numberOfDivisions: 8,
+        CanvasStyles: {},
+        orientation: 'vertical',
+        filled: true,
+        oddColor: '#f2f2f2',
+        evenColor: '#ffffff',
+        offset: 0
+      }, options);
+    },
+    resize: function(width, height, base) {
+      this.plot(base);
+    },
+    plot: function(base) {
+      var canvas = base.canvas,
+          ctx = base.getCtx(),
+          conf = this.config,
+          styles = conf.CanvasStyles;
+      //set canvas styles
+      for(var s in styles) ctx[s] = styles[s];
+      var n = conf.numberOfDivisions,
+          rho = conf.levelDistance,
+          fill = (conf.filled) ? 'fillRect' : 'rect';
+          heightDivision = canvas.height / n,
+          widthDivision = canvas.width / n,
+          colors = [conf.oddColor, conf.evenColor],
+          oldColor = ctx.fillStyle;
+      ctx.beginPath();
+      for(var i=1; i<=n; i++) {
+        ctx.fillStyle = ctx.strokeStyle = colors[i%2];
+        if (conf.orientation == 'vertical')
+            ctx[fill](canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
+        else if (conf.orientation == 'horizontal')
+            ctx[fill](canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
+      }
+      ctx.closePath();
+      ctx.fillStyle = ctx.strokeStyle = oldColor;
+    }
+  });
+  
 })();
