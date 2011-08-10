@@ -8,8 +8,7 @@ var json = [
       "$x": -100,
       "$y": 12,
       "$color": "#4f5f6f",
-      "$type":"circle",
-      "$dim":10,
+      "$dim":5,
     }
   },
   {
@@ -17,12 +16,11 @@ var json = [
     "name": "event2",
     "data": {
       "$x": 25,
-      "$y": 56,
+      "$y": 148,
       "$legendX": "2010-01-02",
       "$legendY": "category1",
       "$dim": 5,
       "$color": "#4f5f9f",
-      "$type":"star",
     }
   },
   {
@@ -34,8 +32,6 @@ var json = [
       "$x": 67,
       "$y": 84,
       "$color": "#c2c3c4",
-      "$dim": 10,
-      "$type":"triangle"
     }
   },
   {
@@ -116,8 +112,7 @@ var json2 = [
       "$x": 50,
       "$y": 2,
       "$color": "#4f5f6f",
-      "$type":"circle",
-      "$dim":20,
+      "$dim":10,
     }
   },
   {
@@ -141,8 +136,7 @@ var json2 = [
       "$x": -200,
       "$y": -50,
       "$color": "#c2c3c4",
-      "$dim": 10,
-      "$type":"triangle"
+      "$dim": 5,
     }
   },
   {

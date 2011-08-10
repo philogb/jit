@@ -16,10 +16,8 @@ Layouts.Scatter = new Class({
         minY = ranges.minY,
         that = this;
     this.graph.eachNode(function(n) {
-      var x = n.getData('x'),
-          y = n.getData('y'),
-          posx = that.calculateX(x, xRange, width, minX, margin, offset),
-          posy = that.calculateY(y, yRange, height, minY, margin, offset);
+          posx = that.calculateX(n, xRange, size.width, width, minX, margin, offset),
+          posy = that.calculateY(n, yRange, size.height, height, minY, margin, offset);
       n.getPos(prop).setc(posx, posy);
     });
     this.controller.onAfterCompute(this);
@@ -40,22 +38,18 @@ Layouts.Scatter = new Class({
     return ans;
   },
   
-  getLegendX: function() {
-    return this._get('legendX');
+  calculateX: function(node, xRange, canvasWidth, width, minX, margin, offset) {
+    var x = node.getData('x'),
+        dim = node.getData('dim'),
+        delta = (x - minX) / xRange; // delta will range from 0 to 1
+    return (- canvasWidth / 2 + delta * width) + margin.left + offset + dim;
   },
   
-  getLegendY: function() {
-    return this._get('legendY');
-  },
-  
-  calculateX: function(x, xRange, width, minX, margin, offset) {
-    var delta = (x - minX) / xRange; // xRange = (maxX - minX)
-    return (- width / 2 + delta * width) + margin.left + offset;
-  },
-  
-  calculateY: function(y, yRange, height, minY, margin, offset) {
-    var delta = (y - minY) / yRange; // delta will range from 0 to 1
-    return (height / 2 - delta * height) - margin.top - offset;
+  calculateY: function(node, yRange, canvasHeight, height, minY, margin, offset) {
+    var y = node.getData('y'),
+        dim = node.getData('dim'),
+        delta = (y - minY) / yRange; // delta will range from 0 to 1
+    return (canvasHeight / 2 - delta * height) - margin.top - offset + dim/2;
   },
   
   calculateRanges: function() {
