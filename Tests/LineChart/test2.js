@@ -15,70 +15,6 @@ var json = {
     }]
 };
 
-$jit.Canvas.Background.Grid_Axis = new $jit.Class({
-  initialize: function(viz, options) {
-    this.viz = viz;
-    this.config = $jit.util.merge({
-      idSuffix: '-bkcanvas',
-      levelDistance: 100,
-      numberOfDivisions: 8,
-      CanvasStyles: {},
-      filled: true,
-      legendX: 'x',
-      legendY: 'y',
-      oddColor: '#f2f5f2',
-      evenColor: '#ffffff',
-      axisOffset: 50
-    }, options);
-  },
-  resize: function(width, height, base) {
-    this.plot(base);
-  },
-  plot: function(base) {
-    var canvas = base.canvas,
-        ctx = base.getCtx(),
-        conf = this.config,
-        styles = conf.CanvasStyles;
-    //set canvas styles
-    for(var s in styles) ctx[s] = styles[s];
-    var n = conf.numberOfDivisions,
-        rho = conf.levelDistance,
-        fill = (conf.filled) ? 'fillRect' : 'rect',
-        offset = conf.axisOffset,
-        heightDivision = canvas.height / n,
-        widthDivision = (canvas.width - offset) / (n-1),
-        colors = [conf.oddColor, conf.evenColor];
-    ctx.beginPath();
-    // painting background of white
-    ctx.fillStyle = ctx.strokeStyle= '#ffffff';
-    ctx.fillRect(canvas.width/-2, canvas.height/-2, canvas.width, canvas.height);
-    
-    for(var i=0; i<=n; i++) {
-      ctx.fillStyle = colors[i%2];
-      ctx[fill](canvas.width/-2 + conf.axisOffset, canvas.height/2 - (heightDivision*i), canvas.width, heightDivision);
-      ctx.fillStyle = ctx.strokeStyle = '#000000';
-      // y axis lines
-      ctx.moveTo(canvas.width/-2 + offset, canvas.height/2 - (heightDivision*i));
-      ctx.lineTo(canvas.width/-2 + offset/1.5, canvas.height/2 - (heightDivision*i));
-      // x axis lines
-      ctx.moveTo((canvas.width/-2) + offset + (widthDivision*i), canvas.height/2 - offset*1.5);
-      ctx.lineTo((canvas.width/-2) + offset + (widthDivision*i), canvas.height/2 - offset);
-    }
-    
-    // DRAWING AXIS
-    ctx.fillStyle = ctx.strokeStyle = '#000000';
-    ctx.rect(-canvas.width/2 + offset, -canvas.height/2 - (offset*1.5), canvas.width, canvas.height);
-    
-    // drawing legends
-    ctx.fillText(conf.legendX, 0, canvas.width/2 - 10);
-    ctx.rotate(Math.PI/-2);
-    ctx.fillText(conf.legendY, conf.axisOffset, -canvas.height/2 + offset - 10);
-    ctx.rotate(Math.PI/2);
-    ctx.stroke();
-    ctx.closePath();
-  }
-});
-
 function init() {
   var lc = new $jit.LineChart({
     //id of the visualization container
@@ -111,10 +47,10 @@ function init() {
       overridable:true
     },
     Margin: {
-      top: 10,
+      top: 20,
       left: 0,
       bottom: 0,
-      right: 0
+      right: 20
     },
     onAfterCompute: function(viz) {
       var ranges = viz.calculateRanges(),
@@ -122,28 +58,39 @@ function init() {
           conf = viz.config,
           ctx = base.getCtx(),
           canvas = base.canvas,
-          xRange = ranges[0],
-          yRange = ranges[1],
+          margin = viz.config.Margin,
+          iniWidth = -canvas.width/2,
+          iniHeight = canvas.height/2,
+          xRange = ranges.xRange,
+          yRange = ranges.yRange,
           offset = viz.backgroundConfig.axisOffset,
+          width = canvas.width - margin.left - margin.right,
+          height = canvas.height - margin.top - margin.bottom,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
-          heightDivision = canvas.height / numberOfDivisions,
-          widthDivision = canvas.width / numberOfDivisions;
+          heightDivision = height / numberOfDivisions-1,
+          widthDivision = canvas.width / numberOfDivisions-1;
+
+      // cleaning canvas
+      var size = lc.canvas.getSize();
+      lc.canvas.getCtx(1).clearRect(iniWidth, iniHeight, size.width, size.height);
+      base.plot(base);
+
       // DRAWING NUMBERS
       var interY = yRange / (numberOfDivisions-1),
-          startY = -yRange/2,
+          startY = ranges.minY,
           interX = xRange / (numberOfDivisions-1),
-          startX = -xRange/2,
-          membersX = [startX],
-          membersY = [startY];
+          startX = ranges.minX,
+          membersX = [startX.toFixed(2)],
+          membersY = [startY.toFixed(2)];
       for (var i=1; i<numberOfDivisions; i++) {
         startY += interY;
         startX += interX;
-        membersX.push(Math.round(startX));
-        membersY.push(Math.round(startY));
+        membersX.push(startX.toFixed(2));
+        membersY.push(startY.toFixed(2));
       }
       for (var i=1, j=0; i<=numberOfDivisions; i++, j++) {
-        ctx.fillText(membersX[j], canvas.width/-2 + (widthDivision*i)-25, canvas.height/2 - offset/2);
-        ctx.fillText(membersY[j], canvas.width/-2, canvas.height/2 - (heightDivision*i) + 10);
+        ctx.fillText(membersX[j], iniWidth + widthDivision * i - 25, iniHeight - offset/2);
+        ctx.fillText(membersY[j], iniWidth, iniHeight - heightDivision * i);
       }
     }
   });

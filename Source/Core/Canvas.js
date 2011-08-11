@@ -578,4 +578,83 @@ var Canvas;
     }
   });
   
+  Canvas.Background.Grid_Axis = new Class({
+  initialize: function(viz, options) {
+    this.viz = viz;
+    this.config = $jit.util.merge({
+      idSuffix: '-bkcanvas',
+      levelDistance: 100,
+      numberOfDivisions: 8,
+      CanvasStyles: {},
+      filled: true,
+      legendX: 'x',
+      legendY: 'y',
+      oddColor: '#f2f2f2',
+      evenColor: '#ffffff',
+      axisOffset: 50
+    }, options);
+  },
+  resize: function(width, height, base) {
+    this.plot(base);
+  },
+  plot: function(base) {
+    var canvas = base.canvas,
+        ctx = base.getCtx(),
+        conf = this.config,
+        styles = conf.CanvasStyles;
+    //set canvas styles
+    for(var s in styles) ctx[s] = styles[s];
+    var divisions = conf.numberOfDivisions,
+        rho = conf.levelDistance,
+        fill = (conf.filled) ? 'fillRect' : 'rect',
+        offset = conf.axisOffset,
+        margin = this.viz.config.Margin,
+        iniWidth = -canvas.width/2,
+        iniHeight = canvas.height/2,
+        width = canvas.width - margin.left - margin.right - offset,
+        height = canvas.height - margin.top - margin.bottom - offset,
+        heightDivision = height / (divisions-1),
+        widthDivision = width / (divisions-1),
+        colors = [conf.oddColor, conf.evenColor];
+    ctx.beginPath();
+    // painting background of white
+    ctx.fillStyle = ctx.strokeStyle= '#ffffff';
+    ctx.fillRect(iniWidth, -iniHeight, canvas.width, canvas.height);
+    
+    for(var i=1; i<=divisions; i++) {
+      ctx.fillStyle = colors[i%2];
+      ctx[fill](iniWidth + offset, iniHeight - height/divisions * i - offset, width, height/divisions);
+      ctx.fillStyle = ctx.strokeStyle = '#000000';
+    }
+
+    for(var i=0; i<=divisions-1; i++) {
+      // y axis lines
+      ctx.moveTo(iniWidth + offset, iniHeight - offset - heightDivision*i);
+      ctx.lineTo(iniWidth + offset/1.5, iniHeight - offset - heightDivision*i);
+      
+      // x axis lines
+      ctx.moveTo(iniWidth + offset + widthDivision * i, iniHeight - offset*0.8);
+      ctx.lineTo(iniWidth + offset + widthDivision * i, iniHeight - offset);
+    }
+    
+    // DRAWING BASE AXIS
+    ctx.fillStyle = ctx.strokeStyle = '#000000';
+    // x
+    ctx.moveTo(iniWidth + offset, iniHeight - offset);
+    ctx.lineTo(iniWidth + offset + height, iniHeight - offset);
+    // y
+    ctx.moveTo(iniWidth + offset, iniHeight - offset);
+    ctx.lineTo(iniWidth + offset, iniHeight - offset - height);
+
+    // drawing legends
+    ctx.fillText(conf.legendX, 0, iniHeight - 10);
+    ctx.rotate(Math.PI/-2);
+    ctx.fillText(conf.legendY, offset, -iniHeight + offset - 10);
+    ctx.rotate(Math.PI/2);
+    ctx.stroke();
+    ctx.closePath();
+    }
+  });
+
+  
 })();

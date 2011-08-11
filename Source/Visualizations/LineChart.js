@@ -70,7 +70,7 @@ $jit.LineChart = new Class({
            "data": {
              "$color":"#674fde",
              "$dim":5,
-             "$x":i*j,
+             "$x":(i+1*j)*j,
              "$y":valArray[j]
            }
          });
