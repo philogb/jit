@@ -59,6 +59,7 @@ $jit.LineChart = new Class({
   updateJSON: function(json, onComplete) {
     var newJSON = this.convertJSON(json);
     this.delegate.updateJSON(newJSON);
+    onComplete && onComplete();
   },
 
 
