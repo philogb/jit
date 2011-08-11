@@ -23,33 +23,18 @@ Layouts.Scatter = new Class({
     this.controller.onAfterCompute(this);
   },
   
-  _get: function(prop) {
-    var config = this.config;
-    if(config[prop] && config[prop].length) {
-      return config[prop];
-    }
-    var ans = [];
-    this.graph.eachNode(function(n) {
-      var leg = n.getData(prop);
-      if($.indexOf(ans, leg) < 0) {
-        ans.push(leg);
-      }
-    });
-    return ans;
-  },
-  
   calculateX: function(node, xRange, canvasWidth, width, minX, margin, offset) {
     var x = node.getData('x'),
         dim = node.getData('dim'),
         delta = (x - minX) / xRange; // delta will range from 0 to 1
-    return (- canvasWidth / 2 + delta * width) + margin.left + offset + dim;
+    return - canvasWidth / 2 + delta * width + offset + dim;
   },
   
   calculateY: function(node, yRange, canvasHeight, height, minY, margin, offset) {
     var y = node.getData('y'),
         dim = node.getData('dim'),
         delta = (y - minY) / yRange; // delta will range from 0 to 1
-    return (canvasHeight / 2 - delta * height) - margin.top - offset + dim/2;
+    return canvasHeight / 2 - delta * height - offset + dim;
   },
   
   calculateRanges: function() {
