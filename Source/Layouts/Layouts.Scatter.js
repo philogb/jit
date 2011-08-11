@@ -4,58 +4,37 @@ Layouts.Scatter = new Class({
     var size = this.canvas.getSize(),
         config = this.config,
         margin = config.Margin,
-        width = size.width - margin.left - margin.right,
-        height = size.height - margin.top - margin.bottom,
+        offset = this.backgroundConfig.axisOffset || 0,
+        width = size.width - margin.left - margin.right - offset,
+        height = size.height - margin.top - margin.bottom - offset,
         legendX = config.legendX,
         legendY = config.legendY,
-        elemWidth = width / legendX.length,
-        elemHeight = height / legendY.length,
         ranges = this.calculateRanges(),
-        xRange = ranges[0],
-        yRange = ranges[1],
+        xRange = ranges.xRange,
+        yRange = ranges.yRange,
+        minX = ranges.minX,
+        minY = ranges.minY,
         that = this;
-    
     this.graph.eachNode(function(n) {
-      var x = n.getData('x'),
-          y = n.getData('y'),
-          posx = that.calculateX(xRange, x),
-          posy = that.calculateY(yRange, y);
+          posx = that.calculateX(n, xRange, size.width, width, minX, margin, offset),
+          posy = that.calculateY(n, yRange, size.height, height, minY, margin, offset);
       n.getPos(prop).setc(posx, posy);
     });
     this.controller.onAfterCompute(this);
   },
   
-  _get: function(prop) {
-    var config = this.config;
-    if(config[prop] && config[prop].length) {
-      return config[prop];
-    }
-    var ans = [];
-    this.graph.eachNode(function(n) {
-      var leg = n.getData(prop);
-      if($.indexOf(ans, leg) < 0) {
-        ans.push(leg);
-      }
-    });
-    return ans;
+  calculateX: function(node, xRange, canvasWidth, width, minX, margin, offset) {
+    var x = node.getData('x'),
+        dim = node.getData('dim'),
+        delta = (x - minX) / xRange; // delta will range from 0 to 1
+    return - canvasWidth / 2 + delta * width + offset + dim;
   },
   
-  getLegendX: function() {
-    return this._get('legendX');
-  },
-  
-  getLegendY: function() {
-    return this._get('legendY');
-  },
-  
-  calculateX: function(xRange, x) {
-    var size = this.canvas.getSize();
-    return (x * (size.width/2) / xRange) + this.config.Margin.left - this.config.Margin.right;
-  },
-  
-  calculateY: function(yRange, y) {
-    var size = this.canvas.getSize();
-    return (-y * (size.height/2) / yRange) + this.config.Margin.top - this.config.Margin.bottom;
+  calculateY: function(node, yRange, canvasHeight, height, minY, margin, offset) {
+    var y = node.getData('y'),
+        dim = node.getData('dim'),
+        delta = (y - minY) / yRange; // delta will range from 0 to 1
+    return canvasHeight / 2 - delta * height - offset + dim;
   },
   
   calculateRanges: function() {
@@ -71,9 +50,15 @@ Layouts.Scatter = new Class({
       minX = ((x < minX) ? x : minX);
       minY = ((y < minY) ? y : minY);
     });
-    var xRange = (Math.abs(minX) + Math.abs(maxX)),
-        yRange = (Math.abs(minY) + Math.abs(maxY));
-    return [xRange, yRange];
+    
+    return {
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      xRange: maxX - minX,
+      yRange: maxY - minY
+    };
   }
   
 });

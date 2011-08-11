@@ -8,6 +8,8 @@ var json = [
       "$x": 10,
       "$y": -50,
       "$color": "#ccc",
+      "$width":10,
+      "$height":10,
       "$type":"rectangle"
     }
   },
@@ -161,8 +163,10 @@ var json2 = [
       "$legendY": "category0",
       "$x": -10,
       "$y": 50,
+      "$width":30,
+      "$height":20,
       "$color": "#ccc",
-      "$type":"square"
+      "$type":"rectangle"
     }
   },
   {
@@ -344,7 +348,7 @@ function init() {
       overridable:true
     },
     Margin: {
-      top: 10,
+      top: 0,
       left: 0,
       bottom: 0,
       right: 0
