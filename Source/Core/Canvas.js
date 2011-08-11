@@ -55,7 +55,7 @@ var Canvas;
 (function() {
   //check for native canvas support
   var canvasType = typeof HTMLCanvasElement,
-      supportsCanvas = (canvasType == 'object' || canvasType == 'function');
+  supportsCanvas = (canvasType == 'object' || canvasType == 'function');
   //create element function
   function $E(tag, props) {
     var elem = document.createElement(tag);
@@ -81,7 +81,7 @@ var Canvas;
     translateOffsetY: 0,
     scaleOffsetX: 1,
     scaleOffsetY: 1,
-    
+
     initialize: function(viz, opt) {
       this.viz = viz;
       this.opt = this.config = opt;
@@ -591,7 +591,7 @@ var Canvas;
       legendY: 'y',
       oddColor: '#f2f2f2',
       evenColor: '#ffffff',
-      axisOffset: 50
+      axisOffset: 50,
     }, options);
   },
   resize: function(width, height, base) {
@@ -626,7 +626,30 @@ var Canvas;
       ctx[fill](iniWidth + offset, iniHeight - height/divisions * i - offset, width, height/divisions);
       ctx.fillStyle = ctx.strokeStyle = '#000000';
     }
+    this.drawBaseAxis(ctx, iniWidth, iniHeight, offset, width, height);
+    this.drawAxisLines(ctx, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision);
+    ctx.stroke();
+    ctx.closePath();
+  },
 
+  drawBaseAxis: function (ctx, iniWidth, iniHeight, offset, width, height) {
+    // DRAWING BASE AXIS
+    ctx.fillStyle = ctx.strokeStyle = '#000000';
+    // x
+    ctx.moveTo(iniWidth + offset, iniHeight - offset);
+    ctx.lineTo(iniWidth + offset + width, iniHeight - offset);
+    // y
+    ctx.moveTo(iniWidth + offset, iniHeight - offset);
+    ctx.lineTo(iniWidth + offset, iniHeight - offset - height);
+
+    // drawing legends
+    ctx.fillText(this.config.legendX, 0, iniHeight - 10);
+    ctx.rotate(Math.PI/-2);
+    ctx.fillText(this.config.legendY, offset, -iniHeight + offset - 10);
+    ctx.rotate(Math.PI/2);
+  },
+
+  drawAxisLines: function (ctx, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision) {
     for(var i=0; i<=divisions-1; i++) {
       // y axis lines
       ctx.moveTo(iniWidth + offset, iniHeight - offset - heightDivision*i);
@@ -636,24 +659,7 @@ var Canvas;
       ctx.moveTo(iniWidth + offset + widthDivision * i, iniHeight - offset*0.8);
       ctx.lineTo(iniWidth + offset + widthDivision * i, iniHeight - offset);
     }
-    
-    // DRAWING BASE AXIS
-    ctx.fillStyle = ctx.strokeStyle = '#000000';
-    // x
-    ctx.moveTo(iniWidth + offset, iniHeight - offset);
-    ctx.lineTo(iniWidth + offset + height, iniHeight - offset);
-    // y
-    ctx.moveTo(iniWidth + offset, iniHeight - offset);
-    ctx.lineTo(iniWidth + offset, iniHeight - offset - height);
-
-    // drawing legends
-    ctx.fillText(conf.legendX, 0, iniHeight - 10);
-    ctx.rotate(Math.PI/-2);
-    ctx.fillText(conf.legendY, offset, -iniHeight + offset - 10);
-    ctx.rotate(Math.PI/2);
-    ctx.stroke();
-    ctx.closePath();
-    }
+  }
   });
 
   

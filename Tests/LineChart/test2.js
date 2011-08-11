@@ -74,7 +74,7 @@ function init() {
       var size = lc.canvas.getSize();
       lc.canvas.getCtx(1).clearRect(iniWidth, iniHeight, size.width, size.height);
       base.plot(base);
-
+      
       // DRAWING NUMBERS
       var interY = yRange / (numberOfDivisions-1),
           startY = ranges.minY,
@@ -92,6 +92,7 @@ function init() {
         ctx.fillText(membersX[j], iniWidth + widthDivision * i - 25, iniHeight - offset/2);
         ctx.fillText(membersY[j], iniWidth, iniHeight - heightDivision * i);
       }
+      
     }
   });
   lc.loadJSON(json);

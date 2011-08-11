@@ -51,33 +51,44 @@ $jit.LineChart = new Class({
      (end code)
   */  
    loadJSON: function(json) {
-     var newJSON = [],
-         config = this.config,
-         color = $.splat(json.color || this.colors),
-         delegate = this.delegate,
-         that = this;
-     for(var i=0, values=json.values, l=json.values.length; i<l; i++) {
-       var label = values[i].label,
-           valArray = $.splat(values[i].values);
-       for(var j in valArray) {
-         var adjacencies_ = ((j%2!=0) ? [label+(parseInt(j)-1), label+(parseInt(j)+1)] : []),
-             // used to eliminate the last bug adjacency
-             adjacencies = ((j!=valArray.length-1) ? adjacencies_ : [label+(parseInt(j)-1)]);
-         newJSON.push({
-           "id": label+j,
-           "name": 'event'+i+j,
-           "adjacencies": adjacencies,
-           "data": {
-             "$color":"#674fde",
-             "$dim":5,
-             "$x":(i+1*j)*j,
-             "$y":valArray[j]
-           }
-         });
-       }
-     }
-     delegate.loadJSON(newJSON);
-     delegate.refresh();
+     var newJSON = this.convertJSON(json);
+     this.delegate.loadJSON(newJSON);
+     this.delegate.refresh();
+  },
+
+  updateJSON: function(json, onComplete) {
+    var newJSON = this.convertJSON(json);
+    this.delegate.updateJSON(newJSON);
+  },
+
+
+  convertJSON: function(json) {
+    var newJSON = [],
+        config = this.config,
+        color = $.splat(json.color || this.colors),
+        delegate = this.delegate,
+        that = this;
+   for(var i=0, values=json.values, l=json.values.length; i<l; i++) {
+     var label = values[i].label,
+         valArray = $.splat(values[i].values);
+     for(var j in valArray) {
+       var adjacencies_ = ((j%2!=0) ? [label+(parseInt(j)-1), label+(parseInt(j)+1)] : []),
+           // used to eliminate the last bug adjacency
+           adjacencies = ((j!=valArray.length-1) ? adjacencies_ : [label+(parseInt(j)-1)]);
+       newJSON.push({
+         "id": label+j,
+         "name": 'event'+i+j,
+         "adjacencies": adjacencies,
+         "data": {
+           "$color":"#674fde",
+           "$dim":5,
+           "$x":(i+1*j)*j,
+           "$y":valArray[j]
+          }
+        });
+      }
+    }
+    return newJSON;
   }
 });
 
