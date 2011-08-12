@@ -4,7 +4,7 @@ var json = {
     {
       'label': 'dateA',
       'values': [-100, -40, 55, 105],
-      'type': 'circle',
+      'type': 'circle'
     },
     {
       'label': 'dateB',
@@ -14,6 +14,25 @@ var json = {
     {
       'label': 'dateC',
       'values': [-38, -10, 125, 150]
+    }]
+};
+
+var json2 = {
+    'label': ['label A', 'label B', 'label C'],
+    'values': [
+    {
+      'label': 'dateA',
+      'values': [-200, -80, 15, 55],
+      'type': 'circle'
+    },
+    {
+      'label': 'dateB',
+      'values': [-10, -50, -90, -150],
+      'color': 'red'
+    },
+    {
+      'label': 'dateC',
+      'values': [-150, 100, -25, 90]
     }]
 };
 
@@ -99,4 +118,14 @@ function init() {
   });
   lc.loadJSON(json);
   lc.refresh();
+  var list = $jit.id('id-list'),
+      button = $jit.id('update');
+
+  //update json on click
+  var jsoncount = 0;
+  var jsons = [json, json2];
+  $jit.util.addEvent(button, 'click', function() {
+    jsoncount = jsoncount + 1;
+    lc.updateJSON(jsons[jsoncount%2]);
+  });
 }

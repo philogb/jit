@@ -858,14 +858,6 @@ tests_model = {
             'Extras':['excanvas.js']
         },
         {
-            'Title':'Line Chart example with axis',
-            'Description':
-            """
-            Line Chart example with axis
-            """,
-            'Extras':['excanvas.js']
-        },
-        {
             'Title':'Line Chart example with axis and update',
             'Description':
             """
