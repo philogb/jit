@@ -73,7 +73,6 @@ $jit.LineChart = new Class({
      var label = values[i].label,
          valArray = $.splat(values[i].values);
      for(var j in valArray) {
-       console.log();
        var adjacencies_ = ((j%2!=0) ? [label+(parseInt(j)-1), label+(parseInt(j)+1)] : []),
            // used to eliminate the last bug adjacency
            adjacencies = ((j!=valArray.length-1) ? adjacencies_ : [label+(parseInt(j)-1)]);
