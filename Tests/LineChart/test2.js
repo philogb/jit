@@ -3,11 +3,13 @@ var json = {
     'values': [
     {
       'label': 'dateA',
-      'values': [-100, -40, 55, 105]
+      'values': [-100, -40, 55, 105],
+      'type': 'circle',
     },
     {
       'label': 'dateB',
-      'values': [-80, -10, 45, 100]
+      'values': [-80, -10, 45, 100],
+      'color': 'red'
     },
     {
       'label': 'dateC',
