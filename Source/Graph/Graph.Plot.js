@@ -239,9 +239,9 @@ Graph.Plot = {
         	var boundary = elem[getter](prop);
         	var offset = elem.offset;
         	if (offset) {
-            boundary = $jit.util.offsetConvex(boundary, - offset);
+            boundary = $jit.geometry.offsetConvex(boundary, - offset);
           }
-        	var polygons = $jit.Voronoi.voronoiFortune(subSites, boundary);
+        	var polygons = $jit.geometry.voronoi(subSites, boundary);
         	polygons.forEach(function(poly, i) { 
             sub[i][setter](prop, poly); });
         }

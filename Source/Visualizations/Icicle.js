@@ -161,7 +161,8 @@ $jit.Icicle = new Class({
     this.busy = true;
 
     var that = this,
-        config = this.config;
+        config = this.config,
+        clickedNode = node;
 
     var callback = {
       onComplete: function() {
@@ -227,7 +228,8 @@ $jit.Icicle = new Class({
         parents = GUtil.getParents(graph.getNode(this.clickedNode && this.clickedNode.id || this.root)),
         parent = parents[0],
         clickedNode = parent,
-        previousClickedNode = this.clickedNode;
+        previousClickedNode = this.clickedNode,
+        callback;
 
     this.busy = true;
     this.events.hoveredNode = false;

@@ -465,35 +465,35 @@ tests_model = {
    ],
    
   'Voronoi' : [
-    {
-      'Title': 'Voronoi Treemaps -- Infrastractures',
-      'Description':
-      """
-      Test Voronoi Treemap Infrastractures
-      """,
-      'Extras': ['excanvas.js'],
-    }, {
-      'Title': 'Voronoi Treemaps',
-      'Description':
-      """
-      Test Voronoi Treemap
-      """,
-      'Extras': ['excanvas.js'],
-    }, {
-      'Title': 'Voronoi Treemaps',
-      'Description':
-      """
-      Test Voronoi Treemap
-      """,
-      'Extras': ['excanvas.js'],
-    }, {
-      'Title': 'Voronoi Treemaps',
-      'Description':
-      """
-      Test Voronoi Treemap
-      """,
-      'Extras': ['excanvas.js'],
-    }
+      {
+          'Title': 'Voronoi Treemaps -- Infrastractures',
+          'Description':
+          """
+          Test Voronoi Treemap Infrastractures
+          """,
+          'Extras': ['excanvas.js'],
+      }, {
+          'Title': 'Voronoi Treemaps',
+          'Description':
+          """
+          Test Voronoi Treemap
+          """,
+          'Extras': ['excanvas.js'],
+      }, {
+          'Title': 'Voronoi Treemaps',
+          'Description':
+          """
+          Test Voronoi Treemap
+          """,
+          'Extras': ['excanvas.js'],
+      }, {
+          'Title': 'Voronoi Treemaps',
+          'Description':
+          """
+          Test Voronoi Treemap
+          """,
+          'Extras': ['excanvas.js'],
+      }
   ],
    
     'Icicle': [

@@ -173,7 +173,6 @@ TM.Base = {
     } else {
       var labelType = this.config.Label.type;
       if(labelType != 'Native') {
-        var that = this;
         this.graph.eachNode(function(n) { that.labels.hideLabel(n, false); });
       }
       this.busy = false;
@@ -683,7 +682,7 @@ TM.Label.HTML = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
-  	controller = controller || this.viz.controller;
+    controller = controller || this.viz.controller;
     var pos = node.pos.getc(true), 
         canvas = this.viz.canvas,
         ox = canvas.translateOffsetX,
