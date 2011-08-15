@@ -20,7 +20,6 @@ Graph.Plot = {
       this.node = viz.config.Node;
       this.edge = viz.config.Edge;
       this.animation = new Animation;
-      debugger;
       this.nodeTypes = new klass.Plot.NodeTypes;
       this.edgeTypes = new klass.Plot.EdgeTypes;
       this.labels = viz.labels;
