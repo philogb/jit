@@ -111,7 +111,6 @@ function init(){
   var sq = $jit.id('r-sq'),
       st = $jit.id('r-st'),
       sd = $jit.id('r-sd');
-      vn = $jit.id('r-vn');
       
   var util = $jit.util;
   util.addEvent(sq, 'change', function() {
@@ -129,12 +128,6 @@ function init(){
     if(!sd.checked) return;
     util.extend(tm, new $jit.Layouts.TM.SliceAndDice);
     tm.layout.orientation = "v";
-    tm.refresh();
-  });
-  
-  util.addEvent(vn, 'change', function() {
-    if(!vn.checked) return;
-    util.extend(tm, new $jit.Layouts.TM.Voronoi);
     tm.refresh();
   });
   //add event to the back button

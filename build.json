@@ -23,7 +23,7 @@
     "Vector3": [],
     "Camera": ["Vector3", "Matrix4"],
     "O3D": ["Vector3", "Matrix4"],
-    "Geoms": ["Complex"]
+    "Geometry": ["Complex"]
   },
 
   "Extras": {
@@ -405,7 +405,7 @@
         "Core",
         "Canvas",
         "Extras",
-        "Geoms",
+        "Geometry",
         "Treemap"
     ]
   }
