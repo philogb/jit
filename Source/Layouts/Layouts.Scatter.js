@@ -27,14 +27,14 @@ Layouts.Scatter = new Class({
     var x = node.getData('x'),
         dim = node.getData('dim'),
         delta = (x - minX) / xRange; // delta will range from 0 to 1
-    return - canvasWidth / 2 + delta * width + offset + dim;
+    return -canvasWidth / 2 + margin.left + delta * width + offset + dim;
   },
   
   calculateY: function(node, yRange, canvasHeight, height, minY, margin, offset) {
     var y = node.getData('y'),
         dim = node.getData('dim'),
         delta = (y - minY) / yRange; // delta will range from 0 to 1
-    return canvasHeight / 2 - delta * height - offset + dim;
+    return canvasHeight / 2 - margin.bottom - delta * height + offset + dim;
   },
   
   calculateRanges: function() {

@@ -845,6 +845,14 @@ tests_model = {
              A Scatter example with Axis.
              """,
              'Extras': ['excanvas.js']
+         },
+         {
+             'Title': 'Scatter Example',
+             'Description':
+             """
+             A Scatter example with horizontal background orientation.
+             """,
+             'Extras': ['excanvas.js']
          }
      ],
      

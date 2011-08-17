@@ -348,10 +348,10 @@ function init() {
       overridable:true
     },
     Margin: {
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0
+      top: 10,
+      left: 30,
+      bottom: 20,
+      right: 10
     }
   });
   sp.loadJSON(json);

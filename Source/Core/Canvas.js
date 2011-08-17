@@ -556,26 +556,45 @@ var Canvas;
       var canvas = base.canvas,
           ctx = base.getCtx(),
           conf = this.config,
-          styles = conf.CanvasStyles;
-      //set canvas styles
-      for(var s in styles) ctx[s] = styles[s];
-      var n = conf.numberOfDivisions,
+          margin = this.viz.config.Margin,
+          styles = conf.CanvasStyles,
+          n = conf.numberOfDivisions,
           rho = conf.levelDistance,
-          fill = (conf.filled) ? 'fillRect' : 'rect';
-          heightDivision = canvas.height / n,
-          widthDivision = canvas.width / n,
+          fill = (conf.filled) ? 'drawFilledGrid' : 'drawStrokedGrid';
+          width = canvas.width - margin.left - margin.right,
+          height = canvas.height - margin.top - margin.bottom,
+          iniHeight = -canvas.height/2,
+          iniWidth = -canvas.width/2,
+          heightDivision = height / n,
+          widthDivision = width / n,
           colors = [conf.oddColor, conf.evenColor],
-          oldColor = ctx.fillStyle;
+          oldColor = ctx.fillStyle = ctx.strokeStyle;
+      // set canvas styles
+      for(var s in styles) ctx[s] = styles[s];
+      // painting background of white
+      ctx.fillStyle = ctx.strokeStyle='#ffffff';
+      ctx.fillRect(iniWidth, iniHeight, canvas.width, canvas.height);
+      // start draw
+      ctx.fillStyle = ctx.strokeStyle = oldColor;
       ctx.beginPath();
-      for(var i=1; i<=n; i++) {
-        ctx.fillStyle = ctx.strokeStyle = colors[i%2];
-        if (conf.orientation == 'vertical')
-            ctx[fill](canvas.height/2 - (widthDivision * i), canvas.width/-2, widthDivision, canvas.height);
-        else if (conf.orientation == 'horizontal')
-            ctx[fill](canvas.width/-2, canvas.height/2 - (heightDivision * i), canvas.width, heightDivision);
+      for(var i=0; i<n; i++) {
+        if (conf.orientation == 'vertical') {
+          this[fill](ctx, iniWidth + margin.left + (widthDivision * i), iniHeight + margin.top, widthDivision, height, colors[i%2]);
+        } else if (conf.orientation == 'horizontal') {
+          this[fill](ctx, iniWidth + margin.left, iniHeight + margin.top + (heightDivision * i), width, heightDivision, colors[i%2]);
+        }
       }
       ctx.closePath();
       ctx.fillStyle = ctx.strokeStyle = oldColor;
+    },
+    drawFilledGrid: function(ctx, x, y, width, height, color) {
+      ctx.fillStyle = ctx.strokeStyle = color;
+      ctx.fillRect(x, y, width, height);
+    
+    },
+    drawStrokedGrid: function(ctx, x, y, width, height, color) {
+      ctx.fillStyle = ctx.strokeStyle = color;
+      ctx.strokeRect(x, y, width, height);
     }
   });
   
