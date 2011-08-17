@@ -152,7 +152,7 @@ Layouts.TM.Voronoi = new Class({
 
   centroid : function(sites, bound) {
     var tdist = 2, polygons;
-    while (tdist > 1e-3) {
+    while (tdist > 1) {
       polygons = Geometry.voronoi(sites, bound);
       tdist = 0;
       sites = polygons.map(function(p, j) {
