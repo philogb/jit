@@ -530,6 +530,7 @@ var Canvas;
      oddColor - (string) Odd color in RGB;
      evenColor - (string) Even color in RGB;
      numberOfDivisions - (int) Numbers of divisions inside the grid;
+     filled - (boolean) - Fill of division;
      orientation - (string) Orientation of the grid. Can be 'vertical' or 'horizontal';
    
    */
@@ -578,7 +579,33 @@ var Canvas;
     }
   });
   
-  Canvas.Background.Grid_Axis = new Class({
+  /*
+  Class: Canvas.Background.GridWithAxis
+
+  Create a Grid Background With Axis. This is essentially the same of a Grid Background, n
+  How to customize Grid Background
+
+  (start code js)
+  var viz = new $jit.Viz({
+    background: {
+      //options to customize background
+      type: 'GridWithAxis',
+      numberOfDivisions:5,
+      orientation:'vertical',
+      legendX : 'year',
+      legendY : 'month',
+      axisOffset : 50,
+   });
+  (end code)
+
+  Options:
+   Same options of Grid Background, but in addition:
+   legendX - (string) Legend of x axis;
+   legendY - (string) Legend of y axis;
+   axisOffset - (int) Distance of axis from canvas offset;
+   
+  */
+  Canvas.Background.GridWithAxis = new Class({
   initialize: function(viz, options) {
     this.viz = viz;
     this.config = $jit.util.merge({

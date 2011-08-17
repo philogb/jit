@@ -57,7 +57,7 @@ function init() {
       }
     },
     background: {
-      type: 'Grid_Axis',
+      type: 'GridWithAxis',
       CanvasStyles: {
         fillStyle: 'white',
         font: 'bold 12px Arial'
