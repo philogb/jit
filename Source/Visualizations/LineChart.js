@@ -1,15 +1,44 @@
+/* 
+  Class: LineChart  
+  
+   A Line Chart visualization.
+  
+  This chart is built on top of Scatter Chart. Nodes are delegated to a Scatter Chart that controls all lines and nodes.
+
+  Implements:
+  
+  All <Loader> methods
+  
+  Constructor Options:
+  
+  Inherits options from
+  
+  - <Options.Canvas>
+  - <Options.Controller>
+  - <Options.Node>
+  - <Options.Edge>
+  - <Options.Label>
+  - <Options.Events>
+  - <Options.Tips>
+  - <Options.NodeStyles>
+  - <Options.Navigation>
+  
+  Instance Properties:
+  
+  canvas - Access a <Canvas> instance.
+  delegate - Access a <Scatter> chart instance.
+
+*/
 $jit.LineChart = new Class({
   Implements: [Layouts.Scatter, Loader, Extras],
-  
+
   initialize: function(config) {
     var opt = {
-      legendX: '',
-      legendY: '',
       animate: false,
       nodeOffsetWidth: 0,
       nodeOffsetHeight: 0,
       showNodeNames: false,
-      
+
       colors: ["#416D9C", "#70A35E", "#EBB056", "#C74243", "#83548B", "#909291", "#557EAA"],
       Node: {
         overridable: true,
@@ -38,31 +67,55 @@ $jit.LineChart = new Class({
    /*
      Method: loadJSON
 
-     Loads JSON data into the visualization. 
+     Loads JSON data into the visualization.
 
      Parameters:
 
-     json - The JSON data format. This format is described in <http://blog.thejit.org/2010/04/24/new-javascript-infovis-toolkit-visualizations/#json-data-format>.
+     json - The JSON data format. This format can be seen in Tests/LineChart/1.js
 
      Example:
      (start code js)
      var lineChart = new $jit.LineChart(options);
      lineChart.loadJSON(json);
      (end code)
-  */  
+  */
    loadJSON: function(json) {
      var newJSON = this.convertJSON(json);
      this.delegate.loadJSON(newJSON);
      this.delegate.refresh();
   },
 
+  /*
+   Method: updateJSON
+
+   Update JSON data into the visualization.
+
+   Parameters:
+
+   json - The JSON data format. This format can be seen in Tests/LineChart/1.js
+
+   Example:
+   (start code js)
+   lineChart.updateJSON(newJSON);
+   (end code)
+  */
   updateJSON: function(json, onComplete) {
     var newJSON = this.convertJSON(json);
     this.delegate.updateJSON(newJSON);
     onComplete && onComplete();
   },
 
+  /*
+   Method: convertJSON
 
+   Convert JSON line chart format to JSON node format.
+   It's used in loadJSON and updateJSON.
+
+   Parameters:
+
+   json - The JSON data format. This format can be seen in Tests/LineChart/1.js
+
+*/
   convertJSON: function(json) {
     var newJSON = [],
         config = this.config,
