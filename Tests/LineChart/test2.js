@@ -10,7 +10,7 @@ var json = {
     {
       'label': 'dateB',
       'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-80, -10, 45, 100],
+      'valuesY': [-80, -15, 45, 100],
       'color': 'red'
     },
     {
