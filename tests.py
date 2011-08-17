@@ -865,5 +865,15 @@ tests_model = {
             """,
             'Extras':['excanvas.js']
         }
+     ],
+     'RadarChart': [
+        {
+            'Title':'Radar Chart example',
+            'Description':
+            """
+            Radar Chart example
+            """,
+            'Extras':['excanvas.js']
+        }
      ]
 }   
