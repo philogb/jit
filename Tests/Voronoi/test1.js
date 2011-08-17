@@ -8,6 +8,11 @@ var log = function(text) {
     element.innerHTML = text;
     can.getElement().appendChild(element);
   }
+if (!window.console) {
+    console = {
+        log : log
+    };
+}
 var V = $jit.util;
 var color = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
 var ps;
@@ -194,10 +199,10 @@ function step(){
 function force() {
   if(window.fc) {
     window.clearInterval(window.fc), window.fc = null;
-    $jit.id('force-button').innerText = "Animate!";
+    $jit.id('force-button').innerHTML = "Animate!";
   } else {
     window.fc = window.setInterval(step, 10);  
-    $jit.id('force-button').innerText = "Stop!";
+    $jit.id('force-button').innerHTML = "Stop!";
   }
 }
 
