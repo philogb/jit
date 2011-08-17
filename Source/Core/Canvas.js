@@ -582,8 +582,7 @@ var Canvas;
   /*
   Class: Canvas.Background.GridWithAxis
 
-  Create a Grid Background With Axis. This is essentially the same of a Grid Background, n
-  How to customize Grid Background
+  Create a Grid Background With Axis. This is essentially the same of a Grid Background but with legends and axis. 
 
   (start code js)
   var viz = new $jit.Viz({
