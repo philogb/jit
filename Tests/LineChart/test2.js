@@ -3,17 +3,20 @@ var json = {
     'values': [
     {
       'label': 'dateA',
-      'values': [-100, -40, 55, 105],
+      'valuesX': [-10, 10, 50, 100],
+      'valuesY': [-100, -40, 55, 105],
       'type': 'circle'
     },
     {
       'label': 'dateB',
-      'values': [-80, -10, 45, 100],
+      'valuesX': [-100, 0, 100, 150],
+      'valuesY': [-80, -10, 45, 100],
       'color': 'red'
     },
     {
       'label': 'dateC',
-      'values': [-38, -10, 125, 150]
+      'valuesX': [-100, 0, 100, 150],
+      'valuesY': [-38, -10, 125, 150]
     }]
 };
 
@@ -22,17 +25,20 @@ var json2 = {
     'values': [
     {
       'label': 'dateA',
-      'values': [-200, -80, 15, 55],
+      'valuesX': [-100, 10, 50, 100],
+      'valuesY': [-200, -80, 15, 55],
       'type': 'circle'
     },
     {
       'label': 'dateB',
-      'values': [-10, -50, -90, -150],
+      'valuesX': [-100, 0, 100, 150],
+      'valuesY': [-10, -50, -90, -150],
       'color': 'red'
     },
     {
       'label': 'dateC',
-      'values': [-150, 100, -25, 90]
+      'valuesX': [-100, 0, 100, 150],
+      'valuesY': [-150, 100, -25, 90]
     }]
 };
 
