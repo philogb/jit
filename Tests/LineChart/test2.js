@@ -3,20 +3,17 @@ var json = {
     'values': [
     {
       'label': 'dateA',
-      'valuesX': [-10, 10, 50, 100],
-      'valuesY': [-100, -40, 55, 105],
+      'values': [-100, -40, 55, 105],
       'type': 'circle'
     },
     {
       'label': 'dateB',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-80, -15, 45, 100],
+      'values': [-80, -15, 45, 100],
       'color': 'red'
     },
     {
       'label': 'dateC',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-38, -10, 125, 150]
+      'values': [-38, -10, 125, 150]
     }]
 };
 
@@ -25,20 +22,17 @@ var json2 = {
     'values': [
     {
       'label': 'dateA',
-      'valuesX': [-100, 10, 50, 100],
-      'valuesY': [-200, -80, 15, 55],
+      'values': [-200, -80, 15, 55],
       'type': 'circle'
     },
     {
       'label': 'dateB',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-10, -50, -90, -150],
+      'values': [-10, -50, -90, -150],
       'color': 'red'
     },
     {
       'label': 'dateC',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-150, 100, -25, 90]
+      'values': [-150, 100, -25, 90]
     }]
 };
 
@@ -71,16 +65,18 @@ function init() {
       Axis: {
         legendX: 'legend X',
         offset: 50,
-      }
+      },
+      evenColor:'#f2f2f2',
+      oddColor:'#ffffff'
     },
     Node: {
       overridable:true
     },
     Margin: {
       top: 20,
-      left: 0,
+      left: 10,
       bottom: 0,
-      right: 20
+      right: 40
     },
     onAfterCompute: function(viz) {
       var ranges = viz.calculateRanges(),

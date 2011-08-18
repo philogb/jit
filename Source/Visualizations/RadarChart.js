@@ -52,7 +52,7 @@ $jit.RadarChart = new Class({
       Label: {
         textAlign: 'center',
         textBaseline: 'middle'
-      }
+      },
     };
     var opts = Options("Canvas", "Margin", "Node", "Edge", "Fx", "Tips", "NodeStyles",
         "Events", "Navigation", "Controller", "Label");

@@ -266,7 +266,7 @@ function init() {
           iniHeight = canvas.height/2,
           xRange = ranges.xRange,
           yRange = ranges.yRange,
-          offset = viz.config.background.Axis.offset || 0,
+          offset = viz.config.background.Axis && viz.config.background.Axis.offset || 0,
           width = canvas.width - margin.left - margin.right,
           height = canvas.height - margin.top - margin.bottom,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,

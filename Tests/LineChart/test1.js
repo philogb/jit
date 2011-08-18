@@ -3,18 +3,15 @@ var json = {
     'values': [
     {
       'label': 'dateA',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-100, -40, 55, 105]
+      'values': [-100, -40, 55, 105]
     },
     {
       'label': 'dateB',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-80, -10, 45, 100]
+      'values': [-80, -15, 45, 100]
     },
     {
       'label': 'dateC',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-38, -10, 125, 150]
+      'values': [-38, -10, 125, 150]
     }]
 };
 
@@ -23,18 +20,15 @@ var json2 = {
     'values': [
     {
       'label': 'dateA',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-200, -80, 15, 55]
+      'values': [-200, -80, 15, 55]
     },
     {
       'label': 'dateB',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-10, -50, -90, -150]
+      'values': [-10, -50, -90, -150]
     },
     {
       'label': 'dateC',
-      'valuesX': [-100, 0, 100, 150],
-      'valuesY': [-150, 100, -25, 90]
+      'values': [-150, 100, -25, 90]
     }]
 };
 
@@ -77,9 +71,9 @@ function init() {
     },
     Margin: {
       top: 10,
-      left: 0,
-      bottom: 0,
-      right: 0
+      left: 10,
+      bottom: 10,
+      right: 10
     }
   });
   lc.loadJSON(json);

@@ -124,14 +124,11 @@ $jit.LineChart = new Class({
         that = this;
    for(var i=0, values=json.values, l=json.values.length; i<l; i++) {
      var label = values[i].label,
-         valArrayX = $.splat(values[i].valuesX);
-         valArrayY = $.splat(values[i].valuesY);
-     console.log(values[i], valArrayX, valArrayY);
-     console.log(json);
-     for(var j in valArrayX) {
+         valArray = $.splat(values[i].values);
+     for(var j in valArray) {
        var adjacencies_ = ((j%2!=0) ? [label+(parseInt(j)-1), label+(parseInt(j)+1)] : []),
            // used to eliminate the last bug adjacency
-           adjacencies = ((j!=valArrayX.length-1) ? adjacencies_ : [label+(parseInt(j)-1)]);
+           adjacencies = ((j!=valArray.length-1) ? adjacencies_ : [label+(parseInt(j)-1)]);
        newJSON.push({
          "id": label+j,
          "name": 'event'+i+j,
@@ -139,8 +136,8 @@ $jit.LineChart = new Class({
          "data": {
            "$color":values[i]['color'] || "#674fde",
            "$dim":5,
-           "$x":valArrayX[j],
-           "$y":valArrayY[j],
+           "$x":j,
+           "$y":valArray[j],
            "$type":values[i]['type'] || "square"
           }
         });

@@ -602,8 +602,8 @@ var Canvas;
       ctx.closePath();
       if (conf.Axis) {
         ctx.beginPath();
-        this.drawBaseAxis(ctx, iniWidth, -iniHeight, offset, width, height);
-        this.drawAxisLines(ctx, iniWidth, -iniHeight, offset, n+1, widthDivision, heightDivision);
+        this.drawBaseAxis(ctx, margin, iniWidth, -iniHeight, offset, width, height);
+        this.drawAxisLines(ctx, margin, iniWidth, -iniHeight, offset, n+1, widthDivision, heightDivision);
         ctx.stroke();
         ctx.closePath();
       }
@@ -623,15 +623,18 @@ var Canvas;
       ctx.closePath();
     },
 
-    drawBaseAxis: function (ctx, iniWidth, iniHeight, offset, width, height) {
+    drawBaseAxis: function (ctx, margin, iniWidth, iniHeight, offset, width, height) {
       // DRAWING BASE AXIS
-      ctx.fillStyle = ctx.strokeStyle = '#000000';
+      var initialX = iniWidth + offset + margin.left || 0,
+	  initialY = iniHeight - offset;
+	  ctx.fillStyle = ctx.strokeStyle = '#000000';
+      
       // x
-      ctx.moveTo(iniWidth + offset, iniHeight - offset);
-      ctx.lineTo(iniWidth + offset + width, iniHeight - offset);
+      ctx.moveTo(initialX, initialY);
+      ctx.lineTo(initialX + width, initialY);
       // y
-      ctx.moveTo(iniWidth + offset, iniHeight - offset);
-      ctx.lineTo(iniWidth + offset, iniHeight - offset - height);
+      ctx.moveTo(initialX, initialY);
+      ctx.lineTo(initialX , initialY - height);
       // drawing legends
       ctx.fillText(this.config.Axis.legendX || 'x', 0, iniHeight - 10);
       ctx.rotate(Math.PI/-2);
@@ -639,15 +642,18 @@ var Canvas;
       ctx.rotate(Math.PI/2);
     },
 
-    drawAxisLines: function (ctx, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision) {
+    drawAxisLines: function (ctx, margin, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision) {
+      var initialX = iniWidth + offset + margin.left || 0,
+	  initialY = iniHeight - offset,
+	  line = 15;
       ctx.fillStyle = ctx.strokeStyle = '#000000';
       for(var i=0; i<=divisions-1; i++) {
         // y axis lines
-        ctx.moveTo(iniWidth + offset, iniHeight - offset - heightDivision*i);
-        ctx.lineTo(iniWidth + offset/1.5, iniHeight - offset - heightDivision*i);
+        ctx.moveTo(initialX, initialY - heightDivision*i);
+        ctx.lineTo(initialX - line, initialY - heightDivision*i);
         // x axis lines
-        ctx.moveTo(iniWidth + offset + widthDivision * i, iniHeight - offset*0.8);
-        ctx.lineTo(iniWidth + offset + widthDivision * i, iniHeight - offset);
+        ctx.moveTo(initialX + widthDivision * i, initialY + line);
+        ctx.lineTo(initialX + widthDivision * i, initialY);
       }
     }
   });
