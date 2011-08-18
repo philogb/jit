@@ -1,5 +1,5 @@
 var json = {
-    'label': ['label A', 'label B', 'label C'],
+    'label': ['label A', 'label B', 'label C', 'label D'],
     'values': [
     {
       'label': 'dateA',
@@ -18,7 +18,7 @@ var json = {
 };
 
 var json2 = {
-    'label': ['label A', 'label B', 'label C'],
+    'label': ['label A', 'label B', 'label C', 'label D'],
     'values': [
     {
       'label': 'dateA',
@@ -65,7 +65,7 @@ function init() {
       Axis: {
         legendX: 'legend X',
         offset: 50,
-	linesX: 3
+	linesX: 4
       },
       evenColor:'#f2f2f2',
       oddColor:'#ffffff'
@@ -98,7 +98,7 @@ function init() {
 	  linesX = axis && axis.linesX || numberOfDivisions,
 	  linesY = axis && axis.linesY || numberOfDivisions,
           heightDivision = height / linesY,
-          widthDivision = width*1.3 / linesX;
+          widthDivision = width*1.2 / linesX;
 
       // cleaning canvas
       var size = lc.canvas.getSize();
