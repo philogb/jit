@@ -8,9 +8,6 @@ var json = [
       "$x": 10,
       "$y": -50,
       "$color": "#ccc",
-      "$width":10,
-      "$height":10,
-      "$type":"rectangle"
     }
   },
   {
@@ -48,7 +45,6 @@ var json = [
       "$x": 89,
       "$y": 56,
       "$color": "#f2ff27",
-      "$type":"ellipse",
     }
   },
   {
@@ -163,10 +159,7 @@ var json2 = [
       "$legendY": "category0",
       "$x": -10,
       "$y": 50,
-      "$width":30,
-      "$height":20,
       "$color": "#ccc",
-      "$type":"rectangle"
     }
   },
   {
@@ -204,7 +197,6 @@ var json2 = [
       "$x": -100,
       "$y": -56,
       "$color": "#f2ff27",
-      "$type":"ellipse"
     }
   },
   {

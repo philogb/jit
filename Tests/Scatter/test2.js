@@ -235,12 +235,16 @@ function init() {
       }
     },
     background: {
-      type: 'Grid_Axis',
+      type: 'Grid',
       CanvasStyles: {
         fillStyle: 'white',
         font: 'bold 12px Arial'
       },
-      legendX: 'legend X',
+      Axis: {
+        legendX: 'legend X',
+        offset: 50
+      },
+      orientation:'horizontal'
     },
     Node: {
       overridable:true
@@ -262,7 +266,7 @@ function init() {
           iniHeight = canvas.height/2,
           xRange = ranges.xRange,
           yRange = ranges.yRange,
-          offset = viz.backgroundConfig.axisOffset,
+          offset = viz.config.background.Axis.offset || 0,
           width = canvas.width - margin.left - margin.right,
           height = canvas.height - margin.top - margin.bottom,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,

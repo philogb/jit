@@ -522,6 +522,10 @@ var Canvas;
         type: 'Grid',
         numberOfDivisions:5,
         orientation:'vertical',
+        Axis : {
+          legendX:'legend',
+          offset:50
+        }
   	 });
    (end code)
    
@@ -532,6 +536,11 @@ var Canvas;
      numberOfDivisions - (int) Numbers of divisions inside the grid;
      filled - (boolean) - Fill of division;
      orientation - (string) Orientation of the grid. Can be 'vertical' or 'horizontal';
+     Axis - (object)
+       legendX - (string) Legend of x axis;
+       legendY - (string) Legend of y axis;
+       offset - (int) Distance of axis from canvas offset;
+
    
    */
   Canvas.Background.Grid = new Class({
@@ -542,6 +551,7 @@ var Canvas;
         levelDistance: 100,
         numberOfDivisions: 8,
         CanvasStyles: {},
+        Axis: undefined,
         orientation: 'vertical',
         filled: true,
         oddColor: '#f2f2f2',
@@ -560,9 +570,11 @@ var Canvas;
           styles = conf.CanvasStyles,
           n = conf.numberOfDivisions,
           rho = conf.levelDistance,
-          fill = (conf.filled) ? 'drawFilledGrid' : 'drawStrokedGrid';
-          width = canvas.width - margin.left - margin.right,
-          height = canvas.height - margin.top - margin.bottom,
+          fill = (conf.filled) ? 'drawFilledGrid' : 'drawStrokedGrid',
+          iterations = (conf.filled) ? n : n+1,
+          offset = conf.Axis && conf.Axis.offset || 0,
+          width = canvas.width - margin.left - margin.right - offset,
+          height = canvas.height - margin.top - margin.bottom - offset,
           iniHeight = -canvas.height/2,
           iniWidth = -canvas.width/2,
           heightDivision = height / n,
@@ -577,135 +589,67 @@ var Canvas;
       // start draw
       ctx.fillStyle = ctx.strokeStyle = oldColor;
       ctx.beginPath();
-      for(var i=0; i<n; i++) {
+      for(var i=0; i<iterations; i++) {
         if (conf.orientation == 'vertical') {
-          this[fill](ctx, iniWidth + margin.left + (widthDivision * i), iniHeight + margin.top, widthDivision, height, colors[i%2]);
+          this[fill](ctx, iniWidth + margin.left + offset + (widthDivision * i),
+                     iniHeight + margin.top, widthDivision, height, colors[i%2]);
         } else if (conf.orientation == 'horizontal') {
-          this[fill](ctx, iniWidth + margin.left, iniHeight + margin.top + (heightDivision * i), width, heightDivision, colors[i%2]);
+          this[fill](ctx, iniWidth + margin.left + offset, iniHeight + margin.top +
+                     (heightDivision * i), width, heightDivision, colors[i%2]);
+
         }
       }
       ctx.closePath();
+      if (conf.Axis) {
+        ctx.beginPath();
+        this.drawBaseAxis(ctx, iniWidth, -iniHeight, offset, width, height);
+        this.drawAxisLines(ctx, iniWidth, -iniHeight, offset, n+1, widthDivision, heightDivision);
+        ctx.stroke();
+        ctx.closePath();
+      }
       ctx.fillStyle = ctx.strokeStyle = oldColor;
     },
     drawFilledGrid: function(ctx, x, y, width, height, color) {
       ctx.fillStyle = ctx.strokeStyle = color;
       ctx.fillRect(x, y, width, height);
-    
     },
+
     drawStrokedGrid: function(ctx, x, y, width, height, color) {
-      ctx.fillStyle = ctx.strokeStyle = color;
-      ctx.strokeRect(x, y, width, height);
-    }
-  });
-  
-  /*
-  Class: Canvas.Background.GridWithAxis
+      ctx.fillStyle = ctx.strokeStyle = '#cccccc';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x+width, y);
+      ctx.stroke();
+      ctx.closePath();
+    },
 
-  Create a Grid Background With Axis. This is essentially the same of a Grid Background but with legends and axis. 
-
-  (start code js)
-  var viz = new $jit.Viz({
-    background: {
-      //options to customize background
-      type: 'GridWithAxis',
-      numberOfDivisions:5,
-      orientation:'vertical',
-      legendX : 'year',
-      legendY : 'month',
-      axisOffset : 50,
-   });
-  (end code)
-
-  Options:
-   Same options of Grid Background, but in addition:
-   legendX - (string) Legend of x axis;
-   legendY - (string) Legend of y axis;
-   axisOffset - (int) Distance of axis from canvas offset;
-   
-  */
-  Canvas.Background.GridWithAxis = new Class({
-  initialize: function(viz, options) {
-    this.viz = viz;
-    this.config = $jit.util.merge({
-      idSuffix: '-bkcanvas',
-      levelDistance: 100,
-      numberOfDivisions: 8,
-      CanvasStyles: {},
-      filled: true,
-      legendX: 'x',
-      legendY: 'y',
-      oddColor: '#f2f2f2',
-      evenColor: '#ffffff',
-      axisOffset: 50,
-    }, options);
-  },
-  resize: function(width, height, base) {
-    this.plot(base);
-  },
-  plot: function(base) {
-    var canvas = base.canvas,
-        ctx = base.getCtx(),
-        conf = this.config,
-        styles = conf.CanvasStyles;
-    //set canvas styles
-    for(var s in styles) ctx[s] = styles[s];
-    var divisions = conf.numberOfDivisions,
-        rho = conf.levelDistance,
-        fill = (conf.filled) ? 'fillRect' : 'rect',
-        offset = conf.axisOffset,
-        margin = this.viz.config.Margin,
-        iniWidth = -canvas.width/2,
-        iniHeight = canvas.height/2,
-        width = canvas.width - margin.left - margin.right - offset,
-        height = canvas.height - margin.top - margin.bottom - offset,
-        heightDivision = height / (divisions-1),
-        widthDivision = width / (divisions-1),
-        colors = [conf.oddColor, conf.evenColor];
-    ctx.beginPath();
-    // painting background of white
-    ctx.fillStyle = ctx.strokeStyle= '#ffffff';
-    ctx.fillRect(iniWidth, -iniHeight, canvas.width, canvas.height);
-    
-    for(var i=1; i<=divisions; i++) {
-      ctx.fillStyle = colors[i%2];
-      ctx[fill](iniWidth + offset, iniHeight - height/divisions * i - offset, width, height/divisions);
+    drawBaseAxis: function (ctx, iniWidth, iniHeight, offset, width, height) {
+      // DRAWING BASE AXIS
       ctx.fillStyle = ctx.strokeStyle = '#000000';
+      // x
+      ctx.moveTo(iniWidth + offset, iniHeight - offset);
+      ctx.lineTo(iniWidth + offset + width, iniHeight - offset);
+      // y
+      ctx.moveTo(iniWidth + offset, iniHeight - offset);
+      ctx.lineTo(iniWidth + offset, iniHeight - offset - height);
+      // drawing legends
+      ctx.fillText(this.config.Axis.legendX || 'x', 0, iniHeight - 10);
+      ctx.rotate(Math.PI/-2);
+      ctx.fillText(this.config.Axis.legendY || 'y', offset, -iniHeight + offset - 10);
+      ctx.rotate(Math.PI/2);
+    },
+
+    drawAxisLines: function (ctx, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision) {
+      ctx.fillStyle = ctx.strokeStyle = '#000000';
+      for(var i=0; i<=divisions-1; i++) {
+        // y axis lines
+        ctx.moveTo(iniWidth + offset, iniHeight - offset - heightDivision*i);
+        ctx.lineTo(iniWidth + offset/1.5, iniHeight - offset - heightDivision*i);
+        // x axis lines
+        ctx.moveTo(iniWidth + offset + widthDivision * i, iniHeight - offset*0.8);
+        ctx.lineTo(iniWidth + offset + widthDivision * i, iniHeight - offset);
+      }
     }
-    this.drawBaseAxis(ctx, iniWidth, iniHeight, offset, width, height);
-    this.drawAxisLines(ctx, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision);
-    ctx.stroke();
-    ctx.closePath();
-  },
-
-  drawBaseAxis: function (ctx, iniWidth, iniHeight, offset, width, height) {
-    // DRAWING BASE AXIS
-    ctx.fillStyle = ctx.strokeStyle = '#000000';
-    // x
-    ctx.moveTo(iniWidth + offset, iniHeight - offset);
-    ctx.lineTo(iniWidth + offset + width, iniHeight - offset);
-    // y
-    ctx.moveTo(iniWidth + offset, iniHeight - offset);
-    ctx.lineTo(iniWidth + offset, iniHeight - offset - height);
-
-    // drawing legends
-    ctx.fillText(this.config.legendX, 0, iniHeight - 10);
-    ctx.rotate(Math.PI/-2);
-    ctx.fillText(this.config.legendY, offset, -iniHeight + offset - 10);
-    ctx.rotate(Math.PI/2);
-  },
-
-  drawAxisLines: function (ctx, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision) {
-    for(var i=0; i<=divisions-1; i++) {
-      // y axis lines
-      ctx.moveTo(iniWidth + offset, iniHeight - offset - heightDivision*i);
-      ctx.lineTo(iniWidth + offset/1.5, iniHeight - offset - heightDivision*i);
-      
-      // x axis lines
-      ctx.moveTo(iniWidth + offset + widthDivision * i, iniHeight - offset*0.8);
-      ctx.lineTo(iniWidth + offset + widthDivision * i, iniHeight - offset);
-    }
-  }
   });
 
-  
 })();

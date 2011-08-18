@@ -4,7 +4,7 @@ Layouts.Scatter = new Class({
     var size = this.canvas.getSize(),
         config = this.config,
         margin = config.Margin,
-        offset = this.backgroundConfig.axisOffset || 0,
+        offset = this.config.background.Axis && this.config.background.Axis.offset || 0,
         width = size.width - margin.left - margin.right - offset,
         height = size.height - margin.top - margin.bottom - offset,
         legendX = config.legendX,
@@ -34,7 +34,7 @@ Layouts.Scatter = new Class({
     var y = node.getData('y'),
         dim = node.getData('dim'),
         delta = (y - minY) / yRange; // delta will range from 0 to 1
-    return canvasHeight / 2 - margin.bottom - delta * height + offset + dim;
+    return canvasHeight / 2 - margin.bottom - delta * height - offset + dim/2;
   },
   
   calculateRanges: function() {
