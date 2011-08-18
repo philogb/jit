@@ -603,7 +603,7 @@ var Canvas;
       if (conf.Axis) {
         ctx.beginPath();
         this.drawBaseAxis(ctx, margin, iniWidth, -iniHeight, offset, width, height);
-        this.drawAxisLines(ctx, margin, iniWidth, -iniHeight, offset, n+1, widthDivision, heightDivision);
+        this.drawAxisLines(ctx, margin, iniWidth, -iniHeight, offset, n+1, width, height);
         ctx.stroke();
         ctx.closePath();
       }
@@ -642,16 +642,22 @@ var Canvas;
       ctx.rotate(Math.PI/2);
     },
 
-    drawAxisLines: function (ctx, margin, iniWidth, iniHeight, offset, divisions, widthDivision, heightDivision) {
+    drawAxisLines: function (ctx, margin, iniWidth, iniHeight, offset, divisions, width, height) {
       var initialX = iniWidth + offset + margin.left || 0,
 	  initialY = iniHeight - offset,
-	  line = 15;
+	  line = 15,
+	  linesX = this.config.Axis.linesX || divisions,
+	  linesY = this.config.Axis.linesY || divisions,
+	  widthDivision = width / (linesX-1),
+	  heightDivision = height / (linesY-1);
       ctx.fillStyle = ctx.strokeStyle = '#000000';
-      for(var i=0; i<=divisions-1; i++) {
-        // y axis lines
+      // y axis lines
+      for(var i=0; i<linesY; i++) {
         ctx.moveTo(initialX, initialY - heightDivision*i);
         ctx.lineTo(initialX - line, initialY - heightDivision*i);
-        // x axis lines
+      }
+      // x axis lines
+      for(var i=0; i<linesX; i++) {
         ctx.moveTo(initialX + widthDivision * i, initialY + line);
         ctx.lineTo(initialX + widthDivision * i, initialY);
       }

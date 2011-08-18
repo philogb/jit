@@ -65,6 +65,7 @@ function init() {
       Axis: {
         legendX: 'legend X',
         offset: 50,
+	linesX: 3
       },
       evenColor:'#f2f2f2',
       oddColor:'#ffffff'
@@ -80,6 +81,7 @@ function init() {
     },
     onAfterCompute: function(viz) {
       var ranges = viz.calculateRanges(),
+	  axis = viz.config.background.Axis,
           base = viz.canvas.canvases[1],
           conf = viz.config,
           ctx = base.getCtx(),
@@ -89,12 +91,14 @@ function init() {
           iniHeight = canvas.height/2,
           xRange = ranges.xRange,
           yRange = ranges.yRange,
-          offset = viz.config.background.Axis && viz.config.background.Axis.offset || 0,
+          offset = axis && axis.offset || 0,
           width = canvas.width - margin.left - margin.right,
           height = canvas.height - margin.top - margin.bottom,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
-          heightDivision = height / numberOfDivisions-1,
-          widthDivision = canvas.width / numberOfDivisions-1;
+	  linesX = axis && axis.linesX || numberOfDivisions,
+	  linesY = axis && axis.linesY || numberOfDivisions,
+          heightDivision = height / linesY,
+          widthDivision = width*1.3 / linesX;
 
       // cleaning canvas
       var size = lc.canvas.getSize();
@@ -106,19 +110,20 @@ function init() {
           startY = ranges.minY,
           interX = xRange / (numberOfDivisions-1),
           startX = ranges.minX,
-          membersX = [startX.toFixed(2)],
-          membersY = [startY.toFixed(2)];
+          membersY = [startY.toFixed(2)],
+	  membersX = json.label;
       for (var i=1; i<numberOfDivisions; i++) {
         startY += interY;
-        startX += interX;
-        membersX.push(startX.toFixed(2));
         membersY.push(startY.toFixed(2));
       }
-      for (var i=1, j=0; i<=numberOfDivisions; i++, j++) {
-        ctx.fillText(membersX[j], iniWidth + widthDivision * i - 25, iniHeight - offset/2);
+      // x numbers
+      for (var i=0; i<linesX; i++) {
+        ctx.fillText(membersX[i], iniWidth + offset + widthDivision * i, iniHeight - offset/2);
+      }
+      // y numbers
+      for (var i=1, j=0; i<=linesY; i++, j++) {
         ctx.fillText(membersY[j], iniWidth, iniHeight - heightDivision * i);
       }
-      
     }
   });
   lc.loadJSON(json);
