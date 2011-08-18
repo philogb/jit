@@ -646,8 +646,8 @@ var Canvas;
       var initialX = iniWidth + offset + margin.left || 0,
 	  initialY = iniHeight - offset,
 	  line = 15,
-	  linesX = this.config.Axis.linesX || divisions,
-	  linesY = this.config.Axis.linesY || divisions,
+	  linesX = this.config.Axis.linesX || divisions - 1,
+	  linesY = this.config.Axis.linesY || divisions - 1,
 	  widthDivision = width / (linesX-1),
 	  heightDivision = height / (linesY-1);
       ctx.fillStyle = ctx.strokeStyle = '#000000';

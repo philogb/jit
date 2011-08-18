@@ -52,7 +52,7 @@ function init() {
     Events: {
       enable: true,
       type: 'Native',
-      onClick: function(node) {
+      onMouseEnter: function(node) {
         console.log(node);
       }
     },
@@ -97,7 +97,7 @@ function init() {
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
 	  linesX = axis && axis.linesX || numberOfDivisions,
 	  linesY = axis && axis.linesY || numberOfDivisions,
-          heightDivision = height / linesY,
+          heightDivision = height*1.05 / linesY,
           widthDivision = width*1.2 / linesX;
 
       // cleaning canvas
@@ -112,7 +112,7 @@ function init() {
           startX = ranges.minX,
           membersY = [startY.toFixed(2)],
 	  membersX = json.label;
-      for (var i=1; i<numberOfDivisions; i++) {
+      for (var i=0; i<numberOfDivisions; i++) {
         startY += interY;
         membersY.push(startY.toFixed(2));
       }
@@ -121,8 +121,8 @@ function init() {
         ctx.fillText(membersX[i], iniWidth + offset + widthDivision * i, iniHeight - offset/2);
       }
       // y numbers
-      for (var i=1, j=0; i<=linesY; i++, j++) {
-        ctx.fillText(membersY[j], iniWidth, iniHeight - heightDivision * i);
+      for (var i=0; i<linesY; i++) {
+        ctx.fillText(membersY[i], iniWidth, iniHeight - offset - heightDivision * i);
       }
     }
   });
