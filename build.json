@@ -414,10 +414,7 @@
    "LineChart": [
        "Scatter"
    ],
-   "RadarChart": [
-       "Scatter"
-   ],
-    "AreaChart": [
+   "AreaChart": [
         "Options.AreaChart",
         "Options.Margin",
         "Spacetree"
