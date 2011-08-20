@@ -35,7 +35,7 @@ Layouts.TM.SliceAndDice = new Class({
     });
     
     var config = this.config,
-        offst = config.offset,
+        offset = config.offset,
         width  = par.getData('width', prop),
         height = Math.max(par.getData('height', prop) - config.titleHeight, 0),
         fact = par == ch? 1 : (ch.getData('area', prop) / totalArea);
@@ -625,19 +625,75 @@ Layouts.TM.Voronoi = new Class({
 
   centroid : function(sites, bound) {
     var tdist = 2, polygons;
-    while (tdist > 1) {
+    while (tdist > 1e-3) {
       polygons = Geometry.voronoi(sites, bound);
       tdist = 0;
       sites = polygons.map(function(p, j) {
         var c = Geometry.centroid(p);
-        tdist += Geometry.dist(c, sites[j]);
+        tdist += Geometry.dist2(c, sites[j]);
         return c;
       });
     }
     return sites;
   },
 
-  pressure : function(sites, bound) {
+  doLayoutPressure: function () {
+    var me = this,
+        root = me.graph.getNode(me.clickedNode && me.clickedNode.id || me.root);
+    root.eachNode(function() {
+
+    });
+  },
+  
+  weightedCentroid : function(sites, bound) {
+    // sites = this.centroid(sites, bound);
+    var pascal = [];
+    var tdist = 2, polygons, totalArea = Geometry.area(bound), totalWeight = 0, adjust;
+    $.each(sites, function(site, i) {
+      totalWeight += site.area;
+    });
+    adjust = totalArea / totalWeight;
+    polygons = Geometry.voronoi(sites, bound);
+    $.each(polygons, function(p, i) {
+        pascal[i] = sites[i].area * adjust / Geometry.area(p);
+      });
+    var s = 0, s2 = 0;
+    $.each(pascal, function(p, i) {
+      s += p;
+      s2 += p * p;
+    });
+    console.log('from ' + (s2 - s * s / pascal.length) / pascal.length);
+    while (tdist > 1e-3) {
+      polygons = Geometry.voronoi(sites, bound);
+      $.each(polygons, function(p, i) {
+        pascal[i] = sites[i].area * adjust / Geometry.area(p);
+      });
+      tdist = 0;
+      sites = polygons.map(function(p, j) {
+        var c = $C(0, 0), totalW = 0;
+        $.each(p, function(v, i) {
+          var poly = [sites[j], v, p[i + 1] || p[0]],
+              targetPascal = (v.attached) ? pascal[v.attached[0]] : 1,
+              w = Geometry.area(poly) * Math.exp((pascal[j] - targetPascal) * 2);
+          totalW += w;
+          c.$add(v.add(poly[2]).scale(0.5 * w));
+        });
+        c.$scale(1 / totalW);
+        c.area = sites[j].area;
+        tdist += Geometry.dist(c, sites[j]);
+        return c;
+      });
+    }
+    var s = 0, s2 = 0;
+    $.each(pascal, function(p, i) {
+      s += p;
+      s2 += p * p;
+    });
+    console.log('to ' + (s2 - s * s / pascal.length) / pascal.length);
+    return sites;
+  },
+
+  byArea : function(sites, bound) {
     sites = this.centroid(sites, bound);
     var tw = 0, iter = 0, polygons, pressure, polygons;
     $jit.util.each(sites, function(s) {

@@ -32,12 +32,12 @@ $jit.geometry = {
 
   /**
    *
-   * @param {Number} a1
-   * @param {Number} a2
-   * @param {Number} a3
+   * @param {Complex} p1
+   * @param {Complex} p2
+   * @param {Complex} p3
    */
-  weightOfPoint: function(a1, a2, a3) {
-    return (a3 - a1) / (a2 - a1);
+  weightOfPoint: function(p1, p2, p3) {
+    return (p3.x - p1.x) / (p2.x - p1.x);
   },
 
   /**
@@ -95,7 +95,7 @@ $jit.geometry = {
    * Reserves those l[0],l[1],c[i] is counter-clockwise
    *
    * @param {Complex[]} convex
-   * @param {Complex[][]} l as a ex line
+   * @param {Complex[]} l as a ex line
    * @param {?Object} attached
    */
   convexCut : function(convex, l, attached) {
@@ -268,14 +268,30 @@ $jit.geometry = {
    * The intersection of two segments
    * @param {Complex[]} l1
    * @param {Complex[]} l2
+   * @param {Boolean} [constraint]
    * @returns {Complex}
    */
-  intersectionSeg : function(l1, l2) {
+  intersectionSeg : function(l1, l2, constraint) {
     var c1 = Geometry.cross(l1[0], l2[0], l2[1]),
         c2 = Geometry.cross(l1[1], l2[0], l2[1]), k;
-    if (c1 === c2)
+    if (c1 == c2) {
       return null;
+    }
     k = c1 / (c1 - c2);
+    if (constraint) {
+      if (k < 0 || k > 1) {
+        return null;
+      }
+      var c3 = Geometry.cross(l2[0], l1[0], l1[1]),
+          c4 = Geometry.cross(l2[1], l1[0], l1[1]);
+      if (c3 == c4) {
+        return null;
+      }
+      var k2 = c3 / (c3 - c4);
+      if (k2 < 0 || k2 > 1) {
+        return null;
+      }
+    }
     return Geometry.weightedPoint(l1[0], l1[1], k);
   },
 
@@ -326,32 +342,6 @@ $jit.geometry = {
       return ((dx > 0) ^ (cdx > 0));
   },
 
-  /**
-   *
-   * @param {Complex} p1
-   * @param {Complex} orig
-   * @param {Complex} p2
-   */
-  angleBisectorLH: function(p1, orig, p2, dist) {
-    dist = dist || 1;
-    p1 = $C(orig.x - p1.x, orig.y - p1.y);
-    p2 = $C(p2.x - orig.x, p2.y - orig.y);
-    p1.$scale(1 / p1.norm());
-    p2.$scale(3 / p2.norm());
-    var oab = Geometry.weightedPoint(p1, p2, 0.25);
-    oab.$scale(- dist / oab.norm());
-    oab.$prod(Complex.IM);
-    return [orig, orig.add(oab)];
-  },
-
-  /**
-   * http://en.wikipedia.org/wiki/Straight_skeleton
-   * @param {Complex[]} polygon
-   */
-  straightSkeleton: function (polygon) {
-    
-  },
-  
   offsetConvex : function(convex, offset) {
     if (convex.length < 3) {
       return [];
@@ -400,37 +390,29 @@ $jit.geometry = {
     for (start = first_line.next; start != first_line; start = start.next) {
       result.push(start.cline[1]);
     }
-
-    if (offset < 0) {
-      if (result.length < 3) {
-        return Geometry.centroid(convex);
-      }
-      var p1 = result[0], p2 = result[1], pos = 1;
-      for (i = 2; i < result.length; i++) {
-        var curr = result[i];
-        if (Geometry.cross(p1, p2, curr) < 0) {
-          for (i = i + 1; i < result.length; i++) {
-            var curr2 = result[i];
-            if (Geometry.cross(p1, p2, curr2) > 0) {
-              p2 = result[pos] = Geometry.intersectionSeg([p1, p2], [curr, curr2]);
-              curr = curr2;
-              break;
-            } else {
-              curr = curr2;
-            }
-          }
-          if (i == result.length) {
-
-          }
-        }
-        
-        result[pos++] = curr;
-        p1 = p2;
-        p2 = curr;
-      }
-    }
-
+    if (offset < 0) return Geometry.cleanConvexHull(result);
     return result;
+  },
+
+  cleanConvexHull: function(convex) {
+    var last = convex[0], stack = [last], found = [], inter, np;
+    for (var i = 1; i <= convex.length; i++) {
+      var curr = convex[i] || convex[0];
+      for (var j = stack.length - 1; j > 0; j --) {
+        var p1 = stack[j], p2 = stack[j - 1];
+        if (inter = Geometry.intersectionSeg([last, curr], [p1, p2], true)) {
+          if(Geometry.area(np = [inter].concat(stack.slice(j))) > 0) {
+            found.push(np);
+          }
+          stack.length = j;
+          stack.push(inter);
+        }
+      }
+      stack.push(curr);
+      last = curr;
+    }
+    if (Geometry.area(stack)) found.push(stack);
+    return found[0] || Geometry.centroid(convex);
   },
 
   randPointInTriangle : function(t) {
@@ -487,8 +469,8 @@ $jit.geometry = {
    *            {[Array}
    */
   convexHull : function (sites) {
-    var stack_top = 0, i, temp, base, result;
-    for (i = 1; i < sites.length; i++) {
+    var stack_top = 0, i, temp, base, result, N = sites.length;
+    for (i = 1; i < N; i++) {
       if (sites[i].y < sites[0].y
           || (sites[i].y == sites[0].y && sites[i].x < sites[0].x)) {
         temp = sites[i];
@@ -499,15 +481,13 @@ $jit.geometry = {
     base = sites[0];
     sites.sort(Geometry.convexHull.polarComp(base));
     result = [sites[0], sites[1]];
-    stack_top = 1;
     for (i = 2; i < N; i++) {
-      while (stack_top
-          && Geometry.cross(result[stack_top - 1], result[stack_top], sites[i]) <= 0) {
-        stack_top--;
+      while (result.length && Geometry.cross(result[result.length - 2], result[result.length - 1], sites[i]) <= 0) {
+        result.pop();
       }
-      result[++stack_top] = sites[i];
+      result.push(sites[i]);
     }
-    return result.slice(stack_top + 1);
+    return result;
   },
 
   /**
