@@ -3,6 +3,9 @@ var G = $jit.geometry;
 var idlist;
 var ctx;
 var can;
+
+var ang = 0;
+
 var log = function(text) {
     var element = document.createElement('div');
     element.innerHTML = text;
@@ -46,6 +49,7 @@ function dp(cent) {
 }
 
 function draw() {
+
   ctx.fillStyle = "#CCC";
   ctx.fillRect(-400, -300, 800, 600);
   
@@ -114,6 +118,24 @@ function draw() {
   
   ctx.fillStyle = "#000";
   ctx.fillText("Steps: " + scount, -400, -280);
+
+  ctx.beginPath();
+  ctx.moveTo(30, 30);
+  ctx.lineTo(10, 30);
+  ctx.moveTo(30, 30);
+  ctx.lineTo(30 + Math.cos(ang) * 20, 30 + Math.sin(ang) * 20);
+  ctx.strokeStyle = "red";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.beginPath();
+  var p = G.angleBisector($C(20, 30), $C(30, 30), $C(30 + Math.cos(ang) * 10, 30 + Math.sin(ang) * 10), 30);
+  ctx.moveTo(30, 30);
+  ctx.lineTo(p[1].x, p[1].y)
+  ctx.strokeStyle = "blue";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ang+=0.05;
+    
 }
 
 function stroke() {
