@@ -850,7 +850,7 @@ tests_model = {
              'Title': 'Scatter Example',
              'Description':
              """
-             A Scatter example with horizontal background orientation.
+	     Height Versus Weight of 507 Individuals by Gender. Source: Heinz 2003
              """,
              'Extras': ['excanvas.js']
          }

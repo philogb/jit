@@ -626,7 +626,7 @@ var Canvas;
     drawBaseAxis: function (ctx, margin, iniWidth, iniHeight, offset, width, height) {
       // DRAWING BASE AXIS
       var initialX = iniWidth + offset + margin.left || 0,
-	  initialY = iniHeight - offset;
+	  initialY = iniHeight - offset - margin.bottom;
 	  ctx.fillStyle = ctx.strokeStyle = '#000000';
       
       // x
@@ -644,10 +644,10 @@ var Canvas;
 
     drawAxisLines: function (ctx, margin, iniWidth, iniHeight, offset, divisions, width, height) {
       var initialX = iniWidth + offset + margin.left || 0,
-	  initialY = iniHeight - offset,
+	  initialY = iniHeight - offset - margin.bottom,
 	  line = 15,
-	  linesX = this.config.Axis.linesX || divisions - 1,
-	  linesY = this.config.Axis.linesY || divisions - 1,
+	  linesX = this.config.Axis.linesX || divisions,
+	  linesY = this.config.Axis.linesY || divisions,
 	  widthDivision = width / (linesX-1),
 	  heightDivision = height / (linesY-1);
       ctx.fillStyle = ctx.strokeStyle = '#000000';
