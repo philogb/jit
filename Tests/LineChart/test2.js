@@ -98,7 +98,7 @@ function init() {
 	  linesX = axis && axis.linesX || numberOfDivisions,
 	  linesY = axis && axis.linesY || numberOfDivisions,
           heightDivision = height / (linesY-1),
-          widthDivision = width / linesX;
+          widthDivision = width / (linesX-1);
 
       // cleaning canvas
       var size = lc.canvas.getSize();
