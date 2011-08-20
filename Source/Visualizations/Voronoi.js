@@ -133,7 +133,7 @@ TM.Voronoi = new Class({
   Implements : [ Loader, Extras, TM.Base, Layouts.TM.Voronoi ],
   initialize : function(controller) {
     var config = {
-      centroidType : "centroid",
+      centroidType : "weightedCentroid",
       Node : {
         type : 'polygon',
         props : 'node-property:width:height:vertices'
