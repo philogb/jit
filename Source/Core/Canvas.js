@@ -603,7 +603,7 @@ var Canvas;
       if (conf.Axis) {
         ctx.beginPath();
         this.drawBaseAxis(ctx, margin, iniWidth, -iniHeight, offset, width, height);
-        this.drawAxisLines(ctx, margin, iniWidth, -iniHeight, offset, n+1, width, height);
+        this.drawAxisLines(ctx, margin, iniWidth, -iniHeight, offset, n, width, height);
         ctx.stroke();
         ctx.closePath();
       }

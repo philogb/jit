@@ -195,17 +195,17 @@ function init() {
           width = canvas.width - margin.left - margin.right - offset,
           height = canvas.height - margin.top - margin.bottom - offset,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
-          heightDivision = height / numberOfDivisions,
-          widthDivision = width / numberOfDivisions;
+          heightDivision = height / (numberOfDivisions-1),
+          widthDivision = width / (numberOfDivisions-1);
 
       // cleaning canvas
       var size = sp.canvas.getSize();
       sp.canvas.getCtx(1).clearRect(iniWidth, iniHeight, size.width, size.height);
       base.plot(base);
       // DRAWING NUMBERS
-      var interY = yRange / numberOfDivisions,
+      var interY = yRange / (numberOfDivisions-1),
           startY = ranges.minY,
-          interX = xRange / numberOfDivisions,
+          interX = xRange / (numberOfDivisions-1),
           startX = ranges.minX,
           membersX = [startX.toFixed(2)],
           membersY = [startY.toFixed(2)];

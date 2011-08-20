@@ -92,13 +92,13 @@ function init() {
           xRange = ranges.xRange,
           yRange = ranges.yRange,
           offset = axis && axis.offset || 0,
-          width = canvas.width - margin.left - margin.right,
-          height = canvas.height - margin.top - margin.bottom,
+          width = canvas.width - margin.left - margin.right - offset,
+          height = canvas.height - margin.top - margin.bottom - offset,
           numberOfDivisions = viz.backgroundConfig.numberOfDivisions,
 	  linesX = axis && axis.linesX || numberOfDivisions,
 	  linesY = axis && axis.linesY || numberOfDivisions,
-          heightDivision = height*1.05 / linesY,
-          widthDivision = width*1.2 / linesX;
+          heightDivision = height / (linesY-1),
+          widthDivision = width / linesX;
 
       // cleaning canvas
       var size = lc.canvas.getSize();
@@ -108,14 +108,13 @@ function init() {
       // DRAWING NUMBERS
       var interY = yRange / (numberOfDivisions-1),
           startY = ranges.minY,
-          interX = xRange / (numberOfDivisions-1),
-          startX = ranges.minX,
           membersY = [startY.toFixed(2)],
 	  membersX = json.label;
-      for (var i=0; i<numberOfDivisions; i++) {
+      for (var i=0; i<numberOfDivisions-1; i++) {
         startY += interY;
         membersY.push(startY.toFixed(2));
       }
+	console.log(membersY);
       // x numbers
       for (var i=0; i<linesX; i++) {
         ctx.fillText(membersX[i], iniWidth + offset + widthDivision * i, iniHeight - offset/2);
