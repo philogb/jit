@@ -46,7 +46,7 @@ Graph.Plot = {
           'vertices':'polygon'
           //'colorArray':'array-color'
         },
-        
+
         //canvas specific parsers
         'canvas': {
           'globalAlpha': 'number',
@@ -59,34 +59,34 @@ Graph.Plot = {
           'shadowOffsetY': 'number',
           'miterLimit': 'number'
         },
-  
+
         //label parsers
         'label': {
           'size': 'number',
           'color': 'color'
         },
-  
+
         //Number interpolator
         'compute': function(from, to, delta) {
           return from + (to - from) * delta;
         },
-        
+
         //Position interpolators
         'moebius': function(elem, props, delta, vector) {
-          var v = vector.scale(-delta);  
+          var v = vector.scale(-delta);
           if(v.norm() < 1) {
               var x = v.x, y = v.y;
               var ans = elem.startPos
                 .getc().moebiusTransformation(v);
               elem.pos.setc(ans.x, ans.y);
               v.x = x; v.y = y;
-            }           
+            }
         },
 
         'linear': function(elem, props, delta) {
             var from = elem.startPos.getc(true);
             var to = elem.endPos.getc(true);
-            elem.pos.setc(this.compute(from.x, to.x, delta), 
+            elem.pos.setc(this.compute(from.x, to.x, delta),
                           this.compute(from.y, to.y, delta));
         },
 
@@ -96,7 +96,7 @@ Graph.Plot = {
           var ans = to.interpolate(from, delta);
           elem.pos.setp(ans.theta, ans.rho);
         },
-        
+
         //Graph's Node/Edge interpolators
         'number': function(elem, prop, delta, getter, setter) {
           var from = elem[getter](prop, 'start');
@@ -111,10 +111,10 @@ Graph.Plot = {
           var val = $.rgbToHex([parseInt(comp(from[0], to[0], delta)),
                                 parseInt(comp(from[1], to[1], delta)),
                                 parseInt(comp(from[2], to[2], delta))]);
-          
+
           elem[setter](prop, val);
         },
-        
+
         'array-number': function(elem, prop, delta, getter, setter) {
           var from = elem[getter](prop, 'start'),
               to = elem[getter](prop, 'end'),
@@ -132,7 +132,7 @@ Graph.Plot = {
           }
           elem[setter](prop, cur);
         },
-        
+
         'node': function(elem, props, delta, map, getter, setter) {
           map = this[map];
           if(props) {
@@ -147,34 +147,34 @@ Graph.Plot = {
             }
           }
         },
-        
+
         'edge': function(elem, props, delta, mapKey, getter, setter) {
             var adjs = elem.adjacencies;
             for(var id in adjs) this['node'](adjs[id], props, delta, mapKey, getter, setter);
         },
-        
+
         'node-property': function(elem, props, delta) {
           this['node'](elem, props, delta, 'map', 'getData', 'setData');
         },
-        
+
         'edge-property': function(elem, props, delta) {
-          this['edge'](elem, props, delta, 'map', 'getData', 'setData');  
+          this['edge'](elem, props, delta, 'map', 'getData', 'setData');
         },
 
         'label-property': function(elem, props, delta) {
           this['node'](elem, props, delta, 'label', 'getLabelData', 'setLabelData');
         },
-        
+
         'node-style': function(elem, props, delta) {
           this['node'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');
         },
-        
+
         'edge-style': function(elem, props, delta) {
-          this['edge'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');  
+          this['edge'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');
         },
-        
+
         'polygon': function(elem, prop, delta, getter, setter) {
-          if (elem.selected || elem.id == 'root') {
+//          if (elem.selected || elem.id == 'root') {
             var from = elem[getter](prop, 'start'),
                 to = elem[getter](prop, 'end'),
                 cur = [];
@@ -219,28 +219,28 @@ Graph.Plot = {
               ));
             }
             elem[setter](prop, cur);
-          }
-          var sub = elem.getSubnodes([1, 1]);
-          var comp = this.compute;
-          var subSites = sub.map(function(node, i) {
-            var fromi = node.getPos('start'), toi = node.getPos('end');
-            var site = $C(
-                comp(fromi.x, toi.x, delta),
-                comp(fromi.y, toi.y, delta)
-            );
-            if (node.data.$area)
-              site.area = node.data.$area;
-            return site;
-          });
-          var boundary = elem[getter](prop);
-          var offset = elem.offset;
-          if (offset) {
-            boundary = $jit.geometry.offsetConvex(boundary, - offset);
-          }
-          var polygons = $jit.geometry.voronoi(subSites, boundary);
-          polygons.forEach(function(poly, i) {
-            sub[i][setter](prop, poly);
-          });
+//          }
+//          var sub = elem.getSubnodes([1, 1]);
+//          var comp = this.compute;
+//          var subSites = sub.map(function(node, i) {
+//            var fromi = node.getPos('start'), toi = node.getPos('end');
+//            var site = $C(
+//                comp(fromi.x, toi.x, delta),
+//                comp(fromi.y, toi.y, delta)
+//            );
+//            if (node.data.$area)
+//              site.area = node.data.$area;
+//            return site;
+//          });
+//          var boundary = elem[getter](prop);
+//          var offset = elem.offset;
+//          if (offset) {
+//            boundary = $jit.geometry.offsetConvex(boundary, - offset);
+//          }
+//          var polygons = $jit.geometry.voronoi(subSites, boundary);
+//          polygons.forEach(function(poly, i) {
+//            sub[i][setter](prop, poly);
+//          });
         }
     },
     

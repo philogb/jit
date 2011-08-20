@@ -20,6 +20,27 @@ $jit.geometry = {
   },
 
   /**
+   *
+   * @param {Complex} p1
+   * @param {Complex} p2
+   * @param {Number} weight
+   * @return {Complex}
+   */
+  weightedPoint: function(p1, p2, weight) {
+    return $C((p2.x - p1.x) * weight + p1.x, (p2.y -p1.y) * weight + p1.y);
+  },
+
+  /**
+   *
+   * @param {Number} a1
+   * @param {Number} a2
+   * @param {Number} a3
+   */
+  weightOfPoint: function(a1, a2, a3) {
+    return (a3 - a1) / (a2 - a1);
+  },
+
+  /**
    * Tests whether all points are in a polygon
    * @param {Complex[]} pts Points to be tested.
    * @param {Complex[]} polygon The Polygon.
@@ -255,10 +276,7 @@ $jit.geometry = {
     if (c1 === c2)
       return null;
     k = c1 / (c1 - c2);
-    return $C(
-        k * (l1[1].x - l1[0].x) + l1[0].x,
-        k * (l1[1].y - l1[0].y) + l1[0].y
-    );
+    return Geometry.weightedPoint(l1[0], l1[1], k);
   },
 
   /**
@@ -308,6 +326,32 @@ $jit.geometry = {
       return ((dx > 0) ^ (cdx > 0));
   },
 
+  /**
+   *
+   * @param {Complex} p1
+   * @param {Complex} orig
+   * @param {Complex} p2
+   */
+  angleBisectorLH: function(p1, orig, p2, dist) {
+    dist = dist || 1;
+    p1 = $C(orig.x - p1.x, orig.y - p1.y);
+    p2 = $C(p2.x - orig.x, p2.y - orig.y);
+    p1.$scale(1 / p1.norm());
+    p2.$scale(3 / p2.norm());
+    var oab = Geometry.weightedPoint(p1, p2, 0.25);
+    oab.$scale(- dist / oab.norm());
+    oab.$prod(Complex.IM);
+    return [orig, orig.add(oab)];
+  },
+
+  /**
+   * http://en.wikipedia.org/wiki/Straight_skeleton
+   * @param {Complex[]} polygon
+   */
+  straightSkeleton: function (polygon) {
+    
+  },
+  
   offsetConvex : function(convex, offset) {
     if (convex.length < 3) {
       return [];
@@ -315,6 +359,7 @@ $jit.geometry = {
     if (Geometry.area(convex) < 0) {
       convex.reverse();
     }
+
     var last_line = null, first_line = null, cnt = 0, i, start, stop, line, result;
     // Offset edges
     for (i = 0; i < convex.length; i++) {
@@ -349,14 +394,43 @@ $jit.geometry = {
       if (stop == first_line)
         break;
     }
+
     result = [];
     result.push(first_line.cline[1]);
-    for (i = first_line.next; i != first_line; i = i.next) {
-      result.push(i.cline[1]);
+    for (start = first_line.next; start != first_line; start = start.next) {
+      result.push(start.cline[1]);
     }
-    return result.filter(function(d) {
-      return !!d;
-    });
+
+    if (offset < 0) {
+      if (result.length < 3) {
+        return Geometry.centroid(convex);
+      }
+      var p1 = result[0], p2 = result[1], pos = 1;
+      for (i = 2; i < result.length; i++) {
+        var curr = result[i];
+        if (Geometry.cross(p1, p2, curr) < 0) {
+          for (i = i + 1; i < result.length; i++) {
+            var curr2 = result[i];
+            if (Geometry.cross(p1, p2, curr2) > 0) {
+              p2 = result[pos] = Geometry.intersectionSeg([p1, p2], [curr, curr2]);
+              curr = curr2;
+              break;
+            } else {
+              curr = curr2;
+            }
+          }
+          if (i == result.length) {
+
+          }
+        }
+        
+        result[pos++] = curr;
+        p1 = p2;
+        p2 = curr;
+      }
+    }
+
+    return result;
   },
 
   randPointInTriangle : function(t) {

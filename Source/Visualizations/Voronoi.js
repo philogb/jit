@@ -31,10 +31,11 @@ TM.Plot.NodeTypes.implement({
       if (Geometry.area(pts) < 0) {
         pts.reverse();
       }
-      if (offset) {
-        pts = Geometry.offsetConvex(pts, -offset * 0.5);
-      }
+//      if (offset) {
+//        pts = Geometry.offsetConvex(pts, -offset * 0.75);
+//      }
       if (leaf) {
+        ctx.lineJoin = "bevel";
         if (config.cushion) {
           var center = Geometry.centroid(pts), x = 0, y = 0, minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
           x = center[0];
@@ -65,6 +66,7 @@ TM.Plot.NodeTypes.implement({
           ctx.restore();
         }
       } else if (titleHeight > 0) {
+        pts = Geometry.offsetConvex(pts, -offset * 0.5);
         // Fill polygon
         ctx.beginPath();
         ctx.moveTo(pts[0].x, pts[0].y);
@@ -72,11 +74,12 @@ TM.Plot.NodeTypes.implement({
           ctx.lineTo(pts[i].x, pts[i].y);
         }
         ctx.lineTo(pts[0].x, pts[0].y);
+        ctx.closePath();
         ctx.save();
         ctx.lineWidth = config.offset;
         ctx.stroke();
         ctx.restore();
-        ctx.closePath();
+
       }
     },
 
@@ -117,150 +120,6 @@ TM.Plot.NodeTypes.implement({
   }
 });
 
-Layouts.TM.Voronoi = new Class({
-  Implements : Layouts.TM.Area,
-  compute : function(prop) {
-    this.controller.onBeforeCompute(root);
-    var root = this.graph.getNode(this.clickedNode && this.clickedNode.id || this.root),
-        size = this.canvas.getSize(),
-        config = this.config,
-        offset = config.offset,
-        width = size.width - offset * 2,
-        height = size.height - offset * 2;
-
-    this.graph.computeLevels(this.root, 0, 0);
-
-    // set root position and dimensions
-    root.getPos(prop).setc(-5, -5);
-    if (!root.histoPos) {
-      root.histoPos = [];
-    }
-    root.histoPos[0] = $C(0, 0);
-    var bound = [
-      $C(-width * 0.5, -height * 0.5),
-      $C(width * 0.5, -height * 0.5),
-      $C(width * 0.5, height * 0.5),
-      $C(-width * 0.5, height * 0.5)
-    ];
-
-    root.setData('vertices', bound, prop);
-    root.setData('width', 0, prop);
-    root.setData('height', 0, prop);
-    this.computePositions(root, bound, prop, 0);
-    this.controller.onAfterCompute(root);
-  },
-
-  centroid : function(sites, bound) {
-    var tdist = 2, polygons;
-    while (tdist > 1) {
-      polygons = Geometry.voronoi(sites, bound);
-      tdist = 0;
-      sites = polygons.map(function(p, j) {
-        var c = Geometry.centroid(p);
-        tdist += Geometry.dist(c, sites[j]);
-        return c;
-      });
-    }
-    return sites;
-  },
-
-  pressure : function(sites, bound) {
-    sites = this.centroid(sites, bound);
-    var tw = 0, iter = 0, polygons, pressure, polygons;
-    $jit.util.each(sites, function(s) {
-      tw += s.area;
-    });
-    tw = Geometry.area(bound) / tw;
-    for (; iter < 100; iter++) {
-      polygons = Geometry.voronoi(sites, bound);
-      for (var j = 0; j < sites.length; j++) {
-        if (polygons[j].length == 0) {
-          sites = polygons.map(function(p, j) {
-            return Geometry.centroid(p);
-          });
-          iter = 1;
-          break;
-        }
-      }
-      pressure = polygons.map(function(p, ind) {
-        return p.area * tw / (Geometry.area(p) + 1e-10);
-      });
-      polygons = Geometry.voronoi(sites, bound);
-      sites = polygons.map(function(p, ind) {
-        var po = $C(sites[ind].x, sites[ind].y), totalPressure, i;
-        po.area = sites[ind].area;
-        totalPressure = $C(0, 0);
-        $jit.util.each(p, function(v, i) {
-          var target = (v.attached) ? v.attached : -1,
-              targetPressure = (v.attached) ? pressure[v.attached[0]] : 1,
-              start = v,
-              stop = p[i + 1] || p[0],
-              pr = (pressure[ind] - targetPressure),
-              dx = stop.x - start.x,
-              dy = stop.y - start.y;
-          totalPressure.x += dy * pr;
-          totalPressure.y -= dx * pr;
-        });
-        po.x += totalPressure.x / 10;
-        po.y += totalPressure.y / 10;
-        po.tp = totalPressure;
-        return po;
-      });
-    }
-    return sites;
-  },
-
-  computePositions : function(node, bound, prop, level) {
-    var me = this,
-        chs = node.getSubnodes([ 1, 1 ], "ignore"),
-        config = this.config,
-        offset = config.offset,
-        histoPos = node.histoPos[level] || c(0, 0),
-        sites,
-        polygons;
-
-    node.setData('width', 0, prop);
-    node.setData('height', 0, prop);
-    node.getPos(prop).setc(histoPos.x, histoPos.y);
-
-    if (chs.length > 0) {
-      if (!chs[0].histoPos || !chs[0].histoPos[level + 1]) {
-        sites = $jit.util.map(chs, function(ch) {
-          var pt = Geometry.randPointInPolygon(bound);
-          if (ch.data && ch.data.$area)
-            pt.area = ch.data.$area;
-          return pt;
-        });
-        sites = me[me.config.centroidType](sites, bound);
-        $jit.util.each(sites, function(p, i) {
-          if (!chs[i].histoPos) {
-            chs[i].histoPos = [];
-          }
-          chs[i].histoPos[level + 1] = p;
-        });
-      }
-      sites = $jit.util.map(chs, function(ch) {
-        return ch.histoPos[level + 1];
-      });
-      polygons = Geometry.voronoi(sites, bound);
-
-      $jit.util.each(chs, function(ch, i) {
-        var vertices = polygons[i];
-        if (Geometry.area(vertices) < 0) {
-          vertices.reverse();
-        }
-        var vertices0 = vertices;
-        if (offset) {
-          vertices0 = Geometry.offsetConvex(vertices, -offset);
-          ch.offset = offset;
-        }
-        ch.setData('vertices', vertices, prop);
-        me.computePositions(ch, vertices0, prop, level + 1);
-      });
-    }
-  }
-});
-
 /*
  * Class: TM.Voronoi
  * 
@@ -274,13 +133,13 @@ TM.Voronoi = new Class({
   Implements : [ Loader, Extras, TM.Base, Layouts.TM.Voronoi ],
   initialize : function(controller) {
     var config = {
-      centroidType : "pressure",
+      centroidType : "centroid",
       Node : {
         type : 'polygon',
         props : 'node-property:width:height:vertices'
       },
       Label : {
-        textBaseline : 'center',
+        textBaseline : 'middle',
         type : 'Native'
       }
     };
