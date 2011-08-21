@@ -39,10 +39,12 @@ $jit.TM.$extend = true;
   offset - (number) Default's *2*. Boxes offset.
   constrained - (boolean) Default's *false*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
   levelsToShow - (number) Default's *3*. The number of levels to show for a subtree. This number is relative to the selected node.
+  labelsToShow - describe the range of levels to show for labels of sub tree. Default's [0, -1].
   animate - (boolean) Default's *false*. Whether to animate transitions.
   Node.type - Described in <Options.Node>. Default's *rectangle*.
   duration - Described in <Options.Fx>. Default's *700*.
   fps - Described in <Options.Fx>. Default's *45*.
+  
   
   Instance Properties:
   
@@ -83,6 +85,7 @@ TM.Base = {
       titleHeight: 13,
       offset: 2,
       levelsToShow: 0,
+      labelsToShow: [0, -1],
       constrained: false,
       animate: false,
       Node: {
@@ -92,7 +95,8 @@ TM.Base = {
         //right, Firefox?
         width: 3,
         height: 3,
-        color: '#444'
+        color: '#444',
+        props: 'node-property:width:height'
       },
       Label: {
         textAlign: 'center',
@@ -120,7 +124,10 @@ TM.Base = {
         }, canvasConfig.background);
       }
       this.canvas = new Canvas(this, canvasConfig);
-      this.config.labelContainer = (typeof canvasConfig.injectInto == 'string'? canvasConfig.injectInto : canvasConfig.injectInto.id) + '-label';
+      this.config.labelContainer = (
+        typeof canvasConfig.injectInto == 'string'? 
+        canvasConfig.injectInto : 
+        canvasConfig.injectInto.id) + '-label';
     }
 
     this.graphOptions = {
@@ -155,10 +162,10 @@ TM.Base = {
     var that = this;
     if(this.config.animate) {
       this.compute('end');
-      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
+      this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode
           && this.clickedNode.id || this.root));
       this.fx.animate($.merge(this.config, {
-        modes: ['linear', 'node-property:width:height'],
+        modes: ['linear', this.config.Node.props],
         onComplete: function() {
           that.busy = false;
         }
@@ -166,12 +173,11 @@ TM.Base = {
     } else {
       var labelType = this.config.Label.type;
       if(labelType != 'Native') {
-        var that = this;
         this.graph.eachNode(function(n) { that.labels.hideLabel(n, false); });
       }
       this.busy = false;
       this.compute();
-      this.config.levelsToShow > 0 && this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
+      this.geom.setRightLevelToShow(this.graph.getNode(this.clickedNode 
           && this.clickedNode.id || this.root));
       this.plot();
     }
@@ -216,7 +222,6 @@ TM.Base = {
   enter: function(n){
     if(this.busy) return;
     this.busy = true;
-    
     var that = this,
         config = this.config,
         graph = this.graph,
@@ -226,17 +231,18 @@ TM.Base = {
     var callback = {
       onComplete: function() {
         //ensure that nodes are shown for that level
-        if(config.levelsToShow > 0) {
-          that.geom.setRightLevelToShow(n);
-        }
+        that.geom.setRightLevelToShow(n);
+        
         //compute positions of newly inserted nodes
-        if(config.levelsToShow > 0 || config.request) that.compute();
+        if(config.request) that.compute();
         if(config.animate) {
           //fade nodes
           graph.nodeList.setData('alpha', 0, 'end');
           n.eachSubgraph(function(n) {
             n.setData('alpha', 1, 'end');
+            n.selected = false;
           }, "ignore");
+          clickedNode.selected = true;
           that.fx.animate({
             duration: 500,
             modes:['node-property:alpha'],
@@ -248,12 +254,13 @@ TM.Base = {
               //TODO(nico) commenting this line didn't seem to throw errors...
               that.clickedNode = previousClickedNode;
               that.fx.animate({
-                modes:['linear', 'node-property:width:height'],
+                modes:['linear', that.config.Node.props],
                 duration: 1000,
                 onComplete: function() { 
                   that.busy = false;
                   //TODO(nico) check comment above
                   that.clickedNode = clickedNode;
+                  that.geom.setRightLevelToShow(clickedNode);
                 }
               });
             }
@@ -265,6 +272,7 @@ TM.Base = {
         }
       }
     };
+    this.geom.setRightLevelToShow(n);
     if(config.request) {
       this.requestNodes(clickedNode, callback);
     } else {
@@ -296,9 +304,12 @@ TM.Base = {
       this.busy = false;
       return;
     }
+    parent.selected = true;
+    
     //final plot callback
-    callback = {
+    var callback = {
       onComplete: function() {
+        previousClickedNode.selected = false;
         that.clickedNode = parent;
         if(config.request) {
           that.requestNodes(parent, {
@@ -313,11 +324,12 @@ TM.Base = {
           that.plot();
           that.busy = false;
         }
+        that.geom.setRightLevelToShow(parent);
+        that.plot();
       }
     };
     //prune tree
-    if (config.levelsToShow > 0)
-      this.geom.setRightLevelToShow(parent);
+    this.geom.setRightLevelToShow(parent);
     //animate node positions
     if(config.animate) {
       this.clickedNode = clickedNode;
@@ -325,13 +337,13 @@ TM.Base = {
       //animate the visible subtree only
       this.clickedNode = previousClickedNode;
       this.fx.animate({
-        modes:['linear', 'node-property:width:height'],
+        modes:['linear', this.config.Node.props],
         duration: 1000,
         onComplete: function() {
           //animate the parent subtree
           that.clickedNode = clickedNode;
           //change nodes alpha
-          graph.eachNode(function(n) {
+          clickedNode.eachSubgraph(function(n) {
             n.setDataset(['current', 'end'], {
               'alpha': [0, 1]
             });
@@ -339,6 +351,7 @@ TM.Base = {
           previousClickedNode.eachSubgraph(function(node) {
             node.setData('alpha', 1);
           }, "ignore");
+          that.geom.setRightLevelToShow(parent);
           that.fx.animate({
             duration: 500,
             modes:['node-property:alpha'],
@@ -376,6 +389,7 @@ TM.Base = {
   }
 };
 
+
 /*
   Class: TM.Op
   
@@ -407,11 +421,13 @@ TM.Geom = new Class({
   },
   
   setRightLevelToShow: function(node) {
-    var level = this.getRightLevelToShow(), 
+    var level = this.getRightLevelToShow(),
+        labelRange = this.viz.config.labelsToShow,
         fx = this.viz.labels;
-    node.eachLevel(0, level+1, function(n) {
+    node.eachLevel(0, false, function(n) {
       var d = n._depth - node._depth;
-      if(d > level) {
+      n._hideLabel = labelRange[0] >= 0 && d < labelRange[0] || labelRange[1] >= 0 && d > labelRange[1];
+      if(level > 0 && d > level) {
         n.drawn = false; 
         n.exist = false;
         n.ignore = true;
@@ -554,15 +570,17 @@ TM.Label.Native = new Class({
   },
   
   renderLabel: function(canvas, node, controller){
-    if(!this.leaf(node) && !this.config.titleHeight) return;
-    var pos = node.pos.getc(true), 
+    if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) return;
+    var pos = node.pos.getc(true),
         ctx = canvas.getCtx(),
         width = node.getData('width'),
         height = node.getData('height'),
-        x = pos.x + width/2,
+        x = pos.x + width / 2,
         y = pos.y;
-        
-    ctx.fillText(node.name, x, y, width);
+    if (isNaN(width) || width == 0) 
+      ctx.fillText(node.name, x, y);
+    else
+      ctx.fillText(node.name, x, y, width);  
   }
 });
 
@@ -601,6 +619,7 @@ TM.Label.SVG = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
+  	controller = controller || this.viz.controller;
     var pos = node.pos.getc(true), 
         canvas = this.viz.canvas,
         ox = canvas.translateOffsetX,
@@ -615,7 +634,7 @@ TM.Label.SVG = new Class( {
     tag.setAttribute('x', labelPos.x);
     tag.setAttribute('y', labelPos.y);
 
-    if(!this.leaf(node) && !this.config.titleHeight) {
+    if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) {
       tag.style.display = 'none';
     }
     controller.onPlaceLabel(tag, node);
@@ -658,6 +677,7 @@ TM.Label.HTML = new Class( {
   
   */
   placeLabel: function(tag, node, controller){
+    controller = controller || this.viz.controller;
     var pos = node.pos.getc(true), 
         canvas = this.viz.canvas,
         ox = canvas.translateOffsetX,
@@ -678,7 +698,7 @@ TM.Label.HTML = new Class( {
     style.zIndex = node._depth * 100;
     style.display = '';
 
-    if(!this.leaf(node) && !this.config.titleHeight) {
+    if(node._hideLabel || !this.leaf(node) && !this.config.titleHeight) {
       tag.style.display = 'none';
     }
     controller.onPlaceLabel(tag, node);

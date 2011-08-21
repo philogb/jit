@@ -22,7 +22,8 @@
     "Matrix4": [],
     "Vector3": [],
     "Camera": ["Vector3", "Matrix4"],
-    "O3D": ["Vector3", "Matrix4"]
+    "O3D": ["Vector3", "Matrix4"],
+    "Geometry": ["Complex"]
   },
 
   "Extras": {
@@ -398,6 +399,14 @@
         "Options.BarChart",
         "Options.Margin",
         "Spacetree"
+    ],
+    
+    "Voronoi": [
+        "Core",
+        "Canvas",
+        "Extras",
+        "Geometry",
+        "Treemap"
     ]
   }
 }
