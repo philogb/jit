@@ -89,8 +89,9 @@ $jit.ST.Plot.NodeTypes.implement({
           if(aggValue !== false) {
             ctx.fillText(aggValue !== true? aggValue : valAcum, x, y - acumLeft - config.labelOffset - label.size/2, width);
           }
-          if(showLabels(node.name, valLeft, valRight, node)) {
-            ctx.fillText(node.name, x, y + label.size/2 + config.labelOffset);
+          var labValue = showLabels(node.name, valLeft, valRight, node)
+          if(labValue !== false) {
+            ctx.fillText(labValue !== true? labValue : node.name, x, y + label.size/2 + config.labelOffset);
           }
           ctx.restore();
         }

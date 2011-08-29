@@ -8,6 +8,7 @@ function init(){
     injectInto: 'infovis',
     //show only one tree level
     levelsToShow: 1,
+    labelsToShow: [1, 1],
     //parent box title heights
     titleHeight: 4,
     //enable animations
@@ -115,4 +116,5 @@ function init(){
     tm.out();
   });
 }
+
 

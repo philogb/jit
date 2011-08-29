@@ -83,6 +83,22 @@ Graph.Label.Native = new Class({
       ctx.fillText(node.name, pos.x, pos.y + node.getData("height") / 2);
     },
 
+    /*
+       Method: hideLabel
+   
+       Hides the corresponding <Graph.Node> label.
+    
+       Parameters:
+   
+       node - (object) A <Graph.Node>. Can also be an array of <Graph.Nodes>.
+       show - (boolean) If *true*, nodes will be shown. Otherwise nodes will be hidden.
+   
+       Example:
+       (start code js)
+        var rg = new $jit.Viz(options);
+        viz.labels.hideLabel(viz.graph.getNode('someid'), false);
+       (end code)
+    */
     hideLabel: $.empty,
     hideLabels: $.empty
 });
@@ -249,7 +265,7 @@ Graph.Label.DOM = new Class({
       node = $.splat(node);
       var st = show ? "" : "none", lab, that = this;
       $.each(node, function(n) {
-        var lab = that.getLabel(n.id);
+        lab = that.getLabel(n.id);
         if (lab) {
           lab.style.display = st;
         }

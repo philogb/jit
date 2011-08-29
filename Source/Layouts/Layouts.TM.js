@@ -35,7 +35,7 @@ Layouts.TM.SliceAndDice = new Class({
     });
     
     var config = this.config,
-        offst = config.offset,
+        offset = config.offset,
         width  = par.getData('width', prop),
         height = Math.max(par.getData('height', prop) - config.titleHeight, 0),
         fact = par == ch? 1 : (ch.getData('area', prop) / totalArea);
@@ -534,3 +534,208 @@ Layouts.TM.Strip = new Class({
      };
     }
  });
+
+
+Layouts.TM.Voronoi = new Class({
+  Implements : Layouts.TM.Area,
+  compute : function(prop) {
+    this.controller.onBeforeCompute(root);
+    var root = this.graph.getNode(this.clickedNode && this.clickedNode.id || this.root),
+        size = this.canvas.getSize(),
+        config = this.config,
+        offset = config.offset,
+        width = size.width,
+        height = size.height;
+
+    this.graph.computeLevels(this.root, 0, 0);
+
+    // set root position and dimensions
+    root.getPos(prop).setc(-5, -5);
+    if (!root.histoPos) {
+      root.histoPos = [];
+    }
+    root.histoPos[0] = $C(0, 0);
+    var bound = [
+      $C(-width * 0.5, -height * 0.5),
+      $C(width * 0.5, -height * 0.5),
+      $C(width * 0.5, height * 0.5),
+      $C(-width * 0.5, height * 0.5)
+    ];
+    bound = Geometry.offsetConvex(bound, -offset * 0.5);
+    root.setData('vertices', bound, prop);
+    root.setData('width', 0, prop);
+    root.setData('height', 0, prop);
+
+    bound = Geometry.offsetConvex(bound, -offset * 1.5);
+    this.computePositions(root, bound, prop, 0);
+    this.controller.onAfterCompute(root);
+  },
+
+
+  computePositions : function(node, bound, prop, level) {
+    var me = this,
+        chs = node.getSubnodes([ 1, 1 ], "ignore"),
+        config = this.config,
+        offset = config.offset,
+        historyPosition = node.histoPos[level] || c(0, 0),
+        sites,
+        polygons;
+
+    node.setData('width', 0, prop);
+    node.setData('height', 0, prop);
+    node.getPos(prop).setc(historyPosition.x, historyPosition.y);
+
+    if (chs.length > 0) {
+      if (!chs[0].histoPos || !chs[0].histoPos[level + 1]) {
+        sites = $jit.util.map(chs, function(ch) {
+          var pt = Geometry.randPointInPolygon(bound);
+          if (ch.data && ch.data.$area)
+            pt.area = ch.data.$area;
+          return pt;
+        });
+        sites = me[me.config.centroidType](sites, bound);
+        $jit.util.each(sites, function(p, i) {
+          if (!chs[i].histoPos) {
+            chs[i].histoPos = [];
+          }
+          chs[i].histoPos[level + 1] = p;
+        });
+      }
+      sites = $jit.util.map(chs, function(ch) {
+        return ch.histoPos[level + 1];
+      });
+      polygons = Geometry.voronoi(sites, bound);
+
+      $jit.util.each(chs, function(ch, i) {
+        var vertices = polygons[i];
+        var newBoundary = vertices.slice(0);
+        if (Geometry.area(vertices) < 0) {
+          vertices.reverse();
+        }
+        if (offset) {
+          newBoundary = Geometry.offsetConvex(vertices, -offset * 2);
+          vertices = Geometry.offsetConvex(vertices, -offset * 0.5);
+          ch.offset = offset;
+        }
+        ch.setData('vertices', vertices, prop);
+        me.computePositions(ch, newBoundary, prop, level + 1);
+      });
+    }
+  },
+
+  centroid : function(sites, bound) {
+    var tdist = 2, polygons;
+    while (tdist > 1e-3) {
+      polygons = Geometry.voronoi(sites, bound);
+      tdist = 0;
+      sites = polygons.map(function(p, j) {
+        var c = Geometry.centroid(p);
+        tdist += Geometry.dist2(c, sites[j]);
+        return c;
+      });
+    }
+    return sites;
+  },
+
+  doLayoutPressure: function () {
+    var me = this,
+        root = me.graph.getNode(me.clickedNode && me.clickedNode.id || me.root);
+    root.eachNode(function() {
+
+    });
+  },
+  
+  weightedCentroid : function(sites, bound) {
+    // sites = this.centroid(sites, bound);
+    var pascal = [];
+    var tdist = 2, polygons, totalArea = Geometry.area(bound), totalWeight = 0, adjust;
+    $.each(sites, function(site, i) {
+      totalWeight += site.area;
+    });
+    adjust = totalArea / totalWeight;
+    polygons = Geometry.voronoi(sites, bound);
+    $.each(polygons, function(p, i) {
+        pascal[i] = sites[i].area * adjust / Geometry.area(p);
+      });
+    var s = 0, s2 = 0;
+    $.each(pascal, function(p, i) {
+      s += p;
+      s2 += p * p;
+    });
+    console.log('from ' + (s2 - s * s / pascal.length) / pascal.length);
+    while (tdist > 1e-3) {
+      polygons = Geometry.voronoi(sites, bound);
+      $.each(polygons, function(p, i) {
+        pascal[i] = sites[i].area * adjust / Geometry.area(p);
+      });
+      tdist = 0;
+      sites = polygons.map(function(p, j) {
+        var c = $C(0, 0), totalW = 0;
+        $.each(p, function(v, i) {
+          var poly = [sites[j], v, p[i + 1] || p[0]],
+              targetPascal = (v.attached) ? pascal[v.attached[0]] : 1,
+              w = Geometry.area(poly) * Math.exp((pascal[j] - targetPascal) * 2);
+          totalW += w;
+          c.$add(v.add(poly[2]).scale(0.5 * w));
+        });
+        c.$scale(1 / totalW);
+        c.area = sites[j].area;
+        tdist += Geometry.dist(c, sites[j]);
+        return c;
+      });
+    }
+    var s = 0, s2 = 0;
+    $.each(pascal, function(p, i) {
+      s += p;
+      s2 += p * p;
+    });
+    console.log('to ' + (s2 - s * s / pascal.length) / pascal.length);
+    return sites;
+  },
+
+  byArea : function(sites, bound) {
+    sites = this.centroid(sites, bound);
+    var tw = 0, iter = 0, polygons, pressure, polygons;
+    $jit.util.each(sites, function(s) {
+      tw += s.area;
+    });
+    tw = Geometry.area(bound) / tw;
+    for (; iter < 100; iter++) {
+      polygons = Geometry.voronoi(sites, bound);
+      for (var j = 0; j < sites.length; j++) {
+        if (polygons[j].length == 0) {
+          sites = polygons.map(function(p, j) {
+            return Geometry.centroid(p);
+          });
+          // iter = 1;
+          break;
+        }
+      }
+      pressure = polygons.map(function(p, ind) {
+        return p.area * tw / (Geometry.area(p) + 1e-10);
+      });
+      polygons = Geometry.voronoi(sites, bound);
+      sites = polygons.map(function(p, ind) {
+        var po = $C(sites[ind].x, sites[ind].y), totalPressure, i;
+        po.area = sites[ind].area;
+        totalPressure = $C(0, 0);
+        $jit.util.each(p, function(v, i) {
+          var target = (v.attached) ? v.attached : -1,
+              targetPressure = (v.attached) ? pressure[v.attached[0]] : 1,
+              start = v,
+              stop = p[i + 1] || p[0],
+              pr = (pressure[ind] - targetPressure),
+              dx = stop.x - start.x,
+              dy = stop.y - start.y;
+          totalPressure.x += dy * pr;
+          totalPressure.y -= dx * pr;
+        });
+        po.x += totalPressure.x / 10;
+        po.y += totalPressure.y / 10;
+        po.tp = totalPressure;
+        return po;
+      });
+    }
+    return sites;
+  }
+});
