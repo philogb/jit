@@ -20,7 +20,6 @@ Graph.Plot = {
       this.node = viz.config.Node;
       this.edge = viz.config.Edge;
       this.animation = new Animation;
-      debugger;
       this.nodeTypes = new klass.Plot.NodeTypes;
       this.edgeTypes = new klass.Plot.EdgeTypes;
       this.labels = viz.labels;
@@ -44,10 +43,10 @@ Graph.Plot = {
           'span':'number',
           'valueArray':'array-number',
           'dimArray':'array-number',
-          'vertics':'polygon'
+          'vertices':'polygon'
           //'colorArray':'array-color'
         },
-        
+
         //canvas specific parsers
         'canvas': {
           'globalAlpha': 'number',
@@ -60,34 +59,34 @@ Graph.Plot = {
           'shadowOffsetY': 'number',
           'miterLimit': 'number'
         },
-  
+
         //label parsers
         'label': {
           'size': 'number',
           'color': 'color'
         },
-  
+
         //Number interpolator
         'compute': function(from, to, delta) {
           return from + (to - from) * delta;
         },
-        
+
         //Position interpolators
         'moebius': function(elem, props, delta, vector) {
-          var v = vector.scale(-delta);  
+          var v = vector.scale(-delta);
           if(v.norm() < 1) {
               var x = v.x, y = v.y;
               var ans = elem.startPos
                 .getc().moebiusTransformation(v);
               elem.pos.setc(ans.x, ans.y);
               v.x = x; v.y = y;
-            }           
+            }
         },
 
         'linear': function(elem, props, delta) {
             var from = elem.startPos.getc(true);
             var to = elem.endPos.getc(true);
-            elem.pos.setc(this.compute(from.x, to.x, delta), 
+            elem.pos.setc(this.compute(from.x, to.x, delta),
                           this.compute(from.y, to.y, delta));
         },
 
@@ -97,7 +96,7 @@ Graph.Plot = {
           var ans = to.interpolate(from, delta);
           elem.pos.setp(ans.theta, ans.rho);
         },
-        
+
         //Graph's Node/Edge interpolators
         'number': function(elem, prop, delta, getter, setter) {
           var from = elem[getter](prop, 'start');
@@ -112,10 +111,10 @@ Graph.Plot = {
           var val = $.rgbToHex([parseInt(comp(from[0], to[0], delta)),
                                 parseInt(comp(from[1], to[1], delta)),
                                 parseInt(comp(from[2], to[2], delta))]);
-          
+
           elem[setter](prop, val);
         },
-        
+
         'array-number': function(elem, prop, delta, getter, setter) {
           var from = elem[getter](prop, 'start'),
               to = elem[getter](prop, 'end'),
@@ -133,7 +132,7 @@ Graph.Plot = {
           }
           elem[setter](prop, cur);
         },
-        
+
         'node': function(elem, props, delta, map, getter, setter) {
           map = this[map];
           if(props) {
@@ -148,93 +147,77 @@ Graph.Plot = {
             }
           }
         },
-        
+
         'edge': function(elem, props, delta, mapKey, getter, setter) {
             var adjs = elem.adjacencies;
             for(var id in adjs) this['node'](adjs[id], props, delta, mapKey, getter, setter);
         },
-        
+
         'node-property': function(elem, props, delta) {
           this['node'](elem, props, delta, 'map', 'getData', 'setData');
         },
-        
+
         'edge-property': function(elem, props, delta) {
-          this['edge'](elem, props, delta, 'map', 'getData', 'setData');  
+          this['edge'](elem, props, delta, 'map', 'getData', 'setData');
         },
 
         'label-property': function(elem, props, delta) {
           this['node'](elem, props, delta, 'label', 'getLabelData', 'setLabelData');
         },
-        
+
         'node-style': function(elem, props, delta) {
           this['node'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');
         },
-        
+
         'edge-style': function(elem, props, delta) {
-          this['edge'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');  
+          this['edge'](elem, props, delta, 'canvas', 'getCanvasStyle', 'setCanvasStyle');
         },
-        
+
         'polygon': function(elem, prop, delta, getter, setter) {
-        	if (elem.selected || elem.id == 'root') {
-            var from = elem[getter](prop, 'start'),
-                to = elem[getter](prop, 'end'),
-                cur = [];
-            var dist = function (c1, c2) {
-              var dx = c1.x - c2.x, dy = c1.y - c2.y;
-              return dx * dx + dy * dy;
-            };
-            if(typeof from.offset == 'undefined') {
-              if(from === 0) {
-                from = $.map(to,function(){return new $jit.Complex(0, 0);});
-                from.offset = 0;
+          var from = elem[getter](prop, 'start'),
+              to = elem[getter](prop, 'end'),
+              cur = [];
+          if (typeof from.offset == 'undefined') {
+            if (from === 0) {
+              from = $.map(to, function() {
+                return new $jit.Complex(0, 0);
+              });
+              from.offset = 0;
+            }
+            else {
+              if (from.length == 0) {
+                from.push(new $jit.Complex(0, 0));
               }
-              else {
-                if(from.length == 0) {
-                    from.push(new $jit.Complex(0, 0));
+              while (from.length < to.length) {
+                from.push(from[0]);
+              }
+              while (from.length > to.length) {
+                to.push(to[0] || new $jit.Complex(0, 0));
+              }
+              if (from.length == 0) return;
+              var l = from.length;
+              var minDist = 1e300;
+              for (var offset = 0; offset < l; offset ++) {
+                var d = 0;
+                for (var i = 0; i < l; i++) {
+                  d +=Geometry.dist2(from[(offset + i) % l], to[i]);
                 }
-                while(from.length < to.length) {
-                  from.push(from[0]);
-                }
-                while(from.length > to.length) {
-                  to.push(to[0] || new $jit.Complex(0, 0));
-                }
-                if (from.length == 0) return;
-                var l = from.length;
-                var minDist = 1e300;
-                for(var offset = 0; offset < l; offset ++) {
-                  var d = 0;
-                  for(var i = 0; i < l; i++){
-                    d += dist(from[(offset + i) % l], to[i]);
-                  }
-                  if (d < minDist)
-                  {
-                    from.offset = offset;
-                    minDist = d;
-                  }
+                if (d < minDist) {
+                  from.offset = offset;
+                  minDist = d;
                 }
               }
             }
-            
-            for(var i=0, l=from.length; i<l; i++) {
-              var fromi = from[(i + from.offset) % l], toi = to[i];
-              cur.push(new $jit.Complex(
-                  this.compute(fromi.x, toi.x, delta),
-                  this.compute(fromi.y, toi.y, delta)
-                ));
-            }
-            elem[setter](prop, cur);
-        	}	
-        	var sub = elem.getSubnodes([1, 1]);
-        	var comp = this.compute;
-        	var subSites = sub.map(function(node, i){
-        		var fromi = node.getPos('start'), toi = node.getPos('end');
-        	  return new $jit.Complex(
-                  comp(fromi.x, toi.x, delta),
-                  comp(fromi.y, toi.y, delta)
-                );
-        	});
-        	var polygons = $jit.Voronoi.voronoiFortune(subSites, elem[getter](prop));
-        	polygons.forEach(function(poly, i) { sub[i][setter](prop, poly); });
+          }
+
+          for (var i = 0, l = from.length; i < l; i++) {
+            var fromi = from[(i + from.offset) % l], toi = to[i];
+            cur.push(new $jit.Complex(
+                this.compute(fromi.x, toi.x, delta),
+                this.compute(fromi.y, toi.y, delta)
+            ));
+          }
+          elem[setter](prop, cur);
         }
     },
     
@@ -609,10 +592,10 @@ Graph.Plot = {
    */
    plotTree: function(node, opt, animating) {
        var that = this, 
-       viz = this.viz, 
-       canvas = viz.canvas,
-       config = this.config,
-       ctx = canvas.getCtx();
+           viz = this.viz, 
+           canvas = viz.canvas,
+           config = this.config,
+           ctx = canvas.getCtx();
        var nodeAlpha = node.getData('alpha');
        node.eachSubnode(function(elem) {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {

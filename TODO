@@ -10,5 +10,5 @@ Articles
 * implementing NodeTypes/EdgeTypes documentation is pretty important!
 
 Bugs
-IE.x has a strange behavior when morphing with animations in ForceDirected/3. Labels that were removed are still there captured by the event system,
+* IE.x has a strange behavior when morphing with animations in ForceDirected/3. Labels that were removed are still there captured by the event system,
 but not label or value is returned when, once the event fired, I try to retrieve the subject that fired the event. Weird.

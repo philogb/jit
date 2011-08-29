@@ -387,4 +387,5 @@ Complex.prototype = {
 var $C = function(a, b) { return new Complex(a, b); };
 
 Complex.KER = $C(0, 0);
+Complex.IM = $C(0, 1);
 

@@ -22,7 +22,8 @@
     "Matrix4": [],
     "Vector3": [],
     "Camera": ["Vector3", "Matrix4"],
-    "O3D": ["Vector3", "Matrix4"]
+    "O3D": ["Vector3", "Matrix4"],
+    "Geometry": ["Complex"]
   },
 
   "Extras": {
@@ -404,6 +405,7 @@
         "Core",
         "Canvas",
         "Extras",
+        "Geometry",
         "Treemap"
     ]
   }
