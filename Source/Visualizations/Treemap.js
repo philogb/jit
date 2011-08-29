@@ -238,7 +238,7 @@ TM.Base = {
             n.setData('alpha', 1, 'end');
           }, "ignore");
           that.fx.animate({
-            duration: 500,
+            duration: that.config.duration / 3,
             modes:['node-property:alpha'],
             onComplete: function() {
               //compute end positions
@@ -249,7 +249,7 @@ TM.Base = {
               that.clickedNode = previousClickedNode;
               that.fx.animate({
                 modes:['linear', 'node-property:width:height'],
-                duration: 1000,
+                duration: 2 * that.config.duration / 3,
                 onComplete: function() { 
                   that.busy = false;
                   //TODO(nico) check comment above
@@ -326,7 +326,7 @@ TM.Base = {
       this.clickedNode = previousClickedNode;
       this.fx.animate({
         modes:['linear', 'node-property:width:height'],
-        duration: 1000,
+        duration: 2 * this.config.duration / 3,
         onComplete: function() {
           //animate the parent subtree
           that.clickedNode = clickedNode;
@@ -340,7 +340,7 @@ TM.Base = {
             node.setData('alpha', 1);
           }, "ignore");
           that.fx.animate({
-            duration: 500,
+            duration: that.config.duration / 3,
             modes:['node-property:alpha'],
             onComplete: function() {
               callback.onComplete();
