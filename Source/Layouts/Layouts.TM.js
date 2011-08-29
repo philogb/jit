@@ -105,8 +105,8 @@ Layouts.TM.Area = {
     root.setData('height', height, prop);
     //create a coordinates object
     var coord = {
-        'top': -height/2 + config.titleHeight,
-        'left': -width/2,
+        'top': -height/2 + config.titleHeight + offst / 2,
+        'left': -width/2 + offst / 2,
         'width': offwdth,
         'height': offhght - config.titleHeight
     };
@@ -261,8 +261,8 @@ Layouts.TM.Squarified = new Class({
        coord = {
          'width': width,
          'height': height,
-         'top': chipos.y + config.titleHeight,
-         'left': chipos.x
+         'top': chipos.y + config.titleHeight + offst / 2,
+         'left': chipos.x + offst / 2
        };
        this.computePositions(chi, coord, prop);
      }
@@ -415,8 +415,8 @@ Layouts.TM.Strip = new Class({
          coord = {
            'width': width,
            'height': height,
-           'top': chipos.y + config.titleHeight,
-           'left': chipos.x
+           'top': chipos.y + config.titleHeight + offst / 2,
+           'left': chipos.x + offst / 2
          };
          this.computePositions(chi, coord, prop);
        }
