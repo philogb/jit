@@ -204,7 +204,7 @@ $jit.Icicle = new Class({
     };
 
     if(config.request) {
-      this.requestNodes(clickedNode, callback);
+      this.requestNodes(node, callback);
     } else {
       callback.onComplete();
     }
