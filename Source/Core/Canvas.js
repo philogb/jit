@@ -295,6 +295,40 @@ var Canvas;
       this.translate(dx, dy, false);
     },
     /*
+      Method: getZoom
+
+      Returns canvas zooming factors. *1* means initial zoom.
+
+      Returns:
+
+      An object with *x* and *y* properties.
+    */
+    getZoom: function() {
+      return new Complex(this.scaleOffsetX, this.scaleOffsetY);
+    },
+    /*
+      Method: setZoom
+
+      Sets the zoom to given factors. *1* means initial zoom.
+
+      Parameters:
+
+      x - (number) zooming factor
+      y - (number) zooming factor
+      disablePlot - (boolean) Default's *false*. Set this to *true* if you don't want to refresh the visualization.
+
+      Example:
+      (start code js)
+      canvas.setZoom(2, 2); //sets 2x zoom
+      (end code)
+    */
+    setZoom: function(x, y, disablePlot) {
+      var cur = this.getZoom(),
+          px = x / cur.x,
+          py = y / cur.y;
+      this.scale(px, py, disablePlot);
+    },
+    /*
       Method: getPos
       
       Returns the canvas position as an *x, y* object.
