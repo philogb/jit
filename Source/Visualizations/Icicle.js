@@ -204,7 +204,7 @@ $jit.Icicle = new Class({
     };
 
     if(config.request) {
-      this.requestNodes(clickedNode, callback);
+      this.requestNodes(node, callback);
     } else {
       callback.onComplete();
     }
@@ -299,8 +299,6 @@ $jit.Icicle = new Class({
         if (n.drawn && !Graph.Util.anySubnode(n)) {
           leaves.push(n);
           n._level = n._depth - d;
-          if (this.config.constrained)
-            n._level = levelsToShow - n._level;
 
         }
       });

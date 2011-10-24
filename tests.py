@@ -495,6 +495,23 @@ tests_model = {
             'Extras': ['excanvas.js'],
             'Example': True
         },
+        {
+            'Title': 'Icicle with dynamic loading',
+            'Description': 
+            """
+            <p>A static JSON tree is loaded at start. The visualization
+            dynamically adds the said tree to extend the visualization to be
+            practically endless.</p>
+            <p>
+              <b>Left click</b> to set a node as root for the visualization.
+            </p>
+            <p>
+              <b>Right click</b> to set the parent node as root for the visualization.
+            </p>
+            """,
+            'Extras': ['excanvas.js'],
+            'Example': True
+        },
    ],
 
     'ForceDirected': [
