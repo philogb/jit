@@ -1494,9 +1494,10 @@ $jit.ST.Plot.EdgeTypes = new Class({
          var orn = this.getOrientation(adj),
              node = adj.nodeFrom, 
              child = adj.nodeTo,
+             rel = (node._depth < child._depth),
              dim = adj.getData('dim'),
-             from = this.viz.geom.getEdge(node, 'begin', orn),
-             to = this.viz.geom.getEdge(child, 'end', orn),
+             from = this.viz.geom.getEdge((rel?node:child), 'begin', orn),
+             to = this.viz.geom.getEdge((rel?child:node), 'end', orn),
              direction = adj.data.$direction,
              inv = (direction && direction.length>1 && direction[0] != node.id);
          this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
