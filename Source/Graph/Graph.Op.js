@@ -63,7 +63,10 @@ Graph.Op = {
         var i, that, nodeObj;
         switch(options.type) {
             case 'nothing':
-                for(i=0; i<n.length; i++) viz.graph.removeNode(n[i]);
+                for(i=0; i<n.length; i++) {
+                    options.onBeforeRemoveNode(viz.graph.getNode(n[i]));
+                    viz.graph.removeNode(n[i]);
+                }
                 break;
             
             case 'replot':
