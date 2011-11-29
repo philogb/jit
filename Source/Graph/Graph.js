@@ -1073,6 +1073,7 @@ Graph.Util = {
         var queue = [graph.getNode(id)];
         while(queue.length != 0) {
             var node = queue.pop();
+            if (!node) return;
             node._flag = true;
             action(node, node._depth);
             this.eachAdjacency(node, function(adj) {
@@ -1089,6 +1090,7 @@ Graph.Util = {
        Method: eachLevel
     
        Iterates over a node's subgraph applying *action* to the nodes of relative depth between *levelBegin* and *levelEnd*.
+       In case you need to break the iteration, *action* should return false.
        
        Also implemented by:
        
@@ -1103,18 +1105,20 @@ Graph.Util = {
 
     */
     eachLevel: function(node, levelBegin, levelEnd, action, flags) {
-        var d = node._depth, filter = this.filter(flags), that = this;
+        var d = node._depth, filter = this.filter(flags), that = this, shouldContinue = true;
         levelEnd = levelEnd === false? Number.MAX_VALUE -d : levelEnd;
         (function loopLevel(node, levelBegin, levelEnd) {
-            var d = node._depth;
-            if(d >= levelBegin && d <= levelEnd && filter(node)) action(node, d);
-            if(d < levelEnd) {
+            if(!shouldContinue) return;
+            var d = node._depth, ret;
+            if(d >= levelBegin && d <= levelEnd && filter(node)) ret = action(node, d);
+            if(typeof ret !== "undefined") shouldContinue = ret;
+            if(shouldContinue && d < levelEnd) {
                 that.eachAdjacency(node, function(adj) {
                     var n = adj.nodeTo;
                     if(n._depth > d) loopLevel(n, levelBegin, levelEnd);
                 });
             }
-        })(node, levelBegin + d, levelEnd + d);      
+        })(node, levelBegin + d, levelEnd + d);
     },
 
     /*

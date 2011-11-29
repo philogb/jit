@@ -66,7 +66,8 @@
    onAfterPlotNode(node) - This method is triggered right after plotting each <Graph.Node>.
    onBeforePlotLine(adj) - This method is triggered right before plotting a <Graph.Adjacence>. This method is useful for adding some styles to a particular edge before being plotted.
    onAfterPlotLine(adj) - This method is triggered right after plotting a <Graph.Adjacence>.
-
+   onBeforeRemoveNode(node) - This method is triggered right before removing each <Graph.Node>.
+   
     *Used in <ST>, <TM.Base> and <Icicle> visualizations*
     
     request(nodeId, level, onComplete) - This method is used for buffering information into the visualization. When clicking on an empty node, the visualization will make a request for this node's subtrees, specifying a given level for this subtree (defined by _levelsToShow_). Once the request is completed, the onComplete callback should be called with the given result. This is useful to provide on-demand information into the visualizations withought having to load the entire information from start. The parameters used by this method are _nodeId_, which is the id of the root of the subtree to request, _level_ which is the depth of the subtree to be requested (0 would mean just the root node). _onComplete_ is an object having the callback method _onComplete.onComplete(json)_ that should be called once the json has been retrieved.  
@@ -75,14 +76,15 @@
 Options.Controller = {
   $extend: true,
   
-  onBeforeCompute: $.empty,
-  onAfterCompute:  $.empty,
-  onCreateLabel:   $.empty,
-  onPlaceLabel:    $.empty,
-  onComplete:      $.empty,
-  onBeforePlotLine:$.empty,
-  onAfterPlotLine: $.empty,
-  onBeforePlotNode:$.empty,
-  onAfterPlotNode: $.empty,
+  onBeforeCompute:   $.empty,
+  onAfterCompute:    $.empty,
+  onCreateLabel:     $.empty,
+  onPlaceLabel:      $.empty,
+  onComplete:        $.empty,
+  onBeforePlotLine:  $.empty,
+  onAfterPlotLine:   $.empty,
+  onBeforePlotNode:  $.empty,
+  onAfterPlotNode:   $.empty,
+  onBeforeRemoveNode:$.empty,
   request:         false
 };
