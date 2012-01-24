@@ -28,7 +28,7 @@ class Build:
     def build(self, args=[]):
         if not args: args = default_visualizations
         self.script = ''.join([self.load_script(viz) for viz in args if viz in self.build_model['Visualizations']])
-        return 'var $jit;\n\n(function () { \n\n' + self.script + '\n\n })();'
+        return '(function () { \n\n' + self.script + '\n\n })();'
     
     def load_script(self, script=None):
         ans = ''
