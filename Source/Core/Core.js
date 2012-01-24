@@ -10,7 +10,7 @@
  This variable is the *only* global variable defined in the Toolkit. 
  There are also other interesting properties attached to this variable described below.
  */
-window.$jit = function(w) {
+this.$jit = function(w) {
   w = w || window;
   for(var k in $jit) {
     if($jit[k].$extend) {
