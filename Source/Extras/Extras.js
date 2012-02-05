@@ -264,9 +264,9 @@ Extras.Classes.Events = new Class({
     var evt = $.event.get(e, win);
     if(!this.moved) {
       if(isRightClick) {
-        this.config.onRightClick(this.hovered, event, evt);
+        this.hovered && this.config.onRightClick(this.hovered, event, evt);
       } else {
-        this.config.onClick(this.pressed, event, evt);
+        this.pressed && this.config.onClick(this.pressed, event, evt);
       }
     }
     if(this.pressed) {

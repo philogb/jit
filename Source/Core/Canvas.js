@@ -55,7 +55,7 @@ var Canvas;
 (function() {
   //check for native canvas support
   var canvasType = typeof HTMLCanvasElement,
-      supportsCanvas = (canvasType == 'object' || canvasType == 'function');
+  supportsCanvas = (canvasType == 'object' || canvasType == 'function');
   //create element function
   function $E(tag, props) {
     var elem = document.createElement(tag);
@@ -81,7 +81,7 @@ var Canvas;
     translateOffsetY: 0,
     scaleOffsetX: 1,
     scaleOffsetY: 1,
-    
+
     initialize: function(viz, opt) {
       this.viz = viz;
       this.opt = this.config = opt;
@@ -126,6 +126,7 @@ var Canvas;
       if(back) {
         var backCanvas = new Canvas.Background[back.type](viz, $.extend(back, canvasOptions));
         this.canvases.push(new Canvas.Base[type](backCanvas));
+        viz.backgroundConfig = backCanvas.config;
       }
       //insert canvases
       var len = this.canvases.length;
@@ -540,4 +541,161 @@ var Canvas;
       //TODO(nico): print labels too!
     }
   });
+  
+  /*
+   Class: Canvas.Background.Grid
+   
+   Create a Grid Background. This could be oriented vertically or horizontally.
+   
+   How to customize Grid Background
+
+   (start code js)
+   	var viz = new $jit.Viz({
+   		background: {
+   		  //options to customize background
+        type: 'Grid',
+        numberOfDivisions:5,
+        orientation:'vertical',
+        Axis : {
+          legendX:'legend',
+          offset:50
+        }
+  	 });
+   (end code)
+   
+   Options:
+   
+     oddColor - (string) Odd color in RGB;
+     evenColor - (string) Even color in RGB;
+     numberOfDivisions - (int) Numbers of divisions inside the grid;
+     filled - (boolean) - Fill of division;
+     orientation - (string) Orientation of the grid. Can be 'vertical' or 'horizontal';
+     Axis - (object)
+       legendX - (string) Legend of x axis;
+       legendY - (string) Legend of y axis;
+       offset - (int) Distance of axis from canvas offset;
+
+   
+   */
+  Canvas.Background.Grid = new Class({
+    initialize: function(viz, options) {
+      this.viz = viz;
+      this.config = $.merge({
+        idSuffix: '-bkcanvas',
+        levelDistance: 100,
+        numberOfDivisions: 8,
+        CanvasStyles: {},
+        Axis: undefined,
+        orientation: 'vertical',
+        filled: true,
+        oddColor: '#f2f2f2',
+        evenColor: '#ffffff',
+        offset: 0
+      }, options);
+    },
+    resize: function(width, height, base) {
+      this.plot(base);
+    },
+    plot: function(base) {
+      var canvas = base.canvas,
+          ctx = base.getCtx(),
+          conf = this.config,
+          margin = this.viz.config.Margin,
+          styles = conf.CanvasStyles,
+          n = conf.numberOfDivisions,
+          iterations = n-1,
+          rho = conf.levelDistance,
+          fill = (conf.filled) ? 'drawFilledGrid' : 'drawStrokedGrid',
+          offset = conf.Axis && conf.Axis.offset || 0,
+          width = canvas.width - margin.left - margin.right - offset,
+          height = canvas.height - margin.top - margin.bottom - offset,
+          iniHeight = -canvas.height/2,
+          iniWidth = -canvas.width/2,
+          heightDivision = height / iterations,
+          widthDivision = width / iterations,
+          colors = [conf.oddColor, conf.evenColor],
+          oldColor = ctx.fillStyle = ctx.strokeStyle;
+      // set canvas styles
+      for(var s in styles) ctx[s] = styles[s];
+      // painting background of white
+      ctx.fillStyle = ctx.strokeStyle='#ffffff';
+      ctx.fillRect(iniWidth, iniHeight, canvas.width, canvas.height);
+      // start draw
+      ctx.fillStyle = ctx.strokeStyle = oldColor;
+      ctx.beginPath();
+      for(var i=0; i<iterations; i++) {
+        if (conf.orientation == 'vertical') {
+          this[fill](ctx, iniWidth + margin.left + offset + (widthDivision * i),
+                     iniHeight + margin.top, widthDivision, height, colors[i%2]);
+        } else if (conf.orientation == 'horizontal') {
+          this[fill](ctx, iniWidth + margin.left + offset, iniHeight + margin.top +
+                     (heightDivision * i), width, heightDivision, colors[i%2]);
+
+        }
+      }
+      ctx.closePath();
+      if (conf.Axis) {
+        ctx.beginPath();
+        this.drawBaseAxis(ctx, margin, iniWidth, -iniHeight, offset, width, height);
+        this.drawAxisLines(ctx, margin, iniWidth, -iniHeight, offset, n, width, height);
+        ctx.stroke();
+        ctx.closePath();
+      }
+      ctx.fillStyle = ctx.strokeStyle = oldColor;
+    },
+    drawFilledGrid: function(ctx, x, y, width, height, color) {
+      ctx.fillStyle = ctx.strokeStyle = color;
+      ctx.fillRect(x, y, width, height);
+    },
+
+    drawStrokedGrid: function(ctx, x, y, width, height, color) {
+      ctx.fillStyle = ctx.strokeStyle = '#cccccc';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x+width, y);
+      ctx.stroke();
+      ctx.closePath();
+    },
+
+    drawBaseAxis: function (ctx, margin, iniWidth, iniHeight, offset, width, height) {
+      // DRAWING BASE AXIS
+      var initialX = iniWidth + offset + margin.left || 0,
+	  initialY = iniHeight - offset - margin.bottom;
+	  ctx.fillStyle = ctx.strokeStyle = '#000000';
+      
+      // x
+      ctx.moveTo(initialX, initialY);
+      ctx.lineTo(initialX + width, initialY);
+      // y
+      ctx.moveTo(initialX, initialY);
+      ctx.lineTo(initialX , initialY - height);
+      // drawing legends
+      ctx.fillText(this.config.Axis.legendX || 'x', 0, iniHeight - 10);
+      ctx.rotate(Math.PI/-2);
+      ctx.fillText(this.config.Axis.legendY || 'y', offset, -iniHeight + offset - 10);
+      ctx.rotate(Math.PI/2);
+    },
+
+    drawAxisLines: function (ctx, margin, iniWidth, iniHeight, offset, divisions, width, height) {
+      var initialX = iniWidth + offset + margin.left || 0,
+	  initialY = iniHeight - offset - margin.bottom,
+	  line = 15,
+	  linesX = this.config.Axis.linesX || divisions,
+	  linesY = this.config.Axis.linesY || divisions,
+	  widthDivision = width / (linesX-1),
+	  heightDivision = height / (linesY-1);
+      ctx.fillStyle = ctx.strokeStyle = '#000000';
+      // y axis lines
+      for(var i=0; i<linesY; i++) {
+        ctx.moveTo(initialX, initialY - heightDivision*i);
+        ctx.lineTo(initialX - line, initialY - heightDivision*i);
+      }
+      // x axis lines
+      for(var i=0; i<linesX; i++) {
+        ctx.moveTo(initialX + widthDivision * i, initialY + line);
+        ctx.lineTo(initialX + widthDivision * i, initialY);
+      }
+    }
+  });
+
 })();
