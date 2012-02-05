@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -11,13 +10,15 @@
     <meta name="robots" content="all" />
 
     <title>
-     JavaScript InfoVis Toolkit 
+    
+Documentation - JavaScript InfoVis Toolkit
+
     </title>
     
     <!-- CSS -->
     <link href="static/v20/css/base.css" rel="stylesheet" type="text/css" media="screen" />
     
-<link href="static/v20/css/home.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="static/v20/css/docs.css" rel="stylesheet" type="text/css" media="screen" />
 
     <!--[if IE]>
     <link href="static/v20/css/featureless.css" rel="stylesheet" type="text/css" media="screen" />
@@ -26,9 +27,7 @@
     <!-- Scripts -->
     <script type="text/javascript" src="static/v20/js/mootools-1.2.4-core-yc.js"></script>
     <script type="text/javascript" src="static/v20/js/mootools-1.2.4.4-more.js"></script>
-    
-<script type="text/javascript" src="static/v20/js/mootools.marquee-yc.js"></script>
-<script type="text/javascript" src="static/v20/js/home.js"></script>
+        
 
 </head>
 <body>
@@ -41,7 +40,11 @@
       <h4>Create Interactive Data Visualizations for the Web</h4>
     </a>
     
+    <div id="upper_menu">
+<a href="index.html">Home</a> &#9679; <a href="downloads/Jit-2.0.1.zip">Download</a> &#9679; <a href="builder.html">Builder</a> &#9679; <a href="#" onclick="document.getElementById('myform').submit(); return false;">Donate</a> 
+</div>
 
+    
   </div>
 </div>
         <div id="nav">
@@ -95,42 +98,36 @@
 
     
     
-      <div id="wrapper">
-        <div class="container">
-          <div id="image-switcher">
-              <div style="position:relative;">
-                  <a href="demos/" title="Try the demos">
-                  <img src="static/v20/img/marquee/sunburst.png" id="first-image" alt="image" />
-                  </a>
-                  <div class="tag">
-                      Sunburst Visualization
-                  </div>                    
-              </div>
-          </div>
-          <div id="main-text-container">
-            The JavaScript InfoVis Toolkit provides tools for creating Interactive Data Visualizations for the Web.
-          </div>
-          <div id="download">
-              <a title="Source and Compressed libraries, Examples, Extras" class="button blue" href="downloads/Jit-2.0.1.zip">Download</a>
-              <div class="description">
-                  Current Release: <b>2.0.1</b>
-              </div>
-          </div>
-          <a class="custom-build" href="builder.html">Click here for a custom build.</a>        
-	        <div id="donation">  
-	        <div class="donation-text">Donations keep this project going!</div>
-	        <form style="margin-top:5px;" action="https://www.paypal.com/cgi-bin/webscr" method="post">
-	        <div>
-	        <input type="hidden" name="cmd" value="_s-xclick" />
-	        <input type="hidden" name="hosted_button_id" value="5763237" />
-	        <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" style="border:none;" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-	        <img alt="" style="border:none;" src="https://www.paypal.com/fr_FR/i/scr/pixel.gif" width="1" height="1" />
-	        </div>
-	        </form>
-	        </div>
-        
-        </div>
-      </div>
+
+    <div id="docs">
+    <div class="wrapper">
+        <h5> Where to start?</h5>
+        <p>
+          This is an index for the documentation available for the Toolkit that can help you get started. 
+          It's written like a wiki and may be updated frequently. If you'd like to contribute 
+          to the documentation please <a href="http://philogb.github.com/">contact me</a>.
+        </p>
+        <h5>The demos page</h5>
+        <p> 
+          The best way to start is to take a look at the <a href="demos.html">demos page</a>.
+          Each demo has a <em>See the Example Code</em> link that takes you to the code for that example. 
+          I recommend you read the code for all demo visualizations because most features common to all visualizations are 
+          showcased across the examples.
+        </p>
+        <h5>API documentation</h5>
+        <p>
+          I strongly advise to take a look at the demos' code while keeping a tab open with the 
+          <a href="static/v20/Docs/index.html">API documentation page</a>. I put a lot of effort in this documentation to keep 
+          it clean and detailed. I recommend reading the main <em>Visualizations</em> articles and also the <em>Options</em> articles first,  
+          to get an idea of the different configuration options you can add to the toolkit. 
+        </p>
+        <h5>Further questions</h5>
+        <p>For any questions regarding the Toolkit please join the 
+	        <a target="_blank" href="http://groups.google.com/group/javascript-information-visualization-toolkit">Google Group</a>.
+        </p>
+    </div>
+    </div>
+    
 
 
         <div id="footer">

@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="author" content="Nicolas Garcia Belmonte" />
+    <meta name="copyright" content="copyright 2008-2010, Nicolas Garcia Belmonte" />
+    <meta name="description" content="JavaScript InfoVis Toolkit, Meaningful Visualizations" />
+    <meta name="keywords" content="jit, javascript, information visualization, infovis, information, visualization" />
+    <meta name="robots" content="all" />
+
+    <title>
+    
+Builder - JavaScript InfoVis Toolkit
+
+    </title>
+    
+    <!-- CSS -->
+    <link href="static/v20/css/base.css" rel="stylesheet" type="text/css" media="screen" />
+    
+    <link href="static/v20/css/builder.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <!--[if IE]>
+    <link href="static/v20/css/featureless.css" rel="stylesheet" type="text/css" media="screen" />
+    <![endif]-->
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="static/v20/js/mootools-1.2.4-core-yc.js"></script>
+    <script type="text/javascript" src="static/v20/js/mootools-1.2.4.4-more.js"></script>
+
+</head>
+<body>
+<div id="container">
+
+<div id="header">
+  <div class="container">
+    <a href="index.html">
+      <h1>JavaScript InfoVis Toolkit</h1>
+      <h4>Create Interactive Data Visualizations for the Web</h4>
+    </a>
+    
+    <div id="upper_menu">
+<a href="index.html">Home</a> &#9679; <a href="downloads/Jit-2.0.1.zip">Download</a> &#9679; <a href="builder.html">Builder</a> &#9679; <a href="#" onclick="document.getElementById('myform').submit(); return false;">Donate</a> 
+</div>
+
+    
+  </div>
+</div>
+        <div id="nav">
+      <div class="container">
+        <ul>
+          <li>
+          <div class="item first"></div>
+            <a href="demos.html">
+              <span class="title">Demos</span>
+              <span class="subtitle">Explore the Visualizations</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a href="docs.html">
+              <span class="title">Learn</span>
+              <span class="subtitle">Browse the Doc</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a target="_blank" href="http://groups.google.com/group/javascript-information-visualization-toolkit">
+              <span class="title">Discuss</span>
+              <span class="subtitle">Join the Google Group</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a target="_blank" href="http://github.com/philogb/jit">
+              <span class="title">Contribute</span>
+              <span class="subtitle">Get Involved</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a target="_blank" href="http://blog.thejit.org/">
+              <span class="title">Blog</span>
+              <span class="subtitle">News and Stuff</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a href="http://philogb.github.com/">
+              <span class="title">About</span>
+              <span class="subtitle">Bio and Contact</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    
+    
+
+    <div id="builder">
+    <p class="description" style='padding: 30px 0; text-align: center;'>
+    The <a href='https://github.com/philogb/jit/wiki/Getting-Started'>getting started guide</a> describes how to generate a JavaScript file with the chosen visualizations.
+    </p>
+    <!-- div class="wrapper">
+      <form id="builder-form" method="post" action="/builder/">
+        <h4>Build Options</h4>
+        
+        <table>
+          <th colspan=3>
+            Node Link Visualizations
+          </th>
+          <tr>
+            <td>
+              <input type="checkbox" name="RGraph" id="RGraph" />
+            </td>
+            <td class="name">
+              <label for="RGraph">RGraph</label>
+            </td>
+            <td>
+              Radial tree and graph visualization.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="ForceDirected" id="ForceDirected" />
+            </td>
+            <td class="name">
+              <label for="ForceDirected">ForceDirected</label>
+            </td>
+            <td>
+              A Force-Directed tree and graph visualization.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="Spacetree" id="Spacetree" />
+            </td>
+            <td class="name">
+              <label for="Spacetree">SpaceTree</label>
+            </td>
+            <td>
+              A "classic" tree layout that contracts and expands nodes to adapt to the available space. 
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="Hypertree" id="Hypertree" />
+            </td>
+            <td class="name">
+              <label for="Hypertree">HyperTree</label>
+            </td>
+            <td>
+              A tree and graph layout based on hyperbolic geometry.
+            </td>
+          </tr>
+          <th colspan=3>
+            Space Filling Visualizations
+          </th>
+          <tr>
+            <td>
+              <input type="checkbox" name="Treemap" id="Treemap" />
+            </td>
+            <td class="name">
+              <label for="Treemap">TreeMap</label>
+            </td>
+            <td>
+              A space-filling visualization that uses containment as visual encoding for nodes relations. 
+              Squarified, SliceAndDice and Strip layouts are included.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="Sunburst" id="Sunburst" />
+            </td>
+            <td class="name">
+              <label for="Sunburst">SunBurst</label>
+            </td>
+            <td>
+              A radial space-filling visualization.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="Icicle" id="Icicle" />
+            </td>
+            <td class="name">
+              <label for="Icicle">Icicle</label>
+            </td>
+            <td>
+              A tree space-filling visualization with multiple orientations. 
+            </td>
+          </tr>
+          <th colspan=3>
+            Charts
+          </th>
+          <tr>
+            <td>
+              <input type="checkbox" name="AreaChart" id="AreaChart" />
+            </td>
+            <td class="name">
+              <label for="AreaChart">AreaChart</label>
+            </td>
+            <td>
+              A stacked area chart.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="BarChart" id="BarChart" />
+            </td>
+            <td class="name">
+              <label for="BarChart">BarChart</label>
+            </td>
+            <td>
+              A stacked or grouped bar chart that supports multiple orientations.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="checkbox" name="PieChart" id="PieChart" />
+            </td>
+            <td class="name">
+              <label for="PieChart">PieChart</label>
+            </td>
+            <td>
+              A stacked pie chart.
+            </td>
+          </tr>
+        </table>
+        
+        <h4>Download Options</h4>
+        <table>
+          <th colspan=3>
+            Compressor
+          </th>
+          <tr>
+            <td>
+              <input type="radio" name="compression" value="CC" checked="checked" id="CC" />
+            </td>
+            <td class="name">
+               <label for="CC">Closure Compiler</label>
+            </td>
+            <td>
+              Uses <a href="http://code.google.com/intl/en/closure/compiler/">Google's Closure Compiler</a> to clean whitespace and perform simple code optimizations.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="radio" name="compression" value="No" id="no-compression" />
+            </td>
+            <td class="name">
+               <label for="no-compression">No Compression</label>
+            </td>
+            <td>
+              Uncompressed source. Recommended in testing phase.</b>
+            </td>
+          </tr>
+        </table>
+        
+        <p class="submit">
+          <input type="submit" value="Download" class="button blue" />
+        </p>
+      </form>
+    </div -->
+    </div>
+    
+
+
+        <div id="footer">
+        <div class="container">
+          <p>copyright &copy; 2011 <a href="http://sencha.com/company/">SenchaLabs</a> - Author: <a href="http://philogb.github.com/">Nicolas Garcia Belmonte</a></p>
+        </div>
+    </div>
+
+</div>
+<form style="display:none;" id="myform" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<div>
+<input type="hidden" name="cmd" value="_s-xclick" />
+<input type="hidden" name="hosted_button_id" value="5763237" />
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" style="border:none;" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+<img alt="" style="border:none;" src="https://www.paypal.com/fr_FR/i/scr/pixel.gif" width="1" height="1" />
+</div>
+</form>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1601691-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
+

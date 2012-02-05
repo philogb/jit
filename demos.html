@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="author" content="Nicolas Garcia Belmonte" />
+    <meta name="copyright" content="copyright 2008-2010, Nicolas Garcia Belmonte" />
+    <meta name="description" content="JavaScript InfoVis Toolkit, Meaningful Visualizations" />
+    <meta name="keywords" content="jit, javascript, information visualization, infovis, information, visualization" />
+    <meta name="robots" content="all" />
+
+    <title>
+     Demos - JavaScript InfoVis Toolkit 
+    </title>
+    
+    <!-- CSS -->
+    <link href="static/v20/css/base.css" rel="stylesheet" type="text/css" media="screen" />
+    
+<link href="static/v20/css/demos.css" rel="stylesheet" type="text/css" media="screen" />
+
+    <!--[if IE]>
+    <link href="static/v20/css/featureless.css" rel="stylesheet" type="text/css" media="screen" />
+    <![endif]-->
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="static/v20/js/mootools-1.2.4-core-yc.js"></script>
+    <script type="text/javascript" src="static/v20/js/mootools-1.2.4.4-more.js"></script>
+    
+
+</head>
+<body>
+<div id="container">
+
+<div id="header">
+  <div class="container">
+    <a href="index.html">
+      <h1>JavaScript InfoVis Toolkit</h1>
+      <h4>Create Interactive Data Visualizations for the Web</h4>
+    </a>
+    
+    <div id="upper_menu">
+<a href="index.html">Home</a> &#9679; <a href="downloads/Jit-2.0.1.zip">Download</a> &#9679; <a href="builder.html">Builder</a> &#9679; <a href="#" onclick="document.getElementById('myform').submit(); return false;">Donate</a> 
+</div>
+
+    
+  </div>
+</div>
+        <div id="nav">
+      <div class="container">
+        <ul>
+          <li>
+          <div class="item first"></div>
+            <a href="demos.html">
+              <span class="title">Demos</span>
+              <span class="subtitle">Explore the Visualizations</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a href="docs.html">
+              <span class="title">Learn</span>
+              <span class="subtitle">Browse the Doc</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a target="_blank" href="http://groups.google.com/group/javascript-information-visualization-toolkit">
+              <span class="title">Discuss</span>
+              <span class="subtitle">Join the Google Group</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a target="_blank" href="http://github.com/philogb/jit">
+              <span class="title">Contribute</span>
+              <span class="subtitle">Get Involved</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a target="_blank" href="http://blog.thejit.org/">
+              <span class="title">Blog</span>
+              <span class="subtitle">News and Stuff</span>
+            </a>
+          </li>
+          <li>
+          <div class="item"></div>
+            <a href="http://philogb.github.com/">
+              <span class="title">About</span>
+              <span class="subtitle">Bio and Contact</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    
+    
+    <div id="demos">
+        <div class="col" id="chart-demos">
+            <div class="title">Area, Bar and Pie Charts</div>
+            <img src="static/v20/img/demos/barchart.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/AreaChart/example1.html" target="_blank">Stacked AreaChart</a></li>
+                <li><a href="static/v20/Jit/Examples/BarChart/example1.html" target="_blank">Vertical Stacked BarChart</a></li>
+                <li><a href="static/v20/Jit/Examples/BarChart/example2.html" target="_blank">Horizontal Stacked BarChart</a></li>
+                <li><a href="static/v20/Jit/Examples/PieChart/example1.html" target="_blank">Stacked PieChart</a></li>
+            </ul>
+        </div>
+        <div class="col" id="sunburst-demos">
+            <div class="title">Sunburst</div>
+            <img src="static/v20/img/demos/sunburst.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/Sunburst/example2.html" target="_blank">File System Visualization</a></li>
+                <li><a href="static/v20/Jit/Examples/Sunburst/example1.html" target="_blank">Custom Nodes and Edges</a></li>
+            </ul>
+        </div>
+        <div class="col" id="icicle-demos">
+            <div class="title">Icicle</div>
+            <img src="static/v20/img/demos/icicle.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/Icicle/example1.html" target="_blank">Static Icicle Animation</a></li>
+                <li><a href="static/v20/Jit/Examples/Icicle/example2.html" target="_blank">File System Visualization</a></li>
+            </ul>
+        </div>
+        <div class="col" id="forcedirected-demos">
+            <div class="title">ForceDirected</div>
+            <img src="static/v20/img/demos/force-directed.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/ForceDirected/example1.html" target="_blank">Graph Manipulation</a></li>
+                <li><a href="static/v20/Jit/Examples/ForceDirected/example2.html" target="_blank">Graph Manipulation and Editing</a></li>
+            </ul>
+        </div>
+        <div class="col" id="treemap-demos">
+            <div class="title">TreeMap</div>
+            <img src="static/v20/img/demos/tm.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/Treemap/example1.html" target="_blank">Squarified Animated Treemap</a></li>
+                <li><a href="static/v20/Jit/Examples/Treemap/example2.html" target="_blank">On-Demand Nodes</a></li>
+                <li><a href="static/v20/Jit/Examples/Treemap/example3.html" target="_blank">Cushion Treemap</a></li>
+            </ul>
+        </div>
+        <div class="col" id="spacetree-demos">
+            <div class="title">SpaceTree</div>
+            <img src="static/v20/img/demos/spacetree.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/Spacetree/example1.html" target="_blank">Tree Animation</a></li>
+                <li><a href="static/v20/Jit/Examples/Spacetree/example2.html" target="_blank">On-Demand Nodes</a></li>
+                <li><a href="static/v20/Jit/Examples/Spacetree/example3.html" target="_blank">Add/Remove Subtrees</a></li>
+                <li><a href="static/v20/Jit/Examples/Spacetree/example5.html" target="_blank">Custom Style Animations</a></li>
+                <!-- <li><a href="static/v20/Jit/Examples/Spacetree/example4.html" target="_blank">MultiTrees</a></li>  -->
+            </ul>
+        </div>
+        <div class="col" id="rgraph-demos">
+            <div class="title">RGraph</div>
+            <img src="static/v20/img/demos/rgraph.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/RGraph/example1.html" target="_blank">Tree Animation</a></li>
+                <li><a href="static/v20/Jit/Examples/RGraph/example2.html" target="_blank">Weighted Graph Animation</a></li>
+                <li><a href="static/v20/Jit/Examples/RGraph/example3.html" target="_blank">Graph Operations</a></li>
+                <li><a href="static/v20/Jit/Examples/RGraph/example4.html" target="_blank">Drag and Drop Nodes</a></li>
+            </ul>
+        </div>
+        <div class="col" id="hypertree-demos">
+            <div class="title">HyperTree</div>
+            <img src="static/v20/img/demos/hypertree.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/Hypertree/example1.html" target="_blank">Tree Animation</a></li>
+                <li><a href="static/v20/Jit/Examples/Hypertree/example2.html" target="_blank">Weighted Graph Animation</a></li>
+                <li><a href="static/v20/Jit/Examples/Hypertree/example3.html" target="_blank">Graph Operations</a></li>
+            </ul>
+        </div>
+        <div class="col" id="other-demos">
+            <div class="title">Advanced/Other</div>
+            <img src="static/v20/img/demos/other.png" alt="image" />
+            <ul>
+                <li><a href="static/v20/Jit/Examples/Other/example1.html" target="_blank">Implementing NodeTypes</a></li>
+                <li><a href="static/v20/Jit/Examples/Other/example2.html" target="_blank">Composing RGraphs</a></li>
+                <li><a href="static/v20/Jit/Examples/Other/example3.html" target="_blank">Combinig SpaceTrees and RGraphs</a></li>
+            </ul>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+
+
+        <div id="footer">
+        <div class="container">
+          <p>copyright &copy; 2011 <a href="http://sencha.com/company/">SenchaLabs</a> - Author: <a href="http://philogb.github.com/">Nicolas Garcia Belmonte</a></p>
+        </div>
+    </div>
+
+</div>
+<form style="display:none;" id="myform" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<div>
+<input type="hidden" name="cmd" value="_s-xclick" />
+<input type="hidden" name="hosted_button_id" value="5763237" />
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" style="border:none;" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+<img alt="" style="border:none;" src="https://www.paypal.com/fr_FR/i/scr/pixel.gif" width="1" height="1" />
+</div>
+</form>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1601691-6");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>
+
