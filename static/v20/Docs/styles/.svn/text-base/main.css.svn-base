@@ -1,0 +1,443 @@
+/*
+    This file is part of Natural Docs, which is Copyright (C) 2003-2005 Greg Valure
+    Natural Docs is licensed under the GPL
+*/
+
+html {
+  margin:0;
+  padding:0;
+  background-color: white;
+}
+
+body {
+    font-family:"Lucida Grande", Verdana;
+    font-size: 11px;
+    color: #323234;
+    margin: 0 auto;
+    padding: 0;
+    background-color:#fff;
+    width: 900px;
+}
+
+/* links */
+a:link, a:visited {
+    color: #7389ae;
+}
+
+a:hover, a:active {
+    color: #23A4FF;
+}
+
+h1, h2, h3, h4, h5, p, blockquote {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 20px;
+    padding: 5px 0;
+}
+
+h2 {
+    font-size: 18px;
+    padding: 4px 0;
+}
+
+h3 {
+    font-size: 16px;
+    padding: 3px 0;
+}
+
+h4 {
+    font-size: 14px;
+    padding: 2px 0;
+}
+
+p {
+    padding: 5px 0;
+}
+
+#MSubTitle {
+    font-size: 11px;
+}
+
+/*menu*/
+
+#Menu {
+    line-height: 1;
+    position: absolute;
+    top: 0;
+    width: 210px;
+    padding-top:20px;
+   /* border-right: 1px solid #aaa;*/
+}
+
+.MGroup {
+    font-size: 14px;
+    padding: 0 0 5px;
+    text-decoration: none;
+}
+
+.MGroup a {
+    padding: 6px 10px;
+    text-decoration: none;
+    display: block;
+    color: #111;
+    text-shadow:2px 2px 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.MGroupContent {
+    font-size: 12px;
+    padding-top: 5px;
+    font-weight: normal;
+    text-transform: none;
+}
+
+#MSelected, .MFile a:link, .MFile a:visited, .MIndex a:link, .MIndex a:visited {
+    display: block;
+    padding: 4px 4px 4px 30px;
+    margin: 2px 0;
+    color: #888;
+    text-decoration: none;
+    text-align: left;
+    font-weight: bold;
+    text-shadow:none;
+}
+
+.MFile a:hover, .MFile a:active, .MIndex a:hover, .MIndex a:active {
+    background-color: #ebebeb;
+    color: #555;
+}
+
+#MSelected {
+    text-shadow: none;
+    position:relative;
+		-moz-border-radius:1em 1em 1em 1em;
+		background-color:#555555;
+		color:#F3F3F3;
+		position:relative;
+		text-shadow:none;
+}
+
+/*content, paragraphs, code, headings*/
+
+.SBorder {
+  -moz-box-shadow:0 0 5px #CCCCCC;
+  -o-box-shadow:0 0 5px #CCCCCC;
+  -webkit-box-shadow:0 0 5px #CCCCCC;
+  box-shadow:0 0 5px #CCCCCC;
+}
+
+#Content, #Index {
+    margin-left: 210px;
+    padding: 15px 30px 15px 15px;
+    font-size: 13px;
+    min-height: 600px;
+}
+
+#MainTopic .CTitle, .IPageTitle {
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    color:#111111;
+		text-shadow:2px 2px 13px rgba(0, 0, 0, 0.3);
+		-moz-text-shadow:2px 2px 13px rgba(0, 0, 0, 0.3);
+		-o-text-shadow:2px 2px 13px rgba(0, 0, 0, 0.3);
+		-webkit-text-shadow:2px 2px 13px rgba(0, 0, 0, 0.3);
+}
+
+.CClass .CTitle, .CSection .CTitle {
+		border-bottom:1px solid #999999;
+		color:#111;
+		padding:5px 10px;
+		text-shadow:2px 2px 5px rgba(0, 0, 0, 0.3)
+}
+
+.CSection .CTitle {
+    background-color: #ddd;
+    color: #666;
+    text-shadow: none;
+}
+
+.CGroup .CTitle, .INavigationBar {
+    background: #ccc;
+    padding: 3px 10px;
+    font-size: 18px;
+    text-transform: uppercase;
+    font-size: 15px;
+}
+
+.CProperty .CTitle, .CFunction .CTitle {
+    color: #fff;
+    background: #7389ae;
+    padding: 3px 10px;
+    background-repeat: no-repeat;
+    background-position: center left;
+}
+
+.CProperty .CTitle {
+    padding-left: 50px;
+    background-image: url(../images/method.png);
+}
+
+.CFunction .CTitle {
+    padding-left: 60px;
+    background-image: url(../images/function.png);
+}
+
+.CClass .CTitle {
+/*    padding-left: 40px; */
+    background-image: url(../images/class.png);
+}
+
+pre {
+    font: 12px "Monaco", "Courier New", Monospace;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    color: #444;
+    margin-left: 30px;
+    overflow: auto !important;
+    overflow: scroll;
+    line-height: 1.5;
+}
+
+.CParagraph, .CDescriptionList {
+    padding: 5px 5px 5px 30px;
+}
+
+.CDescriptionList tr {
+    padding: 2px 0;
+}
+
+.CDLEntry {
+	color:#111111;
+	font:italic 12px "Monaco","Courier New",Monospace;
+	padding:0 10px 0 0;
+}
+
+.CDLDescription {
+    padding: 10px 0;
+}
+
+h4.CHeading, .STitle {
+    padding-left: 10px;
+    color: #111;
+    border-bottom: 1px solid #aaa;
+    text-shadow:2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.CProperty .CTitle, .CFunction .CTitle, .CGroup .CTitle, .CClass .CTitle, .CSection .CTitle {
+    margin: 15px 0 10px;
+}
+
+/*summary*/
+
+.SBody {
+    margin-left: 30px;
+}
+
+.STitle {
+    font-size: 14px;
+    padding: 2px 10px;
+    font-weight: bold;
+}
+
+.STable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+/*
+.STable a:link, .STable a:visited {
+    color: #875938;
+}
+
+.STable a:hover, .STable a:active {
+    color: #342113;
+}
+*/
+
+.SBody {
+    padding: 10px;
+    background: #fff9f0;
+}
+
+.SMarked {
+    background: #EFEFEF;
+}
+
+.STable td {
+    border: 2px solid #fff;
+    padding: 3px 6px;
+}
+
+h4.CHeading, .STitle {
+    margin: 10px 0 7px;
+}
+
+.SMain {
+    font-size: 13px;
+    background-color:#f7f7f7;
+}
+
+.SMain td {
+    padding: 4px 6px;
+}
+
+.SProperty .SEntry, .SFunction .SEntry {
+    text-align: right;
+}
+
+.SEntry {
+    width: 170px;
+}
+
+.SClass, .SSection {
+    font-size: 13px;
+    background: #f7f7f7;
+}
+
+.SGroup {
+    font-size: 13px;
+    background: #E5E5E5;
+}
+
+/*index*/
+
+#Index table {
+    padding: 10px;
+    font-size: 14px;
+}
+
+#Index table td {
+    padding: 2px 6px;
+}
+
+.IHeading, .ISymbolPrefix {
+    font-weight: bold;
+    font-size: 15px;
+    background: #eee;
+}
+
+td.IHeading {
+    padding-top: 10px;
+    border-top: 4px solid #fff;
+    text-align: center;
+}
+
+.ISubIndex {
+    padding-left: 20px;
+}
+
+.ISubIndex a {
+    display: block;
+}
+
+.IPageTitle {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.INavigationBar {
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#Footer {
+    margin-left: 200px;
+    padding: 10px;
+    text-align: right;
+    color: #dadada;
+}
+
+.CToolTip {
+    position: absolute;
+    visibility: hidden;
+    left: 0;
+    top: 0;
+    background: #444;
+    padding: 10px;
+    color: #fff;
+}
+
+/*custom*/
+
+div#littlefoot {
+    text-align: right;
+    color: #c1c1d5;
+    padding: 0 30px;
+}
+
+a.toTop {
+    float: right;
+    font-size: 9px;
+    color: #fff;
+    margin-top: 4px;
+    text-transform: lowercase;
+    text-shadow: none;
+}
+
+
+.Prototype {
+    font: 10pt "Courier New", Courier, monospace;
+    padding: 5px 3ex;
+    border-width: 1px; border-style: solid;
+    margin: 0 5ex 1.5em 5ex;
+    }
+
+    .Prototype td {
+        font-size: 10pt;
+        color:#555;
+        }
+
+    .PDefaultValue,
+    .PDefaultValuePrefix,
+    .PTypePrefix {
+        color: #8F8F8F;
+        }
+    .PTypePrefix {
+        text-align: right;
+        }
+    .PAfterParameters {
+        vertical-align: bottom;
+        }
+
+    .IE .Prototype table {
+        padding: 0;
+        }
+
+    .CFunction .Prototype {
+        background-color: #F4F4F4; border-color: #D0D0D0 }
+    .CProperty .Prototype {
+        background-color: #F4F4FF; border-color: #C0C0E8 }
+    .CVariable .Prototype {
+        background-color: #FFFFF0; border-color: #E0E0A0 }
+
+    .CClass .Prototype {
+        border-width: 1px 2px 2px 1px; border-style: solid; border-color: #A0A0A0;
+        background-color: #F4F4F4;
+        }
+    .CInterface .Prototype {
+        border-width: 1px 2px 2px 1px; border-style: solid; border-color: #A0A0D0;
+        background-color: #F4F4FF;
+        }
+
+    .CDatabaseIndex .Prototype,
+    .CConstant .Prototype {
+        background-color: #D0D0D0; border-color: #000000 }
+    .CType .Prototype,
+    .CEnumeration .Prototype {
+        background-color: #FAF0F0; border-color: #E0B0B0;
+        }
+    .CDatabaseTrigger .Prototype,
+    .CEvent .Prototype,
+    .CDelegate .Prototype {
+        background-color: #F0FCF0; border-color: #B8E4B8 }
+
+    .CToolTip .Prototype {
+        margin: 0 0 .5em 0;
+        white-space: nowrap;
+        }

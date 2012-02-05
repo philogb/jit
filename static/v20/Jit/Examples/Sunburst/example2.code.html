@@ -1,0 +1,790 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Sunburst - Sunburst of a Directory Tree - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Sunburst of a Directory Tree</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Sunburst of a Directory Tree</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example2.js">here</a>. Or <a href="example2.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+  var json = {
+    &quot;children&quot;: [
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;$jit namespace and $jit() for append vis to Global\n    \n    Example:\n    \n    new $jit.Hypertree({\n      &#39;injectInto&#39;: &#39;myvisContainer&#39;\n    });&quot;, 
+               &quot;$angularWidth&quot;: 7490, 
+               &quot;days&quot;: 111, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 7490
+             }, 
+             &quot;id&quot;: &quot;Source/Coordinates/Complex.js&quot;, 
+             &quot;name&quot;: &quot;Complex.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Fixed polar interpolation problem when theta = pi&quot;, 
+               &quot;$angularWidth&quot;: 6390, 
+               &quot;days&quot;: 2, 
+               &quot;$color&quot;: &quot;#B0AAF6&quot;, 
+               &quot;size&quot;: 6390
+             }, 
+             &quot;id&quot;: &quot;Source/Coordinates/Polar.js&quot;, 
+             &quot;name&quot;: &quot;Polar.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Fixed polar interpolation problem when theta = pi&quot;, 
+           &quot;$color&quot;: &quot;#B0AAF6&quot;, 
+           &quot;days&quot;: 2, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 13880
+         }, 
+         &quot;id&quot;: &quot;Source/Coordinates&quot;, 
+         &quot;name&quot;: &quot;Coordinates&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Scaling done right :)&quot;, 
+               &quot;$angularWidth&quot;: 14952, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 14952
+             }, 
+             &quot;id&quot;: &quot;Source/Core/Canvas.js&quot;, 
+             &quot;name&quot;: &quot;Canvas.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 14759, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 14759
+             }, 
+             &quot;id&quot;: &quot;Source/Core/Core.js&quot;, 
+             &quot;name&quot;: &quot;Core.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;$jit namespace and $jit() for append vis to Global\n    \n    Example:\n    \n    new $jit.Hypertree({\n      &#39;injectInto&#39;: &#39;myvisContainer&#39;\n    });&quot;, 
+               &quot;$angularWidth&quot;: 5838, 
+               &quot;days&quot;: 111, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 5838
+             }, 
+             &quot;id&quot;: &quot;Source/Core/Fx.js&quot;, 
+             &quot;name&quot;: &quot;Fx.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+           &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+           &quot;days&quot;: 3, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 35549
+         }, 
+         &quot;id&quot;: &quot;Source/Core&quot;, 
+         &quot;name&quot;: &quot;Core&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Merge remote branch &#39;woot/bugfixes_docnet&#39; into sunburst_fixes&quot;, 
+               &quot;$angularWidth&quot;: 18672, 
+               &quot;days&quot;: 1, 
+               &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+               &quot;size&quot;: 18672
+             }, 
+             &quot;id&quot;: &quot;Source/Extras/Extras.js&quot;, 
+             &quot;name&quot;: &quot;Extras.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Merge remote branch &#39;woot/bugfixes_docnet&#39; into sunburst_fixes&quot;, 
+           &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+           &quot;days&quot;: 1, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 18672
+         }, 
+         &quot;id&quot;: &quot;Source/Extras&quot;, 
+         &quot;name&quot;: &quot;Extras&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 1652, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 1652
+             }, 
+             &quot;id&quot;: &quot;Source/Graph/Graph.Geom.js&quot;, 
+             &quot;name&quot;: &quot;Graph.Geom.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 27921, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 27921
+             }, 
+             &quot;id&quot;: &quot;Source/Graph/Graph.js&quot;, 
+             &quot;name&quot;: &quot;Graph.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added new Canvas class with zoom/pan options&quot;, 
+               &quot;$angularWidth&quot;: 9512, 
+               &quot;days&quot;: 5, 
+               &quot;$color&quot;: &quot;#B6AEEF&quot;, 
+               &quot;size&quot;: 9512
+             }, 
+             &quot;id&quot;: &quot;Source/Graph/Graph.Label.js&quot;, 
+             &quot;name&quot;: &quot;Graph.Label.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Change the way edges where stored and used in Graph.js. This is how Graph.js internally handles nodes. The user API should remain the same.&quot;, 
+               &quot;$angularWidth&quot;: 22838, 
+               &quot;days&quot;: 26, 
+               &quot;$color&quot;: &quot;#E0C7C0&quot;, 
+               &quot;size&quot;: 22838
+             }, 
+             &quot;id&quot;: &quot;Source/Graph/Graph.Op.js&quot;, 
+             &quot;name&quot;: &quot;Graph.Op.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Bug Fix Extras + Tweaking examples&quot;, 
+               &quot;$angularWidth&quot;: 18950, 
+               &quot;days&quot;: 19, 
+               &quot;$color&quot;: &quot;#D2BFD0&quot;, 
+               &quot;size&quot;: 18950
+             }, 
+             &quot;id&quot;: &quot;Source/Graph/Graph.Plot.js&quot;, 
+             &quot;name&quot;: &quot;Graph.Plot.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;(Re)-Implemented nodeTypes using node/edgeHelpers\n    \n    Code is cleaner and NodeTypes are now easier to implement.&quot;, 
+               &quot;$angularWidth&quot;: 6947, 
+               &quot;days&quot;: 32, 
+               &quot;$color&quot;: &quot;#ECCFB3&quot;, 
+               &quot;size&quot;: 6947
+             }, 
+             &quot;id&quot;: &quot;Source/Graph/Helpers.js&quot;, 
+             &quot;name&quot;: &quot;Helpers.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+           &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+           &quot;days&quot;: 3, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 87820
+         }, 
+         &quot;id&quot;: &quot;Source/Graph&quot;, 
+         &quot;name&quot;: &quot;Graph&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;$jit namespace and $jit() for append vis to Global\n    \n    Example:\n    \n    new $jit.Hypertree({\n      &#39;injectInto&#39;: &#39;myvisContainer&#39;\n    });&quot;, 
+               &quot;$angularWidth&quot;: 4064, 
+               &quot;days&quot;: 111, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 4064
+             }, 
+             &quot;id&quot;: &quot;Source/Layouts/Layouts.ForceDirected.js&quot;, 
+             &quot;name&quot;: &quot;Layouts.ForceDirected.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 2198, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 2198
+             }, 
+             &quot;id&quot;: &quot;Source/Layouts/Layouts.js&quot;, 
+             &quot;name&quot;: &quot;Layouts.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;$jit namespace and $jit() for append vis to Global\n    \n    Example:\n    \n    new $jit.Hypertree({\n      &#39;injectInto&#39;: &#39;myvisContainer&#39;\n    });&quot;, 
+               &quot;$angularWidth&quot;: 4372, 
+               &quot;days&quot;: 111, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 4372
+             }, 
+             &quot;id&quot;: &quot;Source/Layouts/Layouts.Radial.js&quot;, 
+             &quot;name&quot;: &quot;Layouts.Radial.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 15570, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 15570
+             }, 
+             &quot;id&quot;: &quot;Source/Layouts/Layouts.TM.js&quot;, 
+             &quot;name&quot;: &quot;Layouts.TM.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;$jit namespace and $jit() for append vis to Global\n    \n    Example:\n    \n    new $jit.Hypertree({\n      &#39;injectInto&#39;: &#39;myvisContainer&#39;\n    });&quot;, 
+               &quot;$angularWidth&quot;: 6696, 
+               &quot;days&quot;: 111, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 6696
+             }, 
+             &quot;id&quot;: &quot;Source/Layouts/Layouts.Tree.js&quot;, 
+             &quot;name&quot;: &quot;Layouts.Tree.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+           &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+           &quot;days&quot;: 3, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 32900
+         }, 
+         &quot;id&quot;: &quot;Source/Layouts&quot;, 
+         &quot;name&quot;: &quot;Layouts&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Fixed passing of general Label object&quot;, 
+               &quot;$angularWidth&quot;: 8079, 
+               &quot;days&quot;: 26, 
+               &quot;$color&quot;: &quot;#E0C7C0&quot;, 
+               &quot;size&quot;: 8079
+             }, 
+             &quot;id&quot;: &quot;Source/Loader/Loader.js&quot;, 
+             &quot;name&quot;: &quot;Loader.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Fixed passing of general Label object&quot;, 
+           &quot;$color&quot;: &quot;#E0C7C0&quot;, 
+           &quot;days&quot;: 26, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 8079
+         }, 
+         &quot;id&quot;: &quot;Source/Loader&quot;, 
+         &quot;name&quot;: &quot;Loader&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Small tweaks on Tips and Selected nodes in Charts&quot;, 
+               &quot;$angularWidth&quot;: 348, 
+               &quot;days&quot;: 33, 
+               &quot;$color&quot;: &quot;#EED0B0&quot;, 
+               &quot;size&quot;: 348
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.AreaChart.js&quot;, 
+             &quot;name&quot;: &quot;Options.AreaChart.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added gradients to AreaChart&quot;, 
+               &quot;$angularWidth&quot;: 386, 
+               &quot;days&quot;: 37, 
+               &quot;$color&quot;: &quot;#F6D5A7&quot;, 
+               &quot;size&quot;: 386
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.BarChart.js&quot;, 
+             &quot;name&quot;: &quot;Options.BarChart.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Add label types in Label configuration object.\n    \n    Add calls to getLabelData in plotLabel.&quot;, 
+               &quot;$angularWidth&quot;: 392, 
+               &quot;days&quot;: 26, 
+               &quot;$color&quot;: &quot;#E0C7C0&quot;, 
+               &quot;size&quot;: 392
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Canvas.js&quot;, 
+             &quot;name&quot;: &quot;Options.Canvas.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Organizing sources and build&quot;, 
+               &quot;$angularWidth&quot;: 3856, 
+               &quot;days&quot;: 112, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 3856
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Controller.js&quot;, 
+             &quot;name&quot;: &quot;Options.Controller.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added raw Canvas options + and animations\n    \n    Added the CanvasStyles object in Node/Edge properties to define raw\n    canvas properties before plotting a node or edge. For example\n    \n          Node: {\n            overridable: true,\n            dim: 4,\n            color: \&quot;#fff\&quot;,\n            CanvasStyles: {\n              shadowBlur: 10,\n              shadowColor: &#39;#ccc&#39;,\n              shadowOffsetY: 5,\n              shadowOffsetX: 5\n            }\n          }\n    \n    These properties can also be animated and accessed just like dataset\n    properties.\n    \n    Also there are new APIs for setting multiple properties at the same\n    time. setDataset and setCanvasStyles have been added and can be used\n    like this:\n    \n         node.setCanvasStyle(&#39;shadowBlur&#39;, 100, &#39;end&#39;);\n    \n         //will perform various node.setCanvasStyle\n         node.setCanvasStyles([&#39;current&#39;, &#39;end&#39;], {\n           &#39;shadowBlur&#39;: [100, 5],\n           &#39;shadowOffsetX&#39;: [200, 3]\n         });\n    \n         node.setData(&#39;width&#39;, 100, &#39;end&#39;);\n    \n         //will perform various node.setData\n         node.setDataset(&#39;end&#39;, {\n           &#39;width&#39;: 100,\n           &#39;color: &#39;#ccc&#39;\n         });\n    \n    For more information take a look at test1.js for the ForceDirected\n    visualization.&quot;, 
+               &quot;$angularWidth&quot;: 1475, 
+               &quot;days&quot;: 31, 
+               &quot;$color&quot;: &quot;#EACDB5&quot;, 
+               &quot;size&quot;: 1475
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Edge.js&quot;, 
+             &quot;name&quot;: &quot;Options.Edge.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Extras.Events bug fixes&quot;, 
+               &quot;$angularWidth&quot;: 312, 
+               &quot;days&quot;: 20, 
+               &quot;$color&quot;: &quot;#D4C0CE&quot;, 
+               &quot;size&quot;: 312
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Events.js&quot;, 
+             &quot;name&quot;: &quot;Options.Events.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;$jit namespace and $jit() for append vis to Global\n    \n    Example:\n    \n    new $jit.Hypertree({\n      &#39;injectInto&#39;: &#39;myvisContainer&#39;\n    });&quot;, 
+               &quot;$angularWidth&quot;: 749, 
+               &quot;days&quot;: 111, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 749
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Fx.js&quot;, 
+             &quot;name&quot;: &quot;Options.Fx.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Revisiting Extras.js Redesigning MouseEventManager and registered\n    classes to automatically use DOM elements via event delegation or canvas\n    based events.&quot;, 
+               &quot;$angularWidth&quot;: 530, 
+               &quot;days&quot;: 25, 
+               &quot;$color&quot;: &quot;#DEC6C2&quot;, 
+               &quot;size&quot;: 530
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.js&quot;, 
+             &quot;name&quot;: &quot;Options.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Add label types in Label configuration object.\n    \n    Add calls to getLabelData in plotLabel.&quot;, 
+               &quot;$angularWidth&quot;: 203, 
+               &quot;days&quot;: 26, 
+               &quot;$color&quot;: &quot;#E0C7C0&quot;, 
+               &quot;size&quot;: 203
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Label.js&quot;, 
+             &quot;name&quot;: &quot;Options.Label.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;* Ignore panning if Options.Navigation.panning = false\n     * Add &#39;avoid nodes&#39; panning option for panning only when the cursor does not match a nodes position&quot;, 
+               &quot;$angularWidth&quot;: 137, 
+               &quot;days&quot;: 1, 
+               &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+               &quot;size&quot;: 137
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Navigation.js&quot;, 
+             &quot;name&quot;: &quot;Options.Navigation.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added raw Canvas options + and animations\n    \n    Added the CanvasStyles object in Node/Edge properties to define raw\n    canvas properties before plotting a node or edge. For example\n    \n          Node: {\n            overridable: true,\n            dim: 4,\n            color: \&quot;#fff\&quot;,\n            CanvasStyles: {\n              shadowBlur: 10,\n              shadowColor: &#39;#ccc&#39;,\n              shadowOffsetY: 5,\n              shadowOffsetX: 5\n            }\n          }\n    \n    These properties can also be animated and accessed just like dataset\n    properties.\n    \n    Also there are new APIs for setting multiple properties at the same\n    time. setDataset and setCanvasStyles have been added and can be used\n    like this:\n    \n         node.setCanvasStyle(&#39;shadowBlur&#39;, 100, &#39;end&#39;);\n    \n         //will perform various node.setCanvasStyle\n         node.setCanvasStyles([&#39;current&#39;, &#39;end&#39;], {\n           &#39;shadowBlur&#39;: [100, 5],\n           &#39;shadowOffsetX&#39;: [200, 3]\n         });\n    \n         node.setData(&#39;width&#39;, 100, &#39;end&#39;);\n    \n         //will perform various node.setData\n         node.setDataset(&#39;end&#39;, {\n           &#39;width&#39;: 100,\n           &#39;color: &#39;#ccc&#39;\n         });\n    \n    For more information take a look at test1.js for the ForceDirected\n    visualization.&quot;, 
+               &quot;$angularWidth&quot;: 2083, 
+               &quot;days&quot;: 31, 
+               &quot;$color&quot;: &quot;#EACDB5&quot;, 
+               &quot;size&quot;: 2083
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Node.js&quot;, 
+             &quot;name&quot;: &quot;Options.Node.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Bug Fix Extras + Tweaking examples&quot;, 
+               &quot;$angularWidth&quot;: 583, 
+               &quot;days&quot;: 19, 
+               &quot;$color&quot;: &quot;#D2BFD0&quot;, 
+               &quot;size&quot;: 583
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.NodeStyles.js&quot;, 
+             &quot;name&quot;: &quot;Options.NodeStyles.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Add an option to resize labels according to its pie slice&quot;, 
+               &quot;$angularWidth&quot;: 380, 
+               &quot;days&quot;: 1, 
+               &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+               &quot;size&quot;: 380
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.PieChart.js&quot;, 
+             &quot;name&quot;: &quot;Options.PieChart.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Revisiting Extras.js Redesigning MouseEventManager and registered\n    classes to automatically use DOM elements via event delegation or canvas\n    based events.&quot;, 
+               &quot;$angularWidth&quot;: 1120, 
+               &quot;days&quot;: 25, 
+               &quot;$color&quot;: &quot;#DEC6C2&quot;, 
+               &quot;size&quot;: 1120
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Tips.js&quot;, 
+             &quot;name&quot;: &quot;Options.Tips.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Organizing sources and build&quot;, 
+               &quot;$angularWidth&quot;: 1021, 
+               &quot;days&quot;: 112, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 1021
+             }, 
+             &quot;id&quot;: &quot;Source/Options/Options.Tree.js&quot;, 
+             &quot;name&quot;: &quot;Options.Tree.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Add an option to resize labels according to its pie slice&quot;, 
+           &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+           &quot;days&quot;: 1, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 13575
+         }, 
+         &quot;id&quot;: &quot;Source/Options&quot;, 
+         &quot;name&quot;: &quot;Options&quot;
+       }, 
+       {
+         &quot;children&quot;: [
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Fixing AreaCharts for IE&quot;, 
+               &quot;$angularWidth&quot;: 13636, 
+               &quot;days&quot;: 19, 
+               &quot;$color&quot;: &quot;#D2BFD0&quot;, 
+               &quot;size&quot;: 13636
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/AreaChart.js&quot;, 
+             &quot;name&quot;: &quot;AreaChart.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Append utils, id and Class objects to $jit. Add legends to Bar/Pie/AreaChart examples.&quot;, 
+               &quot;$angularWidth&quot;: 12608, 
+               &quot;days&quot;: 15, 
+               &quot;$color&quot;: &quot;#CABAD9&quot;, 
+               &quot;size&quot;: 12608
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/BarChart.js&quot;, 
+             &quot;name&quot;: &quot;BarChart.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added new Canvas class with zoom/pan options&quot;, 
+               &quot;$angularWidth&quot;: 16954, 
+               &quot;days&quot;: 5, 
+               &quot;$color&quot;: &quot;#B6AEEF&quot;, 
+               &quot;size&quot;: 16954
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/ForceDirected.js&quot;, 
+             &quot;name&quot;: &quot;ForceDirected.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added new Canvas class with zoom/pan options&quot;, 
+               &quot;$angularWidth&quot;: 23448, 
+               &quot;days&quot;: 5, 
+               &quot;$color&quot;: &quot;#B6AEEF&quot;, 
+               &quot;size&quot;: 23448
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/Hypertree.js&quot;, 
+             &quot;name&quot;: &quot;Hypertree.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Adding $jit as Namespace + Build Refactor + Config (part I)&quot;, 
+               &quot;$angularWidth&quot;: 0, 
+               &quot;days&quot;: 112, 
+               &quot;$color&quot;: &quot;#FCD9A1&quot;, 
+               &quot;size&quot;: 0
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/Icicle.js&quot;, 
+             &quot;name&quot;: &quot;Icicle.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Add an option to resize labels according to its pie slice&quot;, 
+               &quot;$angularWidth&quot;: 10762, 
+               &quot;days&quot;: 1, 
+               &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+               &quot;size&quot;: 10762
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/PieChart.js&quot;, 
+             &quot;name&quot;: &quot;PieChart.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Added new Canvas class with zoom/pan options&quot;, 
+               &quot;$angularWidth&quot;: 18010, 
+               &quot;days&quot;: 5, 
+               &quot;$color&quot;: &quot;#B6AEEF&quot;, 
+               &quot;size&quot;: 18010
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/RGraph.js&quot;, 
+             &quot;name&quot;: &quot;RGraph.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 52895, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 52895
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/Spacetree.js&quot;, 
+             &quot;name&quot;: &quot;Spacetree.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Adding new JSON data to the Sunburst and already finding some bugs :S&quot;, 
+               &quot;$angularWidth&quot;: 21436, 
+               &quot;days&quot;: 2, 
+               &quot;$color&quot;: &quot;#B0AAF6&quot;, 
+               &quot;size&quot;: 21436
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/Sunburst.js&quot;, 
+             &quot;name&quot;: &quot;Sunburst.js&quot;
+           }, 
+           {
+             &quot;children&quot;: [], 
+             &quot;data&quot;: {
+               &quot;description&quot;: &quot;Animated TreeMaps&quot;, 
+               &quot;$angularWidth&quot;: 16472, 
+               &quot;days&quot;: 3, 
+               &quot;$color&quot;: &quot;#B2ABF4&quot;, 
+               &quot;size&quot;: 16472
+             }, 
+             &quot;id&quot;: &quot;Source/Visualizations/Treemap.js&quot;, 
+             &quot;name&quot;: &quot;Treemap.js&quot;
+           }
+         ], 
+         &quot;data&quot;: {
+           &quot;description&quot;: &quot;Merge remote branch &#39;woot/bugfixes_docnet&#39; into sunburst_fixes&quot;, 
+           &quot;$color&quot;: &quot;#AEA9F8&quot;, 
+           &quot;days&quot;: 1, 
+           &quot;$angularWidth&quot;: 1000, 
+           &quot;size&quot;: 186221
+         }, 
+         &quot;id&quot;: &quot;Source/Visualizations&quot;, 
+         &quot;name&quot;: &quot;Visualizations&quot;
+       }
+     ], 
+     &quot;data&quot;: {
+       &quot;$type&quot;: &quot;none&quot;
+     }, 
+     &quot;id&quot;: &quot;Source&quot;, 
+     &quot;name&quot;: &quot;Source&quot;
+   };
+
+</pre>
+</div>
+<h4>Sunburst</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var sb = new $jit.Sunburst({
+        //id container for the visualization
+        injectInto: &#39;infovis&#39;,
+        //Distance between levels
+        levelDistance: 90,
+        //Change node and edge styles such as
+        //color, width and dimensions.
+        Node: {
+          overridable: true,
+          type: useGradients? &#39;gradient-multipie&#39; : &#39;multipie&#39;
+        },
+        //Select canvas labels
+        //&#39;HTML&#39;, &#39;SVG&#39; and &#39;Native&#39; are possible options
+        Label: {
+          type: labelType
+        },
+        //Change styles when hovering and clicking nodes
+        NodeStyles: {
+          enable: true,
+          type: &#39;Native&#39;,
+          stylesClick: {
+            &#39;color&#39;: &#39;#33dddd&#39;
+          },
+          stylesHover: {
+            &#39;color&#39;: &#39;#dd3333&#39;
+          }
+        },
+        //Add tooltips
+        Tips: {
+          enable: true,
+          onShow: function(tip, node) {
+            var html = &quot;&lt;div class=\&quot;tip-title\&quot;&gt;&quot; + node.name + &quot;&lt;/div&gt;&quot;; 
+            var data = node.data;
+            if(&quot;days&quot; in data) {
+              html += &quot;&lt;b&gt;Last modified:&lt;/b&gt; &quot; + data.days + &quot; days ago&quot;;
+            }
+            if(&quot;size&quot; in data) {
+              html += &quot;&lt;br /&gt;&lt;b&gt;File size:&lt;/b&gt; &quot; + Math.round(data.size / 1024) + &quot;KB&quot;;
+            }
+            tip.innerHTML = html;
+          }
+        },
+        //implement event handlers
+        Events: {
+          enable: true,
+          onClick: function(node) {
+            if(!node) return;
+            //Build detailed information about the file/folder
+            //and place it in the right column.
+            var html = &quot;&lt;h4&gt;&quot; + node.name + &quot;&lt;/h4&gt;&quot;, data = node.data;
+            if(&quot;days&quot; in data) {
+              html += &quot;&lt;b&gt;Last modified:&lt;/b&gt; &quot; + data.days + &quot; days ago&quot;;
+            }
+            if(&quot;size&quot; in data) {
+              html += &quot;&lt;br /&gt;&lt;br /&gt;&lt;b&gt;File size:&lt;/b&gt; &quot; + Math.round(data.size / 1024) + &quot;KB&quot;;
+            }
+            if(&quot;description&quot; in data) {
+              html += &quot;&lt;br /&gt;&lt;br /&gt;&lt;b&gt;Last commit was:&lt;/b&gt;&lt;br /&gt;&lt;pre&gt;&quot; + data.description + &quot;&lt;/pre&gt;&quot;;
+            }
+            $jit.id(&#39;inner-details&#39;).innerHTML = html;
+            //hide tip
+            sb.tips.hide();
+            //rotate
+            sb.rotate(node, animate? &#39;animate&#39; : &#39;replot&#39;, {
+              duration: 1000,
+              transition: $jit.Trans.Quart.easeInOut
+            });
+          }
+        },
+        // Only used when Label type is &#39;HTML&#39; or &#39;SVG&#39;
+        // Add text to the labels. 
+        // This method is only triggered on label creation
+        onCreateLabel: function(domElement, node){
+          var labels = sb.config.Label.type,
+              aw = node.getData(&#39;angularWidth&#39;);
+          if (labels === &#39;HTML&#39; &amp;&amp; (node._depth &lt; 2 || aw &gt; 2000)) {
+            domElement.innerHTML = node.name;
+          } else if (labels === &#39;SVG&#39; &amp;&amp; (node._depth &lt; 2 || aw &gt; 2000)) {
+            domElement.firstChild.appendChild(document.createTextNode(node.name));
+          }
+        },
+        // Only used when Label type is &#39;HTML&#39; or &#39;SVG&#39;
+        // Change node styles when labels are placed
+        // or moved.
+        onPlaceLabel: function(domElement, node){
+          var labels = sb.config.Label.type;
+          if (labels === &#39;SVG&#39;) {
+            var fch = domElement.firstChild;
+            var style = fch.style;
+            style.display = &#39;&#39;;
+            style.cursor = &#39;pointer&#39;;
+            style.fontSize = &quot;0.8em&quot;;
+            fch.setAttribute(&#39;fill&#39;, &quot;#fff&quot;);
+          } else if (labels === &#39;HTML&#39;) {
+            var style = domElement.style;
+            style.display = &#39;&#39;;
+            style.cursor = &#39;pointer&#39;;
+            style.fontSize = &quot;0.8em&quot;;
+            style.color = &quot;#ddd&quot;;
+            var left = parseInt(style.left);
+            var w = domElement.offsetWidth;
+            style.left = (left - w / 2) + &#39;px&#39;;
+          }
+        }
+   });
+    //load JSON data.
+    sb.loadJSON(json);
+    //compute positions and plot.
+    sb.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

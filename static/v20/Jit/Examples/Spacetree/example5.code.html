@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Morphing - Style Animations - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Style Animations</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Style Animations</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example5.js">here</a>. Or <a href="example5.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+        id: &quot;node02&quot;,
+        name: &quot;0.2&quot;,
+        children: [{
+            id: &quot;node13&quot;,
+            name: &quot;1.3&quot;,
+            children: [{
+                id: &quot;node24&quot;,
+                name: &quot;2.4&quot;
+              }, {
+                id: &quot;node222&quot;,
+                name: &quot;2.22&quot;
+              }]
+        }, {
+            id: &quot;node125&quot;,
+            name: &quot;1.25&quot;,
+            children: [{
+                id: &quot;node226&quot;,
+                name: &quot;2.26&quot;
+            }, {
+                id: &quot;node237&quot;,
+                name: &quot;2.37&quot;
+            }, {
+                id: &quot;node258&quot;,
+                name: &quot;2.58&quot;
+            }]
+        }, {
+            id: &quot;node165&quot;,
+            name: &quot;1.65&quot;,
+            children: [{
+                id: &quot;node266&quot;,
+                name: &quot;2.66&quot;
+            }, {
+                id: &quot;node283&quot;,
+                name: &quot;2.83&quot;
+            }, {
+                id: &quot;node2104&quot;,
+                name: &quot;2.104&quot;
+            }, {
+                id: &quot;node2109&quot;,
+                name: &quot;2.109&quot;
+            }, {
+                id: &quot;node2125&quot;,
+                name: &quot;2.125&quot;
+            }]
+        }, {
+            id: &quot;node1130&quot;,
+            name: &quot;1.130&quot;,
+            children: [{
+                id: &quot;node2131&quot;,
+                name: &quot;2.131&quot;
+            }, {
+                id: &quot;node2138&quot;,
+                name: &quot;2.138&quot;
+            }]
+        }]
+    };
+
+</pre>
+</div>
+<h4>Node</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //Create a node rendering function that plots a fill
+    //rectangle and a stroke rectangle for borders
+    $jit.ST.Plot.NodeTypes.implement({
+      &#39;stroke-rect&#39;: {
+        &#39;render&#39;: function(node, canvas) {
+          var width = node.getData(&#39;width&#39;),
+              height = node.getData(&#39;height&#39;),
+              pos = this.getAlignedPos(node.pos.getc(true), width, height),
+              posX = pos.x + width/2,
+              posY = pos.y + height/2;
+          this.nodeHelper.rectangle.render(&#39;fill&#39;, {x: posX, y: posY}, width, height, canvas);
+          this.nodeHelper.rectangle.render(&#39;stroke&#39;, {x: posX, y: posY}, width, height, canvas);
+        }
+      }
+    });
+
+</pre>
+</div>
+<h4>Spacetree</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //Create a new ST instance
+    var st = new $jit.ST({
+        //id of viz container element
+        injectInto: &#39;infovis&#39;,
+        //set distance between node and its children
+        levelDistance: 50,
+        //set an X offset
+        offsetX: 130,
+        //set node, edge and label styles
+        //set overridable=true for styling individual
+        //nodes or edges
+        Node: {
+            overridable: true,
+            type: &#39;stroke-rect&#39;,
+            height: 20,
+            width: 60,
+            //canvas specific styles
+            CanvasStyles: {
+              fillStyle: &#39;#daa&#39;,
+              strokeStyle: &#39;#ffc&#39;,
+              lineWidth: 2
+            }
+        },
+        Edge: {
+            overridable: true,
+            type: &#39;line&#39;,
+            color: &#39;#ffc&#39;,
+            lineWidth: 1
+        },
+        Label: {
+            type: labelType,
+            style: &#39;bold&#39;,
+            size: 10,
+            color: &#39;#333&#39;
+        },
+        //This method is called on DOM label creation.
+        //Use this method to add event handlers and styles to
+        //your node.
+        onCreateLabel: function(label, node){
+            label.innerHTML = node.name;
+            //set label styles
+            var style = label.style;
+            style.width = 60 + &#39;px&#39;;
+            style.height = 17 + &#39;px&#39;;            
+            style.color = &#39;#333&#39;;
+            style.fontSize = &#39;0.8em&#39;;
+            style.textAlign= &#39;center&#39;;
+            style.paddingTop = &#39;3px&#39;;
+        },
+        onPlaceLabel: function(label, node) {
+          var style = label.style;
+          style.width = node.getData(&#39;width&#39;) + &#39;px&#39;;
+          style.height = node.getData(&#39;height&#39;) + &#39;px&#39;;            
+          style.color = node.getLabelData(&#39;color&#39;);
+          style.fontSize = node.getLabelData(&#39;size&#39;) + &#39;px&#39;;
+          style.textAlign= &#39;center&#39;;
+          style.paddingTop = &#39;3px&#39;;
+        }
+    });
+    //load json data
+    st.loadJSON(json);
+    //compute node positions and layout
+    st.compute();
+    //emulate a click on the root node.
+    st.onClick(st.root);
+
+</pre>
+</div>
+<h4>Morphing</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var button = $jit.id(&#39;update&#39;),
+        restore = $jit.id(&#39;restore&#39;),
+        rand = Math.random,
+        floor = Math.floor,
+        colors = [&#39;#33a&#39;, &#39;#55b&#39;, &#39;#77c&#39;, &#39;#99d&#39;, &#39;#aae&#39;, &#39;#bf0&#39;, &#39;#cf5&#39;, 
+                  &#39;#dfa&#39;, &#39;#faccff&#39;, &#39;#ffccff&#39;, &#39;#CCC&#39;, &#39;#C37&#39;],
+        colorLength = colors.length;
+    //add click event for restore
+    $jit.util.addEvent(restore, &#39;click&#39;, function() {
+      if(init.busy) return;
+      init.busy = true;
+      
+      st.graph.eachNode(function(n) {
+        //restore width and height node styles
+        n.setDataset(&#39;end&#39;, {
+          width: 60,
+          height: 20
+        });
+        //restore canvas specific styles
+        n.setCanvasStyles(&#39;end&#39;, {
+          fillStyle: &#39;#daa&#39;,
+          strokeStyle: &#39;#ffc&#39;,
+          lineWidth: 2
+        });
+        //restore font styles
+        n.setLabelDataset(&#39;end&#39;, {
+          size: 10,
+          color: &#39;#333&#39;
+        });
+        //set adjacencies styles
+        n.eachAdjacency(function(adj) {
+          adj.setDataset(&#39;end&#39;, {
+            lineWidth: 1,
+            color: &#39;#ffc&#39;
+          });
+        });
+      });
+      st.compute(&#39;end&#39;);
+      st.geom.translate({x:-130, y:0}, &#39;end&#39;);
+      st.fx.animate({
+        modes: [&#39;linear&#39;, 
+                &#39;node-property:width:height&#39;,
+                &#39;edge-property:lineWidth:color&#39;,
+                &#39;label-property:size:color&#39;,
+                &#39;node-style:fillStyle:strokeStyle:lineWidth&#39;],
+        duration: 1500,
+        onComplete: function() {
+          init.busy = false;
+        }
+      });
+    });
+    //add click event for updating styles
+    $jit.util.addEvent(button, &#39;click&#39;, function() {
+      if(init.busy) return;
+      init.busy = true;
+      
+      st.graph.eachNode(function(n) {
+        //set random width and height node styles
+        nWidth.checked &amp;&amp; n.setData(&#39;width&#39;, floor(rand() * 40 + 20), &#39;end&#39;);
+        nHeight.checked &amp;&amp; n.setData(&#39;height&#39;, floor(rand() * 40 + 20), &#39;end&#39;);
+        //set random canvas specific styles
+        nColor.checked &amp;&amp; n.setCanvasStyle(&#39;fillStyle&#39;, colors[floor(colorLength * rand())], &#39;end&#39;);
+        nBorderColor.checked &amp;&amp; n.setCanvasStyle(&#39;strokeStyle&#39;, colors[floor(colorLength * rand())], &#39;end&#39;);
+        nBorderWidth.checked &amp;&amp; n.setCanvasStyle(&#39;lineWidth&#39;, 10 * rand() + 1, &#39;end&#39;);
+        //set label styles
+        lFontSize.checked &amp;&amp; n.setLabelData(&#39;size&#39;, 20 * rand() + 1, &#39;end&#39;);
+        lFontColor.checked &amp;&amp; n.setLabelData(&#39;color&#39;, colors[floor(colorLength * rand())], &#39;end&#39;);
+        //set adjacency styles
+        n.eachAdjacency(function(adj) {
+          eLineWidth.checked &amp;&amp; adj.setData(&#39;lineWidth&#39;, 10 * rand() + 1, &#39;end&#39;);
+          eLineColor.checked &amp;&amp; adj.setData(&#39;color&#39;, colors[floor(colorLength * rand())], &#39;end&#39;);
+        });
+      });
+      st.compute(&#39;end&#39;);
+      st.geom.translate({x:-130, y:0}, &#39;end&#39;);
+      st.fx.animate({
+        modes: [&#39;linear&#39;, 
+                &#39;node-property:width:height&#39;,
+                &#39;edge-property:lineWidth:color&#39;,
+                &#39;label-property:size:color&#39;,
+                &#39;node-style:fillStyle:strokeStyle:lineWidth&#39;],
+        duration: 1500,
+        onComplete: function() {
+          init.busy = false;
+        }
+      });
+    });
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

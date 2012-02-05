@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>TreeMap - TreeMap with on-demand nodes - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for TreeMap with on-demand nodes</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>TreeMap with on-demand nodes</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example2.js">here</a>. Or <a href="example2.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+  var json = &quot;{\&quot;children\&quot;: [{\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;276\&quot;, \&quot;artist\&quot;: \&quot;A Perfect Circle\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/11403219.jpg\&quot;, \&quot;$area\&quot;: 276}, \&quot;id\&quot;: \&quot;album-Thirteenth Step\&quot;, \&quot;name\&quot;: \&quot;Thirteenth Step\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;271\&quot;, \&quot;artist\&quot;: \&quot;A Perfect Circle\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/11393921.jpg\&quot;, \&quot;$area\&quot;: 271}, \&quot;id\&quot;: \&quot;album-Mer De Noms\&quot;, \&quot;name\&quot;: \&quot;Mer De Noms\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 547, \&quot;$area\&quot;: 547}, \&quot;id\&quot;: \&quot;artist_A Perfect Circle\&quot;, \&quot;name\&quot;: \&quot;A Perfect Circle\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;209\&quot;, \&quot;artist\&quot;: \&quot;Mad Season\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/32349839.jpg\&quot;, \&quot;$area\&quot;: 209}, \&quot;id\&quot;: \&quot;album-Above\&quot;, \&quot;name\&quot;: \&quot;Above\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 209, \&quot;$area\&quot;: 209}, \&quot;id\&quot;: \&quot;artist_Mad Season\&quot;, \&quot;name\&quot;: \&quot;Mad Season\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;260\&quot;, \&quot;artist\&quot;: \&quot;Stone Temple Pilots\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/38753425.jpg\&quot;, \&quot;$area\&quot;: 260}, \&quot;id\&quot;: \&quot;album-Tiny Music... Songs From the Vatican Gift Shop\&quot;, \&quot;name\&quot;: \&quot;Tiny Music... Songs From the Vatican Gift Shop\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;254\&quot;, \&quot;artist\&quot;: \&quot;Stone Temple Pilots\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B000002IU3.01.LZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 254}, \&quot;id\&quot;: \&quot;album-Core\&quot;, \&quot;name\&quot;: \&quot;Core\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 514, \&quot;$area\&quot;: 514}, \&quot;id\&quot;: \&quot;artist_Stone Temple Pilots\&quot;, \&quot;name\&quot;: \&quot;Stone Temple Pilots\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;181\&quot;, \&quot;artist\&quot;: \&quot;Bush\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8673371.jpg\&quot;, \&quot;$area\&quot;: 181}, \&quot;id\&quot;: \&quot;album-The Science of Things\&quot;, \&quot;name\&quot;: \&quot;The Science of Things\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 181, \&quot;$area\&quot;: 181}, \&quot;id\&quot;: \&quot;artist_Bush\&quot;, \&quot;name\&quot;: \&quot;Bush\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;229\&quot;, \&quot;artist\&quot;: \&quot;Foo Fighters\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/32579429.jpg\&quot;, \&quot;$area\&quot;: 229}, \&quot;id\&quot;: \&quot;album-Echoes, Silence, Patience &amp;amp; Grace\&quot;, \&quot;name\&quot;: \&quot;Echoes, Silence, Patience &amp;amp; Grace\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;185\&quot;, \&quot;artist\&quot;: \&quot;Foo Fighters\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B0009HLDFU.01.MZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 185}, \&quot;id\&quot;: \&quot;album-In Your Honor (disc 2)\&quot;, \&quot;name\&quot;: \&quot;In Your Honor (disc 2)\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 414, \&quot;$area\&quot;: 414}, \&quot;id\&quot;: \&quot;artist_Foo Fighters\&quot;, \&quot;name\&quot;: \&quot;Foo Fighters\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;398\&quot;, \&quot;artist\&quot;: \&quot;Luis Alberto Spinetta\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B00005LNP5.01._SCMZZZZZZZ_.jpg\&quot;, \&quot;$area\&quot;: 398}, \&quot;id\&quot;: \&quot;album-Elija Y Gane\&quot;, \&quot;name\&quot;: \&quot;Elija Y Gane\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;203\&quot;, \&quot;artist\&quot;: \&quot;Luis Alberto Spinetta\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B0000B193V.01._SCMZZZZZZZ_.jpg\&quot;, \&quot;$area\&quot;: 203}, \&quot;id\&quot;: \&quot;album-Para los Arboles\&quot;, \&quot;name\&quot;: \&quot;Para los Arboles\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 601, \&quot;$area\&quot;: 601}, \&quot;id\&quot;: \&quot;artist_Luis Alberto Spinetta\&quot;, \&quot;name\&quot;: \&quot;Luis Alberto Spinetta\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;224\&quot;, \&quot;artist\&quot;: \&quot;Alice in Chains\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/26497553.jpg\&quot;, \&quot;$area\&quot;: 224}, \&quot;id\&quot;: \&quot;album-Music Bank\&quot;, \&quot;name\&quot;: \&quot;Music Bank\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;217\&quot;, \&quot;artist\&quot;: \&quot;Alice in Chains\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B0000296JW.01.MZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 217}, \&quot;id\&quot;: \&quot;album-Music Bank (disc 1)\&quot;, \&quot;name\&quot;: \&quot;Music Bank (disc 1)\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;215\&quot;, \&quot;artist\&quot;: \&quot;Alice in Chains\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B0000296JW.01.MZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 215}, \&quot;id\&quot;: \&quot;album-Music Bank (disc 2)\&quot;, \&quot;name\&quot;: \&quot;Music Bank (disc 2)\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;181\&quot;, \&quot;artist\&quot;: \&quot;Alice in Chains\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B0000296JW.01.MZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 181}, \&quot;id\&quot;: \&quot;album-Music Bank (disc 3)\&quot;, \&quot;name\&quot;: \&quot;Music Bank (disc 3)\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 837, \&quot;$area\&quot;: 837}, \&quot;id\&quot;: \&quot;artist_Alice in Chains\&quot;, \&quot;name\&quot;: \&quot;Alice in Chains\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;627\&quot;, \&quot;artist\&quot;: \&quot;Tool\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8480501.jpg\&quot;, \&quot;$area\&quot;: 627}, \&quot;id\&quot;: \&quot;album-10,000 Days\&quot;, \&quot;name\&quot;: \&quot;10,000 Days\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 627, \&quot;$area\&quot;: 627}, \&quot;id\&quot;: \&quot;artist_Tool\&quot;, \&quot;name\&quot;: \&quot;Tool\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;261\&quot;, \&quot;artist\&quot;: \&quot;Chris Cornell\&quot;, \&quot;image\&quot;: \&quot;http:\/\/cdn.last.fm\/flatness\/catalogue\/noimage\/2\/default_album_medium.png\&quot;, \&quot;$area\&quot;: 261}, \&quot;id\&quot;: \&quot;album-2006-09-07: O-Bar, Stockholm, Sweden\&quot;, \&quot;name\&quot;: \&quot;2006-09-07: O-Bar, Stockholm, Sweden\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;211\&quot;, \&quot;artist\&quot;: \&quot;Chris Cornell\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/25402479.jpg\&quot;, \&quot;$area\&quot;: 211}, \&quot;id\&quot;: \&quot;album-Lost and Found\&quot;, \&quot;name\&quot;: \&quot;Lost and Found\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 472, \&quot;$area\&quot;: 472}, \&quot;id\&quot;: \&quot;artist_Chris Cornell\&quot;, \&quot;name\&quot;: \&quot;Chris Cornell\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;197\&quot;, \&quot;artist\&quot;: \&quot;Disturbed\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8634627.jpg\&quot;, \&quot;$area\&quot;: 197}, \&quot;id\&quot;: \&quot;album-The Sickness\&quot;, \&quot;name\&quot;: \&quot;The Sickness\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 197, \&quot;$area\&quot;: 197}, \&quot;id\&quot;: \&quot;artist_Disturbed\&quot;, \&quot;name\&quot;: \&quot;Disturbed\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;493\&quot;, \&quot;artist\&quot;: \&quot;Erykah Badu\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8591345.jpg\&quot;, \&quot;$area\&quot;: 493}, \&quot;id\&quot;: \&quot;album-Mama&#39;s Gun\&quot;, \&quot;name\&quot;: \&quot;Mama&#39;s Gun\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 493, \&quot;$area\&quot;: 493}, \&quot;id\&quot;: \&quot;artist_Erykah Badu\&quot;, \&quot;name\&quot;: \&quot;Erykah Badu\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;249\&quot;, \&quot;artist\&quot;: \&quot;Audioslave\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/32070871.jpg\&quot;, \&quot;$area\&quot;: 249}, \&quot;id\&quot;: \&quot;album-Audioslave\&quot;, \&quot;name\&quot;: \&quot;Audioslave\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 249, \&quot;$area\&quot;: 249}, \&quot;id\&quot;: \&quot;artist_Audioslave\&quot;, \&quot;name\&quot;: \&quot;Audioslave\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;359\&quot;, \&quot;artist\&quot;: \&quot;Soda Stereo\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/15858421.jpg\&quot;, \&quot;$area\&quot;: 359}, \&quot;id\&quot;: \&quot;album-Comfort y M\u00fasica Para Volar\&quot;, \&quot;name\&quot;: \&quot;Comfort y M\u00fasica Para Volar\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 359, \&quot;$area\&quot;: 359}, \&quot;id\&quot;: \&quot;artist_Soda Stereo\&quot;, \&quot;name\&quot;: \&quot;Soda Stereo\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;302\&quot;, \&quot;artist\&quot;: \&quot;Sinch\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8776205.jpg\&quot;, \&quot;$area\&quot;: 302}, \&quot;id\&quot;: \&quot;album-Clearing the Channel\&quot;, \&quot;name\&quot;: \&quot;Clearing the Channel\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 302, \&quot;$area\&quot;: 302}, \&quot;id\&quot;: \&quot;artist_Sinch\&quot;, \&quot;name\&quot;: \&quot;Sinch\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;177\&quot;, \&quot;artist\&quot;: \&quot;Dave Matthews Band\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/32457599.jpg\&quot;, \&quot;$area\&quot;: 177}, \&quot;id\&quot;: \&quot;album-Crash\&quot;, \&quot;name\&quot;: \&quot;Crash\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 177, \&quot;$area\&quot;: 177}, \&quot;id\&quot;: \&quot;artist_Dave Matthews Band\&quot;, \&quot;name\&quot;: \&quot;Dave Matthews Band\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;207\&quot;, \&quot;artist\&quot;: \&quot;Pearl Jam\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/30352203.jpg\&quot;, \&quot;$area\&quot;: 207}, \&quot;id\&quot;: \&quot;album-Vs.\&quot;, \&quot;name\&quot;: \&quot;Vs.\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 207, \&quot;$area\&quot;: 207}, \&quot;id\&quot;: \&quot;artist_Pearl Jam\&quot;, \&quot;name\&quot;: \&quot;Pearl Jam\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;486\&quot;, \&quot;artist\&quot;: \&quot;Kr\u00f8m\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/26053425.jpg\&quot;, \&quot;$area\&quot;: 486}, \&quot;id\&quot;: \&quot;album-It All Makes Sense Now\&quot;, \&quot;name\&quot;: \&quot;It All Makes Sense Now\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;251\&quot;, \&quot;artist\&quot;: \&quot;Agua de Annique\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/9658733.jpg\&quot;, \&quot;$area\&quot;: 251}, \&quot;id\&quot;: \&quot;album-Air\&quot;, \&quot;name\&quot;: \&quot;Air\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 737, \&quot;$area\&quot;: 737}, \&quot;id\&quot;: \&quot;artist_Kr\u00f8m\&quot;, \&quot;name\&quot;: \&quot;Kr\u00f8m\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;345\&quot;, \&quot;artist\&quot;: \&quot;Temple of the Dog\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8605651.jpg\&quot;, \&quot;$area\&quot;: 345}, \&quot;id\&quot;: \&quot;album-Temple Of The Dog\&quot;, \&quot;name\&quot;: \&quot;Temple Of The Dog\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 345, \&quot;$area\&quot;: 345}, \&quot;id\&quot;: \&quot;artist_Temple of the Dog\&quot;, \&quot;name\&quot;: \&quot;Temple of the Dog\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;318\&quot;, \&quot;artist\&quot;: \&quot;Nine Inch Nails\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/29274729.jpg\&quot;, \&quot;$area\&quot;: 318}, \&quot;id\&quot;: \&quot;album-And All That Could Have Been (Still)\&quot;, \&quot;name\&quot;: \&quot;And All That Could Have Been (Still)\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 318, \&quot;$area\&quot;: 318}, \&quot;id\&quot;: \&quot;artist_Nine Inch Nails\&quot;, \&quot;name\&quot;: \&quot;Nine Inch Nails\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;256\&quot;, \&quot;artist\&quot;: \&quot;Tryo\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/32595059.jpg\&quot;, \&quot;$area\&quot;: 256}, \&quot;id\&quot;: \&quot;album-Mamagubida\&quot;, \&quot;name\&quot;: \&quot;Mamagubida\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;220\&quot;, \&quot;artist\&quot;: \&quot;Tryo\&quot;, \&quot;image\&quot;: \&quot;http:\/\/cdn.last.fm\/flatness\/catalogue\/noimage\/2\/default_album_medium.png\&quot;, \&quot;$area\&quot;: 220}, \&quot;id\&quot;: \&quot;album-Reggae \u00e0 Coup de Cirque\&quot;, \&quot;name\&quot;: \&quot;Reggae \u00e0 Coup de Cirque\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;181\&quot;, \&quot;artist\&quot;: \&quot;Tryo\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/16799743.jpg\&quot;, \&quot;$area\&quot;: 181}, \&quot;id\&quot;: \&quot;album-Grain de sable\&quot;, \&quot;name\&quot;: \&quot;Grain de sable\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 657, \&quot;$area\&quot;: 657}, \&quot;id\&quot;: \&quot;artist_Tryo\&quot;, \&quot;name\&quot;: \&quot;Tryo\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;258\&quot;, \&quot;artist\&quot;: \&quot;Sublime\&quot;, \&quot;image\&quot;: \&quot;http:\/\/cdn.last.fm\/flatness\/catalogue\/noimage\/2\/default_album_medium.png\&quot;, \&quot;$area\&quot;: 258}, \&quot;id\&quot;: \&quot;album-Best Of\&quot;, \&quot;name\&quot;: \&quot;Best Of\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;176\&quot;, \&quot;artist\&quot;: \&quot;Sublime\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/5264426.jpg\&quot;, \&quot;$area\&quot;: 176}, \&quot;id\&quot;: \&quot;album-Robbin&#39; The Hood\&quot;, \&quot;name\&quot;: \&quot;Robbin&#39; The Hood\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 434, \&quot;$area\&quot;: 434}, \&quot;id\&quot;: \&quot;artist_Sublime\&quot;, \&quot;name\&quot;: \&quot;Sublime\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;418\&quot;, \&quot;artist\&quot;: \&quot;Red Hot Chili Peppers\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8590493.jpg\&quot;, \&quot;$area\&quot;: 418}, \&quot;id\&quot;: \&quot;album-One Hot Minute\&quot;, \&quot;name\&quot;: \&quot;One Hot Minute\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 418, \&quot;$area\&quot;: 418}, \&quot;id\&quot;: \&quot;artist_Red Hot Chili Peppers\&quot;, \&quot;name\&quot;: \&quot;Red Hot Chili Peppers\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;275\&quot;, \&quot;artist\&quot;: \&quot;Guns N&#39; Roses\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/17597653.jpg\&quot;, \&quot;$area\&quot;: 275}, \&quot;id\&quot;: \&quot;album-Chinese Democracy\&quot;, \&quot;name\&quot;: \&quot;Chinese Democracy\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;203\&quot;, \&quot;artist\&quot;: \&quot;Guns N&#39; Roses\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/15231979.jpg\&quot;, \&quot;$area\&quot;: 203}, \&quot;id\&quot;: \&quot;album-Use Your Illusion II\&quot;, \&quot;name\&quot;: \&quot;Use Your Illusion II\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 478, \&quot;$area\&quot;: 478}, \&quot;id\&quot;: \&quot;artist_Guns N&#39; Roses\&quot;, \&quot;name\&quot;: \&quot;Guns N&#39; Roses\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;208\&quot;, \&quot;artist\&quot;: \&quot;Wax Tailor\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B0007LCNNE.01.MZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 208}, \&quot;id\&quot;: \&quot;album-Tales of the Forgotten Melodies\&quot;, \&quot;name\&quot;: \&quot;Tales of the Forgotten Melodies\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 208, \&quot;$area\&quot;: 208}, \&quot;id\&quot;: \&quot;artist_Wax Tailor\&quot;, \&quot;name\&quot;: \&quot;Wax Tailor\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;208\&quot;, \&quot;artist\&quot;: \&quot;Radiohead\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/7862623.png\&quot;, \&quot;$area\&quot;: 208}, \&quot;id\&quot;: \&quot;album-In Rainbows\&quot;, \&quot;name\&quot;: \&quot;In Rainbows\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 208, \&quot;$area\&quot;: 208}, \&quot;id\&quot;: \&quot;artist_Radiohead\&quot;, \&quot;name\&quot;: \&quot;Radiohead\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;317\&quot;, \&quot;artist\&quot;: \&quot;Soundgarden\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8600371.jpg\&quot;, \&quot;$area\&quot;: 317}, \&quot;id\&quot;: \&quot;album-Down On The Upside\&quot;, \&quot;name\&quot;: \&quot;Down On The Upside\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;290\&quot;, \&quot;artist\&quot;: \&quot;Soundgarden\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8590515.jpg\&quot;, \&quot;$area\&quot;: 290}, \&quot;id\&quot;: \&quot;album-Superunknown\&quot;, \&quot;name\&quot;: \&quot;Superunknown\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 607, \&quot;$area\&quot;: 607}, \&quot;id\&quot;: \&quot;artist_Soundgarden\&quot;, \&quot;name\&quot;: \&quot;Soundgarden\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;247\&quot;, \&quot;artist\&quot;: \&quot;Blind Melon\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/15113951.jpg\&quot;, \&quot;$area\&quot;: 247}, \&quot;id\&quot;: \&quot;album-Nico\&quot;, \&quot;name\&quot;: \&quot;Nico\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;218\&quot;, \&quot;artist\&quot;: \&quot;Blind Melon\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/45729417.jpg\&quot;, \&quot;$area\&quot;: 218}, \&quot;id\&quot;: \&quot;album-Soup\&quot;, \&quot;name\&quot;: \&quot;Soup\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;197\&quot;, \&quot;artist\&quot;: \&quot;Blind Melon\&quot;, \&quot;image\&quot;: \&quot;http:\/\/images.amazon.com\/images\/P\/B00005V5PW.01.MZZZZZZZ.jpg\&quot;, \&quot;$area\&quot;: 197}, \&quot;id\&quot;: \&quot;album-Classic Masters\&quot;, \&quot;name\&quot;: \&quot;Classic Masters\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;194\&quot;, \&quot;artist\&quot;: \&quot;Blind Melon\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/15157989.jpg\&quot;, \&quot;$area\&quot;: 194}, \&quot;id\&quot;: \&quot;album-Blind Melon\&quot;, \&quot;name\&quot;: \&quot;Blind Melon\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 856, \&quot;$area\&quot;: 856}, \&quot;id\&quot;: \&quot;artist_Blind Melon\&quot;, \&quot;name\&quot;: \&quot;Blind Melon\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;537\&quot;, \&quot;artist\&quot;: \&quot;Incubus\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/17594883.jpg\&quot;, \&quot;$area\&quot;: 537}, \&quot;id\&quot;: \&quot;album-Make Yourself\&quot;, \&quot;name\&quot;: \&quot;Make Yourself\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;258\&quot;, \&quot;artist\&quot;: \&quot;Incubus\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/31550385.jpg\&quot;, \&quot;$area\&quot;: 258}, \&quot;id\&quot;: \&quot;album-Light Grenades\&quot;, \&quot;name\&quot;: \&quot;Light Grenades\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;181\&quot;, \&quot;artist\&quot;: \&quot;Incubus\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/32309285.jpg\&quot;, \&quot;$area\&quot;: 181}, \&quot;id\&quot;: \&quot;album-Morning View\&quot;, \&quot;name\&quot;: \&quot;Morning View\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 976, \&quot;$area\&quot;: 976}, \&quot;id\&quot;: \&quot;artist_Incubus\&quot;, \&quot;name\&quot;: \&quot;Incubus\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;198\&quot;, \&quot;artist\&quot;: \&quot;Jack Johnson\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/8599099.jpg\&quot;, \&quot;$area\&quot;: 198}, \&quot;id\&quot;: \&quot;album-On And On\&quot;, \&quot;name\&quot;: \&quot;On And On\&quot;}, {\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;186\&quot;, \&quot;artist\&quot;: \&quot;Jack Johnson\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/30082075.jpg\&quot;, \&quot;$area\&quot;: 186}, \&quot;id\&quot;: \&quot;album-Brushfire Fairytales\&quot;, \&quot;name\&quot;: \&quot;Brushfire Fairytales\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 384, \&quot;$area\&quot;: 384}, \&quot;id\&quot;: \&quot;artist_Jack Johnson\&quot;, \&quot;name\&quot;: \&quot;Jack Johnson\&quot;}, {\&quot;children\&quot;: [{\&quot;children\&quot;: [], \&quot;data\&quot;: {\&quot;playcount\&quot;: \&quot;349\&quot;, \&quot;artist\&quot;: \&quot;Mother Love Bone\&quot;, \&quot;image\&quot;: \&quot;http:\/\/userserve-ak.last.fm\/serve\/300x300\/21881921.jpg\&quot;, \&quot;$area\&quot;: 349}, \&quot;id\&quot;: \&quot;album-Mother Love Bone\&quot;, \&quot;name\&quot;: \&quot;Mother Love Bone\&quot;}], \&quot;data\&quot;: {\&quot;playcount\&quot;: 349, \&quot;$area\&quot;: 349}, \&quot;id\&quot;: \&quot;artist_Mother Love Bone\&quot;, \&quot;name\&quot;: \&quot;Mother Love Bone\&quot;}], \&quot;data\&quot;: {}, \&quot;id\&quot;: \&quot;root\&quot;, \&quot;name\&quot;: \&quot;Top Albums\&quot;}&quot;;
+
+</pre>
+</div>
+<h4>TreeMap</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+  var tm = new $jit.TM.Squarified({
+    //where to inject the visualization
+    injectInto: &#39;infovis&#39;,
+    //show only one tree level
+    levelsToShow: 1,
+    //parent box title heights
+    titleHeight: 0,
+    //enable animations
+    animate: animate,
+    //box offsets
+    offset: 1,
+    //use canvas text
+    Label: {
+      type: labelType,
+      size: 9,
+      family: &#39;Tahoma, Verdana, Arial&#39;
+    },
+    //enable specific canvas styles
+    //when rendering nodes
+    Node: {
+      CanvasStyles: {
+        shadowBlur: 0,
+        shadowColor: &#39;#000&#39;
+      }
+    },
+    //Attach left and right click events
+    Events: {
+      enable: true,
+      onClick: function(node) {
+        if(node) tm.enter(node);
+      },
+      onRightClick: function() {
+        tm.out();
+      },
+      //change node styles and canvas styles
+      //when hovering a node
+      onMouseEnter: function(node, eventInfo) {
+        if(node) {
+          //add node selected styles and replot node
+          node.setCanvasStyle(&#39;shadowBlur&#39;, 7);
+          node.setData(&#39;color&#39;, &#39;#888&#39;);
+          tm.fx.plotNode(node, tm.canvas);
+          tm.labels.plotLabel(tm.canvas, node);
+        }
+      },
+      onMouseLeave: function(node) {
+        if(node) {
+          node.removeData(&#39;color&#39;);
+          node.removeCanvasStyle(&#39;shadowBlur&#39;);
+          tm.plot();
+        }
+      }
+    },
+    //duration of the animations
+    duration: 1000,
+    //Enable tips
+    Tips: {
+      enable: true,
+      type: &#39;Native&#39;,
+      //add positioning offsets
+      offsetX: 20,
+      offsetY: 20,
+      //implement the onShow method to
+      //add content to the tooltip when a node
+      //is hovered
+      onShow: function(tip, node, isLeaf, domElement) {
+        var html = &quot;&lt;div class=\&quot;tip-title\&quot;&gt;&quot; + node.name 
+          + &quot;&lt;/div&gt;&lt;div class=\&quot;tip-text\&quot;&gt;&quot;;
+        var data = node.data;
+        if(data.artist) {
+          html += &quot;Artist: &quot; + data.artist + &quot;&lt;br /&gt;&quot;;
+        }
+        if(data.playcount) {
+          html += &quot;Play count: &quot; + data.playcount;
+        }
+        if(data.image) {
+          html += &quot;&lt;img src=\&quot;&quot;+ data.image +&quot;\&quot; class=\&quot;album\&quot; /&gt;&quot;;
+        }
+        tip.innerHTML =  html; 
+      }  
+    },
+    //Implement this method for retrieving a requested  
+    //subtree that has as root a node with id = nodeId,  
+    //and level as depth. This method could also make a server-side  
+    //call for the requested subtree. When completed, the onComplete   
+    //callback method should be called.  
+    request: function(nodeId, level, onComplete){  
+      var tree = eval(&#39;(&#39; + json + &#39;)&#39;);  
+      var subtree = $jit.json.getSubtree(tree, nodeId);  
+      $jit.json.prune(subtree, 1);  
+      onComplete.onComplete(nodeId, subtree);  
+    },
+    //Add the name of the node in the corresponding label
+    //This method is called once, on label creation and only for DOM labels.
+    onCreateLabel: function(domElement, node){
+        domElement.innerHTML = node.name;
+    }
+  });
+  
+  var pjson = eval(&#39;(&#39; + json + &#39;)&#39;);  
+  $jit.json.prune(pjson, 1);
+  
+  tm.loadJSON(pjson);
+  tm.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

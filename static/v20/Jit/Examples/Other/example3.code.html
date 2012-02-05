@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>st - Composing Visualizations 2 - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Composing Visualizations 2</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Composing Visualizations 2</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example3.js">here</a>. Or <a href="example3.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+      &#39;id&#39;: &#39;root&#39;,
+      &#39;name&#39;: &#39;root&#39;,
+      &#39;data&#39;: {
+          //&#39;$type&#39;: &#39;none&#39;
+      },
+      &#39;children&#39;:[
+        {
+            &#39;id&#39;:&#39;pie10&#39;,
+            &#39;name&#39;: &#39;pie1&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 20,
+                &#39;$color&#39;: &#39;#f55&#39;
+            },
+            &#39;children&#39;: [
+                {
+                    &#39;id&#39;:&#39;pie100&#39;,
+                    &#39;name&#39;: &#39;pc1&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 20,
+                        &#39;$color&#39;: &#39;#55f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                },
+                {
+                    &#39;id&#39;:&#39;pie101&#39;,
+                    &#39;name&#39;: &#39;pc2&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 70,
+                        &#39;$color&#39;: &#39;#66f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                },
+                {
+                    &#39;id&#39;:&#39;pie102&#39;,
+                    &#39;name&#39;: &#39;pc3&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 10,
+                        &#39;$color&#39;: &#39;#77f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                }
+            ]
+        },
+        {
+            &#39;id&#39;:&#39;pie20&#39;,
+            &#39;name&#39;: &#39;pie2&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 40,
+                &#39;$color&#39;: &#39;#f77&#39;
+            },
+            &#39;children&#39;: [
+                {
+                    &#39;id&#39;:&#39;pie200&#39;,
+                    &#39;name&#39;: &#39;pc1&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 40,
+                        &#39;$color&#39;: &#39;#88f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                },
+                {
+                    &#39;id&#39;:&#39;pie201&#39;,
+                    &#39;name&#39;: &#39;pc2&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 60,
+                        &#39;$color&#39;: &#39;#99f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                }
+            ]
+        },
+        {
+            &#39;id&#39;:&#39;pie30&#39;,
+            &#39;name&#39;: &#39;pie3&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 10,
+                &#39;$color&#39;: &#39;#f99&#39;
+            },
+            &#39;children&#39;: [
+                {
+                    &#39;id&#39;:&#39;pie300&#39;,
+                    &#39;name&#39;: &#39;pc1&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 100,
+                        &#39;$color&#39;: &#39;#aaf&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                }
+            ]
+        }
+      ]
+    };
+    var jsonpie = {
+      &#39;id&#39;: &#39;root&#39;,
+      &#39;name&#39;: &#39;RGraph based Pie Chart&#39;,
+      &#39;data&#39;: {
+          &#39;$type&#39;: &#39;none&#39;
+      },
+      &#39;children&#39;:[
+        {
+            &#39;id&#39;:&#39;pie1&#39;,
+            &#39;name&#39;: &#39;pie1&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 20,
+                &#39;$color&#39;: &#39;#55f&#39;
+            },
+            &#39;children&#39;: []
+        },
+        {
+            &#39;id&#39;:&#39;pie2&#39;,
+            &#39;name&#39;: &#39;pie2&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 40,
+                &#39;$color&#39;: &#39;#77f&#39;
+            },
+            &#39;children&#39;: []
+        },
+        {
+            &#39;id&#39;:&#39;pie3&#39;,
+            &#39;name&#39;: &#39;pie3&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 10,
+                &#39;$color&#39;: &#39;#99f&#39;
+            },
+            &#39;children&#39;: []
+        },
+        {
+            &#39;id&#39;:&#39;pie4&#39;,
+            &#39;name&#39;: &#39;pie4&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 30,
+                &#39;$color&#39;: &#39;#bbf&#39;
+            },
+            &#39;children&#39;: []
+        }
+      ]
+    };
+
+</pre>
+</div>
+<h4>nodetypes</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //Here we implement custom node rendering types for the RGraph
+    //Using this feature requires some javascript and canvas experience.
+    $jit.RGraph.Plot.NodeTypes.implement({
+        //This node type is used for plotting pie-chart slices as nodes
+        &#39;shortnodepie&#39;: {
+          &#39;render&#39;: function(node, canvas) {
+            var ldist = this.config.levelDistance;
+            var span = node.angleSpan, begin = span.begin, end = span.end;
+            var polarNode = node.pos.getp(true);
+            
+            var polar = new $jit.Polar(polarNode.rho, begin);
+            var p1coord = polar.getc(true);
+            
+            polar.theta = end;
+            var p2coord = polar.getc(true);
+            
+            polar.rho += ldist;
+            var p3coord = polar.getc(true);
+            
+            polar.theta = begin;
+            var p4coord = polar.getc(true);
+            
+            
+            var ctx = canvas.getCtx();
+            ctx.beginPath();
+            ctx.moveTo(p1coord.x, p1coord.y);
+            ctx.lineTo(p4coord.x, p4coord.y);
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, polarNode.rho, begin, end, false);
+
+            ctx.moveTo(p2coord.x, p2coord.y);
+            ctx.lineTo(p3coord.x, p3coord.y);
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, polarNode.rho + ldist, end, begin, true);
+            
+            ctx.fill();
+          }
+        }
+    });
+    
+    $jit.ST.Plot.NodeTypes.implement({
+        //Create a new node type that renders an entire RGraph visualization
+        &#39;piechart&#39;: {
+          &#39;render&#39;: function(node, canvas, animating) {
+            var ctx = canvas.getCtx(), pos = node.pos.getc(true);
+            ctx.save();
+            ctx.translate(pos.x, pos.y);
+            pie.plot();
+            ctx.restore();
+          }
+        }
+    });
+
+</pre>
+</div>
+<h4>pie</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var pie = new $jit.RGraph({
+        &#39;injectInto&#39;: &#39;infovis&#39;,
+        //Add node/edge styles and set
+        //overridable=true if you want your
+        //styles to be individually overriden
+        Node: {
+            &#39;overridable&#39;: true,
+             &#39;type&#39;:&#39;shortnodepie&#39;
+        },
+        Edge: {
+            &#39;type&#39;:&#39;none&#39;
+        },
+        //Parent-children distance
+        levelDistance: 15,
+        //Don&#39;t create labels for this visualization
+        withLabels: false,
+        //Don&#39;t clear the canvas when plotting
+        clearCanvas: false
+    });
+    //load graph.
+    pie.loadJSON(jsonpie);
+    pie.compute();
+
+</pre>
+</div>
+<h4>st</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var st = new $jit.ST({
+        useCanvas: pie.canvas,
+        orientation: &#39;bottom&#39;,
+        //Add node/edge styles
+        Node: {
+           type: &#39;piechart&#39;,
+           width: 60,
+           height: 60
+        },
+        Edge: {
+            color: &#39;#999&#39;,
+            type: &#39;quadratic:begin&#39;
+        },
+        //Parent-children distance
+        levelDistance: 60,
+
+        //Add styles to node labels on label creation
+        onCreateLabel: function(domElement, node){
+            //add some styles to the node label
+            var style = domElement.style;
+            domElement.id = node.id;
+            style.color = &#39;#fff&#39;;
+            style.fontSize = &#39;0.8em&#39;;
+            style.textAlign = &#39;center&#39;;
+            style.width = &quot;60px&quot;;
+            style.height = &quot;24px&quot;;
+            style.paddingTop = &quot;22px&quot;;
+            style.cursor = &#39;pointer&#39;;
+            domElement.innerHTML = node.name;
+            domElement.onclick = function() {
+              st.onClick(node.id, {
+                    Move: {
+                        offsetY: -90
+                    }
+                });  
+            };
+        }
+    });
+    //load json data
+    st.loadJSON(json);
+    //compute node positions and layout
+    st.compute();
+    //optional: make a translation of the tree
+    st.geom.translate(new $jit.Complex(0, 200), &quot;start&quot;);
+    //Emulate a click on the root node.
+    st.onClick(st.root, {
+        Move: {
+            offsetY: -90
+        }
+    });
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

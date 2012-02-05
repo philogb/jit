@@ -1,0 +1,610 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>ForceDirected - Force Directed Static Graph - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Force Directed Static Graph</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Force Directed Static Graph</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+  var json = [
+      {
+        &quot;adjacencies&quot;: [
+            &quot;graphnode21&quot;, 
+            {
+              &quot;nodeTo&quot;: &quot;graphnode1&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode0&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode13&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode0&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode14&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode0&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode15&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode0&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode16&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode0&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode17&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode0&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#83548B&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 10
+        },
+        &quot;id&quot;: &quot;graphnode0&quot;,
+        &quot;name&quot;: &quot;graphnode0&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;graphnode2&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode4&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode5&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode6&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode7&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode8&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode10&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode11&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode12&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode13&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode14&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode15&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode16&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode17&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode1&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#EBB056&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 11
+        },
+        &quot;id&quot;: &quot;graphnode1&quot;,
+        &quot;name&quot;: &quot;graphnode1&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;graphnode5&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode2&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode9&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode2&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode18&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode2&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#416D9C&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 7
+        },
+        &quot;id&quot;: &quot;graphnode2&quot;,
+        &quot;name&quot;: &quot;graphnode2&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;graphnode5&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode3&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#909291&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode9&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode3&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode10&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode3&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode12&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode3&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#416D9C&quot;,
+          &quot;$type&quot;: &quot;square&quot;,
+          &quot;$dim&quot;: 10
+        },
+        &quot;id&quot;: &quot;graphnode3&quot;,
+        &quot;name&quot;: &quot;graphnode3&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#83548B&quot;,
+          &quot;$type&quot;: &quot;square&quot;,
+          &quot;$dim&quot;: 11
+        },
+        &quot;id&quot;: &quot;graphnode4&quot;,
+        &quot;name&quot;: &quot;graphnode4&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+          {
+            &quot;nodeTo&quot;: &quot;graphnode9&quot;,
+            &quot;nodeFrom&quot;: &quot;graphnode5&quot;,
+            &quot;data&quot;: {
+              &quot;$color&quot;: &quot;#909291&quot;
+            }
+          }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#C74243&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 8
+        },
+        &quot;id&quot;: &quot;graphnode5&quot;,
+        &quot;name&quot;: &quot;graphnode5&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;graphnode10&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode6&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode11&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode6&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#83548B&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 11
+        },
+        &quot;id&quot;: &quot;graphnode6&quot;,
+        &quot;name&quot;: &quot;graphnode6&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#EBB056&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 12
+        },
+        &quot;id&quot;: &quot;graphnode7&quot;,
+        &quot;name&quot;: &quot;graphnode7&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#C74243&quot;,
+          &quot;$type&quot;: &quot;star&quot;,
+          &quot;$dim&quot;: 10
+        },
+        &quot;id&quot;: &quot;graphnode8&quot;,
+        &quot;name&quot;: &quot;graphnode8&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#83548B&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 12
+        },
+        &quot;id&quot;: &quot;graphnode9&quot;,
+        &quot;name&quot;: &quot;graphnode9&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+          {
+            &quot;nodeTo&quot;: &quot;graphnode11&quot;,
+            &quot;nodeFrom&quot;: &quot;graphnode10&quot;,
+            &quot;data&quot;: {
+              &quot;$color&quot;: &quot;#909291&quot;
+            }
+          }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#70A35E&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 11
+        },
+        &quot;id&quot;: &quot;graphnode10&quot;,
+        &quot;name&quot;: &quot;graphnode10&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#70A35E&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 11
+        },
+        &quot;id&quot;: &quot;graphnode11&quot;,
+        &quot;name&quot;: &quot;graphnode11&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#83548B&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 10
+        },
+        &quot;id&quot;: &quot;graphnode12&quot;,
+        &quot;name&quot;: &quot;graphnode12&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+          {
+            &quot;nodeTo&quot;: &quot;graphnode14&quot;,
+            &quot;nodeFrom&quot;: &quot;graphnode13&quot;,
+            &quot;data&quot;: {
+              &quot;$color&quot;: &quot;#557EAA&quot;
+            }
+          }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#EBB056&quot;,
+          &quot;$type&quot;: &quot;star&quot;,
+          &quot;$dim&quot;: 7
+        },
+        &quot;id&quot;: &quot;graphnode13&quot;,
+        &quot;name&quot;: &quot;graphnode13&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#EBB056&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 12
+        },
+        &quot;id&quot;: &quot;graphnode14&quot;,
+        &quot;name&quot;: &quot;graphnode14&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;graphnode16&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode15&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode17&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode15&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#83548B&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 11
+        },
+        &quot;id&quot;: &quot;graphnode15&quot;,
+        &quot;name&quot;: &quot;graphnode15&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+          {
+            &quot;nodeTo&quot;: &quot;graphnode17&quot;,
+            &quot;nodeFrom&quot;: &quot;graphnode16&quot;,
+            &quot;data&quot;: {
+              &quot;$color&quot;: &quot;#557EAA&quot;
+            }
+          }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#C74243&quot;,
+          &quot;$type&quot;: &quot;star&quot;,
+          &quot;$dim&quot;: 7
+        },
+        &quot;id&quot;: &quot;graphnode16&quot;,
+        &quot;name&quot;: &quot;graphnode16&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#416D9C&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 7
+        },
+        &quot;id&quot;: &quot;graphnode17&quot;,
+        &quot;name&quot;: &quot;graphnode17&quot;
+      }, {
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;graphnode19&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode18&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;graphnode20&quot;,
+              &quot;nodeFrom&quot;: &quot;graphnode18&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#557EAA&quot;
+              }
+            }
+        ],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#EBB056&quot;,
+          &quot;$type&quot;: &quot;triangle&quot;,
+          &quot;$dim&quot;: 9
+        },
+        &quot;id&quot;: &quot;graphnode18&quot;,
+        &quot;name&quot;: &quot;graphnode18&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#70A35E&quot;,
+          &quot;$type&quot;: &quot;circle&quot;,
+          &quot;$dim&quot;: 8
+        },
+        &quot;id&quot;: &quot;graphnode19&quot;,
+        &quot;name&quot;: &quot;graphnode19&quot;
+      }, {
+        &quot;adjacencies&quot;: [],
+        &quot;data&quot;: {
+          &quot;$color&quot;: &quot;#C74243&quot;,
+          &quot;$type&quot;: &quot;star&quot;,
+          &quot;$dim&quot;: 8
+        },
+        &quot;id&quot;: &quot;graphnode20&quot;,
+        &quot;name&quot;: &quot;graphnode20&quot;
+      }
+  ];
+
+</pre>
+</div>
+<h4>ForceDirected</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+  var fd = new $jit.ForceDirected({
+    //id of the visualization container
+    injectInto: &#39;infovis&#39;,
+    //Enable zooming and panning
+    //by scrolling and DnD
+    Navigation: {
+      enable: true,
+      //Enable panning events only if we&#39;re dragging the empty
+      //canvas (and not a node).
+      panning: &#39;avoid nodes&#39;,
+      zooming: 10 //zoom speed. higher is more sensible
+    },
+    // Change node and edge styles such as
+    // color and width.
+    // These properties are also set per node
+    // with dollar prefixed data-properties in the
+    // JSON structure.
+    Node: {
+      overridable: true
+    },
+    Edge: {
+      overridable: true,
+      color: &#39;#23A4FF&#39;,
+      lineWidth: 0.4
+    },
+    //Native canvas text styling
+    Label: {
+      type: labelType, //Native or HTML
+      size: 10,
+      style: &#39;bold&#39;
+    },
+    //Add Tips
+    Tips: {
+      enable: true,
+      onShow: function(tip, node) {
+        //count connections
+        var count = 0;
+        node.eachAdjacency(function() { count++; });
+        //display node info in tooltip
+        tip.innerHTML = &quot;&lt;div class=\&quot;tip-title\&quot;&gt;&quot; + node.name + &quot;&lt;/div&gt;&quot;
+          + &quot;&lt;div class=\&quot;tip-text\&quot;&gt;&lt;b&gt;connections:&lt;/b&gt; &quot; + count + &quot;&lt;/div&gt;&quot;;
+      }
+    },
+    // Add node events
+    Events: {
+      enable: true,
+      type: &#39;Native&#39;,
+      //Change cursor style when hovering a node
+      onMouseEnter: function() {
+        fd.canvas.getElement().style.cursor = &#39;move&#39;;
+      },
+      onMouseLeave: function() {
+        fd.canvas.getElement().style.cursor = &#39;&#39;;
+      },
+      //Update node positions when dragged
+      onDragMove: function(node, eventInfo, e) {
+          var pos = eventInfo.getPos();
+          node.pos.setc(pos.x, pos.y);
+          fd.plot();
+      },
+      //Implement the same handler for touchscreens
+      onTouchMove: function(node, eventInfo, e) {
+        $jit.util.event.stop(e); //stop default touchmove event
+        this.onDragMove(node, eventInfo, e);
+      },
+      //Add also a click handler to nodes
+      onClick: function(node) {
+        if(!node) return;
+        // Build the right column relations list.
+        // This is done by traversing the clicked node connections.
+        var html = &quot;&lt;h4&gt;&quot; + node.name + &quot;&lt;/h4&gt;&lt;b&gt; connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;&quot;,
+            list = [];
+        node.eachAdjacency(function(adj){
+          list.push(adj.nodeTo.name);
+        });
+        //append connections information
+        $jit.id(&#39;inner-details&#39;).innerHTML = html + list.join(&quot;&lt;/li&gt;&lt;li&gt;&quot;) + &quot;&lt;/li&gt;&lt;/ul&gt;&quot;;
+      }
+    },
+    //Number of iterations for the FD algorithm
+    iterations: 200,
+    //Edge length
+    levelDistance: 130,
+    // Add text to the labels. This method is only triggered
+    // on label creation and only for DOM labels (not native canvas ones).
+    onCreateLabel: function(domElement, node){
+      domElement.innerHTML = node.name;
+      var style = domElement.style;
+      style.fontSize = &quot;0.8em&quot;;
+      style.color = &quot;#ddd&quot;;
+    },
+    // Change node styles when DOM labels are placed
+    // or moved.
+    onPlaceLabel: function(domElement, node){
+      var style = domElement.style;
+      var left = parseInt(style.left);
+      var top = parseInt(style.top);
+      var w = domElement.offsetWidth;
+      style.left = (left - w / 2) + &#39;px&#39;;
+      style.top = (top + 10) + &#39;px&#39;;
+      style.display = &#39;&#39;;
+    }
+  });
+  // load JSON data.
+  fd.loadJSON(json);
+  // compute positions incrementally and animate.
+  fd.computeIncremental({
+    iter: 40,
+    property: &#39;end&#39;,
+    onStep: function(perc){
+      Log.write(perc + &#39;% loaded...&#39;);
+    },
+    onComplete: function(){
+      Log.write(&#39;done&#39;);
+      fd.animate({
+        modes: [&#39;linear&#39;],
+        transition: $jit.Trans.Elastic.easeOut,
+        duration: 2500
+      });
+    }
+  });
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

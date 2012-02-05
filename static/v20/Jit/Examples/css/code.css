@@ -1,0 +1,42 @@
+html, body {
+    margin:0;
+    padding:0;
+    font-family: "Lucida Grande", Verdana;
+    font-size: 0.9em;
+    text-align: center;
+    background-color:#F2F2F2;
+}
+
+h4 {
+    font-size:1.1em;
+    text-decoration:none;
+    font-weight:normal;
+    color:#23A4FF;
+}
+
+#container {
+    width: 900px;
+    margin:0 auto;
+    background-color:white;
+    border:1px solid #ccc;
+}
+
+#center-container {
+    text-align:left;
+    width:800px;
+    color:#888;
+    margin:auto;
+}
+
+.headtext {
+    text-align:justify;
+    width:500px;
+    margin:20px auto;
+}
+
+.code-wrapper {
+    width:750px;
+    margin:5px auto;
+    overflow:auto; 
+    margin-bottom:30px
+}

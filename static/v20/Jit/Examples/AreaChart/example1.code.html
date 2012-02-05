@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>AreaChart - Area Chart Example - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Area Chart Example</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Area Chart Example</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+        &#39;label&#39;: [&#39;label A&#39;, &#39;label B&#39;, &#39;label C&#39;, &#39;label D&#39;],
+        &#39;values&#39;: [
+        {
+          &#39;label&#39;: &#39;date A&#39;,
+          &#39;values&#39;: [20, 40, 15, 5]
+        }, 
+        {
+          &#39;label&#39;: &#39;date B&#39;,
+          &#39;values&#39;: [30, 10, 45, 10]
+        }, 
+        {
+          &#39;label&#39;: &#39;date E&#39;,
+          &#39;values&#39;: [38, 20, 35, 17]
+        }, 
+        {
+          &#39;label&#39;: &#39;date F&#39;,
+          &#39;values&#39;: [58, 10, 35, 32]
+        }, 
+        {
+          &#39;label&#39;: &#39;date D&#39;,
+          &#39;values&#39;: [55, 60, 34, 38]
+        }, 
+        {
+          &#39;label&#39;: &#39;date C&#39;,
+          &#39;values&#39;: [26, 40, 25, 40]
+        }]
+        
+    };
+    var json2 = {
+        &#39;values&#39;: [
+        {
+          &#39;label&#39;: &#39;date A&#39;,
+          &#39;values&#39;: [10, 40, 15, 7]
+        }, 
+        {
+          &#39;label&#39;: &#39;date B&#39;,
+          &#39;values&#39;: [30, 40, 45, 9]
+        }, 
+        {
+          &#39;label&#39;: &#39;date D&#39;,
+          &#39;values&#39;: [55, 30, 34, 26]
+        }, 
+        {
+          &#39;label&#39;: &#39;date C&#39;,
+          &#39;values&#39;: [26, 40, 85, 28]
+        }]
+        
+    };
+
+</pre>
+</div>
+<h4>AreaChart</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var areaChart = new $jit.AreaChart({
+      //id of the visualization container
+      injectInto: &#39;infovis&#39;,
+      //add animations
+      animate: true,
+      //separation offsets
+      Margin: {
+        top: 5,
+        left: 5,
+        right: 5,
+        bottom: 5
+      },
+      labelOffset: 10,
+      //whether to display sums
+      showAggregates: true,
+      //whether to display labels at all
+      showLabels: true,
+      //could also be &#39;stacked&#39;
+      type: useGradients? &#39;stacked:gradient&#39; : &#39;stacked&#39;,
+      //label styling
+      Label: {
+        type: labelType, //can be &#39;Native&#39; or &#39;HTML&#39;
+        size: 13,
+        family: &#39;Arial&#39;,
+        color: &#39;white&#39;
+      },
+      //enable tips
+      Tips: {
+        enable: true,
+        onShow: function(tip, elem) {
+          tip.innerHTML = &quot;&lt;b&gt;&quot; + elem.name + &quot;&lt;/b&gt;: &quot; + elem.value;
+        }
+      },
+      //add left and right click handlers
+      filterOnClick: true,
+      restoreOnRightClick:true
+    });
+    //load JSON data.
+    areaChart.loadJSON(json);
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

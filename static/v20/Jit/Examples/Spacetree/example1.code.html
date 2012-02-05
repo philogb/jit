@@ -1,0 +1,895 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Spacetree - Tree Animation - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Tree Animation</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Tree Animation</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+        id: &quot;node02&quot;,
+        name: &quot;0.2&quot;,
+        data: {},
+        children: [{
+            id: &quot;node13&quot;,
+            name: &quot;1.3&quot;,
+            data: {},
+            children: [{
+                id: &quot;node24&quot;,
+                name: &quot;2.4&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node35&quot;,
+                    name: &quot;3.5&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node46&quot;,
+                        name: &quot;4.6&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node37&quot;,
+                    name: &quot;3.7&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node48&quot;,
+                        name: &quot;4.8&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node49&quot;,
+                        name: &quot;4.9&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node410&quot;,
+                        name: &quot;4.10&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node411&quot;,
+                        name: &quot;4.11&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node312&quot;,
+                    name: &quot;3.12&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node413&quot;,
+                        name: &quot;4.13&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node314&quot;,
+                    name: &quot;3.14&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node415&quot;,
+                        name: &quot;4.15&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node416&quot;,
+                        name: &quot;4.16&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node417&quot;,
+                        name: &quot;4.17&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node418&quot;,
+                        name: &quot;4.18&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node319&quot;,
+                    name: &quot;3.19&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node420&quot;,
+                        name: &quot;4.20&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node421&quot;,
+                        name: &quot;4.21&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node222&quot;,
+                name: &quot;2.22&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node323&quot;,
+                    name: &quot;3.23&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node424&quot;,
+                        name: &quot;4.24&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }]
+        }, {
+            id: &quot;node125&quot;,
+            name: &quot;1.25&quot;,
+            data: {},
+            children: [{
+                id: &quot;node226&quot;,
+                name: &quot;2.26&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node327&quot;,
+                    name: &quot;3.27&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node428&quot;,
+                        name: &quot;4.28&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node429&quot;,
+                        name: &quot;4.29&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node330&quot;,
+                    name: &quot;3.30&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node431&quot;,
+                        name: &quot;4.31&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node332&quot;,
+                    name: &quot;3.32&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node433&quot;,
+                        name: &quot;4.33&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node434&quot;,
+                        name: &quot;4.34&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node435&quot;,
+                        name: &quot;4.35&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node436&quot;,
+                        name: &quot;4.36&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node237&quot;,
+                name: &quot;2.37&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node338&quot;,
+                    name: &quot;3.38&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node439&quot;,
+                        name: &quot;4.39&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node440&quot;,
+                        name: &quot;4.40&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node441&quot;,
+                        name: &quot;4.41&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node342&quot;,
+                    name: &quot;3.42&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node443&quot;,
+                        name: &quot;4.43&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node344&quot;,
+                    name: &quot;3.44&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node445&quot;,
+                        name: &quot;4.45&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node446&quot;,
+                        name: &quot;4.46&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node447&quot;,
+                        name: &quot;4.47&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node348&quot;,
+                    name: &quot;3.48&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node449&quot;,
+                        name: &quot;4.49&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node450&quot;,
+                        name: &quot;4.50&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node451&quot;,
+                        name: &quot;4.51&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node452&quot;,
+                        name: &quot;4.52&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node453&quot;,
+                        name: &quot;4.53&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node354&quot;,
+                    name: &quot;3.54&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node455&quot;,
+                        name: &quot;4.55&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node456&quot;,
+                        name: &quot;4.56&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node457&quot;,
+                        name: &quot;4.57&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node258&quot;,
+                name: &quot;2.58&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node359&quot;,
+                    name: &quot;3.59&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node460&quot;,
+                        name: &quot;4.60&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node461&quot;,
+                        name: &quot;4.61&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node462&quot;,
+                        name: &quot;4.62&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node463&quot;,
+                        name: &quot;4.63&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node464&quot;,
+                        name: &quot;4.64&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }]
+        }, {
+            id: &quot;node165&quot;,
+            name: &quot;1.65&quot;,
+            data: {},
+            children: [{
+                id: &quot;node266&quot;,
+                name: &quot;2.66&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node367&quot;,
+                    name: &quot;3.67&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node468&quot;,
+                        name: &quot;4.68&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node469&quot;,
+                        name: &quot;4.69&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node470&quot;,
+                        name: &quot;4.70&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node471&quot;,
+                        name: &quot;4.71&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node372&quot;,
+                    name: &quot;3.72&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node473&quot;,
+                        name: &quot;4.73&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node474&quot;,
+                        name: &quot;4.74&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node475&quot;,
+                        name: &quot;4.75&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node476&quot;,
+                        name: &quot;4.76&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node377&quot;,
+                    name: &quot;3.77&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node478&quot;,
+                        name: &quot;4.78&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node479&quot;,
+                        name: &quot;4.79&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node380&quot;,
+                    name: &quot;3.80&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node481&quot;,
+                        name: &quot;4.81&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node482&quot;,
+                        name: &quot;4.82&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node283&quot;,
+                name: &quot;2.83&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node384&quot;,
+                    name: &quot;3.84&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node485&quot;,
+                        name: &quot;4.85&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node386&quot;,
+                    name: &quot;3.86&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node487&quot;,
+                        name: &quot;4.87&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node488&quot;,
+                        name: &quot;4.88&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node489&quot;,
+                        name: &quot;4.89&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node490&quot;,
+                        name: &quot;4.90&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node491&quot;,
+                        name: &quot;4.91&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node392&quot;,
+                    name: &quot;3.92&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node493&quot;,
+                        name: &quot;4.93&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node494&quot;,
+                        name: &quot;4.94&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node495&quot;,
+                        name: &quot;4.95&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node496&quot;,
+                        name: &quot;4.96&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node397&quot;,
+                    name: &quot;3.97&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node498&quot;,
+                        name: &quot;4.98&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node399&quot;,
+                    name: &quot;3.99&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4100&quot;,
+                        name: &quot;4.100&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4101&quot;,
+                        name: &quot;4.101&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4102&quot;,
+                        name: &quot;4.102&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4103&quot;,
+                        name: &quot;4.103&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node2104&quot;,
+                name: &quot;2.104&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node3105&quot;,
+                    name: &quot;3.105&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4106&quot;,
+                        name: &quot;4.106&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4107&quot;,
+                        name: &quot;4.107&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4108&quot;,
+                        name: &quot;4.108&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node2109&quot;,
+                name: &quot;2.109&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node3110&quot;,
+                    name: &quot;3.110&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4111&quot;,
+                        name: &quot;4.111&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4112&quot;,
+                        name: &quot;4.112&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node3113&quot;,
+                    name: &quot;3.113&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4114&quot;,
+                        name: &quot;4.114&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4115&quot;,
+                        name: &quot;4.115&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4116&quot;,
+                        name: &quot;4.116&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node3117&quot;,
+                    name: &quot;3.117&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4118&quot;,
+                        name: &quot;4.118&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4119&quot;,
+                        name: &quot;4.119&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4120&quot;,
+                        name: &quot;4.120&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4121&quot;,
+                        name: &quot;4.121&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node3122&quot;,
+                    name: &quot;3.122&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4123&quot;,
+                        name: &quot;4.123&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4124&quot;,
+                        name: &quot;4.124&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node2125&quot;,
+                name: &quot;2.125&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node3126&quot;,
+                    name: &quot;3.126&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4127&quot;,
+                        name: &quot;4.127&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4128&quot;,
+                        name: &quot;4.128&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4129&quot;,
+                        name: &quot;4.129&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }]
+        }, {
+            id: &quot;node1130&quot;,
+            name: &quot;1.130&quot;,
+            data: {},
+            children: [{
+                id: &quot;node2131&quot;,
+                name: &quot;2.131&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node3132&quot;,
+                    name: &quot;3.132&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4133&quot;,
+                        name: &quot;4.133&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4134&quot;,
+                        name: &quot;4.134&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4135&quot;,
+                        name: &quot;4.135&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4136&quot;,
+                        name: &quot;4.136&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4137&quot;,
+                        name: &quot;4.137&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }, {
+                id: &quot;node2138&quot;,
+                name: &quot;2.138&quot;,
+                data: {},
+                children: [{
+                    id: &quot;node3139&quot;,
+                    name: &quot;3.139&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4140&quot;,
+                        name: &quot;4.140&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4141&quot;,
+                        name: &quot;4.141&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }, {
+                    id: &quot;node3142&quot;,
+                    name: &quot;3.142&quot;,
+                    data: {},
+                    children: [{
+                        id: &quot;node4143&quot;,
+                        name: &quot;4.143&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4144&quot;,
+                        name: &quot;4.144&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4145&quot;,
+                        name: &quot;4.145&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4146&quot;,
+                        name: &quot;4.146&quot;,
+                        data: {},
+                        children: []
+                    }, {
+                        id: &quot;node4147&quot;,
+                        name: &quot;4.147&quot;,
+                        data: {},
+                        children: []
+                    }]
+                }]
+            }]
+        }]
+    };
+
+</pre>
+</div>
+<h4>Spacetree</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //Create a new ST instance
+    var st = new $jit.ST({
+        //id of viz container element
+        injectInto: &#39;infovis&#39;,
+        //set duration for the animation
+        duration: 800,
+        //set animation transition type
+        transition: $jit.Trans.Quart.easeInOut,
+        //set distance between node and its children
+        levelDistance: 50,
+        //enable panning
+        Navigation: {
+          enable:true,
+          panning:true
+        },
+        //set node and edge styles
+        //set overridable=true for styling individual
+        //nodes or edges
+        Node: {
+            height: 20,
+            width: 60,
+            type: &#39;rectangle&#39;,
+            color: &#39;#aaa&#39;,
+            overridable: true
+        },
+        
+        Edge: {
+            type: &#39;bezier&#39;,
+            overridable: true
+        },
+        
+        onBeforeCompute: function(node){
+            Log.write(&quot;loading &quot; + node.name);
+        },
+        
+        onAfterCompute: function(){
+            Log.write(&quot;done&quot;);
+        },
+        
+        //This method is called on DOM label creation.
+        //Use this method to add event handlers and styles to
+        //your node.
+        onCreateLabel: function(label, node){
+            label.id = node.id;            
+            label.innerHTML = node.name;
+            label.onclick = function(){
+            	if(normal.checked) {
+            	  st.onClick(node.id);
+            	} else {
+                st.setRoot(node.id, &#39;animate&#39;);
+            	}
+            };
+            //set label styles
+            var style = label.style;
+            style.width = 60 + &#39;px&#39;;
+            style.height = 17 + &#39;px&#39;;            
+            style.cursor = &#39;pointer&#39;;
+            style.color = &#39;#333&#39;;
+            style.fontSize = &#39;0.8em&#39;;
+            style.textAlign= &#39;center&#39;;
+            style.paddingTop = &#39;3px&#39;;
+        },
+        
+        //This method is called right before plotting
+        //a node. It&#39;s useful for changing an individual node
+        //style properties before plotting it.
+        //The data properties prefixed with a dollar
+        //sign will override the global node style properties.
+        onBeforePlotNode: function(node){
+            //add some color to the nodes in the path between the
+            //root node and the selected node.
+            if (node.selected) {
+                node.data.$color = &quot;#ff7&quot;;
+            }
+            else {
+                delete node.data.$color;
+                //if the node belongs to the last plotted level
+                if(!node.anySubnode(&quot;exist&quot;)) {
+                    //count children number
+                    var count = 0;
+                    node.eachSubnode(function(n) { count++; });
+                    //assign a node color based on
+                    //how many children it has
+                    node.data.$color = [&#39;#aaa&#39;, &#39;#baa&#39;, &#39;#caa&#39;, &#39;#daa&#39;, &#39;#eaa&#39;, &#39;#faa&#39;][count];                    
+                }
+            }
+        },
+        
+        //This method is called right before plotting
+        //an edge. It&#39;s useful for changing an individual edge
+        //style properties before plotting it.
+        //Edge data proprties prefixed with a dollar sign will
+        //override the Edge global style properties.
+        onBeforePlotLine: function(adj){
+            if (adj.nodeFrom.selected &amp;&amp; adj.nodeTo.selected) {
+                adj.data.$color = &quot;#eed&quot;;
+                adj.data.$lineWidth = 3;
+            }
+            else {
+                delete adj.data.$color;
+                delete adj.data.$lineWidth;
+            }
+        }
+    });
+    //load json data
+    st.loadJSON(json);
+    //compute node positions and layout
+    st.compute();
+    //optional: make a translation of the tree
+    st.geom.translate(new $jit.Complex(-200, 0), &quot;current&quot;);
+    //emulate a click on the root node.
+    st.onClick(st.root);
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

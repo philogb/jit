@@ -1,0 +1,493 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>RGraph - Tree Animation - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Tree Animation</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Tree Animation</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+        id: &quot;190_0&quot;,
+        name: &quot;Pearl Jam&quot;,
+        children: [{
+            id: &quot;306208_1&quot;,
+            name: &quot;Pearl Jam &amp;amp; Cypress Hill&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Pearl Jam &amp;amp; Cypress Hill&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Cypress Hill &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;84_2&quot;,
+                name: &quot;Cypress Hill&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Cypress Hill&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &amp;amp; Cypress Hill &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;107877_3&quot;,
+            name: &quot;Neil Young &amp;amp; Pearl Jam&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Neil Young &amp;amp; Pearl Jam&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Neil Young &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;964_4&quot;,
+                name: &quot;Neil Young&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Neil Young&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Neil Young &amp;amp; Pearl Jam &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236797_5&quot;,
+            name: &quot;Jeff Ament&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Jeff Ament&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Temple of the Dog &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Mother Love Bone &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Green River &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;M.A.C.C. &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Three Fish &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Gossman Project &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;1756_6&quot;,
+                name: &quot;Temple of the Dog&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Temple of the Dog&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;14581_7&quot;,
+                name: &quot;Mother Love Bone&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Mother Love Bone&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;50188_8&quot;,
+                name: &quot;Green River&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Green River&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;65452_9&quot;,
+                name: &quot;M.A.C.C.&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;M.A.C.C.&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;115632_10&quot;,
+                name: &quot;Three Fish&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Three Fish&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;346850_11&quot;,
+                name: &quot;Gossman Project&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Gossman Project&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;41529_12&quot;,
+            name: &quot;Stone Gossard&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Stone Gossard&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Temple of the Dog &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Mother Love Bone &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Brad &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Green River &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Gossman Project &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;1756_13&quot;,
+                name: &quot;Temple of the Dog&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Temple of the Dog&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Stone Gossard &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;14581_14&quot;,
+                name: &quot;Mother Love Bone&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Mother Love Bone&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Stone Gossard &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;24119_15&quot;,
+                name: &quot;Brad&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Brad&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Stone Gossard &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;50188_16&quot;,
+                name: &quot;Green River&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Green River&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Stone Gossard &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;346850_17&quot;,
+                name: &quot;Gossman Project&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Gossman Project&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Stone Gossard &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;131161_18&quot;,
+            name: &quot;Eddie Vedder&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Eddie Vedder&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Temple of the Dog &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Eddie Vedder &amp;amp; Zeke &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Bad Radio &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Beck &amp;amp; Eddie Vedder &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;1756_19&quot;,
+                name: &quot;Temple of the Dog&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Temple of the Dog&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Eddie Vedder &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;72007_20&quot;,
+                name: &quot;Eddie Vedder &amp;amp; Zeke&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Eddie Vedder &amp;amp; Zeke&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Eddie Vedder &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;236657_21&quot;,
+                name: &quot;Bad Radio&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Bad Radio&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Eddie Vedder &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;432176_22&quot;,
+                name: &quot;Beck &amp;amp; Eddie Vedder&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Beck &amp;amp; Eddie Vedder&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Eddie Vedder &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236583_23&quot;,
+            name: &quot;Mike McCready&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Mike McCready&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Mad Season &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Temple of the Dog &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;$10,000 Gold Chain &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;M.A.C.C. &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;The Rockfords &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Gossman Project &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;1744_24&quot;,
+                name: &quot;Mad Season&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Mad Season&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;1756_25&quot;,
+                name: &quot;Temple of the Dog&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Temple of the Dog&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;43661_26&quot;,
+                name: &quot;$10,000 Gold Chain&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;$10,000 Gold Chain&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;65452_27&quot;,
+                name: &quot;M.A.C.C.&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;M.A.C.C.&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;153766_28&quot;,
+                name: &quot;The Rockfords&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;The Rockfords&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;346850_29&quot;,
+                name: &quot;Gossman Project&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Gossman Project&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236585_30&quot;,
+            name: &quot;Matt Cameron&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Matt Cameron&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Soundgarden &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Temple of the Dog &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Eleven &lt;div&gt;(relation: supporting musician)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Queens of the Stone Age &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Wellwater Conspiracy &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;M.A.C.C. &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Tone Dogs &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;1111_31&quot;,
+                name: &quot;Soundgarden&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Soundgarden&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;1756_32&quot;,
+                name: &quot;Temple of the Dog&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Temple of the Dog&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;9570_33&quot;,
+                name: &quot;Eleven&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Eleven&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: supporting musician)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;11783_34&quot;,
+                name: &quot;Queens of the Stone Age&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Queens of the Stone Age&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;61972_35&quot;,
+                name: &quot;Wellwater Conspiracy&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Wellwater Conspiracy&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;65452_36&quot;,
+                name: &quot;M.A.C.C.&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;M.A.C.C.&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;353097_37&quot;,
+                name: &quot;Tone Dogs&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Tone Dogs&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236594_38&quot;,
+            name: &quot;Dave Krusen&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Dave Krusen&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Candlebox &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;2092_39&quot;,
+                name: &quot;Candlebox&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Candlebox&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Dave Krusen &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236022_40&quot;,
+            name: &quot;Matt Chamberlain&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Matt Chamberlain&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Critters Buggin &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Edie Brickell and New Bohemians &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;54761_41&quot;,
+                name: &quot;Critters Buggin&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Critters Buggin&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Chamberlain &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;92043_42&quot;,
+                name: &quot;Edie Brickell and New Bohemians&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Edie Brickell and New Bohemians&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Matt Chamberlain &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236611_43&quot;,
+            name: &quot;Dave Abbruzzese&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Dave Abbruzzese&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Green Romance Orchestra &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;276933_44&quot;,
+                name: &quot;Green Romance Orchestra&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Green Romance Orchestra&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Dave Abbruzzese &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }, {
+            id: &quot;236612_45&quot;,
+            name: &quot;Jack Irons&quot;,
+            data: {
+                relation: &quot;&lt;h4&gt;Jack Irons&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Redd Kross &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Eleven &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Red Hot Chili Peppers &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Anthym &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;What Is This? &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+            },
+            children: [{
+                id: &quot;4619_46&quot;,
+                name: &quot;Redd Kross&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Redd Kross&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jack Irons &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;9570_47&quot;,
+                name: &quot;Eleven&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Eleven&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jack Irons &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;12389_48&quot;,
+                name: &quot;Red Hot Chili Peppers&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Red Hot Chili Peppers&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jack Irons &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;114288_49&quot;,
+                name: &quot;Anthym&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;Anthym&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jack Irons &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }, {
+                id: &quot;240013_50&quot;,
+                name: &quot;What Is This?&quot;,
+                data: {
+                    relation: &quot;&lt;h4&gt;What Is This?&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Jack Irons &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+                },
+                children: []
+            }]
+        }],
+        data: {
+            relation: &quot;&lt;h4&gt;Pearl Jam&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&lt;ul&gt;&lt;li&gt;Pearl Jam &amp;amp; Cypress Hill &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Neil Young &amp;amp; Pearl Jam &lt;div&gt;(relation: collaboration)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Jeff Ament &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Stone Gossard &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Eddie Vedder &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Mike McCready &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Matt Cameron &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Dave Krusen &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Matt Chamberlain &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Dave Abbruzzese &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;li&gt;Jack Irons &lt;div&gt;(relation: member of band)&lt;/div&gt;&lt;/li&gt;&lt;/ul&gt;&quot;
+        }
+    };
+
+</pre>
+</div>
+<h4>RGraph</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var rgraph = new $jit.RGraph({
+        //Where to append the visualization
+        injectInto: &#39;infovis&#39;,
+        //Optional: create a background canvas that plots
+        //concentric circles.
+        background: {
+          CanvasStyles: {
+            strokeStyle: &#39;#555&#39;
+          }
+        },
+        //Add navigation capabilities:
+        //zooming by scrolling and panning.
+        Navigation: {
+          enable: true,
+          panning: true,
+          zooming: 10
+        },
+        //Set Node and Edge styles.
+        Node: {
+            color: &#39;#ddeeff&#39;
+        },
+        
+        Edge: {
+          color: &#39;#C17878&#39;,
+          lineWidth:1.5
+        },
+
+        onBeforeCompute: function(node){
+            Log.write(&quot;centering &quot; + node.name + &quot;...&quot;);
+            //Add the relation list in the right column.
+            //This list is taken from the data property of each JSON node.
+            $jit.id(&#39;inner-details&#39;).innerHTML = node.data.relation;
+        },
+        
+        //Add the name of the node in the correponding label
+        //and a click handler to move the graph.
+        //This method is called once, on label creation.
+        onCreateLabel: function(domElement, node){
+            domElement.innerHTML = node.name;
+            domElement.onclick = function(){
+                rgraph.onClick(node.id, {
+                    onComplete: function() {
+                        Log.write(&quot;done&quot;);
+                    }
+                });
+            };
+        },
+        //Change some label dom properties.
+        //This method is called each time a label is plotted.
+        onPlaceLabel: function(domElement, node){
+            var style = domElement.style;
+            style.display = &#39;&#39;;
+            style.cursor = &#39;pointer&#39;;
+
+            if (node._depth &lt;= 1) {
+                style.fontSize = &quot;0.8em&quot;;
+                style.color = &quot;#ccc&quot;;
+            
+            } else if(node._depth == 2){
+                style.fontSize = &quot;0.7em&quot;;
+                style.color = &quot;#494949&quot;;
+            
+            } else {
+                style.display = &#39;none&#39;;
+            }
+
+            var left = parseInt(style.left);
+            var w = domElement.offsetWidth;
+            style.left = (left - w / 2) + &#39;px&#39;;
+        }
+    });
+    //load JSON data
+    rgraph.loadJSON(json);
+    //trigger small animation
+    rgraph.graph.eachNode(function(n) {
+      var pos = n.getPos();
+      pos.setc(-200, -200);
+    });
+    rgraph.compute(&#39;end&#39;);
+    rgraph.fx.animate({
+      modes:[&#39;polar&#39;],
+      duration: 2000
+    });
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

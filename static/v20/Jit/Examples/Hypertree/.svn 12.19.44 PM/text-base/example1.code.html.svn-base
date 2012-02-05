@@ -1,0 +1,449 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hypertree - Tree Animation - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Tree Animation</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Tree Animation</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+        &quot;id&quot;: &quot;347_0&quot;,
+        &quot;name&quot;: &quot;Nine Inch Nails&quot;,
+        &quot;children&quot;: [{
+            &quot;id&quot;: &quot;126510_1&quot;,
+            &quot;name&quot;: &quot;Jerome Dillon&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;52163_2&quot;,
+                &quot;name&quot;: &quot;Howlin&#39; Maggie&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jerome Dillon&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;324134_3&quot;,
+                &quot;name&quot;: &quot;nearLY&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jerome Dillon&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;173871_4&quot;,
+            &quot;name&quot;: &quot;Charlie Clouser&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: []
+        }, {
+            &quot;id&quot;: &quot;235952_5&quot;,
+            &quot;name&quot;: &quot;James Woolley&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: []
+        }, {
+            &quot;id&quot;: &quot;235951_6&quot;,
+            &quot;name&quot;: &quot;Jeff Ward&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;2382_7&quot;,
+                &quot;name&quot;: &quot;Ministry&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ward&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;2415_8&quot;,
+                &quot;name&quot;: &quot;Revolting Cocks&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ward&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;3963_9&quot;,
+                &quot;name&quot;: &quot;Pigface&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ward&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;7848_10&quot;,
+                &quot;name&quot;: &quot;Lard&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ward&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;235950_11&quot;,
+            &quot;name&quot;: &quot;Richard Patrick&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1007_12&quot;,
+                &quot;name&quot;: &quot;Filter&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Richard Patrick&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;327924_13&quot;,
+                &quot;name&quot;: &quot;Army of Anyone&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Richard Patrick&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;2396_14&quot;,
+            &quot;name&quot;: &quot;Trent Reznor&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;3963_15&quot;,
+                &quot;name&quot;: &quot;Pigface&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Trent Reznor&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;32247_16&quot;,
+                &quot;name&quot;: &quot;1000 Homo DJs&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Trent Reznor&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;83761_17&quot;,
+                &quot;name&quot;: &quot;Option 30&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Trent Reznor&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;133257_18&quot;,
+                &quot;name&quot;: &quot;Exotic Birds&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Trent Reznor&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;36352_19&quot;,
+            &quot;name&quot;: &quot;Chris Vrenna&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1013_20&quot;,
+                &quot;name&quot;: &quot;Stabbing Westward&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Chris Vrenna&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;3963_21&quot;,
+                &quot;name&quot;: &quot;Pigface&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Chris Vrenna&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;5752_22&quot;,
+                &quot;name&quot;: &quot;Jack Off Jill&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Chris Vrenna&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;33602_23&quot;,
+                &quot;name&quot;: &quot;Die Warzau&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Chris Vrenna&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;40485_24&quot;,
+                &quot;name&quot;: &quot;tweaker&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Chris Vrenna&quot;,
+                    &quot;relation&quot;: &quot;is person&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;133257_25&quot;,
+                &quot;name&quot;: &quot;Exotic Birds&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Chris Vrenna&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236021_26&quot;,
+            &quot;name&quot;: &quot;Aaron North&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: []
+        }, {
+            &quot;id&quot;: &quot;236024_27&quot;,
+            &quot;name&quot;: &quot;Jeordie White&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;909_28&quot;,
+                &quot;name&quot;: &quot;A Perfect Circle&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeordie White&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;237377_29&quot;,
+                &quot;name&quot;: &quot;Twiggy Ramirez&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeordie White&quot;,
+                    &quot;relation&quot;: &quot;is person&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;235953_30&quot;,
+            &quot;name&quot;: &quot;Robin Finck&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1440_31&quot;,
+                &quot;name&quot;: &quot;Guns N&#39; Roses&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Robin Finck&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;235955_32&quot;,
+            &quot;name&quot;: &quot;Danny Lohner&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Nine Inch Nails&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;909_33&quot;,
+                &quot;name&quot;: &quot;A Perfect Circle&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;1695_34&quot;,
+                &quot;name&quot;: &quot;Killing Joke&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;1938_35&quot;,
+                &quot;name&quot;: &quot;Methods of Mayhem&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;5138_36&quot;,
+                &quot;name&quot;: &quot;Skrew&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;53549_37&quot;,
+                &quot;name&quot;: &quot;Angkor Wat&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;113510_38&quot;,
+                &quot;name&quot;: &quot;Puscifer&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;113512_39&quot;,
+                &quot;name&quot;: &quot;Renhold\u00ebr&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Danny Lohner&quot;,
+                    &quot;relation&quot;: &quot;is person&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }],
+        &quot;data&quot;: []
+    };
+
+</pre>
+</div>
+<h4>Hypertree</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var ht = new $jit.Hypertree({
+      //id of the visualization container
+      injectInto: &#39;infovis&#39;,
+      //canvas width and height
+      width: w,
+      height: h,
+      //Change node and edge styles such as
+      //color, width and dimensions.
+      Node: {
+          dim: 9,
+          color: &quot;#f00&quot;
+      },
+      Edge: {
+          lineWidth: 2,
+          color: &quot;#088&quot;
+      },
+      onBeforeCompute: function(node){
+          Log.write(&quot;centering&quot;);
+      },
+      //Attach event handlers and add text to the
+      //labels. This method is only triggered on label
+      //creation
+      onCreateLabel: function(domElement, node){
+          domElement.innerHTML = node.name;
+          $jit.util.addEvent(domElement, &#39;click&#39;, function () {
+              ht.onClick(node.id, {
+                  onComplete: function() {
+                      ht.controller.onComplete();
+                  }
+              });
+          });
+      },
+      //Change node styles when labels are placed
+      //or moved.
+      onPlaceLabel: function(domElement, node){
+          var style = domElement.style;
+          style.display = &#39;&#39;;
+          style.cursor = &#39;pointer&#39;;
+          if (node._depth &lt;= 1) {
+              style.fontSize = &quot;0.8em&quot;;
+              style.color = &quot;#ddd&quot;;
+
+          } else if(node._depth == 2){
+              style.fontSize = &quot;0.7em&quot;;
+              style.color = &quot;#555&quot;;
+
+          } else {
+              style.display = &#39;none&#39;;
+          }
+
+          var left = parseInt(style.left);
+          var w = domElement.offsetWidth;
+          style.left = (left - w / 2) + &#39;px&#39;;
+      },
+      
+      onComplete: function(){
+          Log.write(&quot;done&quot;);
+          
+          //Build the right column relations list.
+          //This is done by collecting the information (stored in the data property) 
+          //for all the nodes adjacent to the centered node.
+          var node = ht.graph.getClosestNodeToOrigin(&quot;current&quot;);
+          var html = &quot;&lt;h4&gt;&quot; + node.name + &quot;&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&quot;;
+          html += &quot;&lt;ul&gt;&quot;;
+          node.eachAdjacency(function(adj){
+              var child = adj.nodeTo;
+              if (child.data) {
+                  var rel = (child.data.band == node.name) ? child.data.relation : node.data.relation;
+                  html += &quot;&lt;li&gt;&quot; + child.name + &quot; &quot; + &quot;&lt;div class=\&quot;relation\&quot;&gt;(relation: &quot; + rel + &quot;)&lt;/div&gt;&lt;/li&gt;&quot;;
+              }
+          });
+          html += &quot;&lt;/ul&gt;&quot;;
+          $jit.id(&#39;inner-details&#39;).innerHTML = html;
+      }
+    });
+    //load JSON data.
+    ht.loadJSON(json);
+    //compute positions and plot.
+    ht.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

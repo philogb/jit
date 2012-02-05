@@ -1,0 +1,110 @@
+#builder {
+  width:935px;
+  margin:30px auto 0 auto;
+  text-align:left;
+}
+
+#builder-form {
+  margin-left: 5px;
+}
+
+label {
+  cursor: pointer;
+}
+
+p.description {
+  font-size: 0.9em;
+  margin-left: 5px;
+}
+
+#builder-form {
+
+}
+
+#builder h4 {
+  font-size: 1.0em;
+  border-bottom: 1px solid #ddd;
+  margin: 20px 0 0 0;
+}
+
+#builder-form table th {
+  color: #222;  
+  text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  -o-text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  -webkit-text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  -moz-text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+	
+	font-weight:normal;
+	padding:15px 5px 5px 5px;
+	font-size: 0.9em;
+  text-align: left;
+}
+
+#builder-form table tr {
+}
+
+#builder-form table td {
+  font-size: 0.8em;
+}
+
+#builder-form table td.name {
+  width: 110px;
+  font-style: italic;
+}
+
+.submit {
+  text-align: center;
+}
+
+.button {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font: 14px / 100% Arial, Helvetica, sans-serif;
+  padding: 0.5em 2em 0.55em;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+  text-decoration: none;
+}
+
+.button:active {
+  position: relative;
+  top: 1px;
+}
+
+a.button.blue {
+  color:#d9eef7;
+}
+
+.blue { /* Blue */
+  color: #d9eef7;
+  border: solid 1px #0076a3;
+  background: #007ead;
+  background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+  background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
+}
+
+.blue:hover {
+  background: #0095cd;
+  background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+  background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+}
+
+.blue:active {
+  color: #80bed6;
+  background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
+  background: -moz-linear-gradient(top,  #0078a5,  #00adee);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
+}

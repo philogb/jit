@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hypertree - Weighted Graph Animation - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Weighted Graph Animation</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Weighted Graph Animation</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example2.js">here</a>. Or <a href="example2.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    //By defining properties with the dollar sign ($)
+    //in nodes and edges we can override the global configuration
+    //properties for nodes and edges.
+    //In this case we use &quot;$type&quot; and &quot;$dim&quot; properties to override
+    //the type of the node to be plotted and its dimension.
+    var json = [{
+        &quot;id&quot;: &quot;node0&quot;,
+        &quot;name&quot;: &quot;node0 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 16.759175934208628,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node1&quot;,
+        &quot;name&quot;: &quot;node1 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 13.077119090372014,
+            &quot;$type&quot;: &quot;square&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node2&quot;,
+        &quot;name&quot;: &quot;node2 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 24.937383149648717,
+            &quot;$type&quot;: &quot;triangle&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node3&quot;,
+        &quot;name&quot;: &quot;node3 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 10.53272740718869,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node4&quot;,
+        &quot;name&quot;: &quot;node4 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 5.3754347037767345,
+            &quot;$type&quot;:&quot;triangle&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node5&quot;,
+        &quot;name&quot;: &quot;node5 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 32.26403873194912,
+            &quot;$type&quot;: &quot;star&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }]
+    }];
+
+</pre>
+</div>
+<h4>Hypertree</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var ht = new $jit.Hypertree({
+        //id of the visualization container
+        injectInto: &#39;infovis&#39;,
+        //By setting overridable=true,
+        //Node and Edge global properties can be
+        //overriden for each node/edge.
+        Node: {
+            overridable: true,
+            &#39;transform&#39;: false,
+            color: &quot;#f00&quot;
+        },
+        
+        Edge: {
+            overridable: true,
+            color: &quot;#088&quot;
+        },
+        //calculate nodes offset
+        offset: 0.2,
+        //Change the animation transition type
+        transition: $jit.Trans.Back.easeOut,
+        //animation duration (in milliseconds)
+        duration:1000,
+        
+        //This method is called right before plotting an
+        //edge. This method is useful for adding individual
+        //styles to edges.
+        onBeforePlotLine: function(adj){
+            //Set random lineWidth for edges.
+            if (!adj.data.$lineWidth) 
+                adj.data.$lineWidth = Math.random() * 7 + 1;
+        },
+        
+        onBeforeCompute: function(node){
+            Log.write(&quot;centering&quot;);
+        },
+        //Attach event handlers on label creation.
+        onCreateLabel: function(domElement, node){
+            domElement.innerHTML = node.name;
+            domElement.style.cursor = &quot;pointer&quot;;
+            domElement.onclick = function () {
+                ht.onClick(node.id, { 
+                    hideLabels: false,
+                    onComplete: function() {
+                      ht.controller.onComplete();
+                    }
+                });
+            };
+        },
+        //This method is called when moving/placing a label.
+        //You can add some positioning offsets to the labels here.
+        onPlaceLabel: function(domElement, node){
+            var width = domElement.offsetWidth;
+            var intX = parseInt(domElement.style.left);
+            intX -= width / 2;
+            domElement.style.left = intX + &#39;px&#39;;
+        },
+        
+        onComplete: function(){
+            Log.write(&quot;done&quot;);
+
+            //Make the relations list shown in the right column.
+            var node = ht.graph.getClosestNodeToOrigin(&quot;current&quot;);
+            var html = &quot;&lt;h4&gt;&quot; + node.name + &quot;&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&quot;;
+            html += &quot;&lt;ul&gt;&quot;;
+            node.eachAdjacency(function(adj){
+                var child = adj.nodeTo;
+                html += &quot;&lt;li&gt;&quot; + child.name + &quot;&lt;/li&gt;&quot;;
+            });
+            html += &quot;&lt;/ul&gt;&quot;;
+            $jit.id(&#39;inner-details&#39;).innerHTML = html;
+        }
+    });
+    //load JSON graph.
+    ht.loadJSON(json, 2);
+    //compute positions and plot
+    ht.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

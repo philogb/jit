@@ -1,0 +1,140 @@
+html, body {
+  margin:0;
+  padding:0;
+  text-align:center;
+  font-family:Tahoma, Helvetica, Arial;
+  background: #f7f7f7;
+  color: #555;
+}
+
+a, a:link, a:visited {
+  text-decoration:none;
+  color:#1E6F91;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a img {
+  border:none;
+}
+
+.container {
+  width:1000px; 
+  margin:auto;
+  position:relative
+}
+
+#header {
+	height:90px;
+}
+
+#header a:hover {
+  text-decoration: none;
+}
+
+#header .submenu {
+    
+}
+
+#header h1, #header h4 {
+  margin:0;
+  padding:0;
+  position:absolute;
+}
+
+#header h1 {
+  left:40px;
+  top:10px;
+  color:#1a1a1a;
+  font-weight:normal;
+}
+
+#header h4 {
+  left:40px;
+  top:50px;
+  color:#666;
+  font-weight:normal;
+}
+
+#nav {
+	height:80px;
+	background: #116283;
+	background: -webkit-gradient(linear, 50% 0, 50% 100%, from(#116283), color-stop(0.5, #1e6f91), to(#116283));
+	background: -moz-linear-gradient(top, #116283, #1e6f91, #116283);
+	background: -o-linear-gradient(top, #116283, #1e6f91, #116283);
+	background: linear-gradient(top, #116283, #1e6f91, #116283);
+}
+
+#nav .container ul {
+  margin:0;
+  position:relative;
+}
+
+#nav .container ul li {
+  position:relative;
+	display:block;
+  width:155px;
+  height:80px;
+  float:left;
+}
+
+#nav .container ul li .item {
+  position:absolute;
+  left:0;
+  top:15px;
+  border-left:1px solid #888;
+  height:50px;
+}
+
+#nav .container ul li a {
+  display: block;
+  width:155px;
+  height:60px;
+}
+
+#nav .container ul li a:hover {
+  text-decoration: none;
+}
+
+#upper_menu a:hover {
+  text-decoration: underline;
+}
+
+#nav .container ul li a span.title {
+	position:absolute; 
+	top:15px; 
+	left:20px; 
+	font-size:19px; 
+	color: #fff;
+}
+
+#nav .container ul li a span.subtitle {
+	position:absolute; 
+	top:35px; 
+	left:0px; 
+	width:140px; 
+	padding:10px 0px 20px 20px; 
+	font-size:11px; 
+	color:#eee;
+	text-align: left;
+}
+
+#upper_menu {
+  position: absolute;
+  left: 720px;
+  top: 30px;
+  font-size: 0.9em;
+}
+
+#footer p {
+    margin: 0;
+}
+
+#footer {
+    padding: 2em 0;
+    text-align: center;
+    font-size: 0.75em;
+    color: #555;
+}

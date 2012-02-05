@@ -1,0 +1,37 @@
+#docs {
+  width:935px;
+  margin:0 auto;
+  text-align:left;
+}
+
+.wrapper {
+  width:710px;
+}
+
+#docs p {
+  font-size: 0.9em;
+  color: #686C70;
+  padding:5px;
+  line-height: 19px;
+}
+
+.me {
+  border: 1px solid magenta; 
+  margin: 5px 0px 5px 20px; 
+  padding: 3px; 
+  float:right;
+}
+
+h5 {
+  font-weight: normal;
+  font-size:1.1em;
+	text-indent: 5px;
+  color: #222;  
+  text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  -o-text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  -webkit-text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  -moz-text-shadow:2px 2px 5px rgba(10, 10, 10, 0.2);
+  
+  margin-bottom: 7px;
+}
+

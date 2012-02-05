@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>RGraph - Weighted Graph Animation - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Weighted Graph Animation</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Weighted Graph Animation</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example2.js">here</a>. Or <a href="example2.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    //If a node in this JSON structure
+    //has the &quot;$type&quot; or &quot;$dim&quot; parameters
+    //defined it will override the &quot;type&quot; and
+    //&quot;dim&quot; parameters globally defined in the
+    //RGraph constructor.
+    var json = [{
+        &quot;id&quot;: &quot;node0&quot;,
+        &quot;name&quot;: &quot;node0 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 16.759175934208628,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;$type&quot;:&quot;arrow&quot;,
+                &quot;$color&quot;:&quot;#dd99dd&quot;,
+                &quot;$dim&quot;:25,
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node1&quot;,
+        &quot;name&quot;: &quot;node1 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 13.077119090372014,
+            &quot;$type&quot;: &quot;square&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node2&quot;,
+        &quot;name&quot;: &quot;node2 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 24.937383149648717,
+            &quot;$type&quot;: &quot;triangle&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node3&quot;,
+        &quot;name&quot;: &quot;node3 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 10.53272740718869,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;$type&quot;:&quot;arrow&quot;,
+                &quot;$direction&quot;: [&quot;node4&quot;, &quot;node3&quot;],
+                &quot;$dim&quot;:25,
+                &quot;$color&quot;:&quot;#dd99dd&quot;,
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node4&quot;,
+        &quot;name&quot;: &quot;node4 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 5.3754347037767345,
+            &quot;$type&quot;:&quot;triangle&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node5&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }]
+    }, {
+        &quot;id&quot;: &quot;node5&quot;,
+        &quot;name&quot;: &quot;node5 name&quot;,
+        &quot;data&quot;: {
+            &quot;$dim&quot;: 32.26403873194912,
+            &quot;$type&quot;: &quot;star&quot;,
+            &quot;some other key&quot;: &quot;some other value&quot;
+        },
+        &quot;adjacencies&quot;: [{
+            &quot;nodeTo&quot;: &quot;node0&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node1&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node2&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 1
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node3&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }, {
+            &quot;nodeTo&quot;: &quot;node4&quot;,
+            &quot;data&quot;: {
+                &quot;weight&quot;: 3
+            }
+        }]
+    }];
+
+</pre>
+</div>
+<h4>RGraph</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var rgraph = new $jit.RGraph({
+      &#39;injectInto&#39;: &#39;infovis&#39;,
+      //Optional: Add a background canvas
+      //that draws some concentric circles.
+      &#39;background&#39;: {
+        &#39;CanvasStyles&#39;: {
+          &#39;strokeStyle&#39;: &#39;#555&#39;,
+          &#39;shadowBlur&#39;: 50,
+          &#39;shadowColor&#39;: &#39;#ccc&#39;
+        }
+      },
+        //Nodes and Edges parameters
+        //can be overridden if defined in 
+        //the JSON input data.
+        //This way we can define different node
+        //types individually.
+        Node: {
+            &#39;overridable&#39;: true,
+             &#39;color&#39;: &#39;#cc0000&#39;
+        },
+        Edge: {
+            &#39;overridable&#39;: true,
+            &#39;color&#39;: &#39;#cccc00&#39;
+        },
+        //Set polar interpolation.
+        //Default&#39;s linear.
+        interpolation: &#39;polar&#39;,
+        //Change the transition effect from linear
+        //to elastic.
+        transition: $jit.Trans.Elastic.easeOut,
+        //Change other animation parameters.
+        duration:3500,
+        fps: 30,
+        //Change father-child distance.
+        levelDistance: 200,
+        //This method is called right before plotting
+        //an edge. This method is useful to change edge styles
+        //individually.
+        onBeforePlotLine: function(adj){
+            //Add some random lineWidth to each edge.
+            if (!adj.data.$lineWidth) 
+                adj.data.$lineWidth = Math.random() * 5 + 1;
+        },
+        
+        onBeforeCompute: function(node){
+            Log.write(&quot;centering &quot; + node.name + &quot;...&quot;);
+            
+            //Make right column relations list.
+            var html = &quot;&lt;h4&gt;&quot; + node.name + &quot;&lt;/h4&gt;&lt;b&gt;Connections:&lt;/b&gt;&quot;;
+            html += &quot;&lt;ul&gt;&quot;;
+            node.eachAdjacency(function(adj){
+                var child = adj.nodeTo;
+                html += &quot;&lt;li&gt;&quot; + child.name + &quot;&lt;/li&gt;&quot;;
+            });
+            html += &quot;&lt;/ul&gt;&quot;;
+            $jit.id(&#39;inner-details&#39;).innerHTML = html;
+        },
+        //Add node click handler and some styles.
+        //This method is called only once for each node/label crated.
+        onCreateLabel: function(domElement, node){
+            domElement.innerHTML = node.name;
+            domElement.onclick = function () {
+                rgraph.onClick(node.id, { 
+                    hideLabels: false,
+                    onComplete: function() {
+                        Log.write(&quot;done&quot;);
+                    }
+                });
+            };
+            var style = domElement.style;
+            style.cursor = &#39;pointer&#39;;
+            style.fontSize = &quot;0.8em&quot;;
+            style.color = &quot;#fff&quot;;
+        },
+        //This method is called when rendering/moving a label.
+        //This is method is useful to make some last minute changes
+        //to node labels like adding some position offset.
+        onPlaceLabel: function(domElement, node){
+            var style = domElement.style;
+            var left = parseInt(style.left);
+            var w = domElement.offsetWidth;
+            style.left = (left - w / 2) + &#39;px&#39;;
+        }
+    });
+    //load graph.
+    rgraph.loadJSON(json, 1);
+    
+    //compute positions and plot
+    rgraph.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

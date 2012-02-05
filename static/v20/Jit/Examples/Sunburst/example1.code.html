@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Sunburst - Connected Sunburst - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Connected Sunburst</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Connected Sunburst</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+  var json = [
+      //&quot;root&quot; node is invisible
+      {
+        &quot;id&quot;: &quot;node0&quot;,
+        &quot;name&quot;: &quot;&quot;,
+        &quot;data&quot;: {
+          &quot;$type&quot;: &quot;none&quot;
+        },
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;node1&quot;,
+              &quot;data&quot;: {
+                &#39;$type&#39;: &#39;none&#39;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node2&quot;,
+              &quot;data&quot;: {
+                &#39;$type&#39;: &#39;none&#39;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node3&quot;,
+              &quot;data&quot;: {
+                &#39;$type&#39;: &#39;none&#39;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node4&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node5&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node6&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node7&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node8&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node9&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node10&quot;,
+              &quot;data&quot;: {
+                &quot;$type&quot;: &quot;none&quot;
+              }
+            }
+        ]
+      }, {
+        &quot;id&quot;: &quot;node1&quot;,
+        &quot;name&quot;: &quot;node 1&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 13.00,
+          &quot;$color&quot;: &quot;#33a&quot;,
+          &quot;$height&quot;: 70
+        },
+        &quot;adjacencies&quot;: [
+            {
+              &quot;nodeTo&quot;: &quot;node3&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#ddaacc&quot;,
+                &quot;$lineWidth&quot;: 4
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node5&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#ccffdd&quot;,
+                &quot;$lineWidth&quot;: 4
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node7&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#dd99dd&quot;,
+                &quot;$lineWidth&quot;: 4
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node8&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#dd99dd&quot;,
+                &quot;$lineWidth&quot;: 4
+              }
+            }, {
+              &quot;nodeTo&quot;: &quot;node10&quot;,
+              &quot;data&quot;: {
+                &quot;$color&quot;: &quot;#ddaacc&quot;,
+                &quot;$lineWidth&quot;: 4
+              }
+            }
+        ]
+      }, {
+        &quot;id&quot;: &quot;node2&quot;,
+        &quot;name&quot;: &quot;node 2&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 24.90,
+          &quot;$color&quot;: &quot;#55b&quot;,
+          &quot;$height&quot;: 73
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node8&quot;, &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node3&quot;,
+        &quot;name&quot;: &quot;node 3&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 10.50,
+          &quot;$color&quot;: &quot;#77c&quot;,
+          &quot;$height&quot;: 75
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node8&quot;, &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node4&quot;,
+        &quot;name&quot;: &quot;node 4&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 5.40,
+          &quot;$color&quot;: &quot;#99d&quot;,
+          &quot;$height&quot;: 75
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node8&quot;, &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node5&quot;,
+        &quot;name&quot;: &quot;node 5&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 32.26,
+          &quot;$color&quot;: &quot;#aae&quot;,
+          &quot;$height&quot;: 80
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node8&quot;, &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node6&quot;,
+        &quot;name&quot;: &quot;node 6&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 24.90,
+          &quot;$color&quot;: &quot;#bf0&quot;,
+          &quot;$height&quot;: 85
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node8&quot;, &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node7&quot;,
+        &quot;name&quot;: &quot;node 7&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 14.90,
+          &quot;$color&quot;: &quot;#cf5&quot;,
+          &quot;$height&quot;: 85
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node8&quot;, &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node8&quot;,
+        &quot;name&quot;: &quot;node 8&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 34.90,
+          &quot;$color&quot;: &quot;#dfa&quot;,
+          &quot;$height&quot;: 80
+        },
+        &quot;adjacencies&quot;: [
+            &quot;node9&quot;, &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node9&quot;,
+        &quot;name&quot;: &quot;node 9&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 42.90,
+          &quot;$color&quot;: &quot;#CCC&quot;,
+          &quot;$height&quot;: 75
+        },
+        &quot;adjacencies&quot;: [
+          &quot;node10&quot;
+        ]
+      }, {
+        &quot;id&quot;: &quot;node10&quot;,
+        &quot;name&quot;: &quot;node 10&quot;,
+        &quot;data&quot;: {
+          &quot;$angularWidth&quot;: 100.90,
+          &quot;$color&quot;: &quot;#C37&quot;,
+          &quot;$height&quot;: 70
+        },
+        &quot;adjacencies&quot;: []
+      }
+  ];
+
+</pre>
+</div>
+<h4>Sunburst</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+  var sb = new $jit.Sunburst({
+    //id container for the visualization
+    injectInto: &#39;infovis&#39;,
+    //Change node and edge styles such as
+    //color, width, lineWidth and edge types
+    Node: {
+      overridable: true,
+      type: useGradients? &#39;gradient-multipie&#39; : &#39;multipie&#39;
+    },
+    Edge: {
+      overridable: true,
+      type: &#39;hyperline&#39;,
+      lineWidth: 2,
+      color: &#39;#777&#39;
+    },
+    //Draw canvas text. Can also be
+    //&#39;HTML&#39; or &#39;SVG&#39; to draw DOM labels
+    Label: {
+      type: nativeTextSupport? &#39;Native&#39; : &#39;SVG&#39;
+    },
+    //Add animations when hovering and clicking nodes
+    NodeStyles: {
+      enable: true,
+      type: &#39;Native&#39;,
+      stylesClick: {
+        &#39;color&#39;: &#39;#33dddd&#39;
+      },
+      stylesHover: {
+        &#39;color&#39;: &#39;#dd3333&#39;
+      },
+      duration: 700
+    },
+    Events: {
+      enable: true,
+      type: &#39;Native&#39;,
+      //List node connections onClick
+      onClick: function(node, eventInfo, e){
+        if (!node) return;
+        var html = &quot;&lt;h4&gt;&quot; + node.name + &quot; connections&lt;/h4&gt;&lt;ul&gt;&lt;li&gt;&quot;, ans = [];
+        node.eachAdjacency(function(adj){
+          // if on the same level i.e siblings
+            if (adj.nodeTo._depth == node._depth) {
+              ans.push(adj.nodeTo.name);
+            }
+          });
+        $jit.id(&#39;inner-details&#39;).innerHTML = html + ans.join(&quot;&lt;/li&gt;&lt;li&gt;&quot;) + &quot;&lt;/li&gt;&lt;/ul&gt;&quot;;
+      }
+    },
+    levelDistance: 190,
+    // Only used when Label type is &#39;HTML&#39; or &#39;SVG&#39;
+    // Add text to the labels. 
+    // This method is only triggered on label creation
+    onCreateLabel: function(domElement, node){
+      var labels = sb.config.Label.type;
+      if (labels === &#39;HTML&#39;) {
+        domElement.innerHTML = node.name;
+      } else if (labels === &#39;SVG&#39;) {
+        domElement.firstChild.appendChild(document.createTextNode(node.name));
+      }
+    },
+    // Only used when Label type is &#39;HTML&#39; or &#39;SVG&#39;
+    // Change node styles when labels are placed
+    // or moved.
+    onPlaceLabel: function(domElement, node){
+      var labels = sb.config.Label.type;
+      if (labels === &#39;SVG&#39;) {
+        var fch = domElement.firstChild;
+        var style = fch.style;
+        style.display = &#39;&#39;;
+        style.cursor = &#39;pointer&#39;;
+        style.fontSize = &quot;0.8em&quot;;
+        fch.setAttribute(&#39;fill&#39;, &quot;#fff&quot;);
+      } else if (labels === &#39;HTML&#39;) {
+        var style = domElement.style;
+        style.display = &#39;&#39;;
+        style.cursor = &#39;pointer&#39;;
+        if (node._depth &lt;= 1) {
+          style.fontSize = &quot;0.8em&quot;;
+          style.color = &quot;#ddd&quot;;
+        } 
+        var left = parseInt(style.left);
+        var w = domElement.offsetWidth;
+        style.left = (left - w / 2) + &#39;px&#39;;
+      }
+    }
+  });
+  // load JSON data.
+  sb.loadJSON(json);
+  // compute positions and plot.
+  sb.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

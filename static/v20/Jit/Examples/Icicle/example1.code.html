@@ -1,0 +1,3513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>controls - Icicle Tree with static JSON data - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Icicle Tree with static JSON data</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Icicle Tree with static JSON data</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example1.js">here</a>. Or <a href="example1.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+  var json = {
+    &quot;id&quot;: &quot;node02&quot;,
+    &quot;name&quot;: &quot;0.2&quot;,
+    &quot;data&quot;: {
+      &quot;$area&quot;: 8,
+      &quot;$dim&quot;: 8,
+      &quot;$color&quot;: &quot;#001eff&quot;
+    },
+    &quot;children&quot;: [
+        {
+          &quot;id&quot;: &quot;node13&quot;,
+          &quot;name&quot;: &quot;1.3&quot;,
+          &quot;data&quot;: {
+            &quot;$area&quot;: 10,
+            &quot;$dim&quot;: 10,
+            &quot;$color&quot;: &quot;#9554ff&quot;
+          },
+          &quot;children&quot;: [
+              {
+                &quot;id&quot;: &quot;node24&quot;,
+                &quot;name&quot;: &quot;2.4&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 3,
+                  &quot;$dim&quot;: 3,
+                  &quot;$color&quot;: &quot;#ee6aff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node35&quot;,
+                      &quot;name&quot;: &quot;3.5&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff0ca2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node46&quot;,
+                            &quot;name&quot;: &quot;4.6&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5c6f&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node47&quot;,
+                            &quot;name&quot;: &quot;4.7&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node48&quot;,
+                            &quot;name&quot;: &quot;4.8&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node49&quot;,
+                            &quot;name&quot;: &quot;4.9&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node410&quot;,
+                            &quot;name&quot;: &quot;4.10&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff5468&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node411&quot;,
+                            &quot;name&quot;: &quot;4.11&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6173&quot;
+                            }
+                            
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node312&quot;,
+                      &quot;name&quot;: &quot;3.12&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff74ca&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node413&quot;,
+                            &quot;name&quot;: &quot;4.13&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4056&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node414&quot;,
+                            &quot;name&quot;: &quot;4.14&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7383&quot;
+                            }
+                            
+                          }, {
+                            &quot;id&quot;: &quot;node415&quot;,
+                            &quot;name&quot;: &quot;4.15&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff4d61&quot;
+                            }
+                            
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node216&quot;,
+                &quot;name&quot;: &quot;2.16&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 8,
+                  &quot;$dim&quot;: 8,
+                  &quot;$color&quot;: &quot;#ea47ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node317&quot;,
+                      &quot;name&quot;: &quot;3.17&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff55be&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node418&quot;,
+                            &quot;name&quot;: &quot;4.18&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff3048&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node419&quot;,
+                            &quot;name&quot;: &quot;4.19&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5064&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node320&quot;,
+                      &quot;name&quot;: &quot;3.20&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff5ac0&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node421&quot;,
+                            &quot;name&quot;: &quot;4.21&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff697b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node422&quot;,
+                            &quot;name&quot;: &quot;4.22&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff4e62&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node423&quot;,
+                            &quot;name&quot;: &quot;4.23&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6f80&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node424&quot;,
+                            &quot;name&quot;: &quot;4.24&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff596c&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node325&quot;,
+                      &quot;name&quot;: &quot;3.25&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff5ec1&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node426&quot;,
+                            &quot;name&quot;: &quot;4.26&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff203a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node427&quot;,
+                            &quot;name&quot;: &quot;4.27&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node328&quot;,
+                      &quot;name&quot;: &quot;3.28&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff71c9&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node429&quot;,
+                            &quot;name&quot;: &quot;4.29&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff4d61&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node430&quot;,
+                            &quot;name&quot;: &quot;4.30&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6f7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node431&quot;,
+                            &quot;name&quot;: &quot;4.31&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff445a&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node232&quot;,
+                &quot;name&quot;: &quot;2.32&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 7,
+                  &quot;$dim&quot;: 7,
+                  &quot;$color&quot;: &quot;#ea4eff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node333&quot;,
+                      &quot;name&quot;: &quot;3.33&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 2,
+                        &quot;$dim&quot;: 2,
+                        &quot;$color&quot;: &quot;#ff78cb&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node434&quot;,
+                            &quot;name&quot;: &quot;4.34&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff0d29&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node435&quot;,
+                            &quot;name&quot;: &quot;4.35&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7383&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node336&quot;,
+                      &quot;name&quot;: &quot;3.36&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff5cc0&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node437&quot;,
+                            &quot;name&quot;: &quot;4.37&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node438&quot;,
+                            &quot;name&quot;: &quot;4.38&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5b6e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node439&quot;,
+                            &quot;name&quot;: &quot;4.39&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff576a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node440&quot;,
+                            &quot;name&quot;: &quot;4.40&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7282&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node441&quot;,
+                            &quot;name&quot;: &quot;4.41&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node342&quot;,
+                      &quot;name&quot;: &quot;3.42&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff68c5&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node443&quot;,
+                            &quot;name&quot;: &quot;4.43&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node444&quot;,
+                            &quot;name&quot;: &quot;4.44&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node445&quot;,
+                            &quot;name&quot;: &quot;4.45&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node446&quot;,
+                            &quot;name&quot;: &quot;4.46&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff586c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node447&quot;,
+                            &quot;name&quot;: &quot;4.47&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6779&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node448&quot;,
+                            &quot;name&quot;: &quot;4.48&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node349&quot;,
+                      &quot;name&quot;: &quot;3.49&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff64c3&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node450&quot;,
+                            &quot;name&quot;: &quot;4.50&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff4056&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node451&quot;,
+                            &quot;name&quot;: &quot;4.51&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node452&quot;,
+                            &quot;name&quot;: &quot;4.52&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff5c6f&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node353&quot;,
+                      &quot;name&quot;: &quot;3.53&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff70c8&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node454&quot;,
+                            &quot;name&quot;: &quot;4.54&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7484&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node455&quot;,
+                            &quot;name&quot;: &quot;4.55&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6d7e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node456&quot;,
+                            &quot;name&quot;: &quot;4.56&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6577&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node457&quot;,
+                            &quot;name&quot;: &quot;4.57&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff697b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node458&quot;,
+                            &quot;name&quot;: &quot;4.58&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6d7e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node459&quot;,
+                            &quot;name&quot;: &quot;4.59&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6274&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node360&quot;,
+                      &quot;name&quot;: &quot;3.60&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff70c8&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node461&quot;,
+                            &quot;name&quot;: &quot;4.61&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node462&quot;,
+                            &quot;name&quot;: &quot;4.62&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node463&quot;,
+                            &quot;name&quot;: &quot;4.63&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node464&quot;,
+                            &quot;name&quot;: &quot;4.64&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7181&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node465&quot;,
+                            &quot;name&quot;: &quot;4.65&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4e63&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node466&quot;,
+                            &quot;name&quot;: &quot;4.66&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }
+          ]
+        }, {
+          &quot;id&quot;: &quot;node167&quot;,
+          &quot;name&quot;: &quot;1.67&quot;,
+          &quot;data&quot;: {
+            &quot;$area&quot;: 3,
+            &quot;$dim&quot;: 3,
+            &quot;$color&quot;: &quot;#a872ff&quot;
+          },
+          &quot;children&quot;: [
+              {
+                &quot;id&quot;: &quot;node268&quot;,
+                &quot;name&quot;: &quot;2.68&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 3,
+                  &quot;$dim&quot;: 3,
+                  &quot;$color&quot;: &quot;#ef72ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node369&quot;,
+                      &quot;name&quot;: &quot;3.69&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff6ec7&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node470&quot;,
+                            &quot;name&quot;: &quot;4.70&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff596d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node471&quot;,
+                            &quot;name&quot;: &quot;4.71&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7383&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node472&quot;,
+                            &quot;name&quot;: &quot;4.72&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7383&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node473&quot;,
+                            &quot;name&quot;: &quot;4.73&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node474&quot;,
+                            &quot;name&quot;: &quot;4.74&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff596d&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node375&quot;,
+                      &quot;name&quot;: &quot;3.75&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff46b8&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node476&quot;,
+                            &quot;name&quot;: &quot;4.76&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6274&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node477&quot;,
+                            &quot;name&quot;: &quot;4.77&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node478&quot;,
+                            &quot;name&quot;: &quot;4.78&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6f7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node479&quot;,
+                            &quot;name&quot;: &quot;4.79&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7383&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node480&quot;,
+                            &quot;name&quot;: &quot;4.80&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node381&quot;,
+                      &quot;name&quot;: &quot;3.81&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff5dc1&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node482&quot;,
+                            &quot;name&quot;: &quot;4.82&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node483&quot;,
+                            &quot;name&quot;: &quot;4.83&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff6779&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node484&quot;,
+                            &quot;name&quot;: &quot;4.84&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5a6e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node485&quot;,
+                            &quot;name&quot;: &quot;4.85&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5a6e&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node386&quot;,
+                      &quot;name&quot;: &quot;3.86&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff7acc&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node487&quot;,
+                            &quot;name&quot;: &quot;4.87&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node488&quot;,
+                            &quot;name&quot;: &quot;4.88&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6b7c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node489&quot;,
+                            &quot;name&quot;: &quot;4.89&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff566a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node490&quot;,
+                            &quot;name&quot;: &quot;4.90&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5a6e&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node391&quot;,
+                      &quot;name&quot;: &quot;3.91&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 2,
+                        &quot;$dim&quot;: 2,
+                        &quot;$color&quot;: &quot;#ff74ca&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node492&quot;,
+                            &quot;name&quot;: &quot;4.92&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node493&quot;,
+                            &quot;name&quot;: &quot;4.93&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5b6e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node494&quot;,
+                            &quot;name&quot;: &quot;4.94&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node495&quot;,
+                            &quot;name&quot;: &quot;4.95&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff495e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node496&quot;,
+                            &quot;name&quot;: &quot;4.96&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6779&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node297&quot;,
+                &quot;name&quot;: &quot;2.97&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 3,
+                  &quot;$dim&quot;: 3,
+                  &quot;$color&quot;: &quot;#ef72ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node398&quot;,
+                      &quot;name&quot;: &quot;3.98&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff40b6&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node499&quot;,
+                            &quot;name&quot;: &quot;4.99&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff5c6f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4100&quot;,
+                            &quot;name&quot;: &quot;4.100&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7888&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4101&quot;,
+                            &quot;name&quot;: &quot;4.101&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4102&quot;,
+                            &quot;name&quot;: &quot;4.102&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3103&quot;,
+                      &quot;name&quot;: &quot;3.103&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff53bd&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4104&quot;,
+                            &quot;name&quot;: &quot;4.104&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4105&quot;,
+                            &quot;name&quot;: &quot;4.105&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff697b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4106&quot;,
+                            &quot;name&quot;: &quot;4.106&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4107&quot;,
+                            &quot;name&quot;: &quot;4.107&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4108&quot;,
+                            &quot;name&quot;: &quot;4.108&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff697b&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3109&quot;,
+                      &quot;name&quot;: &quot;3.109&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff6cc7&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4110&quot;,
+                            &quot;name&quot;: &quot;4.110&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7585&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4111&quot;,
+                            &quot;name&quot;: &quot;4.111&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6778&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4112&quot;,
+                            &quot;name&quot;: &quot;4.112&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff6a7c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4113&quot;,
+                            &quot;name&quot;: &quot;4.113&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4114&quot;,
+                            &quot;name&quot;: &quot;4.114&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6778&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4115&quot;,
+                            &quot;name&quot;: &quot;4.115&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff7182&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2116&quot;,
+                &quot;name&quot;: &quot;2.116&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 7,
+                  &quot;$dim&quot;: 7,
+                  &quot;$color&quot;: &quot;#ec60ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3117&quot;,
+                      &quot;name&quot;: &quot;3.117&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff62c3&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4118&quot;,
+                            &quot;name&quot;: &quot;4.118&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6577&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4119&quot;,
+                            &quot;name&quot;: &quot;4.119&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4120&quot;,
+                            &quot;name&quot;: &quot;4.120&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6274&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4121&quot;,
+                            &quot;name&quot;: &quot;4.121&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6577&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4122&quot;,
+                            &quot;name&quot;: &quot;4.122&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4123&quot;,
+                            &quot;name&quot;: &quot;4.123&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6274&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3124&quot;,
+                      &quot;name&quot;: &quot;3.124&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff58bf&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4125&quot;,
+                            &quot;name&quot;: &quot;4.125&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4056&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4126&quot;,
+                            &quot;name&quot;: &quot;4.126&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff596d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4127&quot;,
+                            &quot;name&quot;: &quot;4.127&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6c7d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4128&quot;,
+                            &quot;name&quot;: &quot;4.128&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3129&quot;,
+                      &quot;name&quot;: &quot;3.129&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff45b8&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4130&quot;,
+                            &quot;name&quot;: &quot;4.130&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4131&quot;,
+                            &quot;name&quot;: &quot;4.131&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4132&quot;,
+                            &quot;name&quot;: &quot;4.132&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7485&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4133&quot;,
+                            &quot;name&quot;: &quot;4.133&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7485&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4134&quot;,
+                            &quot;name&quot;: &quot;4.134&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6f80&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4135&quot;,
+                            &quot;name&quot;: &quot;4.135&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6f80&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2136&quot;,
+                &quot;name&quot;: &quot;2.136&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 2,
+                  &quot;$dim&quot;: 2,
+                  &quot;$color&quot;: &quot;#ef76ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3137&quot;,
+                      &quot;name&quot;: &quot;3.137&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff67c5&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4138&quot;,
+                            &quot;name&quot;: &quot;4.138&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4139&quot;,
+                            &quot;name&quot;: &quot;4.139&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff475c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4140&quot;,
+                            &quot;name&quot;: &quot;4.140&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3141&quot;,
+                      &quot;name&quot;: &quot;3.141&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff5bc0&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4142&quot;,
+                            &quot;name&quot;: &quot;4.142&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4143&quot;,
+                            &quot;name&quot;: &quot;4.143&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff7080&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4144&quot;,
+                            &quot;name&quot;: &quot;4.144&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7c8b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4145&quot;,
+                            &quot;name&quot;: &quot;4.145&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff586b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4146&quot;,
+                            &quot;name&quot;: &quot;4.146&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5c6f&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3147&quot;,
+                      &quot;name&quot;: &quot;3.147&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff79cc&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4148&quot;,
+                            &quot;name&quot;: &quot;4.148&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff687a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4149&quot;,
+                            &quot;name&quot;: &quot;4.149&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff576b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4150&quot;,
+                            &quot;name&quot;: &quot;4.150&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4151&quot;,
+                            &quot;name&quot;: &quot;4.151&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6e7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4152&quot;,
+                            &quot;name&quot;: &quot;4.152&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6e7f&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3153&quot;,
+                      &quot;name&quot;: &quot;3.153&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff79cc&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4154&quot;,
+                            &quot;name&quot;: &quot;4.154&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6f7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4155&quot;,
+                            &quot;name&quot;: &quot;4.155&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff5e70&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4156&quot;,
+                            &quot;name&quot;: &quot;4.156&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4157&quot;,
+                            &quot;name&quot;: &quot;4.157&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff3b52&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3158&quot;,
+                      &quot;name&quot;: &quot;3.158&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff49b9&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4159&quot;,
+                            &quot;name&quot;: &quot;4.159&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4160&quot;,
+                            &quot;name&quot;: &quot;4.160&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4161&quot;,
+                            &quot;name&quot;: &quot;4.161&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6d7e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4162&quot;,
+                            &quot;name&quot;: &quot;4.162&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4163&quot;,
+                            &quot;name&quot;: &quot;4.163&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff576a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4164&quot;,
+                            &quot;name&quot;: &quot;4.164&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff5266&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2165&quot;,
+                &quot;name&quot;: &quot;2.165&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 3,
+                  &quot;$dim&quot;: 3,
+                  &quot;$color&quot;: &quot;#ef72ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3166&quot;,
+                      &quot;name&quot;: &quot;3.166&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 2,
+                        &quot;$dim&quot;: 2,
+                        &quot;$color&quot;: &quot;#ff73c9&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4167&quot;,
+                            &quot;name&quot;: &quot;4.167&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff243e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4168&quot;,
+                            &quot;name&quot;: &quot;4.168&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff5b6e&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3169&quot;,
+                      &quot;name&quot;: &quot;3.169&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff66c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4170&quot;,
+                            &quot;name&quot;: &quot;4.170&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6d7e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4171&quot;,
+                            &quot;name&quot;: &quot;4.171&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4172&quot;,
+                            &quot;name&quot;: &quot;4.172&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4173&quot;,
+                            &quot;name&quot;: &quot;4.173&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff5266&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3174&quot;,
+                      &quot;name&quot;: &quot;3.174&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff59bf&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4175&quot;,
+                            &quot;name&quot;: &quot;4.175&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff6a7c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4176&quot;,
+                            &quot;name&quot;: &quot;4.176&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff1531&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3177&quot;,
+                      &quot;name&quot;: &quot;3.177&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 2,
+                        &quot;$dim&quot;: 2,
+                        &quot;$color&quot;: &quot;#ff73c9&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4178&quot;,
+                            &quot;name&quot;: &quot;4.178&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff2b43&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4179&quot;,
+                            &quot;name&quot;: &quot;4.179&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4180&quot;,
+                            &quot;name&quot;: &quot;4.180&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff5e70&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3181&quot;,
+                      &quot;name&quot;: &quot;3.181&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff6cc7&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4182&quot;,
+                            &quot;name&quot;: &quot;4.182&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4183&quot;,
+                            &quot;name&quot;: &quot;4.183&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff203a&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3184&quot;,
+                      &quot;name&quot;: &quot;3.184&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff6cc7&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4185&quot;,
+                            &quot;name&quot;: &quot;4.185&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7080&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4186&quot;,
+                            &quot;name&quot;: &quot;4.186&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4187&quot;,
+                            &quot;name&quot;: &quot;4.187&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff3048&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2188&quot;,
+                &quot;name&quot;: &quot;2.188&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 10,
+                  &quot;$dim&quot;: 10,
+                  &quot;$color&quot;: &quot;#eb52ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3189&quot;,
+                      &quot;name&quot;: &quot;3.189&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff17a6&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4190&quot;,
+                            &quot;name&quot;: &quot;4.190&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5e70&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4191&quot;,
+                            &quot;name&quot;: &quot;4.191&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4192&quot;,
+                            &quot;name&quot;: &quot;4.192&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5e70&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4193&quot;,
+                            &quot;name&quot;: &quot;4.193&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6f7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4194&quot;,
+                            &quot;name&quot;: &quot;4.194&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5e70&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3195&quot;,
+                      &quot;name&quot;: &quot;3.195&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 2,
+                        &quot;$dim&quot;: 2,
+                        &quot;$color&quot;: &quot;#ff68c5&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4196&quot;,
+                            &quot;name&quot;: &quot;4.196&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff5e70&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4197&quot;,
+                            &quot;name&quot;: &quot;4.197&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4198&quot;,
+                            &quot;name&quot;: &quot;4.198&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6f7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4199&quot;,
+                            &quot;name&quot;: &quot;4.199&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff3b52&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }
+          ]
+        }, {
+          &quot;id&quot;: &quot;node1200&quot;,
+          &quot;name&quot;: &quot;1.200&quot;,
+          &quot;data&quot;: {
+            &quot;$area&quot;: 7,
+            &quot;$dim&quot;: 7,
+            &quot;$color&quot;: &quot;#9d61ff&quot;
+          },
+          &quot;children&quot;: [
+              {
+                &quot;id&quot;: &quot;node2201&quot;,
+                &quot;name&quot;: &quot;2.201&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 4,
+                  &quot;$dim&quot;: 4,
+                  &quot;$color&quot;: &quot;#ed66ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3202&quot;,
+                      &quot;name&quot;: &quot;3.202&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff66c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4203&quot;,
+                            &quot;name&quot;: &quot;4.203&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff4a5f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4204&quot;,
+                            &quot;name&quot;: &quot;4.204&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff354d&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3205&quot;,
+                      &quot;name&quot;: &quot;3.205&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff59bf&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4206&quot;,
+                            &quot;name&quot;: &quot;4.206&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4207&quot;,
+                            &quot;name&quot;: &quot;4.207&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4208&quot;,
+                            &quot;name&quot;: &quot;4.208&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4209&quot;,
+                            &quot;name&quot;: &quot;4.209&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff6f7f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4210&quot;,
+                            &quot;name&quot;: &quot;4.210&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3211&quot;,
+                      &quot;name&quot;: &quot;3.211&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff7bcc&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4212&quot;,
+                            &quot;name&quot;: &quot;4.212&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4213&quot;,
+                            &quot;name&quot;: &quot;4.213&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7c8b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4214&quot;,
+                            &quot;name&quot;: &quot;4.214&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6173&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4215&quot;,
+                            &quot;name&quot;: &quot;4.215&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7c8b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4216&quot;,
+                            &quot;name&quot;: &quot;4.216&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5d70&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4217&quot;,
+                            &quot;name&quot;: &quot;4.217&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3218&quot;,
+                      &quot;name&quot;: &quot;3.218&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff6fc8&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4219&quot;,
+                            &quot;name&quot;: &quot;4.219&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff4d61&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4220&quot;,
+                            &quot;name&quot;: &quot;4.220&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff334b&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3221&quot;,
+                      &quot;name&quot;: &quot;3.221&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff59bf&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4222&quot;,
+                            &quot;name&quot;: &quot;4.222&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff485d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4223&quot;,
+                            &quot;name&quot;: &quot;4.223&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff384f&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3224&quot;,
+                      &quot;name&quot;: &quot;3.224&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff7bcc&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4225&quot;,
+                            &quot;name&quot;: &quot;4.225&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff384f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4226&quot;,
+                            &quot;name&quot;: &quot;4.226&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff485d&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2227&quot;,
+                &quot;name&quot;: &quot;2.227&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 5,
+                  &quot;$dim&quot;: 5,
+                  &quot;$color&quot;: &quot;#ec60ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3228&quot;,
+                      &quot;name&quot;: &quot;3.228&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff7ccd&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4229&quot;,
+                            &quot;name&quot;: &quot;4.229&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7484&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4230&quot;,
+                            &quot;name&quot;: &quot;4.230&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff465b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4231&quot;,
+                            &quot;name&quot;: &quot;4.231&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff687a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4232&quot;,
+                            &quot;name&quot;: &quot;4.232&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff5d70&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3233&quot;,
+                      &quot;name&quot;: &quot;3.233&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff5dc1&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4234&quot;,
+                            &quot;name&quot;: &quot;4.234&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff576a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4235&quot;,
+                            &quot;name&quot;: &quot;4.235&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5266&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4236&quot;,
+                            &quot;name&quot;: &quot;4.236&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7081&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4237&quot;,
+                            &quot;name&quot;: &quot;4.237&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3238&quot;,
+                      &quot;name&quot;: &quot;3.238&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff64c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4239&quot;,
+                            &quot;name&quot;: &quot;4.239&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4240&quot;,
+                            &quot;name&quot;: &quot;4.240&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff596c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4241&quot;,
+                            &quot;name&quot;: &quot;4.241&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3242&quot;,
+                      &quot;name&quot;: &quot;3.242&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff5dc1&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4243&quot;,
+                            &quot;name&quot;: &quot;4.243&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4244&quot;,
+                            &quot;name&quot;: &quot;4.244&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7182&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4245&quot;,
+                            &quot;name&quot;: &quot;4.245&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7182&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4246&quot;,
+                            &quot;name&quot;: &quot;4.246&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff475c&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3247&quot;,
+                      &quot;name&quot;: &quot;3.247&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff64c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4248&quot;,
+                            &quot;name&quot;: &quot;4.248&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6a7c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4249&quot;,
+                            &quot;name&quot;: &quot;4.249&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4a5f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4250&quot;,
+                            &quot;name&quot;: &quot;4.250&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4a5f&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2251&quot;,
+                &quot;name&quot;: &quot;2.251&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 1,
+                  &quot;$dim&quot;: 1,
+                  &quot;$color&quot;: &quot;#ef79ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3252&quot;,
+                      &quot;name&quot;: &quot;3.252&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff26ac&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4253&quot;,
+                            &quot;name&quot;: &quot;4.253&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff586b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4254&quot;,
+                            &quot;name&quot;: &quot;4.254&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4255&quot;,
+                            &quot;name&quot;: &quot;4.255&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5c6f&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4256&quot;,
+                            &quot;name&quot;: &quot;4.256&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7283&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4257&quot;,
+                            &quot;name&quot;: &quot;4.257&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff6577&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4258&quot;,
+                            &quot;name&quot;: &quot;4.258&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3259&quot;,
+                      &quot;name&quot;: &quot;3.259&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff59bf&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4260&quot;,
+                            &quot;name&quot;: &quot;4.260&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6a7c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4261&quot;,
+                            &quot;name&quot;: &quot;4.261&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4262&quot;,
+                            &quot;name&quot;: &quot;4.262&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff596d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4263&quot;,
+                            &quot;name&quot;: &quot;4.263&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7383&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4264&quot;,
+                            &quot;name&quot;: &quot;4.264&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff596d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4265&quot;,
+                            &quot;name&quot;: &quot;4.265&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7787&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2266&quot;,
+                &quot;name&quot;: &quot;2.266&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 1,
+                  &quot;$dim&quot;: 1,
+                  &quot;$color&quot;: &quot;#ef79ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3267&quot;,
+                      &quot;name&quot;: &quot;3.267&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff55be&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4268&quot;,
+                            &quot;name&quot;: &quot;4.268&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6072&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4269&quot;,
+                            &quot;name&quot;: &quot;4.269&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6c7d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4270&quot;,
+                            &quot;name&quot;: &quot;4.270&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4271&quot;,
+                            &quot;name&quot;: &quot;4.271&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff596d&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4272&quot;,
+                            &quot;name&quot;: &quot;4.272&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4273&quot;,
+                            &quot;name&quot;: &quot;4.273&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3274&quot;,
+                      &quot;name&quot;: &quot;3.274&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff6fc8&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4275&quot;,
+                            &quot;name&quot;: &quot;4.275&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff4e62&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4276&quot;,
+                            &quot;name&quot;: &quot;4.276&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4277&quot;,
+                            &quot;name&quot;: &quot;4.277&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7a89&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4278&quot;,
+                            &quot;name&quot;: &quot;4.278&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3279&quot;,
+                      &quot;name&quot;: &quot;3.279&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff55be&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4280&quot;,
+                            &quot;name&quot;: &quot;4.280&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7887&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4281&quot;,
+                            &quot;name&quot;: &quot;4.281&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5064&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4282&quot;,
+                            &quot;name&quot;: &quot;4.282&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff384f&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3283&quot;,
+                      &quot;name&quot;: &quot;3.283&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff66c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4284&quot;,
+                            &quot;name&quot;: &quot;4.284&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6f80&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4285&quot;,
+                            &quot;name&quot;: &quot;4.285&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5367&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4286&quot;,
+                            &quot;name&quot;: &quot;4.286&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff596c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4287&quot;,
+                            &quot;name&quot;: &quot;4.287&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2288&quot;,
+                &quot;name&quot;: &quot;2.288&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 9,
+                  &quot;$dim&quot;: 9,
+                  &quot;$color&quot;: &quot;#e946ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3289&quot;,
+                      &quot;name&quot;: &quot;3.289&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 10,
+                        &quot;$dim&quot;: 10,
+                        &quot;$color&quot;: &quot;#ff40b6&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4290&quot;,
+                            &quot;name&quot;: &quot;4.290&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff3048&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4291&quot;,
+                            &quot;name&quot;: &quot;4.291&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5064&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3292&quot;,
+                      &quot;name&quot;: &quot;3.292&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff79cc&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4293&quot;,
+                            &quot;name&quot;: &quot;4.293&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff5064&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4294&quot;,
+                            &quot;name&quot;: &quot;4.294&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff5a6e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4295&quot;,
+                            &quot;name&quot;: &quot;4.295&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7a8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4296&quot;,
+                            &quot;name&quot;: &quot;4.296&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff5a6e&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3297&quot;,
+                      &quot;name&quot;: &quot;3.297&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 5,
+                        &quot;$dim&quot;: 5,
+                        &quot;$color&quot;: &quot;#ff60c2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4298&quot;,
+                            &quot;name&quot;: &quot;4.298&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7484&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4299&quot;,
+                            &quot;name&quot;: &quot;4.299&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff233c&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4300&quot;,
+                            &quot;name&quot;: &quot;4.300&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff687a&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3301&quot;,
+                      &quot;name&quot;: &quot;3.301&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 4,
+                        &quot;$dim&quot;: 4,
+                        &quot;$color&quot;: &quot;#ff66c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4302&quot;,
+                            &quot;name&quot;: &quot;4.302&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4303&quot;,
+                            &quot;name&quot;: &quot;4.303&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7989&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4304&quot;,
+                            &quot;name&quot;: &quot;4.304&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff7081&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4305&quot;,
+                            &quot;name&quot;: &quot;4.305&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6174&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4306&quot;,
+                            &quot;name&quot;: &quot;4.306&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6779&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4307&quot;,
+                            &quot;name&quot;: &quot;4.307&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6779&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }
+          ]
+        }, {
+          &quot;id&quot;: &quot;node1308&quot;,
+          &quot;name&quot;: &quot;1.308&quot;,
+          &quot;data&quot;: {
+            &quot;$area&quot;: 9,
+            &quot;$dim&quot;: 9,
+            &quot;$color&quot;: &quot;#9858ff&quot;
+          },
+          &quot;children&quot;: [
+              {
+                &quot;id&quot;: &quot;node2309&quot;,
+                &quot;name&quot;: &quot;2.309&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 2,
+                  &quot;$dim&quot;: 2,
+                  &quot;$color&quot;: &quot;#ee71ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3310&quot;,
+                      &quot;name&quot;: &quot;3.310&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 1,
+                        &quot;$dim&quot;: 1,
+                        &quot;$color&quot;: &quot;#ff7ccd&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4311&quot;,
+                            &quot;name&quot;: &quot;4.311&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff495e&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4312&quot;,
+                            &quot;name&quot;: &quot;4.312&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff374e&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3313&quot;,
+                      &quot;name&quot;: &quot;3.313&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 9,
+                        &quot;$dim&quot;: 9,
+                        &quot;$color&quot;: &quot;#ff5dc1&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4314&quot;,
+                            &quot;name&quot;: &quot;4.314&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4315&quot;,
+                            &quot;name&quot;: &quot;4.315&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4316&quot;,
+                            &quot;name&quot;: &quot;4.316&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff374e&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3317&quot;,
+                      &quot;name&quot;: &quot;3.317&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff61c2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4318&quot;,
+                            &quot;name&quot;: &quot;4.318&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff6577&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4319&quot;,
+                            &quot;name&quot;: &quot;4.319&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6174&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4320&quot;,
+                            &quot;name&quot;: &quot;4.320&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff5e71&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4321&quot;,
+                            &quot;name&quot;: &quot;4.321&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7585&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4322&quot;,
+                            &quot;name&quot;: &quot;4.322&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6f80&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4323&quot;,
+                            &quot;name&quot;: &quot;4.323&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7585&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3324&quot;,
+                      &quot;name&quot;: &quot;3.324&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff61c2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4325&quot;,
+                            &quot;name&quot;: &quot;4.325&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff2b43&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4326&quot;,
+                            &quot;name&quot;: &quot;4.326&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3327&quot;,
+                      &quot;name&quot;: &quot;3.327&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff64c4&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4328&quot;,
+                            &quot;name&quot;: &quot;4.328&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff7182&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4329&quot;,
+                            &quot;name&quot;: &quot;4.329&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4330&quot;,
+                            &quot;name&quot;: &quot;4.330&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6678&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4331&quot;,
+                            &quot;name&quot;: &quot;4.331&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff697a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4332&quot;,
+                            &quot;name&quot;: &quot;4.332&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff7484&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4333&quot;,
+                            &quot;name&quot;: &quot;4.333&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2334&quot;,
+                &quot;name&quot;: &quot;2.334&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 7,
+                  &quot;$dim&quot;: 7,
+                  &quot;$color&quot;: &quot;#ea4bff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3335&quot;,
+                      &quot;name&quot;: &quot;3.335&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 2,
+                        &quot;$dim&quot;: 2,
+                        &quot;$color&quot;: &quot;#ff73c9&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4336&quot;,
+                            &quot;name&quot;: &quot;4.336&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff4359&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4337&quot;,
+                            &quot;name&quot;: &quot;4.337&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7888&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4338&quot;,
+                            &quot;name&quot;: &quot;4.338&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7181&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4339&quot;,
+                            &quot;name&quot;: &quot;4.339&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 4,
+                              &quot;$dim&quot;: 4,
+                              &quot;$color&quot;: &quot;#ff6274&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4340&quot;,
+                            &quot;name&quot;: &quot;4.340&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7181&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3341&quot;,
+                      &quot;name&quot;: &quot;3.341&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff55be&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4342&quot;,
+                            &quot;name&quot;: &quot;4.342&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4343&quot;,
+                            &quot;name&quot;: &quot;4.343&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6174&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4344&quot;,
+                            &quot;name&quot;: &quot;4.344&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff6476&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4345&quot;,
+                            &quot;name&quot;: &quot;4.345&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff6174&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4346&quot;,
+                            &quot;name&quot;: &quot;4.346&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7686&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4347&quot;,
+                            &quot;name&quot;: &quot;4.347&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff6a7c&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3348&quot;,
+                      &quot;name&quot;: &quot;3.348&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 5,
+                        &quot;$dim&quot;: 5,
+                        &quot;$color&quot;: &quot;#ff61c2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4349&quot;,
+                            &quot;name&quot;: &quot;4.349&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff7080&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4350&quot;,
+                            &quot;name&quot;: &quot;4.350&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4351&quot;,
+                            &quot;name&quot;: &quot;4.351&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7585&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4352&quot;,
+                            &quot;name&quot;: &quot;4.352&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7a8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4353&quot;,
+                            &quot;name&quot;: &quot;4.353&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4a5f&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3354&quot;,
+                      &quot;name&quot;: &quot;3.354&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 7,
+                        &quot;$dim&quot;: 7,
+                        &quot;$color&quot;: &quot;#ff55be&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4355&quot;,
+                            &quot;name&quot;: &quot;4.355&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4356&quot;,
+                            &quot;name&quot;: &quot;4.356&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 7,
+                              &quot;$dim&quot;: 7,
+                              &quot;$color&quot;: &quot;#ff1c37&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }, {
+                &quot;id&quot;: &quot;node2357&quot;,
+                &quot;name&quot;: &quot;2.357&quot;,
+                &quot;data&quot;: {
+                  &quot;$area&quot;: 8,
+                  &quot;$dim&quot;: 8,
+                  &quot;$color&quot;: &quot;#e943ff&quot;
+                },
+                &quot;children&quot;: [
+                    {
+                      &quot;id&quot;: &quot;node3358&quot;,
+                      &quot;name&quot;: &quot;3.358&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 5,
+                        &quot;$dim&quot;: 5,
+                        &quot;$color&quot;: &quot;#ff6cc7&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4359&quot;,
+                            &quot;name&quot;: &quot;4.359&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff3950&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4360&quot;,
+                            &quot;name&quot;: &quot;4.360&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4361&quot;,
+                            &quot;name&quot;: &quot;4.361&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff6375&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3362&quot;,
+                      &quot;name&quot;: &quot;3.362&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff74ca&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4363&quot;,
+                            &quot;name&quot;: &quot;4.363&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff3950&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4364&quot;,
+                            &quot;name&quot;: &quot;4.364&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 2,
+                              &quot;$dim&quot;: 2,
+                              &quot;$color&quot;: &quot;#ff7182&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4365&quot;,
+                            &quot;name&quot;: &quot;4.365&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5569&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3366&quot;,
+                      &quot;name&quot;: &quot;3.366&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff61c2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4367&quot;,
+                            &quot;name&quot;: &quot;4.367&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 8,
+                              &quot;$dim&quot;: 8,
+                              &quot;$color&quot;: &quot;#ff4359&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4368&quot;,
+                            &quot;name&quot;: &quot;4.368&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 3,
+                              &quot;$dim&quot;: 3,
+                              &quot;$color&quot;: &quot;#ff697b&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4369&quot;,
+                            &quot;name&quot;: &quot;4.369&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 6,
+                              &quot;$dim&quot;: 6,
+                              &quot;$color&quot;: &quot;#ff5267&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3370&quot;,
+                      &quot;name&quot;: &quot;3.370&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 3,
+                        &quot;$dim&quot;: 3,
+                        &quot;$color&quot;: &quot;#ff74ca&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4371&quot;,
+                            &quot;name&quot;: &quot;4.371&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff4056&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4372&quot;,
+                            &quot;name&quot;: &quot;4.372&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff4056&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3373&quot;,
+                      &quot;name&quot;: &quot;3.373&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 6,
+                        &quot;$dim&quot;: 6,
+                        &quot;$color&quot;: &quot;#ff68c5&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4374&quot;,
+                            &quot;name&quot;: &quot;4.374&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff4359&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4375&quot;,
+                            &quot;name&quot;: &quot;4.375&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7988&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4376&quot;,
+                            &quot;name&quot;: &quot;4.376&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 9,
+                              &quot;$dim&quot;: 9,
+                              &quot;$color&quot;: &quot;#ff4359&quot;
+                            }
+                          }
+                      ]
+                    }, {
+                      &quot;id&quot;: &quot;node3377&quot;,
+                      &quot;name&quot;: &quot;3.377&quot;,
+                      &quot;data&quot;: {
+                        &quot;$area&quot;: 8,
+                        &quot;$dim&quot;: 8,
+                        &quot;$color&quot;: &quot;#ff61c2&quot;
+                      },
+                      &quot;children&quot;: [
+                          {
+                            &quot;id&quot;: &quot;node4378&quot;,
+                            &quot;name&quot;: &quot;4.378&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4e63&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4379&quot;,
+                            &quot;name&quot;: &quot;4.379&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 10,
+                              &quot;$dim&quot;: 10,
+                              &quot;$color&quot;: &quot;#ff4e63&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4380&quot;,
+                            &quot;name&quot;: &quot;4.380&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 1,
+                              &quot;$dim&quot;: 1,
+                              &quot;$color&quot;: &quot;#ff7b8a&quot;
+                            }
+                          }, {
+                            &quot;id&quot;: &quot;node4381&quot;,
+                            &quot;name&quot;: &quot;4.381&quot;,
+                            &quot;data&quot;: {
+                              &quot;$area&quot;: 5,
+                              &quot;$dim&quot;: 5,
+                              &quot;$color&quot;: &quot;#ff6779&quot;
+                            }
+                          }
+                      ]
+                    }
+                ]
+              }
+          ]
+        }
+    ]
+  };
+
+</pre>
+</div>
+<h4>Icicle</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+  icicle = new $jit.Icicle({
+    // id of the visualization container
+    injectInto: &#39;infovis&#39;,
+    // whether to add transition animations
+    animate: animate,
+    // nodes offset
+    offset: 1,
+    // whether to add cushion type nodes
+    cushion: false,
+    //show only three levels at a time
+    constrained: true,
+    levelsToShow: 3,
+    // enable tips
+    Tips: {
+      enable: true,
+      type: &#39;Native&#39;,
+      // add positioning offsets
+      offsetX: 20,
+      offsetY: 20,
+      // implement the onShow method to
+      // add content to the tooltip when a node
+      // is hovered
+      onShow: function(tip, node){
+        // count children
+        var count = 0;
+        node.eachSubnode(function(){
+          count++;
+        });
+        // add tooltip info
+        tip.innerHTML = &quot;&lt;div class=\&quot;tip-title\&quot;&gt;&lt;b&gt;Name:&lt;/b&gt; &quot; + node.name
+            + &quot;&lt;/div&gt;&lt;div class=\&quot;tip-text\&quot;&gt;&quot; + count + &quot; children&lt;/div&gt;&quot;;
+      }
+    },
+    // Add events to nodes
+    Events: {
+      enable: true,
+      onMouseEnter: function(node) {
+        //add border and replot node
+        node.setData(&#39;border&#39;, &#39;#33dddd&#39;);
+        icicle.fx.plotNode(node, icicle.canvas);
+        icicle.labels.plotLabel(icicle.canvas, node, icicle.controller);
+      },
+      onMouseLeave: function(node) {
+        node.removeData(&#39;border&#39;);
+        icicle.fx.plot();
+      },
+      onClick: function(node){
+        if (node) {
+          //hide tips and selections
+          icicle.tips.hide();
+          if(icicle.events.hovered)
+            this.onMouseLeave(icicle.events.hovered);
+          //perform the enter animation
+          icicle.enter(node);
+        }
+      },
+      onRightClick: function(){
+        //hide tips and selections
+        icicle.tips.hide();
+        if(icicle.events.hovered)
+          this.onMouseLeave(icicle.events.hovered);
+        //perform the out animation
+        icicle.out();
+      }
+    },
+    // Add canvas label styling
+    Label: {
+      type: labelType // &quot;Native&quot; or &quot;HTML&quot;
+    },
+    // Add the name of the node in the corresponding label
+    // This method is called once, on label creation and only for DOM and not
+    // Native labels.
+    onCreateLabel: function(domElement, node){
+      domElement.innerHTML = node.name;
+      var style = domElement.style;
+      style.fontSize = &#39;0.9em&#39;;
+      style.display = &#39;&#39;;
+      style.cursor = &#39;pointer&#39;;
+      style.color = &#39;#333&#39;;
+      style.overflow = &#39;hidden&#39;;
+    },
+    // Change some label dom properties.
+    // This method is called each time a label is plotted.
+    onPlaceLabel: function(domElement, node){
+      var style = domElement.style,
+          width = node.getData(&#39;width&#39;),
+          height = node.getData(&#39;height&#39;);
+      if(width &lt; 7 || height &lt; 7) {
+        style.display = &#39;none&#39;;
+      } else {
+        style.display = &#39;&#39;;
+        style.width = width + &#39;px&#39;;
+        style.height = height + &#39;px&#39;;
+      }
+    }
+  });
+  // load data
+  icicle.loadJSON(json);
+  // compute positions and plot
+  icicle.refresh();
+
+</pre>
+</div>
+<h4>controls</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+function controls() {
+  var jit = $jit;
+  var gotoparent = jit.id(&#39;update&#39;);
+  jit.util.addEvent(gotoparent, &#39;click&#39;, function() {
+    icicle.out();
+  });
+  var select = jit.id(&#39;s-orientation&#39;);
+  jit.util.addEvent(select, &#39;change&#39;, function () {
+    icicle.layout.orientation = select[select.selectedIndex].value;
+    icicle.refresh();
+  });
+  var levelsToShowSelect = jit.id(&#39;i-levels-to-show&#39;);
+  jit.util.addEvent(levelsToShowSelect, &#39;change&#39;, function () {
+    var index = levelsToShowSelect.selectedIndex;
+    if(index == 0) {
+      icicle.config.constrained = false;
+    } else {
+      icicle.config.constrained = true;
+      icicle.config.levelsToShow = index;
+    }
+    icicle.refresh();
+  });
+}
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

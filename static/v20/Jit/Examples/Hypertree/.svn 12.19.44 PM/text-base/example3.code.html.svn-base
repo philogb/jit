@@ -1,0 +1,622 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>handlers - Graph Operations - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Graph Operations</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Graph Operations</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example3.js">here</a>. Or <a href="example3.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+        &quot;id&quot;: &quot;190_0&quot;,
+        &quot;name&quot;: &quot;Pearl Jam&quot;,
+        &quot;children&quot;: [{
+            &quot;id&quot;: &quot;306208_1&quot;,
+            &quot;name&quot;: &quot;Pearl Jam &amp;amp; Cypress Hill&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;collaboration&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;84_2&quot;,
+                &quot;name&quot;: &quot;Cypress Hill&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Pearl Jam &amp;amp; Cypress Hill&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;107877_3&quot;,
+            &quot;name&quot;: &quot;Neil Young &amp;amp; Pearl Jam&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;collaboration&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;964_4&quot;,
+                &quot;name&quot;: &quot;Neil Young&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Neil Young &amp;amp; Pearl Jam&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236797_5&quot;,
+            &quot;name&quot;: &quot;Jeff Ament&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1756_6&quot;,
+                &quot;name&quot;: &quot;Temple of the Dog&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ament&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;14581_7&quot;,
+                &quot;name&quot;: &quot;Mother Love Bone&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ament&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;50188_8&quot;,
+                &quot;name&quot;: &quot;Green River&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ament&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;65452_9&quot;,
+                &quot;name&quot;: &quot;M.A.C.C.&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ament&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;115632_10&quot;,
+                &quot;name&quot;: &quot;Three Fish&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ament&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;346850_11&quot;,
+                &quot;name&quot;: &quot;Gossman Project&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jeff Ament&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;41529_12&quot;,
+            &quot;name&quot;: &quot;Stone Gossard&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1756_13&quot;,
+                &quot;name&quot;: &quot;Temple of the Dog&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Stone Gossard&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;14581_14&quot;,
+                &quot;name&quot;: &quot;Mother Love Bone&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Stone Gossard&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;24119_15&quot;,
+                &quot;name&quot;: &quot;Brad&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Stone Gossard&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;50188_16&quot;,
+                &quot;name&quot;: &quot;Green River&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Stone Gossard&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;346850_17&quot;,
+                &quot;name&quot;: &quot;Gossman Project&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Stone Gossard&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;131161_18&quot;,
+            &quot;name&quot;: &quot;Eddie Vedder&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1756_19&quot;,
+                &quot;name&quot;: &quot;Temple of the Dog&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Eddie Vedder&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;72007_20&quot;,
+                &quot;name&quot;: &quot;Eddie Vedder &amp;amp; Zeke&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Eddie Vedder&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;236657_21&quot;,
+                &quot;name&quot;: &quot;Bad Radio&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Eddie Vedder&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;432176_22&quot;,
+                &quot;name&quot;: &quot;Beck &amp;amp; Eddie Vedder&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Eddie Vedder&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236583_23&quot;,
+            &quot;name&quot;: &quot;Mike McCready&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1744_24&quot;,
+                &quot;name&quot;: &quot;Mad Season&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Mike McCready&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;1756_25&quot;,
+                &quot;name&quot;: &quot;Temple of the Dog&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Mike McCready&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;43661_26&quot;,
+                &quot;name&quot;: &quot;$10,000 Gold Chain&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Mike McCready&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;65452_27&quot;,
+                &quot;name&quot;: &quot;M.A.C.C.&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Mike McCready&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;153766_28&quot;,
+                &quot;name&quot;: &quot;The Rockfords&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Mike McCready&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;346850_29&quot;,
+                &quot;name&quot;: &quot;Gossman Project&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Mike McCready&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236585_30&quot;,
+            &quot;name&quot;: &quot;Matt Cameron&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;1111_31&quot;,
+                &quot;name&quot;: &quot;Soundgarden&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;1756_32&quot;,
+                &quot;name&quot;: &quot;Temple of the Dog&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;9570_33&quot;,
+                &quot;name&quot;: &quot;Eleven&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;supporting musician&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;11783_34&quot;,
+                &quot;name&quot;: &quot;Queens of the Stone Age&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;61972_35&quot;,
+                &quot;name&quot;: &quot;Wellwater Conspiracy&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;65452_36&quot;,
+                &quot;name&quot;: &quot;M.A.C.C.&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;collaboration&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;353097_37&quot;,
+                &quot;name&quot;: &quot;Tone Dogs&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Cameron&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236594_38&quot;,
+            &quot;name&quot;: &quot;Dave Krusen&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;2092_39&quot;,
+                &quot;name&quot;: &quot;Candlebox&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Dave Krusen&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236022_40&quot;,
+            &quot;name&quot;: &quot;Matt Chamberlain&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;54761_41&quot;,
+                &quot;name&quot;: &quot;Critters Buggin&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Chamberlain&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;92043_42&quot;,
+                &quot;name&quot;: &quot;Edie Brickell and New Bohemians&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Matt Chamberlain&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236611_43&quot;,
+            &quot;name&quot;: &quot;Dave Abbruzzese&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;276933_44&quot;,
+                &quot;name&quot;: &quot;Green Romance Orchestra&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Dave Abbruzzese&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }, {
+            &quot;id&quot;: &quot;236612_45&quot;,
+            &quot;name&quot;: &quot;Jack Irons&quot;,
+            &quot;data&quot;: {
+                &quot;band&quot;: &quot;Pearl Jam&quot;,
+                &quot;relation&quot;: &quot;member of band&quot;
+            },
+            &quot;children&quot;: [{
+                &quot;id&quot;: &quot;4619_46&quot;,
+                &quot;name&quot;: &quot;Redd Kross&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jack Irons&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;9570_47&quot;,
+                &quot;name&quot;: &quot;Eleven&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jack Irons&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;12389_48&quot;,
+                &quot;name&quot;: &quot;Red Hot Chili Peppers&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jack Irons&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;114288_49&quot;,
+                &quot;name&quot;: &quot;Anthym&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jack Irons&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }, {
+                &quot;id&quot;: &quot;240013_50&quot;,
+                &quot;name&quot;: &quot;What Is This?&quot;,
+                &quot;data&quot;: {
+                    &quot;band&quot;: &quot;Jack Irons&quot;,
+                    &quot;relation&quot;: &quot;member of band&quot;
+                },
+                &quot;children&quot;: []
+            }]
+        }],
+        &quot;data&quot;: []
+    };
+    
+    var graph = &#39;[{id:&quot;190_0&quot;, adjacencies:[&quot;node0&quot;]}, {id:&quot;node0&quot;, name:&quot;node0 name&quot;, data:{$dim:8.660354683365695, &quot;some other key&quot;:&quot;some other value&quot;}, adjacencies:[&quot;node1&quot;, &quot;node2&quot;, &quot;node3&quot;, &quot;node4&quot;, &quot;node5&quot;]}, {id:&quot;node1&quot;, name:&quot;node1 name&quot;, data:{$dim:21.118129724156983, &quot;some other key&quot;:&quot;some other value&quot;}, adjacencies:[&quot;node0&quot;, &quot;node2&quot;, &quot;node3&quot;, &quot;node4&quot;, &quot;node5&quot;]}, {id:&quot;node2&quot;, name:&quot;node2 name&quot;, data:{$dim:6.688951018413683, &quot;some other key&quot;:&quot;some other value&quot;}, adjacencies:[&quot;node0&quot;, &quot;node1&quot;, &quot;node3&quot;, &quot;node4&quot;, &quot;node5&quot;]}, {id:&quot;node3&quot;, name:&quot;node3 name&quot;, data:{$dim:19.78771599710248, &quot;some other key&quot;:&quot;some other value&quot;}, adjacencies:[&quot;node0&quot;, &quot;node1&quot;, &quot;node2&quot;, &quot;node4&quot;, &quot;node5&quot;]}, {id:&quot;node4&quot;, name:&quot;node4 name&quot;, data:{$dim:3.025781742947326, &quot;some other key&quot;:&quot;some other value&quot;}, adjacencies:[&quot;node0&quot;, &quot;node1&quot;, &quot;node2&quot;, &quot;node3&quot;, &quot;node5&quot;]}, {id:&quot;node5&quot;, name:&quot;node5 name&quot;, data:{$dim:9.654383829711456, &quot;some other key&quot;:&quot;some other value&quot;}, adjacencies:[&quot;node0&quot;, &quot;node1&quot;, &quot;node2&quot;, &quot;node3&quot;, &quot;node4&quot;]}, {id:&quot;4619_46&quot;, adjacencies:[&quot;190_0&quot;]}, {id:&quot;236585_30&quot;, adjacencies:[&quot;190_0&quot;]}, {id:&quot;131161_18&quot;, adjacencies:[&quot;190_0&quot;]}, {id:&quot;41529_12&quot;, adjacencies:[&quot;190_0&quot;]}]&#39;;
+
+</pre>
+</div>
+<h4>Hypertree</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var ht = new $jit.Hypertree({
+        //id of the visualization container
+        injectInto: &#39;infovis&#39;,
+        //canvas width and height
+        width: w,
+        height: h,
+        //Change Node and Edge styles and colors.
+        Node: {
+            dim: 9,
+            color: &quot;#f00&quot;,
+            overridable: true
+        },
+        
+        Edge: {
+            lineWidth: 2,
+            color: &quot;#088&quot;,
+            overridable: true
+        },
+    
+        onBeforeCompute: function(node){
+            Log.write(&quot;centering&quot;);
+        },
+        //Add the node&#39;s name to its corresponding label.
+        //This method is only called on label creation.
+        onCreateLabel: function(domElement, node){
+            domElement.innerHTML = node.name;
+        },
+
+        //Ths method is called when moving/placing a label.
+        //Add label styles based on their position.
+        onPlaceLabel: function(domElement, node){
+            var style = domElement.style;
+            style.display = &#39;&#39;;
+            if (node._depth &lt;= 1) {
+                style.fontSize = &quot;0.8em&quot;;
+                style.color = &quot;#ddd&quot;;
+
+            } else if(node._depth == 2){
+                style.fontSize = &quot;0.7em&quot;;
+                style.color = &quot;#555&quot;;
+
+            } else {
+                style.display = &#39;none&#39;;
+            }
+
+            var left = parseInt(style.left);
+            var w = domElement.offsetWidth;
+            style.left = (left - w / 2) + &#39;px&#39;;
+        },
+        
+        onAfterCompute: function(){
+            Log.write(&quot;done&quot;);
+        }
+    });
+
+    //load JSON data.
+    ht.loadJSON(json);
+    
+    //Add some edges to transform the
+    //tree into a graph (just for fun).
+    ht.graph.addAdjacence({
+        &#39;id&#39;: &#39;236585_30&#39;
+    }, {
+        &#39;id&#39;: &#39;236583_23&#39;
+    }, null);
+    ht.graph.addAdjacence({
+        &#39;id&#39;: &#39;236585_30&#39;
+    }, {
+        &#39;id&#39;: &#39;4619_46&#39;
+    }, null);
+    
+    //Compute positions and plot.
+    ht.refresh();
+
+</pre>
+</div>
+<h4>handlers</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //Add event handlers to the right column controls.
+    
+    //Remove Nodes
+    var button = $jit.id(&#39;remove-nodes&#39;);
+    button.onclick = function() {
+        //get animation type.
+        var stype = $jit.id(&#39;select-type-remove-nodes&#39;);
+        var sindex = stype.selectedIndex;
+        var type = stype.options[sindex].text;
+        //get node ids to be removed.
+        var n = ht.graph.getNode(&#39;236797_5&#39;);
+        if(!n) return;
+        var subnodes = n.getSubnodes(0);
+        var map = [];
+        for (var i = 0; i &lt; subnodes.length; i++) {
+            map.push(subnodes[i].id);
+        }
+        //perform node-removing animation.
+        ht.op.removeNode(map.reverse(), {
+            type: type,
+            duration: getDuration(),
+            fps: getFPS(),
+            hideLabels:hideLabels()
+        });
+    };
+
+    //Remove edges
+    button = $jit.id(&#39;remove-edges&#39;);
+    button.onclick = function() {
+        //get animation type.
+        var stype = $jit.id(&#39;select-type-remove-edges&#39;);
+        var sindex = stype.selectedIndex;
+        var type = stype.options[sindex].text;
+        //perform edge removing animation.
+        ht.op.removeEdge([[&#39;236585_30&#39;, &quot;190_0&quot;], [&#39;236585_30&#39;, &#39;4619_46&#39;]], {
+            type: type,
+            duration: getDuration(),
+            fps: getFPS(),
+            hideLabels: hideLabels()
+        });
+    };
+
+    //Add a Graph (Sum)
+    button = $jit.id(&#39;sum&#39;);
+    button.onclick = function(){
+        //create json graph to add.
+        var trueGraph = eval(&#39;(&#39; + graph + &#39;)&#39;);        
+        //get animation type.
+        var stype = $jit.id(&#39;select-type-sum&#39;);
+        var sindex = stype.selectedIndex;
+        var type = stype.options[sindex].text;
+        //perform sum animation.
+        ht.op.sum(trueGraph, {
+            type: type,
+            fps: getFPS(),
+            duration: getDuration(),
+            hideLabels: hideLabels(),
+            onComplete: function(){
+                Log.write(&quot;sum complete!&quot;);
+            }
+        });
+    };
+
+    //Morph
+    button = $jit.id(&#39;morph&#39;);
+    button.onclick = function(){
+        //create json graph to morph to.
+        var trueGraph = eval(&#39;(&#39; + graph + &#39;)&#39;);        
+        //get animation type.
+        var stype = $jit.id(&#39;select-type-morph&#39;);
+        var sindex = stype.selectedIndex;
+        var type = stype.options[sindex].text;
+        //perform morphing animation.
+        ht.op.morph(trueGraph, {
+            type: type,
+            fps: getFPS(),
+            duration: getDuration(),
+            hideLabels: hideLabels(),
+            onComplete: function(){
+                Log.write(&quot;morph complete!&quot;);
+            }
+        });
+    };
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

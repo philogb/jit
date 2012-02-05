@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>rgraph - Composing Visualizations - Code</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/code.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" media="screen" href="../sh/Styles/SyntaxHighlighter.css" />
+
+<!-- JavaScript Files -->
+<script type="text/javascript" src="../sh/Scripts/shCore.js"></script>
+<script type="text/javascript" src="../sh/Scripts/shBrushJScript.js"></script>
+<script type="text/javascript">
+    function init() {
+        //adding the js syntax highlighter here
+        dp.SyntaxHighlighter.ClipboardSwf = '../sh/Scripts/clipboard.swf';
+        dp.SyntaxHighlighter.HighlightAll('code');
+    }
+</script>
+
+</head>
+
+<body onload="init();">
+<div id="container">
+
+    <div id="center-container">
+        <h4>Code for Composing Visualizations</h4>
+        <div class="headtext">
+            These are ordered fragments for the <em>Composing Visualizations</em> example code. 
+            I trimmed parts that seemed uninteresting and that are not related to the library code. 
+            You can still see the full code <a href="example2.js">here</a>. Or <a href="example2.html">go back to the example</a>. 
+        </div>
+
+
+<h4>data</h4>
+<div class="code-wrapper" style="height:200px">
+<pre name="code" class="js:nogutter:nocontrols">
+    var json = {
+      &#39;id&#39;: &#39;root&#39;,
+      &#39;name&#39;: &#39;RGraph( RGraph )&#39;,
+      &#39;data&#39;: {
+          &#39;$type&#39;: &#39;none&#39;
+      },
+      &#39;children&#39;:[
+        {
+            &#39;id&#39;:&#39;pie10&#39;,
+            &#39;name&#39;: &#39;pie1&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 20,
+                &#39;$color&#39;: &#39;#f55&#39;
+            },
+            &#39;children&#39;: [
+                {
+                    &#39;id&#39;:&#39;pie100&#39;,
+                    &#39;name&#39;: &#39;pc1&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 20,
+                        &#39;$color&#39;: &#39;#55f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                },
+                {
+                    &#39;id&#39;:&#39;pie101&#39;,
+                    &#39;name&#39;: &#39;pc2&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 70,
+                        &#39;$color&#39;: &#39;#66f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                },
+                {
+                    &#39;id&#39;:&#39;pie102&#39;,
+                    &#39;name&#39;: &#39;pc3&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 10,
+                        &#39;$color&#39;: &#39;#77f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                }
+            ]
+        },
+        {
+            &#39;id&#39;:&#39;pie20&#39;,
+            &#39;name&#39;: &#39;pie2&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 40,
+                &#39;$color&#39;: &#39;#f77&#39;
+            },
+            &#39;children&#39;: [
+                {
+                    &#39;id&#39;:&#39;pie200&#39;,
+                    &#39;name&#39;: &#39;pc1&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 40,
+                        &#39;$color&#39;: &#39;#88f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                },
+                {
+                    &#39;id&#39;:&#39;pie201&#39;,
+                    &#39;name&#39;: &#39;pc2&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 60,
+                        &#39;$color&#39;: &#39;#99f&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                }
+            ]
+        },
+        {
+            &#39;id&#39;:&#39;pie30&#39;,
+            &#39;name&#39;: &#39;pie3&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 10,
+                &#39;$color&#39;: &#39;#f99&#39;
+            },
+            &#39;children&#39;: [
+                {
+                    &#39;id&#39;:&#39;pie300&#39;,
+                    &#39;name&#39;: &#39;pc1&#39;,
+                    &#39;data&#39;: {
+                        &#39;$angularWidth&#39;: 100,
+                        &#39;$color&#39;: &#39;#aaf&#39;
+                    },
+                    &#39;children&#39;: []
+                    
+                }
+            ]
+        }
+      ]
+    };
+    var jsonpie = {
+      &#39;id&#39;: &#39;root&#39;,
+      &#39;name&#39;: &#39;RGraph based Pie Chart&#39;,
+      &#39;data&#39;: {
+          &#39;$type&#39;: &#39;none&#39;
+      },
+      &#39;children&#39;:[
+        {
+            &#39;id&#39;:&#39;pie1&#39;,
+            &#39;name&#39;: &#39;pie1&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 20,
+                &#39;$color&#39;: &#39;#f55&#39;
+            },
+            &#39;children&#39;: []
+        },
+        {
+            &#39;id&#39;:&#39;pie2&#39;,
+            &#39;name&#39;: &#39;pie2&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 40,
+                &#39;$color&#39;: &#39;#f77&#39;
+            },
+            &#39;children&#39;: []
+        },
+        {
+            &#39;id&#39;:&#39;pie3&#39;,
+            &#39;name&#39;: &#39;pie3&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 10,
+                &#39;$color&#39;: &#39;#f99&#39;
+            },
+            &#39;children&#39;: []
+        },
+        {
+            &#39;id&#39;:&#39;pie4&#39;,
+            &#39;name&#39;: &#39;pie4&#39;,
+            &#39;data&#39;: {
+                &#39;$angularWidth&#39;: 30,
+                &#39;$color&#39;: &#39;#fbb&#39;
+            },
+            &#39;children&#39;: []
+        }
+      ]
+    };
+
+</pre>
+</div>
+<h4>nodetypes</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //Here we implement custom node rendering types for the RGraph
+    //Using this feature requires some javascript and canvas experience.
+    $jit.RGraph.Plot.NodeTypes.implement({
+        //This node type is used for plotting pie-chart slices as nodes
+        &#39;nodepie&#39;: {
+          &#39;render&#39;: function(node, canvas) {
+            var span = node.angleSpan, begin = span.begin, end = span.end;
+            var polarNode = node.pos.getp(true);
+            var polar = new $jit.Polar(polarNode.rho, begin);
+            var p1coord = polar.getc(true);
+            polar.theta = end;
+            var p2coord = polar.getc(true);
+
+            var ctx = canvas.getCtx();
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(p1coord.x, p1coord.y);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(p2coord.x, p2coord.y);
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, polarNode.rho, begin, end, false);
+            ctx.fill();
+          }
+        },
+        //Create a new node type that renders an entire RGraph visualization
+        //as node
+        &#39;piechart&#39;: {
+          &#39;render&#39;: function(node, canvas, animating) {
+            var ctx = canvas.getCtx(), pos = node.pos.getc(true);
+            ctx.save();
+            ctx.translate(pos.x, pos.y);
+            pie.plot();
+            ctx.restore();
+          }
+         }
+    });
+
+</pre>
+</div>
+<h4>pie</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    //This RGraph instance will be used as the node for 
+    //another RGraph instance.
+    var pie = new $jit.RGraph({
+        &#39;injectInto&#39;: &#39;infovis&#39;,
+        //Optional: create a background canvas and plot
+        //concentric circles in it.
+        &#39;background&#39;: {
+          CanvasStyles: {
+            strokeStyle: &#39;#555&#39;
+          }
+        },
+        //Add node/edge styles and set
+        //overridable=true if you want your
+        //styles to be individually overriden
+        Node: {
+            &#39;overridable&#39;: true,
+             &#39;type&#39;:&#39;nodepie&#39;
+        },
+        Edge: {
+            &#39;type&#39;:&#39;none&#39;
+        },
+        //Parent-children distance
+        levelDistance: 30,
+        //Don&#39;t create labels in this visualization
+        withLabels: false,
+        //Don&#39;t clear the entire canvas when plotting
+        //this visualization
+        clearCanvas: false
+    });
+    //load graph.
+    pie.loadJSON(jsonpie);
+    pie.compute();
+
+</pre>
+</div>
+<h4>rgraph</h4>
+<div class="code-wrapper">
+<pre name="code" class="js:nogutter:nocontrols">
+    var rgraph = new $jit.RGraph({
+        useCanvas: pie.canvas,
+        //Add node/edge styles and set
+        //overridable=true if you want your
+        //styles to be individually overriden
+        Node: {
+            //set the RGraph rendering function
+            //as node type
+           &#39;type&#39;: &#39;piechart&#39;
+        },
+        Edge: {
+            color: &#39;#772277&#39;
+        },
+        //Parent-children distance
+        levelDistance: 100,
+        //Duration
+        duration: 1500,
+        //Add styles to node labels on label creation
+        onCreateLabel: function(domElement, node){
+            domElement.innerHTML = node.name;
+            var style = domElement.style;
+            style.fontSize = &quot;0.8em&quot;;
+            style.color = &quot;#fff&quot;;
+            style.cursor = &quot;pointer&quot;;
+            domElement.onclick = function() {
+              rgraph.onClick(node.id, {
+                  hideLabels: false
+              });  
+            };
+        },
+        
+        onPlaceLabel: function(domElement, node){
+            var style = domElement.style;
+            var left = parseInt(style.left);
+            var w = domElement.offsetWidth;
+            style.left = (left - w / 2) + &#39;px&#39;;
+            style.display = &#39;&#39;;
+        }
+    });
+    //load graph.
+    rgraph.loadJSON(json);
+    rgraph.refresh();
+
+</pre>
+</div>
+
+</div>
+</div>
+</body>
+</html>

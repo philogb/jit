@@ -1,0 +1,24 @@
+#about {
+	width:935px;
+	margin:30px auto 0 auto;
+	text-align:left;
+}
+
+.wrapper {
+  width:710px;
+}
+
+#about p {
+	font-size: 0.9em;
+	color: #686C70;
+	padding:5px;
+	line-height: 19px;
+}
+
+.me {
+	border: 1px solid magenta; 
+	margin: 5px 0px 5px 20px; 
+	padding: 3px; 
+	float:right;
+}
+

@@ -1,0 +1,62 @@
+h3 {
+  margin: 30px 0 10px 0;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #ccc;
+}
+
+#ideas {
+	width:935px;
+	margin:30px auto 0 auto;
+	text-align:left;
+  font-size: 0.9em;
+}
+
+.wrapper {
+  width:710px;
+}
+
+#ideas p {
+	font-size: 0.9em;
+	color: #686C70;
+	padding:5px;
+	line-height: 19px;
+}
+
+#ideas ul, 
+#ideas ol {
+  padding: 0;
+}
+
+#ideas ul li,
+#ideas ol li{
+  font-size: 0.9em;
+  color: #686C70;
+  display: block;
+  padding: 2px;
+}
+
+#questions {
+  padding: 5px;
+  background: #f5f2d3;
+  border: 1px solid #555;
+}
+
+ul.task-properties {
+  background: #ddd;
+  border: 1px solid #999;
+  font-size: 0.9em;
+}
+
+#ideas ul.task-properties li {
+  padding: 3px;
+}
+
+.me {
+  width: 160px;
+	border: 1px solid magenta; 
+	margin: 5px 20px 5px 0px; 
+	padding: 3px; 
+	float:left;
+}
+
+
