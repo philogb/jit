@@ -43,15 +43,30 @@ TM.Plot.NodeTypes.implement({
               minX = pts[0].x, 
               maxX = pts[0].x, 
               minY = pts[0].y, 
-              maxY = pts[0].y;
+              maxY = pts[0].y,
+              dist, maxDist;
 
-          x = center[0];
-          y = center[1];
+          for (i = 0; i < pts.length; i++) {
+            x += pts[i].x;
+            y += pts[i].y;
+          }
+
+          x /= pts.length;
+          y /= pts.length;
+
+          for (i = 0; i < pts.length; i++) {
+            dist = Math.sqrt((x - pts[i].x) * (x - pts[i].x) + (y - pts[i].y) * (y - pts[i].y));
+            if (!maxDist) {
+              maxDist = dist;
+            } else {
+              maxDist = maxDist < dist ? dist : maxDist;
+            }
+          }
           var width = maxX - minX + 1, height = maxY - minY + 1,
-              lg = ctx.createRadialGradient(x, y, 1, x, y, width < height ? height : width),
+              lg = ctx.createRadialGradient(x, y, 1, x, y, maxDist),
               color = node.getData('color'),
               colorGrad = $.rgbToHex($.map($.hexToRgb(color), function(r) {
-                return r * 0.2 >> 0;
+                return r * 0.5 >> 0;
               }));
           lg.addColorStop(0, color);
           lg.addColorStop(1, colorGrad);

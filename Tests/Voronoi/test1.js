@@ -26,6 +26,7 @@ function init() {
   //end
   //init TreeMap
   window.tm = new $jit.TM.Voronoi({
+    cushion: true,
     //where to inject the visualization
     injectInto: 'infovis',
     //parent box title heights

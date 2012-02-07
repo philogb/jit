@@ -440,7 +440,6 @@ TM.Geom = new Class({
       }
       dump[n.name] = n._hideLabel;
     });
-    console.dir(dump);
     node.drawn = true;
     delete node.ignore;
   }
