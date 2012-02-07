@@ -580,12 +580,11 @@ TM.Label.Native = new Class({
         height = node.getData('height'),
         x = pos.x + width / 2,
         y = pos.y;
-    if(hl) {
-      if (isNaN(width) || width == 0) 
+      if (isNaN(width) || width === 0) {
         ctx.fillText(node.name, x, y);
-      else
+      } else {
         ctx.fillText(node.name, x, y, width);  
-    }
+      }
   }
 });
 

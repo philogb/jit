@@ -8,7 +8,7 @@
  * @class TM.Plot.NodeTypes.polygon
  */
 TM.Plot.NodeTypes.implement({
-  polygon : {
+  polygon: {
     /**
      *
      * @param {Node} node
@@ -37,7 +37,14 @@ TM.Plot.NodeTypes.implement({
       if (leaf) {
         ctx.lineJoin = "bevel";
         if (config.cushion) {
-          var center = Geometry.centroid(pts), x = 0, y = 0, minX = pts[0].x, maxX = pts[0].x, minY = pts[0].y, maxY = pts[0].y;
+          var center = Geometry.centroid(pts), 
+              x = 0, 
+              y = 0, 
+              minX = pts[0].x, 
+              maxX = pts[0].x, 
+              minY = pts[0].y, 
+              maxY = pts[0].y;
+
           x = center[0];
           y = center[1];
           var width = maxX - minX + 1, height = maxY - minY + 1,
@@ -50,8 +57,8 @@ TM.Plot.NodeTypes.implement({
           lg.addColorStop(1, colorGrad);
           ctx.fillStyle = lg;
         }
+        
         // Fill polygon
-
         ctx.beginPath();
         ctx.moveTo(pts[0].x, pts[0].y);
         for (i = 1; i < pts.length; i++) {
@@ -67,6 +74,9 @@ TM.Plot.NodeTypes.implement({
         }
       } else if (titleHeight > 0) {
         pts = Geometry.offsetConvex(pts, -offset * 0.5);
+        if (!pts.length) {
+          pts = [pts];
+        }
         // Fill polygon
         ctx.beginPath();
         ctx.moveTo(pts[0].x, pts[0].y);
