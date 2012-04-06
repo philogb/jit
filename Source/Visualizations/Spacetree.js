@@ -1302,6 +1302,9 @@ $jit.ST.Label.DOM = new Class({
             }
         } else throw "align: not implemented";
 
+		labelPos.w=w;
+		labelPos.h=h;
+
         var style = tag.style;
         style.left = labelPos.x + 'px';
         style.top  = labelPos.y + 'px';

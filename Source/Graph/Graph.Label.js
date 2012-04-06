@@ -295,8 +295,14 @@ Graph.Label.DOM = new Class({
     */
     fitsInCanvas: function(pos, canvas) {
       var size = canvas.getSize();
-      if(pos.x >= size.width || pos.x < 0
+      if (pos.w && pos.h) {
+      	if (pos.x >= size.width || pos.x < -pos.w
+         || pos.y >= size.height || pos.y < -pos.h) return false;      	
+      }
+      else {
+      	if (pos.x >= size.width || pos.x < 0
          || pos.y >= size.height || pos.y < 0) return false;
+      }
        return true;
     }
 });
