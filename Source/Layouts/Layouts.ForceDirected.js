@@ -31,8 +31,8 @@ Layouts.ForceDirected = new Class({
     var l = this.config.levelDistance;
     
     return {
-      width: w,
-      height: h,
+      width: w - l,
+      height: h - l,
       tstart: w * 0.1,
       nodef: function(x) { return k2 / (x || 1); },
       edgef: function(x) { return /* x * x / k; */ k * (x - l); }
