@@ -31,10 +31,9 @@ Layouts.ForceDirected = new Class({
     var l = this.config.levelDistance;
     
     return {
-      width: w,
-      height: h,
+      width: w - l,
+      height: h - l,
       tstart: w * 0.1,
-      ldist: l / 2,
       nodef: function(x) { return k2 / (x || 1); },
       edgef: function(x) { return /* x * x / k; */ k * (x - l); }
     };
@@ -128,9 +127,7 @@ Layouts.ForceDirected = new Class({
       node.visited = !T;
     });
     //arrange positions to fit the canvas
-    var t = opt.t,
-        w2 = opt.width / 2 - opt.ldist,
-        h2 = opt.height / 2 - opt.ldist;
+    var t = opt.t, w2 = opt.width / 2, h2 = opt.height / 2;
     graph.eachNode(function(u) {
       $.each(property, function(p) {
         var disp = u.disp[p];
