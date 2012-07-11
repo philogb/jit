@@ -490,7 +490,7 @@ Layouts.TM.Strip = new Class({
     layoutV: function(ch, w, coord, prop) {
      var totalArea = 0; 
      $.each(ch, function(elem) { totalArea += elem._area; });
-     var width = totalArea / w, top =  0; 
+     var width = totalArea / w || 0, top =  0;
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i];
        var h = chi._area / width;
@@ -513,7 +513,7 @@ Layouts.TM.Strip = new Class({
     layoutH: function(ch, w, coord, prop) {
      var totalArea = 0; 
      $.each(ch, function(elem) { totalArea += elem._area; });
-     var height = totalArea / w,
+     var height = totalArea / w || 0,
          top = coord.height - height, 
          left = 0;
      
