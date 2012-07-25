@@ -882,5 +882,52 @@ tests_model = {
             """,
             'Extras': ['excanvas.js']
         },
-    ]    
+    ],
+
+    'PhyloJiVE': [
+        {
+            'Title': 'PhyloJiVE hornwarts demo',
+            'Description':
+            """
+            Some artificial hornworts data, with multiple link-outs/resources at each node. <br/>
+            Click the top button to get the PhylogenyExplorer nav aid; try choosing 2nd &amp; 3rd
+            characters to plot on the tree; align-names feature; search; set-root; rotate, etc.
+            """,
+            'Extras': ['PhyloJiVE/PhylogenyExplorer.js', 'excanvas.js' ]
+        },
+        {
+            'Title': 'PhyloJiVE qunit tests',
+            'Description':
+            """
+            Runs qunit tests which validate functions used for branch colouring,
+            character weighting, etc.
+            """,
+            'Extras': ['PhyloJiVE/PhylogenyExplorer.js', 'excanvas.js' ]
+        },
+        {
+            'Title': 'PhyloJiVE mammals qualitative character demo',
+            'Description':
+            """
+            Basic test of qualitative characters. Please choose second and third
+            characters to compare them
+            """,
+            'Extras': ['PhyloJiVE/PhylogenyExplorer.js', 'excanvas.js' ]
+        },
+        {
+            'Title': 'PhyloJiVE syncarida demo',
+            'Description':
+            """
+            Shows branchMultiplier init param
+            """,
+            'Extras': ['PhyloJiVE/PhylogenyExplorer.js', 'excanvas.js' ]
+        },
+        {
+            'Title': 'PhyloJiVE plant families demo',
+            'Description':
+            """
+            Slightly larger tree
+            """,
+            'Extras': ['PhyloJiVE/PhylogenyExplorer.js', 'excanvas.js' ]
+        },
+    ],
 }   

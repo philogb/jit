@@ -165,8 +165,8 @@ var MouseEventsManager = new Class({
             sy = canvas.scaleOffsetY,
             pos = $.event.getPos(e, win);
         this.pos = {
-          x: (pos.x - p.x - s.width/2 - ox) * 1/sx,
-          y: (pos.y - p.y - s.height/2 - oy) * 1/sy
+	  x: (pos.x - p.x - ox) * 1/sx,
+          y: (pos.y - p.y - oy) * 1/sy
         };
         return this.pos;
       },

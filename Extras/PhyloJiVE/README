@@ -1,0 +1,59 @@
+This directory contains reusable static files useful for demonstrations of the
+PhyloJiVE vizualisation which are built around PhylogenyExplorer.js.
+
+Icons Copyright (c) 2011 Jack Moore http://jacklmoore.com/colorbox/
+   * Licensed under MIT License http://jacklmoore.com/colorbox/
+      * controls.png
+
+Icons Copyright (c) 2012 OpenLayers contributors http://trac.osgeo.org/openlayers/wiki/CLA
+   * Licensed under modified BSD License http://trac.osgeo.org/openlayers/wiki/Licensing
+      * east-mini.png
+      * north-mini.png
+      * south-mini.png
+      * west-mini.png
+      * zoom-minus-mini.png
+      * zoom-plus-mini.png
+      * zoom-world-mini.png
+
+Files Copyright (c) 2012 Temi.Varghese@csiro.au,
+    Garry.Jolley-Rogers@csiro.au, Joe.Miller@csiro.au, Paul.W.Harvey@csiro.au
+   * Licensed under the same terms as jit itself (MIT)
+      * PhylogenyExplorer.js
+      * startButton.png
+      * transparentCircle.png
+      * transparentSquareFilled.png
+      * transparentSquare.png
+      * transparentStar.png
+      * linkout.svg
+      * linkout.png
+
+PhylogenyExplorer.js also has the following dependencies, which are loaded from
+the web:
+   * jQuery
+      * License: dual MIT/GPL, http://jquery.org/license/
+   * jQuery-UI
+      * License: dual MIT/GPL, http://jqueryui.com/about
+   * QUnit (used in the testcases, not a runtime dependency),
+      * License: dual MIT/GPL, https://raw.github.com/jquery/qunit/master/qunit/qunit.js
+   * jQuery-colorbox,
+      * License: MIT, http://jacklmoore.com/colorbox/
+   * jsPhyloSVG (used for parsing newick strings),
+      * License: GPL, http://www.jsphylosvg.com/js/jsphylosvg.js
+      * Copyright (c) Samuel Smits, samsmits@gmail.com
+        Smits SA, Ouverney CC, 2010 jsPhyloSVG: A Javascript Library for Visualizing
+        Interactive and Vector-Based Phylogenetic Trees on the Web.
+        PLoS ONE 5(8): e12267. doi:10.1371/journal.pone.0012267
+
+-------------------------------------------------------------------------------
+PhyloJiVE data structures added by Temi.
+   * phylo.rangeCount - step size to find the number of quant divisions
+   * phylo.characterMinMax - {'characterName':{min:12,max:100}}
+   * phylo.range - { 'character': [1,2,3,4] }
+   * .characterList - { character1, character2, ..}
+   * .characterGroups - { quali:[], quant:[] }
+   * .charTypeMapping - {'character': config.typeEnum.quant,'character2': config.typeEnum.quali,}
+   * .colorCoding - {character : { characterState : {color: , shape: }}}
+   * node.data.stat[ characters [ i ] ] = {sd:[] , u:[] , n: []};
+
+PhyloJiVE data structures removed by Temi.
+   * node.data.color

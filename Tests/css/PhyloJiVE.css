@@ -1,0 +1,207 @@
+/*@import url("base.css");*/
+@import url('../../Extras/colorbox/example1/colorbox.css');
+@import url('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
+@import url('http://code.jquery.com/qunit/qunit-git.css');
+
+/*TOOLTIPS*/
+.tip {
+    color: #111;
+    max-width: 400px;
+    width: auto;
+    height: auto;
+    border:1px solid #ccc;
+    -moz-box-shadow:#555 2px 2px 8px;
+    -webkit-box-shadow:#555 2px 2px 8px;
+    -o-box-shadow:#555 2px 2px 8px;
+    box-shadow:#555 2px 2px 8px;
+    opacity:1;
+    filter:alpha(opacity=100);
+    background-color:#EEF2F7;
+    font-size:10px;
+    font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+    padding:7px;
+}
+
+.tip .tipImage{
+  width: 100%;
+  height: auto;
+  padding-top:5px;
+}
+/* added by temi, white background for canvas */
+#infovis-canvas{
+/*   background-color:#F4EDE9; */
+/*   background-color:#E4FFAE; */
+background-color:#EEF2F7;
+}
+.box {
+  width: 10px;
+  height: 10px;
+  margin-left:2px;
+}
+.square {
+  width: 10px;
+  height: 10px;
+  margin-left:2px;
+  background-image: url('../../Extras/PhyloJiVE/transparentSquare.png');
+}
+.star {
+  width: 10px;
+  height: 10px;
+  margin-left:2px;
+  background-image: url('../../Extras/PhyloJiVE/transparentStar.png');
+}
+.quant {
+  width: 10px;
+  height: 10px;
+  margin-left:2px;
+}
+.quantAlign {
+  width: 10px;
+  height: 25px;
+  margin-left:2px;
+}
+.triangle {
+  margin-left:2px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid;
+}
+.empty {
+  width: 10px;
+  height: 5px;
+  margin-left:2px;
+  border-bottom: 1px solid black;
+}
+.roundedCorner {
+  background-color: #464646;
+  -moz-border-radius: 20px 20px 20px 20px;
+  border-radius: 20px 20px 20px 20px;
+/*   padding: 20px; */
+}
+.forward {
+  background:url('../../Extras/PhyloJiVE/linkout.png') no-repeat;
+  background-position:center;
+  height: 16px;
+  width: 16px;
+  cursor:pointer;
+  padding-left:10px;
+  padding-top :10px;
+  
+}
+/*.forward:hover {
+  background:url('../../Extras/PhyloJiVE/linkout.png') no-repeat;
+  height: 16px;
+  width: 16px;
+  cursor:pointer;
+}*/
+#jitmenubutton{
+  margin-left:45%;
+/*   margin-top:10px; */
+}
+#jitmenubutton.menubutton {
+  position:absolute;
+  background:url('../../Extras/PhyloJiVE/controls.png') no-repeat -101px 0px;
+  height: 50px;
+  width: 50px;
+  cursor:pointer;
+}
+#jitmenubutton.menubutton:hover {
+  background-color:blue;
+}
+#jitmenubutton.on {
+  background-color:blue;
+}
+#jitcontainer {
+  margin: 0 auto;
+  position:relative;
+}
+#right-jitcontainer{
+  /*position:absolute;*/
+  float:right;
+  background-color: white;
+}
+#center-jitcontainer {
+  width: auto;
+}
+
+#navigationPanel {
+  padding-top:55px;
+  position:absolute;
+}
+.phylojivepadding {
+  margin: 55px 5% 5% 5%;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.clearfix {display: inline-block;}
+
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+/* @end */
+
+
+
+#right-jitcontainer {
+    width:300px;
+    color:#686c70;
+    text-align: left;
+    overflow: auto;
+    background-repeat:no-repeat;
+    float:right;
+    font-size:small;
+    position:absolute;
+    right: 0px;
+    z-index:2;
+}
+
+
+#right-jitcontainer, 
+#center-jitcontainer {
+    top:0;
+}
+
+#center-jitcontainer {
+    float:left;
+    color:#ccc;
+}
+
+#log {
+    font-size:1.0em;
+    font-weight:bold;
+    color:#23A4FF;
+    float: none;
+    top: 0;
+    position: relative;
+}
+
+
+#infovis {
+    position:relative;
+    margin:auto;
+    overflow:hidden;
+    width: auto;
+    height: auto;
+}
+#popup {
+  background-color:#E0E2E7;
+  z-index:10;
+}
+
+#right-container {
+  height: auto;
+}
+
+table {
+    margin-top: 0;
+    border: 0;
+    padding: 0;
+}
