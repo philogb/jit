@@ -174,6 +174,9 @@ background-color:#EEF2F7;
     color:#ccc;
 }
 
+#center-container {
+  background-color: white;
+}
 #log {
     font-size:1.0em;
     font-weight:bold;

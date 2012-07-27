@@ -929,5 +929,14 @@ tests_model = {
             """,
             'Extras': ['PhyloJive/PhylogenyExplorer.js', 'excanvas.js' ]
         },
+        {
+          'Title': 'Basic PhyloJive mammals qualitative character demo',
+          'Description':
+          """
+          Basic test of qualitative characters. Please choose second and third
+          characters to compare them
+          """,
+          'Extras': ['PhyloJive/basicPhyloJive.js', 'excanvas.js' ]
+        },
     ],
 }   
