@@ -45,7 +45,7 @@
   shapes - css class names to distinguish different characters
      
 */
-Options.PhyloJiVE = {
+Options.PhyloJive = {
     $extend: true,
     
     alignName:false,

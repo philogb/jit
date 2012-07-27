@@ -1,5 +1,5 @@
 This directory contains reusable static files useful for demonstrations of the
-PhyloJiVE vizualisation which are built around PhylogenyExplorer.js.
+PhyloJive vizualisation which are built around PhylogenyExplorer.js.
 
 Icons Copyright (c) 2011 Jack Moore http://jacklmoore.com/colorbox/
    * Licensed under MIT License http://jacklmoore.com/colorbox/
@@ -45,7 +45,7 @@ the web:
         PLoS ONE 5(8): e12267. doi:10.1371/journal.pone.0012267
 
 -------------------------------------------------------------------------------
-PhyloJiVE data structures added by Temi.
+PhyloJive data structures added by Temi.
    * phylo.rangeCount - step size to find the number of quant divisions
    * phylo.characterMinMax - {'characterName':{min:12,max:100}}
    * phylo.range - { 'character': [1,2,3,4] }
@@ -55,5 +55,5 @@ PhyloJiVE data structures added by Temi.
    * .colorCoding - {character : { characterState : {color: , shape: }}}
    * node.data.stat[ characters [ i ] ] = {sd:[] , u:[] , n: []};
 
-PhyloJiVE data structures removed by Temi.
+PhyloJive data structures removed by Temi.
    * node.data.color

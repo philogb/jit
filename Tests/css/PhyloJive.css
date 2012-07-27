@@ -42,13 +42,13 @@ background-color:#EEF2F7;
   width: 10px;
   height: 10px;
   margin-left:2px;
-  background-image: url('../../Extras/PhyloJiVE/transparentSquare.png');
+  background-image: url('../../Extras/PhyloJive/transparentSquare.png');
 }
 .star {
   width: 10px;
   height: 10px;
   margin-left:2px;
-  background-image: url('../../Extras/PhyloJiVE/transparentStar.png');
+  background-image: url('../../Extras/PhyloJive/transparentStar.png');
 }
 .quant {
   width: 10px;
@@ -81,7 +81,7 @@ background-color:#EEF2F7;
 /*   padding: 20px; */
 }
 .forward {
-  background:url('../../Extras/PhyloJiVE/linkout.png') no-repeat;
+  background:url('../../Extras/PhyloJive/linkout.png') no-repeat;
   background-position:center;
   height: 16px;
   width: 16px;
@@ -91,7 +91,7 @@ background-color:#EEF2F7;
   
 }
 /*.forward:hover {
-  background:url('../../Extras/PhyloJiVE/linkout.png') no-repeat;
+  background:url('../../Extras/PhyloJive/linkout.png') no-repeat;
   height: 16px;
   width: 16px;
   cursor:pointer;
@@ -102,7 +102,7 @@ background-color:#EEF2F7;
 }
 #jitmenubutton.menubutton {
   position:absolute;
-  background:url('../../Extras/PhyloJiVE/controls.png') no-repeat -101px 0px;
+  background:url('../../Extras/PhyloJive/controls.png') no-repeat -101px 0px;
   height: 50px;
   width: 50px;
   cursor:pointer;

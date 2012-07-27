@@ -1,5 +1,5 @@
 /*
- * File: PhyloJiVE.js
+ * File: PhyloJive.js
  *
  * © Copyright 2012 Temi.Varghese@csiro.au, Garry.Jolley-Rogers@csiro.au &
  * Joe.Miller@csiro.au as part of the
@@ -7,7 +7,7 @@
  * The Commonwealth Scientific and Industrial Research Organisation, Australia.
  *
  * Newick parsing in this visualization is made possible by jsPhyloSVG by
- * Smits SA, Ouverney CC, 2010. Please see Extras/PhyloJiVE/jsPhyloSVG/readme.txt
+ * Smits SA, Ouverney CC, 2010. Please see Extras/PhyloJive/jsPhyloSVG/readme.txt
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -139,7 +139,7 @@ $jit.Phylo = (function () {
   // Now define the actual class.
   return new Class({
 
-    Implements: [Loader, Extras, Layouts.PhyloJiVE],
+    Implements: [Loader, Extras, Layouts.PhyloJive],
 
     initialize: function (controller) {
       var $Phylo = $jit.Phylo;
@@ -157,7 +157,7 @@ $jit.Phylo = (function () {
       };
 
       this.controller = this.config = $.merge(
-      Options("Canvas", "Fx", "Tree", "PhyloJiVE", "Node", "Edge", "Controller", "Tips", "NodeStyles", "Events", "Navigation", "Label"), config, controller);
+      Options("Canvas", "Fx", "Tree", "PhyloJive", "Node", "Edge", "Controller", "Tips", "NodeStyles", "Events", "Navigation", "Label"), config, controller);
 
       var canvasConfig = this.config;
       if (canvasConfig.useCanvas) {
@@ -2322,7 +2322,7 @@ $jit.Phylo.Plot = new Class({
   Implements: Graph.Plot,
 
   /*
-      Plots a subtree from the PhyloJiVE.
+      Plots a subtree from the PhyloJive.
     */
   plotSubtree: function (node, opt, scale, animating) {
     var viz = this.viz,

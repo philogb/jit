@@ -1,15 +1,15 @@
 /*
- * Class: Layouts.PhyloJiVE
+ * Class: Layouts.PhyloJive
  * 
  * Implements a Tree Layout.
  * 
  * Implemented By:
  * 
- * <PhyloJiVE>
+ * <PhyloJive>
  * 
  * 
  */
-Layouts.PhyloJiVE = (function() {
+Layouts.PhyloJive = (function() {
   //Layout functions
   var slice = Array.prototype.slice;
 

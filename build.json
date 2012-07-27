@@ -59,7 +59,7 @@
     "Layouts.Tree": [
       "Layouts"
     ],
-    "Layouts.PhyloJiVE": [
+    "Layouts.PhyloJive": [
       "Layouts"
     ],
     "Layouts.Radial": [
@@ -128,7 +128,7 @@
     "Options.Tree": [
       "Options"
     ],
-    "Options.PhyloJiVE": [
+    "Options.PhyloJive": [
       "Options"
     ],
     "Options.BarChart": [
@@ -289,11 +289,11 @@
         "Fx"
     ],
 
-    "PhyloJiVE": [
+    "PhyloJive": [
         "Core",
         "Options.Canvas",
         "Options.Tree",
-	"Options.PhyloJiVE",
+	"Options.PhyloJive",
         "Options.Node",
         "Options.Edge",
         "Options.Fx",
@@ -312,7 +312,7 @@
         "Graph.Label",
         "Graph.Geom",
         "Loader",
-        "Layouts.PhyloJiVE",
+        "Layouts.PhyloJive",
         "Fx"
     ],
 
