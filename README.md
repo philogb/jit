@@ -29,3 +29,7 @@ To build the documentation:
 To build examples:
 
     python make.py examples
+
+To build PhyloJive:
+
+    python build.py PhyloJive > jit.js
