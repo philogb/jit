@@ -91,7 +91,9 @@ def make_example(viz, ex, i, count, fancy):
     extras = model['Extras'][:]
     example = 'example' + str(count)
     strdir = 'Examples/' + viz + '/'
-    
+    if not path.exists(strdir):
+        mkdir(strdir)
+
     #insert the example js file
     fcommon = open('Tests/js/common.js', 'r')
     ftest = open('Tests/' + viz + '/test' + stri + '.js', 'r')
