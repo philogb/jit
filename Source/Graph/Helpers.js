@@ -448,10 +448,10 @@ var EdgeHelper = {
       'contains': function(posFrom, posTo, pos, epsilon) {
         var min = Math.min, 
             max = Math.max,
-            minPosX = min(posFrom.x, posTo.x),
-            maxPosX = max(posFrom.x, posTo.x),
-            minPosY = min(posFrom.y, posTo.y),
-            maxPosY = max(posFrom.y, posTo.y);
+            minPosX = min(posFrom.x, posTo.x) - epsilon,
+            maxPosX = max(posFrom.x, posTo.x) + epsilon,
+            minPosY = min(posFrom.y, posTo.y) - epsilon,
+            maxPosY = max(posFrom.y, posTo.y) + epsilon;
         
         if(pos.x >= minPosX && pos.x <= maxPosX 
             && pos.y >= minPosY && pos.y <= maxPosY) {
