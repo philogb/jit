@@ -4,28 +4,28 @@
 
 /*
    Class: ST
-   
+
   A Tree layout with advanced contraction and expansion animations.
-     
+
   Inspired by:
- 
-  SpaceTree: Supporting Exploration in Large Node Link Tree, Design Evolution and Empirical Evaluation (Catherine Plaisant, Jesse Grosjean, Benjamin B. Bederson) 
+
+  SpaceTree: Supporting Exploration in Large Node Link Tree, Design Evolution and Empirical Evaluation (Catherine Plaisant, Jesse Grosjean, Benjamin B. Bederson)
   <http://hcil.cs.umd.edu/trs/2002-05/2002-05.pdf>
-  
+
   Drawing Trees (Andrew J. Kennedy) <http://research.microsoft.com/en-us/um/people/akenn/fun/drawingtrees.pdf>
-  
+
   Note:
- 
+
   This visualization was built and engineered from scratch, taking only the papers as inspiration, and only shares some features with the visualization described in those papers.
- 
+
   Implements:
-  
+
   All <Loader> methods
-  
+
   Constructor Options:
-  
+
   Inherits options from
-  
+
   - <Options.Canvas>
   - <Options.Controller>
   - <Options.Tree>
@@ -36,9 +36,9 @@
   - <Options.Tips>
   - <Options.NodeStyles>
   - <Options.Navigation>
-  
+
   Additionally, there are other parameters and some default values changed
-  
+
   constrained - (boolean) Default's *true*. Whether to show the entire tree when loaded or just the number of levels specified by _levelsToShow_.
   levelsToShow - (number) Default's *2*. The number of levels to show for a subtree. This number is relative to the selected node.
   levelDistance - (number) Default's *30*. The distance between two consecutive levels of the tree.
@@ -46,9 +46,9 @@
   offsetX - (number) Default's *0*. The x-offset distance from the selected node to the center of the canvas.
   offsetY - (number) Default's *0*. The y-offset distance from the selected node to the center of the canvas.
   duration - Described in <Options.Fx>. It's default value has been changed to *700*.
-  
+
   Instance Properties:
-  
+
   canvas - Access a <Canvas> instance.
   graph - Access a <Graph> instance.
   op - Access a <ST.Op> instance.
@@ -84,21 +84,21 @@ $jit.ST= (function() {
   	  node.eachLevel(leafLevel, leafLevel, function(n) {
           if(n.exist && !n.selected) nodeArray.push(n);
   	  });
-  	    
+
   	  for (var i = 0; i < nodesInPath.length; i++) {
   	    var n = this.graph.getNode(nodesInPath[i]);
   	    if(!n.isDescendantOf(node.id)) {
   	      nodeArray.push(n);
   	    }
-  	  } 
-  	  return nodeArray;       
+  	  }
+  	  return nodeArray;
     };
     // Nodes to expand
      function getNodesToShow(node) {
         var nodeArray = [], config = this.config;
         node = node || this.clickedNode;
         this.clickedNode.eachLevel(0, config.levelsToShow, function(n) {
-            if(config.multitree && !('$orn' in n.data) 
+            if(config.multitree && !('$orn' in n.data)
             		&& n.anySubnode(function(ch){ return ch.exist && !ch.drawn; })) {
             	nodeArray.push(n);
             } else if(n.drawn && !n.anySubnode("drawn")) {
@@ -109,16 +109,16 @@ $jit.ST= (function() {
      };
     // Now define the actual class.
     return new Class({
-    
+
         Implements: [Loader, Extras, Layouts.Tree],
-        
-        initialize: function(controller) {            
+
+        initialize: function(controller) {
           var $ST = $jit.ST;
-          
+
           var config= {
                 levelsToShow: 2,
                 levelDistance: 30,
-                constrained: true,                
+                constrained: true,
                 Node: {
                   type: 'rectangle'
                 },
@@ -126,9 +126,9 @@ $jit.ST= (function() {
                 offsetX: 0,
                 offsetY: 0
             };
-            
+
             this.controller = this.config = $.merge(
-                Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller", 
+                Options("Canvas", "Fx", "Tree", "Node", "Edge", "Controller",
                     "Tips", "NodeStyles", "Events", "Navigation", "Label"), config, controller);
 
             var canvasConfig = this.config;
@@ -158,19 +158,19 @@ $jit.ST= (function() {
             // initialize extras
             this.initializeExtras();
         },
-    
+
         /*
          Method: plot
-        
+
          Plots the <ST>. This is a shortcut to *fx.plot*.
 
-        */  
+        */
         plot: function() { this.fx.plot(this.controller); },
-    
-      
+
+
         /*
          Method: switchPosition
-        
+
          Switches the tree orientation.
 
          Parameters:
@@ -185,10 +185,10 @@ $jit.ST= (function() {
            st.switchPosition("right", "animate", {
             onComplete: function() {
               alert('completed!');
-            } 
+            }
            });
          (end code)
-        */  
+        */
         switchPosition: function(pos, method, onComplete) {
           var Geom = this.geom, Plot = this.fx, that = this;
           if(!Plot.busy) {
@@ -199,7 +199,7 @@ $jit.ST= (function() {
                       that.compute('end', false);
                       Plot.busy = false;
                       if(method == 'animate') {
-                    	  that.onClick(that.clickedNode.id, onComplete);  
+                    	  that.onClick(that.clickedNode.id, onComplete);
                       } else if(method == 'replot') {
                     	  that.select(that.clickedNode.id, onComplete);
                       }
@@ -210,7 +210,7 @@ $jit.ST= (function() {
 
         /*
         Method: switchAlignment
-       
+
         Switches the tree alignment.
 
         Parameters:
@@ -225,24 +225,24 @@ $jit.ST= (function() {
           st.switchAlignment("right", "animate", {
            onComplete: function() {
              alert('completed!');
-           } 
+           }
           });
         (end code)
-       */  
+       */
        switchAlignment: function(align, method, onComplete) {
         this.config.align = align;
         if(method == 'animate') {
         	this.select(this.clickedNode.id, onComplete);
         } else if(method == 'replot') {
-        	this.onClick(this.clickedNode.id, onComplete);	
+        	this.onClick(this.clickedNode.id, onComplete);
         }
        },
 
        /*
         Method: addNodeInPath
-       
+
         Adds a node to the current path as selected node. The selected node will be visible (as in non-collapsed) at all times.
-        
+
 
         Parameters:
 
@@ -253,42 +253,42 @@ $jit.ST= (function() {
         (start code js)
           st.addNodeInPath("nodeId");
         (end code)
-       */  
+       */
        addNodeInPath: function(id) {
            nodesInPath.push(id);
            this.select((this.clickedNode && this.clickedNode.id) || this.root);
-       },       
+       },
 
        /*
        Method: clearNodesInPath
-      
+
        Removes all nodes tagged as selected by the <ST.addNodeInPath> method.
-       
+
        See also:
-       
+
        <ST.addNodeInPath>
-     
+
        Example:
 
        (start code js)
          st.clearNodesInPath();
        (end code)
-      */  
+      */
        clearNodesInPath: function(id) {
            nodesInPath.length = 0;
            this.select((this.clickedNode && this.clickedNode.id) || this.root);
        },
-        
+
        /*
          Method: refresh
-        
+
          Computes positions and plots the tree.
-         
+
        */
        refresh: function() {
            this.reposition();
            this.select((this.clickedNode && this.clickedNode.id) || this.root);
-       },    
+       },
 
        reposition: function() {
             this.graph.computeLevels(this.root, 0, "ignore");
@@ -305,14 +305,14 @@ $jit.ST= (function() {
               this.geom.translate(this.clickedNode.endPos.add(offset).$scale(-1), 'end');
             }
         },
-        
+
         requestNodes: function(node, onComplete) {
-          var handler = $.merge(this.controller, onComplete), 
+          var handler = $.merge(this.controller, onComplete),
           lev = this.config.levelsToShow;
           if(handler.request) {
               var leaves = [], d = node._depth;
               node.eachLevel(0, lev, function(n) {
-                  if(n.drawn && 
+                  if(n.drawn &&
                    !n.anySubnode()) {
                    leaves.push(n);
                    n._level = lev - (n._depth - d);
@@ -323,7 +323,7 @@ $jit.ST= (function() {
             else
               handler.onComplete();
         },
-     
+
         contract: function(onComplete, switched) {
           var orn  = this.config.orientation;
           var Geom = this.geom, Group = this.group;
@@ -332,12 +332,12 @@ $jit.ST= (function() {
           if(switched) Geom.switchOrientation(orn);
           Group.contract(nodes, $.merge(this.controller, onComplete));
         },
-      
+
          move: function(node, onComplete) {
             this.compute('end', false);
             var move = onComplete.Move, offset = {
                 'x': move.offsetX,
-                'y': move.offsetY 
+                'y': move.offsetY
             };
             if(move.enable) {
                 this.geom.translate(node.endPos.add(offset).$scale(-1), "end");
@@ -346,23 +346,23 @@ $jit.ST= (function() {
             }
             this.fx.animate($.merge(this.controller, { modes: ['linear'] }, onComplete));
          },
-      
+
         expand: function (node, onComplete) {
             var nodeArray = getNodesToShow.call(this, node);
             this.group.expand(nodeArray, $.merge(this.controller, onComplete));
         },
-    
+
         selectPath: function(node) {
           var that = this;
-          this.graph.eachNode(function(n) { n.selected = false; }); 
+          this.graph.eachNode(function(n) { n.selected = false; });
           function path(node) {
               if(node == null || node.selected) return;
               node.selected = true;
-              $.each(that.group.getSiblings([node])[node.id], 
-              function(n) { 
-                   n.exist = true; 
-                   n.drawn = true; 
-              });    
+              $.each(that.group.getSiblings([node])[node.id],
+              function(n) {
+                   n.exist = true;
+                   n.drawn = true;
+              });
               var parents = node.getParents();
               parents = (parents.length > 0)? parents[0] : null;
               path(parents);
@@ -371,17 +371,17 @@ $jit.ST= (function() {
               path(this.graph.getNode(ns[i]));
           }
         },
-      
+
         /*
         Method: setRoot
-     
+
          Switches the current root node. Changes the topology of the Tree.
-     
+
         Parameters:
            id - (string) The id of the node to be set as root.
            method - (string) Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
            onComplete - (optional|object) An action to perform after the animation (if any).
- 
+
         Example:
 
         (start code js)
@@ -461,14 +461,14 @@ $jit.ST= (function() {
 
      /*
            Method: addSubtree
-        
+
             Adds a subtree.
-        
+
            Parameters:
               subtree - (object) A JSON Tree object. See also <Loader.loadJSON>.
               method - (string) Set this to "animate" if you want to animate the tree after adding the subtree. You can also set this parameter to "replot" to just replot the subtree.
               onComplete - (optional|object) An action to perform after the animation (if any).
-    
+
            Example:
 
            (start code js)
@@ -486,12 +486,12 @@ $jit.ST= (function() {
                 this.op.sum(subtree, $.extend({ type: 'fade:seq' }, onComplete || {}));
             }
         },
-    
+
         /*
            Method: removeSubtree
-        
+
             Removes a subtree.
-        
+
            Parameters:
               id - (string) The _id_ of the subtree to be removed.
               removeRoot - (boolean) Default's *false*. Remove the root of the subtree or only its subnodes.
@@ -507,7 +507,7 @@ $jit.ST= (function() {
               }
             });
           (end code)
-    
+
         */
         removeSubtree: function(id, removeRoot, method, onComplete) {
             var node = this.graph.getNode(id), subids = [];
@@ -520,11 +520,11 @@ $jit.ST= (function() {
                 this.op.removeNode(subids, $.extend({ type: 'fade:seq'}, onComplete || {}));
             }
         },
-    
+
         /*
            Method: select
-        
-            Selects a node in the <ST> without performing an animation. Useful when selecting 
+
+            Selects a node in the <ST> without performing an animation. Useful when selecting
             nodes which are currently hidden or deep inside the tree.
 
           Parameters:
@@ -546,7 +546,7 @@ $jit.ST= (function() {
             var root  = this.graph.getNode(this.root);
             var complete = $.merge(this.controller, onComplete);
             var that = this;
-    
+
             complete.onBeforeCompute(node);
             this.selectPath(node);
             this.clickedNode= node;
@@ -555,29 +555,29 @@ $jit.ST= (function() {
                     group.hide(group.prepare(getNodesToHide.call(that)), complete);
                     geom.setRightLevelToShow(node, canvas);
                     that.compute("current");
-                    that.graph.eachNode(function(n) { 
+                    that.graph.eachNode(function(n) {
                         var pos = n.pos.getc(true);
                         n.startPos.setc(pos.x, pos.y);
                         n.endPos.setc(pos.x, pos.y);
-                        n.visited = false; 
+                        n.visited = false;
                     });
                     var offset = { x: complete.offsetX, y: complete.offsetY };
                     that.geom.translate(node.endPos.add(offset).$scale(-1), ["start", "current", "end"]);
-                    group.show(getNodesToShow.call(that));              
+                    group.show(getNodesToShow.call(that));
                     that.plot();
                     complete.onAfterCompute(that.clickedNode);
                     complete.onComplete();
                 }
-            });     
+            });
         },
-    
+
       /*
          Method: onClick
-    
+
         Animates the <ST> to center the node specified by *id*.
-            
+
         Parameters:
-        
+
         id - (string) A node id.
         options - (optional|object) A group of options and callbacks described below.
         onComplete - (object) An object callback called when the animation finishes.
@@ -597,15 +597,15 @@ $jit.ST= (function() {
 	          }
           });
         (end code)
-    
-        */    
+
+        */
       onClick: function (id, options) {
         var canvas = this.canvas, that = this, Geom = this.geom, config = this.config;
         var innerController = {
             Move: {
         	    enable: true,
               offsetX: config.offsetX || 0,
-              offsetY: config.offsetY || 0  
+              offsetY: config.offsetY || 0
             },
             setRightLevelToShowConfig: false,
             onBeforeRequest: $.empty,
@@ -614,7 +614,7 @@ $jit.ST= (function() {
             onBeforeExpand: $.empty
         };
         var complete = $.merge(this.controller, innerController, options);
-        
+
         if(!this.busy) {
             this.busy = true;
             var node = this.graph.getNode(id);
@@ -656,31 +656,31 @@ $jit.ST.$extend = true;
 
 /*
    Class: ST.Op
-    
+
    Custom extension of <Graph.Op>.
 
    Extends:
 
    All <Graph.Op> methods
-   
+
    See also:
-   
+
    <Graph.Op>
 
 */
 $jit.ST.Op = new Class({
 
   Implements: Graph.Op
-    
+
 });
 
 /*
-    
+
      Performs operations on group of nodes.
 
 */
 $jit.ST.Group = new Class({
-    
+
     initialize: function(viz) {
         this.viz = viz;
         this.canvas = viz.canvas;
@@ -688,10 +688,10 @@ $jit.ST.Group = new Class({
         this.animation = new Animation;
         this.nodes = null;
     },
-    
+
     /*
-    
-       Calls the request method on the controller to request a subtree for each node. 
+
+       Calls the request method on the controller to request a subtree for each node.
     */
     requestNodes: function(nodes, controller) {
         var counter = 0, len = nodes.length, nodeSelected = {};
@@ -714,10 +714,10 @@ $jit.ST.Group = new Class({
             });
         }
     },
-    
+
     /*
-    
-       Collapses group of nodes. 
+
+       Collapses group of nodes.
     */
     contract: function(nodes, controller) {
         var viz = this.viz;
@@ -731,13 +731,13 @@ $jit.ST.Group = new Class({
               that.plotStep(1 - delta, controller, this.$animating);
               this.$animating = 'contract';
             },
-            
+
             complete: function() {
                 that.hide(nodes, controller);
-            }       
+            }
         })).start();
     },
-    
+
     hide: function(nodes, controller) {
         var viz = this.viz;
         for(var i=0; i<nodes.length; i++) {
@@ -765,11 +765,11 @@ $jit.ST.Group = new Class({
             }
         }
         controller.onComplete();
-    },    
-    
+    },
+
 
     /*
-       Expands group of nodes. 
+       Expands group of nodes.
     */
     expand: function(nodes, controller) {
         var that = this;
@@ -780,15 +780,15 @@ $jit.ST.Group = new Class({
                 that.plotStep(delta, controller, this.$animating);
                 this.$animating = 'expand';
             },
-            
+
             complete: function() {
                 that.plotStep(undefined, controller, false);
                 controller.onComplete();
-            }       
+            }
         })).start();
-        
+
     },
-    
+
     show: function(nodes) {
         var config = this.config;
         this.prepare(nodes);
@@ -798,8 +798,8 @@ $jit.ST.Group = new Class({
         		delete n.data.$orns;
         		var orns = ' ';
         		n.eachSubnode(function(ch) {
-        			if(('$orn' in ch.data) 
-        					&& orns.indexOf(ch.data.$orn) < 0 
+        			if(('$orn' in ch.data)
+        					&& orns.indexOf(ch.data.$orn) < 0
         					&& ch.exist && !ch.drawn) {
         				orns += ch.data.$orn + ' ';
         			}
@@ -808,15 +808,15 @@ $jit.ST.Group = new Class({
         	}
             n.eachLevel(0, config.levelsToShow, function(n) {
             	if(n.exist) n.drawn = true;
-            });     
+            });
         });
     },
-    
+
     prepare: function(nodes) {
         this.nodes = this.getNodesWithChildren(nodes);
         return this.nodes;
     },
-    
+
     /*
        Filters an array of nodes leaving only nodes with children.
     */
@@ -827,7 +827,7 @@ $jit.ST.Group = new Class({
             if(nodes[i].anySubnode("exist")) {
             	for (var j = i+1, desc = false; !desc && j < nodes.length; j++) {
                     if(!config.multitree || '$orn' in nodes[j].data) {
-                		desc = desc || nodes[i].isDescendantOf(nodes[j].id);                    	
+                		desc = desc || nodes[i].isDescendantOf(nodes[j].id);
                     }
                 }
                 if(!desc) ans.push(nodes[i]);
@@ -835,11 +835,11 @@ $jit.ST.Group = new Class({
         }
         return ans;
     },
-    
+
     plotStep: function(delta, controller, animating) {
         var viz = this.viz,
         config = this.config,
-        canvas = viz.canvas, 
+        canvas = viz.canvas,
         ctx = canvas.getCtx(),
         nodes = this.nodes;
         var i, node;
@@ -850,11 +850,11 @@ $jit.ST.Group = new Class({
           nds[node.id] = [];
           var root = config.multitree && !('$orn' in node.data);
           var orns = root && node.data.$orns;
-          node.eachSubgraph(function(n) { 
+          node.eachSubgraph(function(n) {
             // TODO(nico): Cleanup
         	  // special check for root node subnodes when
         	  // multitree is checked.
-        	  if(root && orns && orns.indexOf(n.data.$orn) > 0 
+        	  if(root && orns && orns.indexOf(n.data.$orn) > 0
         			  && n.drawn) {
         		  n.drawn = false;
                   nds[node.id].push(n);
@@ -862,7 +862,7 @@ $jit.ST.Group = new Class({
                 n.drawn = false;
                 nds[node.id].push(n);
               }
-            });	
+            });
             node.drawn = true;
         }
         // plot the whole (non-scaled) tree
@@ -875,7 +875,7 @@ $jit.ST.Group = new Class({
         for(i=0; i<nodes.length; i++) {
           node = nodes[i];
           ctx.save();
-          viz.fx.plotSubtree(node, controller, delta, animating);                
+          viz.fx.plotSubtree(node, controller, delta, animating);
           ctx.restore();
         }
       },
@@ -922,7 +922,7 @@ $jit.ST.Geom = new Class({
        Changes the tree current orientation to the one specified.
 
        You should usually use <ST.switchPosition> instead.
-    */  
+    */
     switchOrientation: function(orn) {
     	this.config.orientation = orn;
     },
@@ -951,12 +951,12 @@ $jit.ST.Geom = new Class({
 
     /*
        Returns label height or with, depending on the tree current orientation.
-    */  
+    */
     getSize: function(n, invert) {
         var data = n.data, config = this.config;
         var siblingOffset = config.siblingOffset;
-        var s = (config.multitree 
-        		&& ('$orn' in data) 
+        var s = (config.multitree
+        		&& ('$orn' in data)
         		&& data.$orn) || config.orientation;
         var w = n.getData('width') + siblingOffset;
         var h = n.getData('height') + siblingOffset;
@@ -965,10 +965,10 @@ $jit.ST.Geom = new Class({
         else
             return this.dispatch(s, w, h);
     },
-    
+
     /*
        Calculates a subtree base size. This is an utility function used by _getBaseSize_
-    */  
+    */
     getTreeBaseSize: function(node, level, leaf) {
         var size = this.getSize(node, true), baseHeight = 0, that = this;
         if(leaf(level, node)) return size;
@@ -982,7 +982,7 @@ $jit.ST.Geom = new Class({
 
     /*
        getEdge
-       
+
        Returns a Complex instance with the begin or end position of the edge to be plotted.
 
        Parameters:
@@ -993,12 +993,12 @@ $jit.ST.Geom = new Class({
        Returns:
 
        A <Complex> number specifying the begin or end position.
-    */  
+    */
     getEdge: function(node, type, s) {
-    	var $C = function(a, b) { 
+    	var $C = function(a, b) {
           return function(){
             return node.pos.add(new Complex(a, b));
-          }; 
+          };
         };
         var dim = this.node;
         var w = node.getData('width');
@@ -1015,8 +1015,8 @@ $jit.ST.Geom = new Class({
                 return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                      $C(0, -h),$C(0, 0));
             } else throw "align: not implemented";
-            
-            
+
+
         } else if(type == 'end') {
             if(dim.align == "center") {
                 return this.dispatch(s, $C(0, -h/2), $C(w/2, 0),
@@ -1033,19 +1033,19 @@ $jit.ST.Geom = new Class({
 
     /*
        Adjusts the tree position due to canvas scaling or translation.
-    */  
+    */
     getScaledTreePosition: function(node, scale) {
         var dim = this.node;
         var w = node.getData('width');
         var h = node.getData('height');
-        var s = (this.config.multitree 
-        		&& ('$orn' in node.data) 
+        var s = (this.config.multitree
+        		&& ('$orn' in node.data)
         		&& node.data.$orn) || this.config.orientation;
 
-        var $C = function(a, b) { 
+        var $C = function(a, b) {
           return function(){
             return node.pos.add(new Complex(a, b)).$scale(1 - scale);
-          }; 
+          };
         };
         if(dim.align == "left") {
             return this.dispatch(s, $C(0, h), $C(0, 0),
@@ -1061,7 +1061,7 @@ $jit.ST.Geom = new Class({
 
     /*
        treeFitsInCanvas
-       
+
        Returns a Boolean if the current subtree fits in canvas.
 
        Parameters:
@@ -1069,15 +1069,15 @@ $jit.ST.Geom = new Class({
        node - A <Graph.Node> which is the current root of the subtree.
        canvas - The <Canvas> object.
        level - The depth of the subtree to be considered.
-    */  
+    */
     treeFitsInCanvas: function(node, canvas, level) {
         var csize = canvas.getSize();
-        var s = (this.config.multitree 
-        		&& ('$orn' in node.data) 
+        var s = (this.config.multitree
+        		&& ('$orn' in node.data)
         		&& node.data.$orn) || this.config.orientation;
 
         var size = this.dispatch(s, csize.width, csize.height);
-        var baseSize = this.getTreeBaseSize(node, level, function(level, node) { 
+        var baseSize = this.getTreeBaseSize(node, level, function(level, node) {
           return level === 0 || !node.anySubnode();
         });
         return (baseSize < size);
@@ -1086,22 +1086,22 @@ $jit.ST.Geom = new Class({
 
 /*
   Class: ST.Plot
-  
+
   Custom extension of <Graph.Plot>.
 
   Extends:
 
   All <Graph.Plot> methods
-  
+
   See also:
-  
+
   <Graph.Plot>
 
 */
 $jit.ST.Plot = new Class({
-    
+
     Implements: Graph.Plot,
-    
+
     /*
        Plots a subtree from the spacetree.
     */
@@ -1109,7 +1109,7 @@ $jit.ST.Plot = new Class({
         var viz = this.viz, canvas = viz.canvas, config = viz.config;
         scale = Math.min(Math.max(0.001, scale), 1);
         if(scale >= 0) {
-            node.drawn = false;     
+            node.drawn = false;
             var ctx = canvas.getCtx();
             var diff = viz.geom.getScaledTreePosition(node, scale);
             ctx.translate(diff.x, diff.y);
@@ -1125,19 +1125,19 @@ $jit.ST.Plot = new Class({
           }
         }), animating);
         if(scale >= 0) node.drawn = true;
-    },   
-   
+    },
+
     /*
         Method: getAlignedPos
-        
+
         Returns a *x, y* object with the position of the top/left corner of a <ST> node.
-        
+
         Parameters:
-        
+
         pos - (object) A <Graph.Node> position.
         width - (number) The width of the node.
         height - (number) The height of the node.
-        
+
      */
     getAlignedPos: function(pos, width, height) {
         var nconfig = this.node;
@@ -1174,10 +1174,10 @@ $jit.ST.Plot = new Class({
                 };
             }
         } else throw "align: not implemented";
-        
+
         return square;
     },
-    
+
     getOrientation: function(adj) {
     	var config = this.config;
     	var orn = config.orientation;
@@ -1185,20 +1185,20 @@ $jit.ST.Plot = new Class({
     	if(config.multitree) {
         	var nodeFrom = adj.nodeFrom;
         	var nodeTo = adj.nodeTo;
-    		orn = (('$orn' in nodeFrom.data) 
-        		&& nodeFrom.data.$orn) 
-        		|| (('$orn' in nodeTo.data) 
+    		orn = (('$orn' in nodeFrom.data)
+        		&& nodeFrom.data.$orn)
+        		|| (('$orn' in nodeTo.data)
         		&& nodeTo.data.$orn);
     	}
 
-    	return orn; 
+    	return orn;
     }
 });
 
 /*
   Class: ST.Label
 
-  Custom extension of <Graph.Label>. 
+  Custom extension of <Graph.Label>.
   Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
 
   Extends:
@@ -1208,7 +1208,7 @@ $jit.ST.Plot = new Class({
   See also:
 
   <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
- */ 
+ */
 $jit.ST.Label = {};
 
 /*
@@ -1240,7 +1240,7 @@ $jit.ST.Label.Native = new Class({
 $jit.ST.Label.DOM = new Class({
   Implements: Graph.Label.DOM,
 
-  /* 
+  /*
       placeLabel
 
       Overrides abstract method placeLabel in <Graph.Plot>.
@@ -1250,18 +1250,18 @@ $jit.ST.Label.DOM = new Class({
       tag - A DOM label element.
       node - A <Graph.Node>.
       controller - A configuration/controller object passed to the visualization.
-     
+
     */
     placeLabel: function(tag, node, controller) {
-        var pos = node.pos.getc(true), 
-            config = this.viz.config, 
-            dim = config.Node, 
+        var pos = node.pos.getc(true),
+            config = this.viz.config,
+            dim = config.Node,
             canvas = this.viz.canvas,
             w = node.getData('width'),
             h = node.getData('height'),
             radius = canvas.getSize(),
             labelPos, orn;
-        
+
         var ox = canvas.translateOffsetX,
             oy = canvas.translateOffsetY,
             sx = canvas.scaleOffsetX,
@@ -1360,7 +1360,7 @@ $jit.ST.Label.HTML = new Class({
 /*
   Class: ST.Plot.NodeTypes
 
-  This class contains a list of <Graph.Node> built-in types. 
+  This class contains a list of <Graph.Node> built-in types.
   Node types implemented are 'none', 'circle', 'rectangle', 'ellipse' and 'square'.
 
   You can add your custom node types, customizing your visualization to the extreme.
@@ -1398,7 +1398,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var dim  = node.getData('dim'),
           npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
           dim2 = dim/2;
-      this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
+      return this.nodeHelper.circle.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
     }
   },
   'square': {
@@ -1412,7 +1412,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var dim  = node.getData('dim'),
           npos = this.getAlignedPos(node.pos.getc(true), dim, dim),
           dim2 = dim/2;
-      this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
+      return this.nodeHelper.square.contains({x:npos.x+dim2, y:npos.y+dim2}, pos, dim2);
     }
   },
   'ellipse': {
@@ -1426,7 +1426,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var width = node.getData('width'),
           height = node.getData('height'),
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
+      return this.nodeHelper.ellipse.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
     }
   },
   'rectangle': {
@@ -1440,7 +1440,7 @@ $jit.ST.Plot.NodeTypes = new Class({
       var width = node.getData('width'),
           height = node.getData('height'),
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
-      this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
+      return this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
     }
   }
 });
@@ -1448,7 +1448,7 @@ $jit.ST.Plot.NodeTypes = new Class({
 /*
   Class: ST.Plot.EdgeTypes
 
-  This class contains a list of <Graph.Adjacence> built-in types. 
+  This class contains a list of <Graph.Adjacence> built-in types.
   Edge types implemented are 'none', 'line', 'arrow', 'quadratic:begin', 'quadratic:end', 'bezier'.
 
   You can add your custom edge types, customizing your visualization to the extreme.
@@ -1475,7 +1475,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
     'line': {
       'render': function(adj, canvas) {
         var orn = this.getOrientation(adj),
-            nodeFrom = adj.nodeFrom, 
+            nodeFrom = adj.nodeFrom,
             nodeTo = adj.nodeTo,
             rel = nodeFrom._depth < nodeTo._depth,
             from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
@@ -1484,7 +1484,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
       },
       'contains': function(adj, pos) {
         var orn = this.getOrientation(adj),
-            nodeFrom = adj.nodeFrom, 
+            nodeFrom = adj.nodeFrom,
             nodeTo = adj.nodeTo,
             rel = nodeFrom._depth < nodeTo._depth,
             from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
@@ -1495,7 +1495,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
      'arrow': {
        'render': function(adj, canvas) {
          var orn = this.getOrientation(adj),
-             node = adj.nodeFrom, 
+             node = adj.nodeFrom,
              child = adj.nodeTo,
              rel = (node._depth < child._depth),
              dim = adj.getData('dim'),
@@ -1507,7 +1507,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
        },
        'contains': function(adj, pos) {
          var orn = this.getOrientation(adj),
-             nodeFrom = adj.nodeFrom, 
+             nodeFrom = adj.nodeFrom,
              nodeTo = adj.nodeTo,
              rel = nodeFrom._depth < nodeTo._depth,
              from = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
@@ -1518,7 +1518,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
     'quadratic:begin': {
        'render': function(adj, canvas) {
           var orn = this.getOrientation(adj);
-          var nodeFrom = adj.nodeFrom, 
+          var nodeFrom = adj.nodeFrom,
               nodeTo = adj.nodeTo,
               rel = nodeFrom._depth < nodeTo._depth,
               begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
@@ -1547,7 +1547,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
     'quadratic:end': {
        'render': function(adj, canvas) {
           var orn = this.getOrientation(adj);
-          var nodeFrom = adj.nodeFrom, 
+          var nodeFrom = adj.nodeFrom,
               nodeTo = adj.nodeTo,
               rel = nodeFrom._depth < nodeTo._depth,
               begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
@@ -1576,7 +1576,7 @@ $jit.ST.Plot.EdgeTypes = new Class({
     'bezier': {
        'render': function(adj, canvas) {
          var orn = this.getOrientation(adj),
-             nodeFrom = adj.nodeFrom, 
+             nodeFrom = adj.nodeFrom,
              nodeTo = adj.nodeTo,
              rel = nodeFrom._depth < nodeTo._depth,
              begin = this.viz.geom.getEdge(rel? nodeFrom:nodeTo, 'begin', orn),
