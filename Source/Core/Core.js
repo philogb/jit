@@ -5,9 +5,9 @@
 
 /*
  Object: $jit
- 
- Defines the namespace for all library Classes and Objects. 
- This variable is the *only* global variable defined in the Toolkit. 
+
+ Defines the namespace for all library Classes and Objects.
+ This variable is the *only* global variable defined in the Toolkit.
  There are also other interesting properties attached to this variable described below.
  */
 this.$jit = function(w) {
@@ -22,9 +22,9 @@ this.$jit = function(w) {
 $jit.version = '2.0.1';
 /*
   Object: $jit.id
-  
+
   Works just like *document.getElementById*
-  
+
   Example:
   (start code js)
   var element = $jit.id('elementId');
@@ -34,17 +34,17 @@ $jit.version = '2.0.1';
 
 /*
  Object: $jit.util
- 
+
  Contains utility functions.
- 
- Some of the utility functions and the Class system were based in the MooTools Framework 
- <http://mootools.net>. Copyright (c) 2006-2010 Valerio Proietti, <http://mad4milk.net/>. 
+
+ Some of the utility functions and the Class system were based in the MooTools Framework
+ <http://mootools.net>. Copyright (c) 2006-2010 Valerio Proietti, <http://mad4milk.net/>.
  MIT license <http://mootools.net/license.txt>.
- 
+
  These methods are generally also implemented in DOM manipulation frameworks like JQuery, MooTools and Prototype.
- I'd suggest you to use the functions from those libraries instead of using these, since their functions 
+ I'd suggest you to use the functions from those libraries instead of using these, since their functions
  are widely used and tested in many different platforms/browsers. Use these functions only if you have to.
- 
+
  */
 var $ = function(d) {
   return document.getElementById(d);
@@ -55,14 +55,14 @@ $.empty = function() {
 
 /*
   Method: extend
-  
+
   Augment an object by appending another object's properties.
-  
+
   Parameters:
-  
+
   original - (object) The object to be extended.
   extended - (object) An object which properties are going to be appended to the original object.
-  
+
   Example:
   (start code js)
   $jit.util.extend({ 'a': 1, 'b': 2 }, { 'b': 3, 'c': 4 }); //{ 'a':1, 'b': 3, 'c': 4 }
@@ -86,13 +86,13 @@ $.time = Date.now || function() {
 
 /*
   Method: splat
-  
+
   Returns an array wrapping *obj* if *obj* is not an array. Returns *obj* otherwise.
-  
+
   Parameters:
-  
+
   obj - (mixed) The object to be wrapped in an array.
-  
+
   Example:
   (start code js)
   $jit.util.splat(3);   //[3]
@@ -114,14 +114,14 @@ $.type.s = Object.prototype.toString;
 
 /*
   Method: each
-  
+
   Iterates through an iterable applying *f*.
-  
+
   Parameters:
-  
+
   iterable - (array) The original array.
   fn - (function) The function to apply to the array elements.
-  
+
   Example:
   (start code js)
   $jit.util.each([3, 4, 5], function(n) { alert('number ' + n); });
@@ -139,7 +139,7 @@ $.each = function(iterable, fn) {
 };
 
 $.indexOf = function(array, item) {
-  if(Array.indexOf) return array.indexOf(item);
+  if(array.indexOf) return array.indexOf(item);
   for(var i=0,l=array.length; i<l; i++) {
     if(array[i] === item) return i;
   }
@@ -148,14 +148,14 @@ $.indexOf = function(array, item) {
 
 /*
   Method: map
-  
+
   Maps or collects an array by applying *f*.
-  
+
   Parameters:
-  
+
   array - (array) The original array.
   f - (function) The function to apply to the array elements.
-  
+
   Example:
   (start code js)
   $jit.util.map([3, 4, 5], function(n) { return n*n; }); //[9, 16, 25]
@@ -171,15 +171,15 @@ $.map = function(array, f) {
 
 /*
   Method: reduce
-  
+
   Iteratively applies the binary function *f* storing the result in an accumulator.
-  
+
   Parameters:
-  
+
   array - (array) The original array.
   f - (function) The function to apply to the array elements.
   opt - (optional|mixed) The starting value for the acumulator.
-  
+
   Example:
   (start code js)
   $jit.util.reduce([3, 4, 5], function(x, y) { return x + y; }, 0); //12
@@ -197,13 +197,13 @@ $.reduce = function(array, f, opt) {
 
 /*
   Method: merge
-  
+
   Merges n-objects and their sub-objects creating a new, fresh object.
-  
+
   Parameters:
-  
+
   An arbitrary number of objects.
-  
+
   Example:
   (start code js)
   $jit.util.merge({ 'a': 1, 'b': 2 }, { 'b': 3, 'c': 4 }); //{ 'a':1, 'b': 3, 'c': 4 }
@@ -256,13 +256,13 @@ $.zip = function() {
 
 /*
   Method: rgbToHex
-  
+
   Converts an RGB array into a Hex string.
-  
+
   Parameters:
-  
+
   srcArray - (array) An array with R, G and B values
-  
+
   Example:
   (start code js)
   $jit.util.rgbToHex([255, 255, 255]); //'#ffffff'
@@ -283,13 +283,13 @@ $.rgbToHex = function(srcArray, array) {
 
 /*
   Method: hexToRgb
-  
+
   Converts an Hex color string into an RGB array.
-  
+
   Parameters:
-  
+
   hex - (string) A color hex string.
-  
+
   Example:
   (start code js)
   $jit.util.hexToRgb('#fff'); //[255, 255, 255]
@@ -331,15 +331,15 @@ $.clean = function(elem) {
 
 /*
   Method: addEvent
-  
+
   Cross-browser add event listener.
-  
+
   Parameters:
-  
+
   obj - (obj) The Element to attach the listener to.
   type - (string) The listener type. For example 'click', or 'mousemove'.
   fn - (function) The callback function to be used when the event is fired.
-  
+
   Example:
   (start code js)
   $jit.util.addEvent(elem, 'click', function(){ alert('hello'); });
@@ -544,19 +544,19 @@ $jit.Class = Class;
 
 /*
   Object: $jit.json
-  
+
   Provides JSON utility functions.
-  
+
   Most of these functions are JSON-tree traversal and manipulation functions.
 */
 $jit.json = {
   /*
      Method: prune
-  
+
      Clears all tree nodes having depth greater than maxLevel.
-  
+
      Parameters:
-  
+
         tree - (object) A JSON tree object. For more information please see <Loader.loadJSON>.
         maxLevel - (number) An integer specifying the maximum level allowed for this tree. All nodes having depth greater than max level will be deleted.
 
@@ -571,18 +571,18 @@ $jit.json = {
   },
   /*
      Method: getParent
-  
+
      Returns the parent node of the node having _id_ as id.
-  
+
      Parameters:
-  
+
         tree - (object) A JSON tree object. See also <Loader.loadJSON>.
         id - (string) The _id_ of the child node whose parent will be returned.
 
     Returns:
 
         A tree JSON node if any, or false otherwise.
-  
+
   */
   getParent: function(tree, id) {
     if (tree.id == id)
@@ -603,16 +603,16 @@ $jit.json = {
   },
   /*
      Method: getSubtree
-  
+
      Returns the subtree that matches the given id.
-  
+
      Parameters:
-  
+
         tree - (object) A JSON tree object. See also <Loader.loadJSON>.
         id - (string) A node *unique* identifier.
-  
+
      Returns:
-  
+
         A subtree having a root node matching the given id. Returns null if no subtree matching the id is found.
 
   */
@@ -628,16 +628,16 @@ $jit.json = {
   },
   /*
      Method: eachLevel
-  
+
       Iterates on tree nodes with relative depth less or equal than a specified level.
-  
+
      Parameters:
-  
+
         tree - (object) A JSON tree or subtree. See also <Loader.loadJSON>.
         initLevel - (number) An integer specifying the initial relative level. Usually zero.
         toLevel - (number) An integer specifying a top level. This method will iterate only through nodes with depth less than or equal this number.
         action - (function) A function that receives a node and an integer specifying the actual level of the node.
-          
+
     Example:
    (start code js)
      $jit.json.eachLevel(tree, 0, 3, function(node, depth) {
@@ -656,11 +656,11 @@ $jit.json = {
   },
   /*
      Method: each
-  
+
       A JSON tree iterator.
-  
+
      Parameters:
-  
+
         tree - (object) A JSON tree or subtree. See also <Loader.loadJSON>.
         action - (function) A function that receives a node.
 
@@ -670,7 +670,7 @@ $jit.json = {
         alert(node.name);
       });
     (end code)
-          
+
   */
   each: function(tree, action) {
     this.eachLevel(tree, 0, Number.MAX_VALUE, action);
