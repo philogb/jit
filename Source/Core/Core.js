@@ -139,7 +139,7 @@ $.each = function(iterable, fn) {
 };
 
 $.indexOf = function(array, item) {
-  if(Array.indexOf) return array.indexOf(item);
+  if(array.indexOf) return array.indexOf(item);
   for(var i=0,l=array.length; i<l; i++) {
     if(array[i] === item) return i;
   }
