@@ -108,6 +108,7 @@ $.type = function(elem) {
   var type = $.type.s.call(elem).match(/^\[object\s(.*)\]$/)[1].toLowerCase();
   if(type != 'object') return type;
   if(elem && elem.$$family) return elem.$$family;
+  if(elem && elem.nodeType == 9) return 'htmldocument';
   return (elem && elem.nodeName && elem.nodeType == 1)? 'element' : type;
 };
 $.type.s = Object.prototype.toString;
