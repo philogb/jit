@@ -581,8 +581,9 @@ $jit.RGraph.$extend = true;
             to = adj.nodeTo.pos.getc(true),
             dim = adj.getData('dim'),
             direction = adj.data.$direction,
-            inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id);
-        this.edgeHelper.arrow.render(from, to, dim, inv, canvas);
+            inv = (direction && direction.length>1 && direction[0] != adj.nodeFrom.id),
+            arrowPosition = this.edge.arrowPosition || 'end';
+        this.edgeHelper.arrow.render(from, to, dim, inv, canvas, arrowPosition);
       },
       'contains': function(adj, pos) {
         var from = adj.nodeFrom.pos.getc(true),
