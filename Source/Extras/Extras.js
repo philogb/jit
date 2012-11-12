@@ -739,6 +739,8 @@ Extras.Classes.Navigation = new Class({
   
   onMouseDown: function(e, win, eventInfo) {
     if(!this.config.panning) return;
+    e.preventDefault();
+    $.addClass(this.canvas.getElement(), 'grabbing');
     if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : eventInfo.getNode())) return;
     this.pressed = true;
     this.pos = eventInfo.getPos();
@@ -776,6 +778,7 @@ Extras.Classes.Navigation = new Class({
   
   onMouseUp: function(e, win, eventInfo, isRightClick) {
     if(!this.config.panning) return;
+    $.removeClass(this.canvas.getElement(), 'grabbing');
     this.pressed = false;
   }
 });
