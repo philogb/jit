@@ -462,6 +462,12 @@ Graph.Op = {
                             adj.setData('alpha', 1);
                             adj.setData('alpha', 1, 'start');
                             adj.setData('alpha', 0, 'end');
+                            adj._hiding = true;
+                        } else if (adj.data.$direction && adj.data.$direction[0] === nodeFrom.id) {
+                            // only check one direction (from -> to)
+                            if (!nodeFrom.adjacentWithDirectionTo(nodeTo)) {
+                                adj._reversing = true;
+                            }
                         }
                     });
                 }); 
@@ -487,6 +493,8 @@ Graph.Op = {
                 } else {
                   viz.compute('end');
                 }
+                this._updateDirectedEdges();
+
                 viz.graph.eachNode(function(elem) {
                     if (elem.id != root && elem.pos.getp().equals(Polar.KER)) {
                       elem.pos.set(elem.endPos); elem.startPos.set(elem.endPos);
@@ -512,6 +520,36 @@ Graph.Op = {
         }
     },
 
+    _updateDirectedEdges: function () {
+        var graph = this.viz.graph;
+        graph.eachNode(function(node) {
+            node.eachAdjacency(function (adj) {
+
+                var isDirectedEdge = adj.data.$direction;
+                if (isDirectedEdge && adj.nodeFrom.id !== adj.data.$direction[0]) {
+                    return;
+                }
+
+                if (adj._hiding) {
+                    graph.removeAdjacence(adj.nodeFrom.id, adj.nodeTo.id);
+                }
+
+                if (adj._reversing) {
+                    var from = adj.nodeFrom.id;
+                    var to = adj.nodeTo.id;
+//
+//                    // swap instead of adding and removing
+                    var edge1 = graph.edges[from][to];
+                    var edge2 = graph.edges[to][from];
+
+                    edge1.data.$direction = [to, from];
+                    edge2.data.$direction = [to, from];
+
+                    adj._reversing = undefined;
+                }
+            });
+        });
+    },
     
   /*
     Method: contract
