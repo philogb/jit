@@ -71,7 +71,7 @@ Graph.Op = {
             
             case 'replot':
                 this.removeNode(n, { type: 'nothing' });
-                viz.labels.clearLabels();
+                viz.labels.clearLabels ? viz.labels.clearLabels() : false;
                 viz.refresh(true);
                 break;
             
@@ -86,7 +86,7 @@ Graph.Op = {
                     modes: ['node-property:alpha'],
                     onComplete: function() {
                         that.removeNode(n, { type: 'nothing' });
-                        viz.labels.clearLabels();
+                        viz.labels.clearLabels ? viz.labels.clearLabels() : false;
                         viz.reposition();
                         viz.fx.animate($.merge(options, {
                             modes: ['linear']
@@ -117,7 +117,7 @@ Graph.Op = {
                 that = this;
                 viz.fx.sequence({
                     condition: function() { return n.length != 0; },
-                    step: function() { that.removeNode(n.shift(), { type: 'nothing' });  viz.labels.clearLabels(); },
+                    step: function () { that.removeNode(n.shift(), { type: 'nothing' }); viz.labels.clearLabels ? viz.labels.clearLabels() : false; },
                     onComplete: function() { options.onComplete && options.onComplete(); },
                     duration: Math.ceil(options.duration / n.length)
                 });
