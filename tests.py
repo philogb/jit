@@ -128,7 +128,22 @@ tests_model = {
             """,
             'Extras': ['excanvas.js'],
             'Example':False
-        }         
+        },
+        {
+            'Title': 'Test Morph Advanced Operations',
+            'Description': 
+            """
+            Testing morph operations on a directed Graph, where edges are change direction.
+            The edges' direction should be taken into considered when traversing the Graph 
+			I.E., the BFS search should NOT follow a removed edge or a reveresed edges (one that 
+            changes direction in the morph).
+            Running the tests: for each example, load the example clicking the 'Load' button followed 
+            by clicking the 'Run' button.
+            
+            """,
+            'Extras': ['excanvas.js'],
+            'Example':False
+        }
     ],
 
     
