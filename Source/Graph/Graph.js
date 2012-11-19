@@ -738,6 +738,30 @@ Graph.Node = new Class({
     },
 
     /*
+     Method: adjacentWithDirectionTo
+
+     Indicates if the node has a directed edge to the node specified by id
+
+     Parameters:
+
+     id - (string) A node id.
+
+     Example:
+     (start code js)
+     node.adjacentWithDirectionTo('nodeId') == true;
+     (end code)
+     */
+    adjacentWithDirectionTo: function(node) {
+        var areNeighbors = node.id in this.adjacencies;
+        if (!areNeighbors) {
+            return false;
+        }
+
+        var direction = this.adjacencies[node.id].data.$direction;
+        return direction[0] === this.id ;
+    },
+
+    /*
        Method: getAdjacency
     
        Returns a <Graph.Adjacence> object connecting the current <Graph.Node> and the node having *id* as id.
@@ -1033,7 +1057,7 @@ Graph.Util = {
             node._flag = true;
             this.eachAdjacency(node, function(adj) {
                 var n = adj.nodeTo;
-                if(n._flag == false && filter(n)) {
+                if(n._flag == false && filter(n) && !adj._hiding) {
                     if(n._depth < 0) n._depth = node._depth + 1 + startDepth;
                     queue.unshift(n);
                 }
@@ -1078,7 +1102,7 @@ Graph.Util = {
             action(node, node._depth);
             this.eachAdjacency(node, function(adj) {
                 var n = adj.nodeTo;
-                if(n._flag == false && filter(n)) {
+                if(n._flag == false && filter(n) && !adj._hiding) {
                     n._flag = true;
                     queue.unshift(n);
                 }
