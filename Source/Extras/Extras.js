@@ -741,7 +741,7 @@ Extras.Classes.Navigation = new Class({
     if(!this.config.panning) return;
     e.preventDefault();
     $.addClass(this.canvas.getElement(), 'grabbing');
-    if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : eventInfo.getNode())) return;
+    if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : (eventInfo.getNode() || eventInfo.getEdge()))) return;
     this.pressed = true;
     this.pos = eventInfo.getPos();
     var canvas = this.canvas,
