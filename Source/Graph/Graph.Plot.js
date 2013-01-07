@@ -475,6 +475,10 @@ Graph.Plot = {
       (end code)    
    */
    nodeFx: function(opt) {
+     if (this.nodeFxAnimation == undefined) {
+       this.nodeFxAnimation = new Animation();
+     }
+
      var viz = this.viz,
          graph  = viz.graph,
          animation = this.nodeFxAnimation,
