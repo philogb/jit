@@ -493,7 +493,7 @@ Layouts.TM.Strip = new Class({
      var width = totalArea / w || 0, top =  0;
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i];
-       var h = chi._area / width;
+       var h = chi._area / width || 0;
        chi.getPos(prop).setc(coord.left, 
            coord.top + (w - h - top));
        chi.setData('width', width, prop);
@@ -519,7 +519,7 @@ Layouts.TM.Strip = new Class({
      
      for(var i=0, l=ch.length; i<l; i++) {
        var chi = ch[i];
-       var s = chi._area / height;
+       var s = chi._area / height || 0;
        chi.getPos(prop).setc(coord.left + left, coord.top + top);
        chi.setData('width', s, prop);
        chi.setData('height', height, prop);
