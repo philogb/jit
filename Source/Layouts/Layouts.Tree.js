@@ -1,16 +1,16 @@
 /*
  * Class: Layouts.Tree
- * 
+ *
  * Implements a Tree Layout.
- * 
+ *
  * Implemented By:
- * 
+ *
  * <ST>
- * 
+ *
  * Inspired by:
- * 
+ *
  * Drawing Trees (Andrew J. Kennedy) <http://research.microsoft.com/en-us/um/people/akenn/fun/drawingtrees.pdf>
- * 
+ *
  */
 Layouts.Tree = (function() {
   //Layout functions
@@ -18,7 +18,7 @@ Layouts.Tree = (function() {
 
   /*
      Calculates the max width and height nodes for a tree level
-  */  
+  */
   function getBoundaries(graph, config, level, orn, prop) {
     var dim = config.Node;
     var multitree = config.multitree;
@@ -156,8 +156,14 @@ Layouts.Tree = (function() {
             if (n.exist
                 && (!multitree || ('$orn' in n.data) && n.data.$orn == orn)) {
 
-              if (!chmaxsize)
-                chmaxsize = getBoundaries(graph, config, n._depth, orn, prop);
+              if (config.levelSpacing == 'even') {
+                if (!chmaxsize) {
+                  chmaxsize = getBoundaries(graph, config, n._depth, orn, prop);
+                }
+              } else {
+                chmaxsize = { width: n.getData('width'), height: n.getData('height') };
+              }
+
 
               var s = $design(n, chmaxsize[nots], acum + chacum);
               trees.push(s.tree);
@@ -192,7 +198,7 @@ Layouts.Tree = (function() {
   return new Class({
     /*
     Method: compute
-    
+
     Computes nodes' positions.
 
      */
@@ -208,7 +214,7 @@ Layouts.Tree = (function() {
       if (!!computeLevels || !("_depth" in node)) {
         this.graph.computeLevels(this.root, 0, "ignore");
       }
-      
+
       this.computePositions(node, prop);
     },
 
@@ -241,5 +247,5 @@ Layouts.Tree = (function() {
         });
     }
   });
-  
+
 })();
