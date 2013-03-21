@@ -1268,6 +1268,10 @@ $jit.ST.Label.DOM = new Class({
             sy = canvas.scaleOffsetY,
             posx = pos.x * sx + ox,
             posy = pos.y * sy + oy;
+        
+        // Scale node width/height
+        w = w * sx;
+        h = h * sy;
 
         if(dim.align == "center") {
             labelPos= {
