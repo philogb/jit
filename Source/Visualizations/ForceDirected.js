@@ -183,6 +183,34 @@ $jit.ForceDirected = new Class( {
   },
 
   /*
+    Method: computePrefuse
+  
+    Exactly the same as computeIncremental except it applies the Prefuse
+    Force Directed algorithm ((http://prefuse.cvs.sourceforge.net/) as opposed
+    to the default JIT algorithm making it better suited for larger graphs (200+ nodes).
+    Best results are obtained using Chrome, Safari or Opera. Firefox and IE 9+ only
+    provide marginal speed improvement (presumably due to inefficiencies in their
+    Javascript engines).
+    
+    Regarding the algorithm, the code is a Javascript port of the key classes of the 
+    Prefuse Java distribution, namely NBodyForce.java, SpringForce.java, DragForce.java, 
+    RungeKuttaIntegrator.java, ForceSimulator.java, Spring.java, ForceItem.java.
+
+	This method should be treated as experimental.
+  */  
+  computePrefuse: function(opt) {
+    opt = $.merge( {
+      iter: 20,
+      property: 'end',
+      onStep: $.empty,
+      onComplete: $.empty
+    }, opt || {});
+
+    this.config.onBeforeCompute(this.graph.getNode(this.root));
+    this.computeFast(opt.property, opt);
+  },
+
+  /*
     Method: plot
    
     Plots the ForceDirected graph. This is a shortcut to *fx.plot*.
