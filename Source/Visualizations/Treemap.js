@@ -696,8 +696,8 @@ TM.Label.HTML = new Class( {
     var style = tag.style;
     style.left = labelPos.x + 'px';
     style.top = labelPos.y + 'px';
-    style.width = node.getData('width') * sx + 'px';
-    style.height = node.getData('height') * sy + 'px';
+    style.width = Math.max(0, node.getData('width') * sx) + 'px';
+    style.height = Math.max(0, node.getData('height') * sy) + 'px';
     style.zIndex = node._depth * 100;
     style.display = '';
 
