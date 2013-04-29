@@ -299,8 +299,8 @@ $jit.ST= (function() {
             this.compute('end');
             if (this.clickedNode) {
               var offset = {
-                  x: this.config.offsetX || 0,
-                  y: this.config.offsetY || 0
+                  x: this.canvas.translateOffsetX + this.config.offsetX || 0, 
+                  y: this.canvas.translateOffsetY + this.config.offsetY || 0
               };
               this.geom.translate(this.clickedNode.endPos.add(offset).$scale(-1), 'end');
             }
@@ -604,8 +604,8 @@ $jit.ST= (function() {
         var innerController = {
             Move: {
         	    enable: true,
-              offsetX: config.offsetX || 0,
-              offsetY: config.offsetY || 0
+              offsetX: canvas.translateOffsetX + config.offsetX || 0,
+              offsetY: canvas.translateOffsetY + config.offsetY || 0
             },
             setRightLevelToShowConfig: false,
             onBeforeRequest: $.empty,
