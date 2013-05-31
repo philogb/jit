@@ -90,5 +90,6 @@ Options.Events = {
   onTouchStart: $.empty,
   onTouchMove: $.empty,
   onTouchEnd: $.empty,
+  onTouchCancel: $.empty,
   onMouseWheel: $.empty
 };
