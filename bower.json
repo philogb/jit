@@ -1,6 +1,6 @@
 {
   "name": "Javascript InfoVis Toolkit",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "The JavaScript InfoVis Toolkit provides tools for creating Interactive Data Visualizations for the Web.",
   "keywords": [
     "dom",
@@ -18,13 +18,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/philogb/jit.git"
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
-  "scripts": {
-    "test": "node_modules/.bin/vows"
   },
   "licenses": [
     {
