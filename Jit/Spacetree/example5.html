@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Spacetree - Style Animations</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/base.css" rel="stylesheet" />
+<link type="text/css" href="../css/Spacetree.css" rel="stylesheet" />
+
+<!--[if IE]><script language="javascript" type="text/javascript" src="../../Extras/excanvas.js"></script><![endif]-->
+
+<!-- JIT Library File -->
+<script language="javascript" type="text/javascript" src="../../jit.js"></script>
+
+<!-- Example File -->
+<script language="javascript" type="text/javascript" src="example5.js"></script>
+</head>
+
+<body onload="init();">
+<div id="container">
+
+<div id="left-container">
+
+
+
+<div class="text">
+<h4>
+Style Animations    
+</h4> 
+
+            This Advanced Example shows how Node, Edge, Label and Canvas specific style animations can be triggered for this 
+            visualization.<br /><br />
+            <b>Select</b> the styles to be animated in the right column and hit the <em>Morph Styles</em> button. This will 
+            set random values for these properties and animate them.<br /><br />
+            Click on <em>Restore Styles</em> to set the default styles.<br /><br />
+            Other styles like alpha and shadows can also be triggered.<br /><br />
+            This example also implements a custom node rendering function for Stroke + Fill rectangles.
+            
+</div>
+
+<div id="id-list"></div>
+
+
+<div style="text-align:center;"><a href="example5.js">See the Example Code</a></div>            
+</div>
+
+<div id="center-container">
+    <div id="infovis"></div>    
+</div>
+
+<div id="right-container">
+
+<h4>Actions</h4>
+<a id="update" href="#" class="theme button white">Morph Styles</a>
+<a id="restore" href="#" class="theme button white">Restore Styles</a>
+
+<h4>Node Styles</h4>
+<table>
+    <tr>
+        <td>
+            <label for="r-left">Width </label>
+        </td>
+        <td>
+            <input type="checkbox" id="n-width" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="r-left">Height </label>
+        </td>
+        <td>
+            <input type="checkbox" id="n-height" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="r-left">Color </label>
+        </td>
+        <td>
+            <input type="checkbox" id="n-color" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="r-left">Border Color </label>
+        </td>
+        <td>
+            <input type="checkbox" id="n-border-color" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="r-left">Border Width </label>
+        </td>
+        <td>
+            <input type="checkbox" id="n-border-width" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Select All" id="select-all-nodes" />    
+        </td>
+        <td>
+            <input type="button" value="Select None" id="select-none-nodes" />
+        </td>
+    </tr>
+</table>
+
+<h4>Edge Styles</h4>
+<table>
+    <tr>
+        <td>
+            <label for="r-left">Line Width </label>
+        </td>
+        <td>
+            <input type="checkbox" id="e-line-width" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="r-left">Line Color </label>
+        </td>
+        <td>
+            <input type="checkbox" id="e-line-color" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Select All" id="select-all-edges" />    
+        </td>
+        <td>
+            <input type="button" value="Select None" id="select-none-edges" />
+        </td>
+    </tr>
+</table>
+
+<h4>Label Styles</h4>
+<table>
+    <tr>
+        <td>
+            <label for="r-left">Font Size </label>
+        </td>
+        <td>
+            <input type="checkbox" id="l-font-size" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="r-left">Font Color </label>
+        </td>
+        <td>
+            <input type="checkbox" id="l-font-color" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="button" value="Select All" id="select-all-labels" />    
+        </td>
+        <td>
+            <input type="button" value="Select None" id="select-none-labels" />
+        </td>
+    </tr>
+</table>
+
+
+</div>
+
+<div id="log"></div>
+</div>
+</body>
+</html>

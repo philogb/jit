@@ -390,6 +390,12 @@
         "Spacetree"
     ],
 
+    "StreamChart": [
+        "Options.AreaChart",
+        "Options.Margin",
+        "Spacetree"
+    ],
+
     "PieChart": [
         "Options.PieChart",
         "Sunburst"
@@ -400,7 +406,7 @@
         "Options.Margin",
         "Spacetree"
     ],
-    
+
     "Voronoi": [
         "Core",
         "Canvas",

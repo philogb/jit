@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Spacetree - MultiTree</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/base.css" rel="stylesheet" />
+<link type="text/css" href="../css/Spacetree.css" rel="stylesheet" />
+
+<!--[if IE]><script language="javascript" type="text/javascript" src="../../Extras/excanvas.js"></script><![endif]-->
+
+<!-- JIT Library File -->
+<script language="javascript" type="text/javascript" src="../../jit.js"></script>
+
+<!-- Example File -->
+<script language="javascript" type="text/javascript" src="example4.js"></script>
+</head>
+
+<body onload="init();">
+<div id="container">
+
+<div id="left-container">
+
+
+
+<div class="text">
+<h4>
+MultiTree    
+</h4> 
+
+            A static JSON Tree structure is used as input for this animation.<br /><br />
+            By setting the specific orientation for nodes we can create a multitree structure.<br /><br />
+            Nodes and Edges are styled with canvas specific styles like shadows.<br /><br />
+            <b>Click</b> on a node to select it.<br /><br />
+            You can <b>change the selection mode</b> from <em>Normal</em> selection (i.e. center the selected node) to 
+            <em>Set as Root</em>.
+            
+</div>
+
+<div id="id-list"></div>
+
+
+<div style="text-align:center;"><a href="example4.js">See the Example Code</a></div>            
+</div>
+
+<div id="center-container">
+    <div id="infovis"></div>    
+</div>
+
+<div id="right-container">
+
+<h4>Selection Mode</h4>
+<table>
+    <tr>
+        <td>
+            <label for="s-normal">Normal </label>
+        </td>
+        <td>
+            <input type="radio" id="s-normal" name="selection" value="normal" />
+        </td>
+    </tr>
+    <tr>
+         <td>
+            <label for="s-root">Set as Root </label>
+         </td>
+         <td>
+            <input type="radio" id="s-root" name="selection" checked="checked" value="root" />
+         </td>
+    </tr>
+</table>
+
+</div>
+
+<div id="log"></div>
+</div>
+</body>
+</html>

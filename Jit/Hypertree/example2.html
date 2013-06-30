@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Hypertree - Weighted Graph Animation</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="../css/base.css" rel="stylesheet" />
+<link type="text/css" href="../css/Hypertree.css" rel="stylesheet" />
+
+<!--[if IE]><script language="javascript" type="text/javascript" src="../../Extras/excanvas.js"></script><![endif]-->
+
+<!-- JIT Library File -->
+<script language="javascript" type="text/javascript" src="../../jit.js"></script>
+
+<!-- Example File -->
+<script language="javascript" type="text/javascript" src="example2.js"></script>
+</head>
+
+<body onload="init();">
+<div id="container">
+
+<div id="left-container">
+
+
+
+        <div class="text">
+        <h4>
+Weighted Graph Animation    
+        </h4> 
+
+            A static JSON graph structure is used for this animation.<br /><br />
+            For each JSON node the "$type" and "$dim" parameters set the type of node to be plotted and its dimensions.<br /><br />
+            Line weights are added programmatically, <em>onBeforePlotLine</em>.<br /><br />
+            A <b>Back</b> transition is used instead of the linear transition for the animation.
+            
+        </div>
+
+        <div id="id-list"></div>
+
+
+<div style="text-align:center;"><a href="example2.js">See the Example Code</a></div>            
+</div>
+
+<div id="center-container">
+    <div id="infovis"></div>    
+</div>
+
+<div id="right-container">
+
+<div id="inner-details"></div>
+
+</div>
+
+<div id="log"></div>
+</div>
+</body>
+</html>

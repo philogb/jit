@@ -1,0 +1,35 @@
+{
+  "name": "Javascript InfoVis Toolkit",
+  "version": "2.0.1",
+  "description": "The JavaScript InfoVis Toolkit provides tools for creating Interactive Data Visualizations for the Web.",
+  "keywords": [
+    "dom",
+    "w3c",
+    "visualization",
+    "canvas",
+    "animation"
+  ],
+  "main": "Jit/jit-yc.js",
+  "homepage": "http://thejit.org",
+  "author": {
+    "name": "Nicolas Garcia Belmonte",
+    "url": "http://philogb.github.io/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philogb/jit.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "test": "node_modules/.bin/vows"
+  },
+  "licenses": [
+    {
+      "type": "BSD",
+      "url": "https://github.com/mbostock/d3/blob/master/LICENSE"
+    }
+  ]
+}
