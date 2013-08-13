@@ -412,6 +412,25 @@ $.getPos = function(elem) {
   }
 };
 
+/*
+  Method: $.getDir
+
+  Get or compute the direction style (right-to-left or left-to-right) of an element (or document body by default if no element is provided). Returns the direction as a string "rtl" / "ltr".
+
+  Parameters:
+
+  elem - (optional) The element to check direction of (document.body if undefined).
+*/
+$.getDir = function(elem) {
+    var element = document.getElementById(elem) || document.body;
+    if (element.currentStyle)
+	var dir = element.currentStyle.direction;
+    else if (window.getComputedStyle)
+	var dir = document.defaultView.getComputedStyle(element, null)
+	              .getPropertyValue('direction');
+    return dir;
+};
+
 $.event = {
   get: function(e, win) {
     win = win || window;
