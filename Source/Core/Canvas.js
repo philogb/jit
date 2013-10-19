@@ -452,7 +452,7 @@ var Canvas;
           height = ps? (size.height - ps.height - this.translateOffsetY*2) : size.height;
       var ctx = this.getCtx();
       ps && ctx.scale(1/this.scaleOffsetX, 1/this.scaleOffsetY);
-      ctx.translate(width/2, height/2);
+//      ctx.translate(width/2, height/2);
     },
     resize: function(width, height) {
       var size = this.getSize(),
@@ -496,9 +496,13 @@ var Canvas;
           oy = this.translateOffsetY,
           sx = this.scaleOffsetX,
           sy = this.scaleOffsetY;
-      this.getCtx().clearRect((-size.width / 2 - ox) * 1/sx, 
+      /*this.getCtx().clearRect((-size.width / 2 - ox) * 1/sx, 
                               (-size.height / 2 - oy) * 1/sy, 
                               size.width * 1/sx, size.height * 1/sy);
+      */var x = (0 - ox) * 1/sx,
+         y = (0 - oy) * 1/sy;
+      this.getCtx().clearRect(x, y, 
+                              size.width * 1/sx + Math.abs(x), size.height * 1/sy + Math.abs(y));
     },
     plot: function() {
       this.clear();
