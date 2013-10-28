@@ -66,14 +66,14 @@ END {  print "}" }
 # 
 # 1. open a command window or terminal get to the folder/directory in which you wish to work 
 # 2. type a command as follows
-#	 awk -F "," -f tab2json.awk YOUR_INPUTFILE >> YOURDESIRED_outputfile.json
+#	 awk -F "," -f csv2json.awk YOUR_INPUTFILE >> YOURDESIRED_outputfile.json
 # 	e.g.
-# 	awk -F "," -f tab2json.awk hornwort.csv >> hornwarts.json
+# 	awk -F "," -f csv2json.awk hornwort.csv >> hornwarts.json
 #
 #
 # Example 1
 # --------------------------------------
-# awk -F "," -f tab2json.awk acacia.txt >> acacia.json
+# awk -F "," -f csv2json.awk acacia.txt >> acacia.json
 # takes ....
 #  
 # "scientificName","seed mass","Inflorescence colour","plant height","Phyllode length median","Inflorescence arrangement","Stipule length median","Inflorescence shape"," leaflet pairs 2nd leaf","range size","genome size","Phyllode arrangement","Pulvinus length median","first leaf pinnae pairs","section taxonomy"
@@ -117,7 +117,7 @@ END {  print "}" }
 #
 # Example 2
 # --------------------------------------
-# awk -F "," -f tab2json.awk hornwort.csv >> hornwarts.json
+# awk -F "," -f csv2json.awk hornwort.csv >> hornwarts.json
 #
 # takes...
 #
