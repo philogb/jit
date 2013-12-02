@@ -1,4 +1,4 @@
-JavaScript InfoVis Toolkit development 
+JavaScript InfoVis Toolkit devKIT
 =======================================
 
 The JavaScript InfoVis Toolkit provides tools for creating Interactive Data 
