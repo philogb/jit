@@ -1,10 +1,11 @@
 JavaScript InfoVis Toolkit devKIT
 =======================================
 
-The JavaScript InfoVis Toolkit provides tools for creating Interactive Data 
-Visualizations for the Web.
+Users who wish to implement PhyloJIVE should see https://github.com/TRIN/jit/tree/phylojive-test/examples/PhyloJive.
+This information is for Developers.
 
-This is the Dev project, users should download the project from http://thejit.org.
+The JavaScript InfoVis Toolkit provides tools for creating Interactive Data Visualizations for the Web.
+
 
 Useful links
 ------
