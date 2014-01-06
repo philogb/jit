@@ -343,7 +343,10 @@ layoutV: function(ch, w, coord, prop) {
    for(var i=0, l=ch.length; i<l; i++) {
      var h = rnd(ch[i]._area / width) || 0;
      var chi = ch[i];
-     chi.getPos(prop).setc(coord.left, coord.top + top);
+
+     var posx = $.getDir() === 'rtl' ? (-1 * coord.left)-width : coord.left;
+
+     chi.getPos(prop).setc(posx, coord.top + top);
      chi.setData('width', width, prop);
      chi.setData('height', h, prop);
      top += h;
@@ -370,7 +373,11 @@ layoutV: function(ch, w, coord, prop) {
    for(var i=0, l=ch.length; i<l; i++) {
      var chi = ch[i];
      var w = chi._area / height || 0;
-     chi.getPos(prop).setc(coord.left + left, top);
+
+     var posx = $.getDir() === 'rtl' ? 
+	   (-1 * (coord.left + left)) - w : coord.left + left;
+
+     chi.getPos(prop).setc(posx, top);
      chi.setData('width', w, prop);
      chi.setData('height', height, prop);
      left += w;
@@ -384,7 +391,29 @@ layoutV: function(ch, w, coord, prop) {
    ans.dim = Math.min(ans.width, ans.height);
    if(ans.dim != ans.width) this.layout.change();
    return ans;
+ },
+
+ /*
+    layoutLast
+ 
+   Performs the layout of the last computed sibling with respect to direction
+ 
+    Parameters:
+
+       ch - An array of nodes.  
+       w - A fixed dimension where nodes will be layed out.
+     coord - A coordinates object specifying width, height, left and top style properties (assumes ltr direction).
+ */
+ layoutLast: function(ch, w, coord, prop) {
+   var child = ch[0];
+
+   var posx = $.getDir() === 'rtl' ? -1*coord.left-coord.width: coord.left;
+
+   child.getPos(prop).setc(posx, coord.top);
+   child.setData('width', coord.width, prop);
+   child.setData('height', coord.height, prop);
  }
+
 });
 
 Layouts.TM.Strip = new Class({
