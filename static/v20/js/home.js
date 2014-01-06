@@ -21,7 +21,7 @@ window.addEvent('domready', function() {
                 'class': 'tag'
             });
             var alink = new Element('a', {
-              'href': 'demos/',
+              'href': 'demos.html',
               'title': 'Try the demos'
             });
             images[i++].inject(alink);
