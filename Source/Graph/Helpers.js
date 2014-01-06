@@ -23,7 +23,7 @@
  });
  //implement an edge type
  $jit.Viz.Plot.EdgeTypes.implement({
- 'customNodeType': {
+ 'customEdgeType': {
  'render': function(node, canvas) {
  this.edgeHelper.circle.render ...
  },
