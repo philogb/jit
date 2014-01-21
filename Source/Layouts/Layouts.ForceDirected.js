@@ -11,7 +11,7 @@
  *
  * Prefuse javascript written by Scott Yeadon at the Australian National University.
  */
- 
+
 /**
  * Class: QuadTreeNode
  *
@@ -21,7 +21,7 @@
  *
  * jeffrey heer <http://jheer.org">
  */
-QuadTreeNode = new Class({
+var QuadTreeNode = new Class({
 	com: [0.0, 0.0],
 	children: [null, null, null, null],
 	hasChildren: false,
@@ -39,14 +39,14 @@ QuadTreeNode = new Class({
  *
  * jeffrey heer <http://jheer.org">
  */
-QuadTreeNodeFactory = new Class({
+var QuadTreeNodeFactory = new Class({
 	maxNodes: 50000,
 	nodes: null,
-	
+
 	setup: function() {
 		this.nodes = new Array();
 	},
-	
+
 	getQuadTreeNode: function() {
 		if (this.nodes.length > 0)
 		{
@@ -57,7 +57,7 @@ QuadTreeNodeFactory = new Class({
 			return new QuadTreeNode();
 		}
 	},
-	
+
 	// n is a QuadTreeNode
 	reclaim: function(n){
 		n.mass = 0;
@@ -81,24 +81,24 @@ QuadTreeNodeFactory = new Class({
  * the the Barnes-Hut algorithm for efficient n-body force simulations,
  * using a quad-tree with aggregated mass values to compute the n-body
  * force in O(N log N) time, where N is the number of ForceItems.
- * 
+ *
  * The algorithm used is that of J. Barnes and P. Hut, in their research
- * paper A Hierarchical O(n log n) force calculation algorithm, Nature, 
+ * paper A Hierarchical O(n log n) force calculation algorithm, Nature,
  * v.324, December 1986. For more details on the algorithm, see one of
  *  the following links --
- * 
+ *
  *   James Demmel's UC Berkeley lecture notes:
  * <http://www.cs.berkeley.edu/~demmel/cs267/lecture26/lecture26.html>
  *   Description of the Barnes-Hut algorithm:
  * <http://www.physics.gmu.edu/~large/lr_forces/desc/bh/bhdesc.html>
  *   Joshua Barnes' recent implementation
  * <href="http://www.ifa.hawaii.edu/~barnes/treecode/treeguide.html">
- * 
+ *
  * Java source: <https://github.com/prefuse/Prefuse/blob/master/src/prefuse/util/force/NBodyForce.java>
  *
  * jeffrey heer <http://jheer.org">
  */
-NBodyForce = new Class({
+var NBodyForce = new Class({
 	pnames: ["GravitationalConstant", "Distance", "BarnesHutTheta" ],
 
 	DEFAULT_GRAV_CONSTANT: -1.0,
@@ -117,20 +117,20 @@ NBodyForce = new Class({
 	MIN_DISTANCE: 1,
 	BARNES_HUT_THETA: 2,
 
-	xMin: null, 
-	xMax: null, 
-	yMin: null, 
+	xMin: null,
+	xMax: null,
+	yMin: null,
 	yMax: null,
-	
+
 	params: null,
 	minValues: null,
 	maxValues: null,
-	
+
 	factory: null,
 	root: null,
-	
+
 	setup: function(){
-		this.params = [this.DEFAULT_GRAV_CONSTANT, this.DEFAULT_DISTANCE, this.DEFAULT_THETA]
+		this.params = [this.DEFAULT_GRAV_CONSTANT, this.DEFAULT_DISTANCE, this.DEFAULT_THETA];
 		this.minValues = [this.DEFAULT_MIN_GRAV_CONSTANT, this.DEFAULT_MIN_DISTANCE, this.DEFAULT_MIN_THETA];
 		this.maxValues = [this.DEFAULT_MAX_GRAV_CONSTANT, this.DEFAULT_MAX_DISTANCE, this.DEFAULT_MAX_THETA];
 
@@ -153,7 +153,7 @@ NBodyForce = new Class({
 		this.xMax = xMax;
 		this.yMax = yMax;
 	},
-	
+
 	insertHelper: function(p, n, x1, y1, x2, y2){
 		var x = p.location[0];
 		var y = p.location[1];
@@ -175,7 +175,7 @@ NBodyForce = new Class({
 		{
 			x2 = splitx;
 		}
-		
+
 		if (i > 1)
 		{
 			y1 = splity;
@@ -184,11 +184,11 @@ NBodyForce = new Class({
 		{
 			y2 = splity;
 		}
-		
+
 		// recurse
 		this.insert(p, n.children[i], x1, y1, x2, y2);
 	},
-	
+
 	isSameLocation: function(fItem1, fItem2){
 		var dx = Math.abs(fItem1.location[0]-fItem2.location[0]);
 		var dy = Math.abs(fItem1.location[1]-fItem2.location[1]);
@@ -215,7 +215,7 @@ NBodyForce = new Class({
 				var v = n.fItem;
 				n.fItem = null;
 				this.insertHelper(v, n, x1, y1, x2, y2);
-				this.insertHelper(p, n, x1, y1, x2, y2);			
+				this.insertHelper(p, n, x1, y1, x2, y2);
 			}
 		}
 		else // n is empty, so is a leaf
@@ -241,14 +241,14 @@ NBodyForce = new Class({
 				}
 			}
 		}
-		
+
 		if (n.fItem != null)
 		{
 			n.mass += n.fItem.mass;
 			xcom += n.fItem.mass * n.fItem.location[0];
 			ycom += n.fItem.mass * n.fItem.location[1];
 		}
-		
+
 		n.com[0] = xcom / n.mass;
 		n.com[1] = ycom / n.mass;
 	},
@@ -268,7 +268,7 @@ NBodyForce = new Class({
 		}
 		this.factory.reclaim(n);
 	},
-		
+
 	clear: function(){
 		this.clearHelper(this.root);
 		this.root = this.factory.getQuadTreeNode();
@@ -276,12 +276,12 @@ NBodyForce = new Class({
 
 	init: function(fSim){
 		this.clear();
-		
+
 		var x1 = Number.MAX_VALUE;
 		var y1 = Number.MAX_VALUE;
 		var x2 = Number.MIN_VALUE;
 		var y2 = Number.MIN_VALUE;
-		
+
 		for (var i = 0; i < fSim.items.length; i++)
 		{
 			var x = fSim.items[i].location[0];
@@ -315,17 +315,17 @@ NBodyForce = new Class({
 
  	/**
 	* Updates the force calculation on the given ForceItem.
- 	*/	
+ 	*/
 	getForce: function(fItem){
 		this.forceHelper(fItem, this.root, this.xMin, this.yMin, this.xMax, this.yMax);
 	},
-	
+
 	forceHelper: function(item, n, x1, y1, x2, y2){
 		var dx = n.com[0] - item.location[0];
 		var dy = n.com[1] - item.location[1];
 		var r = Math.sqrt(dx*dx+dy*dy);
 		var same = false;
-		
+
 		if (r == 0.0)
 		{
 			dx = (Math.random()-0.5) / 50.0;
@@ -333,9 +333,9 @@ NBodyForce = new Class({
 			r = Math.sqrt(dx*dx+dy*dy);
 			same = true;
 		}
-		
+
 		var minDist = this.params[this.MIN_DISTANCE] > 0 && r > this.params[this.MIN_DISTANCE];
-		
+
 		// the Barnes-Hut approximation criteria is if the ratio of the
 		// size of the quadtree box to the distance between the point and
 		// the box's center of mass is beneath some threshold theta.
@@ -361,12 +361,12 @@ NBodyForce = new Class({
  					this.forceHelper(item, n.children[i], (i==1||i==3?splitx:x1), (i>1?splity:y1), (i==1||i==3?x2:splitx), (i>1?y2:splity));
  				}
  			}
- 			
+
  			if (minDist)
  			{
  				return;
  			}
- 			
+
  			if (n.fItem != null && n.fItem != item)
  			{
  				var v = this.params[this.GRAVITATIONAL_CONST]*item.mass*n.fItem.mass / (r*r*r);
@@ -382,15 +382,15 @@ NBodyForce = new Class({
  *
  * Force function that computes the force acting on ForceItems due to a
  * given Spring.
- * 
- * Java source: 
+ *
+ * Java source:
 <https://github.com/prefuse/Prefuse/blob/master/src/prefuse/util/force/SpringForce.java>
  *
  * jeffrey heer <http://jheer.org">
  */
-SpringForce = new Class({
+var SpringForce = new Class({
 	pnames: ["SpringCoefficient", "DefaultSpringLength"],
-	
+
 	DEFAULT_SPRING_COEFF: 1e-4,
 	DEFAULT_MAX_SPRING_COEFF: 1e-3,
 	DEFAULT_MIN_SPRING_COEFF: 1e-5,
@@ -399,17 +399,17 @@ SpringForce = new Class({
 	DEFAULT_MAX_SPRING_LENGTH: 200,
 	SPRING_COEFF: 0,
 	SPRING_LENGTH: 1,
-	
+
 	params: null,
 	minValues: null,
 	maxValues: null,
-	
+
 	setup: function(){
 		this.params = [this.DEFAULT_SPRING_COEFF, this.DEFAULT_SPRING_LENGTH];
 		this.minValues = [this.DEFAULT_MIN_SPRING_COEFF, this.DEFAULT_MIN_SPRING_LENGTH];
 		this.maxValues = [this.DEFAULT_MAX_SPRING_COEFF, this.DEFAULT_MAX_SPRING_LENGTH];
 	},
-	
+
 	/**
 	* Calculates the force vector acting on the items due to the given spring.
 	* Updates the force calculation on the given Spring. The ForceItems attached to
@@ -440,7 +440,7 @@ SpringForce = new Class({
 		fItem2.force[0] += -coeff*dx;
 		fItem2.force[1] += -coeff*dy;
 	},
-	
+
 	init: function(){
 	}
 });
@@ -450,34 +450,34 @@ SpringForce = new Class({
  *
  * Implements a viscosity/drag force to help stabilize items.
  *
- * Java source: 
+ * Java source:
 <https://github.com/prefuse/Prefuse/blob/master/src/prefuse/util/force/DragForce.java>
- * 
+ *
  * jeffrey heer <http://jheer.org">
  */
-DragForce = new Class({
+var DragForce = new Class({
 	pnames: ["DragCoefficient"],
-	
+
 	DEFAULT_DRAG_COEFF: 0.01,
 	DEFAULT_MIN_DRAG_COEFF: 0.0,
 	DEFAULT_MAX_DRAG_COEFF: 0.1,
 	DRAG_COEFF: 0,
-	
+
 	params: null,
 	minValues: null,
 	maxValues: null,
-	
+
 	setup: function(){
 		this.params = [this.DEFAULT_DRAG_COEFF];
 		this.minValues = [this.DEFAULT_MIN_DRAG_COEFF];
 		this.maxValues = [this.DEFAULT_MAX_DRAG_COEFF];
 	},
-	
+
 	getForce: function(fItem){
 		fItem.force[0] -= this.params[this.DRAG_COEFF]*fItem.velocity[0];
 		fItem.force[1] -= this.params[this.DRAG_COEFF]*fItem.velocity[1];
 	},
-	
+
 	init: function(){
 	}
 });
@@ -489,12 +489,12 @@ DragForce = new Class({
  * It is slower but more accurate than other techniques such as Euler's Method.
  * The technique requires re-evaluating forces 4 times for a given timestep.
  *
- * Java source: 
+ * Java source:
 <https://github.com/prefuse/Prefuse/blob/master/src/prefuse/util/force/RungeKuttaIntegrator.java>
  *
  * jeffrey heer <http://jheer.org">
  */
-RungeKuttaIntegrator = new Class({
+var RungeKuttaIntegrator = new Class({
 	integrate: function(sim, timestep){
 		var speedLimit = sim.speedLimit;
 		var vx, vy, v, coeff;
@@ -512,12 +512,12 @@ RungeKuttaIntegrator = new Class({
 			k[0][1] = timestep*item.velocity[1];
 			l[0][0] = coeff*item.force[0];
 			l[0][1] = coeff*item.force[1];
-		
+
 			// Set the position to the new predicted position
 			item.location[0] += 0.5*k[0][0];
 			item.location[1] += 0.5*k[0][1];
 		}
-		
+
 		// recalculate forces
 		sim.accumulate();
 
@@ -540,7 +540,7 @@ RungeKuttaIntegrator = new Class({
 			k[1][1] = timestep*vy;
 			l[1][0] = coeff*item.force[0];
 			l[1][1] = coeff*item.force[1];
-		
+
 			// Set the position to the new predicted position
 			item.location[0] = item.plocation[0] + 0.5*k[1][0];
 			item.location[1] = item.plocation[1] + 0.5*k[1][1];
@@ -567,12 +567,12 @@ RungeKuttaIntegrator = new Class({
 			k[2][1] = timestep*vy;
 			l[2][0] = coeff*item.force[0];
 			l[2][1] = coeff*item.force[1];
-	
+
 			// Set the position to the new predicted position
 			item.location[0] = item.plocation[0] + 0.5*k[2][0];
 			item.location[1] = item.plocation[1] + 0.5*k[2][1];
 		}
-		
+
 		// recalculate forces
 		sim.accumulate();
 
@@ -597,7 +597,7 @@ RungeKuttaIntegrator = new Class({
 			l[3][1] = coeff*item.force[1];
 			item.location[0] = p[0] + (k[0][0]+k[3][0])/6.0 + (k[1][0]+k[2][0])/3.0;
 			item.location[1] = p[1] + (k[0][1]+k[3][1])/6.0 + (k[1][1]+k[2][1])/3.0;
-			
+
 			vx = (l[0][0]+l[3][0])/6.0 + (l[1][0]+l[2][0])/3.0;
 			vy = (l[0][1]+l[3][1])/6.0 + (l[1][1]+l[2][1])/3.0;
 			v = Math.sqrt(vx*vx+vy*vy);
@@ -615,14 +615,14 @@ RungeKuttaIntegrator = new Class({
 /**
  * Class: ForceSimulator
  *
- * Manages a simulation of physical forces acting on bodies using N-body, Drag and 
+ * Manages a simulation of physical forces acting on bodies using N-body, Drag and
  * Spring forces with a Runge-Kutta integrator.
  *
  * Java source: <https://github.com/prefuse/Prefuse/blob/master/src/prefuse/util/force/ForceSimulator.java>
  *
  * jeffrey heer <http://jheer.org">
  */
-ForceSimulator = new Class({
+var ForceSimulator = new Class({
 	speedLimit: 1.0,
 	iflen: 0,
 	sflen: 0,
@@ -631,7 +631,7 @@ ForceSimulator = new Class({
 	springs: null,
 	iforces: null,
 	sforces: null,
-	
+
 	setup: function(){
 		this.items = new Array();
 		this.springs = new Array();
@@ -639,18 +639,18 @@ ForceSimulator = new Class({
 		this.sforces = new Array();
 		this.integrator = new RungeKuttaIntegrator();
 	},
-	
+
 	accumulate: function(){
 		for (var i = 0; i < this.iforces.length; i++)
 		{
 			this.iforces[i].init(this);
 		}
-		
+
 		for (var i = 0; i < this.sforces.length; i++)
 		{
 			this.sforces[i].init(this);
 		}
-		
+
 		for (var i = 0; i < this.items.length; i++)
 		{
 			this.items[i].force[0] = 0.0;
@@ -660,7 +660,7 @@ ForceSimulator = new Class({
 				this.iforces[j].getForce(this.items[i]);
 			}
 		}
-		
+
 		for (var i = 0; i < this.springs.length; i++)
 		{
 			for (var j = 0; j < this.sforces.length; j++)
@@ -669,12 +669,12 @@ ForceSimulator = new Class({
 			}
 		}
 	},
-	
+
 	runSimulator: function(timestep){
 		this.accumulate();
 		this.integrator.integrate(this, timestep);
 	},
-	
+
 	addForce: function(f, itemForce){
 		if (itemForce)
 		{
@@ -687,11 +687,11 @@ ForceSimulator = new Class({
 			this.sflen++;
 		}
 	},
-	
+
 	addItem: function(fItem){
 		this.items.push(fItem);
 	},
-	
+
 	addSpring: function(spring){
 		this.springs.push(spring);
 	},
@@ -706,12 +706,12 @@ ForceSimulator = new Class({
  *
  * jeffrey heer <http://jheer.org">
  */
-Spring = new Class({
+var Spring = new Class({
 	item1: null,
 	item2: null,
 	coeff: null,
 	length: null,
-	
+
 	setup: function(fItem1, fItem2, coeff, len){
 		this.item1 = fItem1;
 		this.item2 = fItem2;
@@ -730,7 +730,7 @@ Spring = new Class({
  *
  * jeffrey heer <http://jheer.org">
  */
-ForceItem = new Class({
+var ForceItem = new Class({
 	mass: 1.0,
 	force: null,
 	velocity: null,
@@ -738,7 +738,7 @@ ForceItem = new Class({
 	plocation: null,
 	k: [[0,0], [0,0], [0,0], [0,0]],
 	l: [[0,0], [0,0], [0,0], [0,0]],
-	
+
 	setup: function(){
 		this.force = new Array();
 		this.velocity = new Array();
@@ -760,17 +760,17 @@ ForceItem = new Class({
 
 /*
  * Class: Layouts.ForceDirected
- * 
+ *
  * Implements a Force Directed Layout.
- * 
+ *
  * Implemented By:
- * 
+ *
  * <ForceDirected>
- * 
+ *
  * Credits:
- * 
+ *
  * Marcus Cobden <http://marcuscobden.co.uk>
- * 
+ *
  */
 Layouts.ForceDirected = new Class({
 
@@ -779,12 +779,12 @@ Layouts.ForceDirected = new Class({
     var w = s.width, h = s.height;
     //count nodes
     var count = 0;
-    this.graph.eachNode(function(n) { 
+    this.graph.eachNode(function(n) {
       count++;
     });
     var k2 = w * h / count, k = Math.sqrt(k2);
     var l = this.config.levelDistance;
-    
+
     return {
       width: w - l,
       height: h - l,
@@ -793,109 +793,11 @@ Layouts.ForceDirected = new Class({
       edgef: function(x) { return /* x * x / k; */ k * (x - l); }
     };
   },
-  
+
   compute: function(property, incremental) {
-    var prop = $.splat(property || ['current', 'start', 'end']);
-    var opt = this.getOptions();
-    NodeDim.compute(this.graph, prop, this.config);
-    this.graph.computeLevels(this.root, 0, "ignore");
-    this.graph.eachNode(function(n) {
-      $.each(prop, function(p) {
-        var pos = n.getPos(p);
-        if(pos.equals(Complex.KER)) {
-          pos.x = opt.width/5 * (Math.random() - 0.5);
-          pos.y = opt.height/5 * (Math.random() - 0.5);
-        }
-        //initialize disp vector
-        n.disp = {};
-        $.each(prop, function(p) {
-          n.disp[p] = $C(0, 0);
-        });
-      });
-    });
-    this.computePositions(prop, opt, incremental);
+    this.computeFast(property, incremental);
   },
-  
-  computePositions: function(property, opt, incremental) {
-    var times = this.config.iterations, i = 0, that = this;
-    if(incremental) {
-      (function iter() {
-        for(var total=incremental.iter, j=0; j<total; j++) {
-          opt.t = opt.tstart;
-          if(times) opt.t *= (1 - i++/(times -1));
-          that.computePositionStep(property, opt);
-          if(times && i >= times) {
-            incremental.onComplete();
-            return;
-          }
-        }
-        incremental.onStep(Math.round(i / (times -1) * 100));
-        setTimeout(iter, 1);
-      })();
-    } else {
-      for(; i < times; i++) {
-        opt.t = opt.tstart * (1 - i/(times -1));
-        this.computePositionStep(property, opt);
-      }
-    }
-  },
-  
-  computePositionStep: function(property, opt) {
-    var graph = this.graph;
-    var min = Math.min, max = Math.max;
-    var dpos = $C(0, 0);
-    //calculate repulsive forces
-    graph.eachNode(function(v) {
-      //initialize disp
-      $.each(property, function(p) {
-        v.disp[p].x = 0; v.disp[p].y = 0;
-      });
-      graph.eachNode(function(u) {
-        if(u.id != v.id) {
-          $.each(property, function(p) {
-            var vp = v.getPos(p), up = u.getPos(p);
-            dpos.x = vp.x - up.x;
-            dpos.y = vp.y - up.y;
-            var norm = dpos.norm() || 1;
-            v.disp[p].$add(dpos
-                .$scale(opt.nodef(norm) / norm));
-          });
-        }
-      });
-    });
-    //calculate attractive forces
-    var T = !!graph.getNode(this.root).visited;
-    graph.eachNode(function(node) {
-      node.eachAdjacency(function(adj) {
-        var nodeTo = adj.nodeTo;
-        if(!!nodeTo.visited === T) {
-          $.each(property, function(p) {
-            var vp = node.getPos(p), up = nodeTo.getPos(p);
-            dpos.x = vp.x - up.x;
-            dpos.y = vp.y - up.y;
-            var norm = dpos.norm() || 1;
-            node.disp[p].$add(dpos.$scale(-opt.edgef(norm) / norm));
-            nodeTo.disp[p].$add(dpos.$scale(-1));
-          });
-        }
-      });
-      node.visited = !T;
-    });
-    //arrange positions to fit the canvas
-    var t = opt.t, w2 = opt.width / 2, h2 = opt.height / 2;
-    graph.eachNode(function(u) {
-      $.each(property, function(p) {
-        var disp = u.disp[p];
-        var norm = disp.norm() || 1;
-        var p = u.getPos(p);
-        p.$add($C(disp.x * min(Math.abs(disp.x), t) / norm, 
-            disp.y * min(Math.abs(disp.y), t) / norm));
-        p.x = min(w2, max(-w2, p.x));
-        p.y = min(h2, max(-h2, p.y));
-      });
-    });
-  },
-  
+
   // Prefuse layout computation
   computeFast: function(property, incremental){
   	var sim = new ForceSimulator();
@@ -924,7 +826,7 @@ Layouts.ForceDirected = new Class({
 		n.forceItem.setup();
 		n.forceItem.init(pos.x, pos.y);
 		sim.addItem(n.forceItem);
-		
+
         //initialize disp vector
         n.disp = {};
         $.each(prop, function(p) {
@@ -952,7 +854,7 @@ Layouts.ForceDirected = new Class({
 	var times = this.config.iterations;
 	var i = 0;
 	var graph = this.graph;
-	
+
    (function iter(){
         for(var total=incremental.iter, j=0; j<total; j++)
 		{
@@ -967,7 +869,7 @@ Layouts.ForceDirected = new Class({
 				var y1 = 0;
 				var x2 = opt.width/2;
 				var y2 = opt.height/2;
- 
+
 				graph.eachNode(function(n){
 				  $.each(prop, function(p) {
 					var x = n.forceItem.location[0];
@@ -1050,7 +952,7 @@ Layouts.ForceDirected = new Class({
 					}
 					if (l.x <= -x2 + pad) l.x = -x2 + (pad*2);
 					if (l.x >= x2 - pad) l.x = x2 - (pad*2);
-					
+
 					if (minY < 0)
 					{
 						l.y = ((l.y + Math.abs(minY))*(opt.height/lh))-(opt.height/2);

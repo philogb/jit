@@ -4,21 +4,21 @@
 
 /*
    Class: ForceDirected
-      
+
    A visualization that lays graphs using a Force-Directed layout algorithm.
-   
+
    Inspired by:
-  
+
    Force-Directed Drawing Algorithms (Stephen G. Kobourov) <http://www.cs.brown.edu/~rt/gdhandbook/chapters/force-directed.pdf>
-   
+
   Implements:
-  
+
   All <Loader> methods
-  
+
    Constructor Options:
-   
+
    Inherits options from
-   
+
    - <Options.Canvas>
    - <Options.Controller>
    - <Options.Node>
@@ -28,12 +28,12 @@
    - <Options.Tips>
    - <Options.NodeStyles>
    - <Options.Navigation>
-   
+
    Additionally, there are two parameters
-   
+
    levelDistance - (number) Default's *50*. The natural length desired for the edges.
-   iterations - (number) Default's *50*. The number of iterations for the spring layout simulation. Depending on the browser's speed you could set this to a more 'interesting' number, like *200*. 
-     
+   iterations - (number) Default's *50*. The number of iterations for the spring layout simulation. Depending on the browser's speed you could set this to a more 'interesting' number, like *200*.
+
    Instance Properties:
 
    canvas - Access a <Canvas> instance.
@@ -92,9 +92,9 @@ $jit.ForceDirected = new Class( {
     this.initializeExtras();
   },
 
-  /* 
-    Method: refresh 
-    
+  /*
+    Method: refresh
+
     Computes positions and plots the tree.
   */
   refresh: function() {
@@ -108,35 +108,35 @@ $jit.ForceDirected = new Class( {
 
 /*
   Method: computeIncremental
-  
+
   Performs the Force Directed algorithm incrementally.
-  
+
   Description:
-  
-  ForceDirected algorithms can perform many computations and lead to JavaScript taking too much time to complete. 
-  This method splits the algorithm into smaller parts allowing the user to track the evolution of the algorithm and 
+
+  ForceDirected algorithms can perform many computations and lead to JavaScript taking too much time to complete.
+  This method splits the algorithm into smaller parts allowing the user to track the evolution of the algorithm and
   avoiding browser messages such as "This script is taking too long to complete".
-  
+
   Parameters:
-  
+
   opt - (object) The object properties are described below
-  
-  iter - (number) Default's *20*. Split the algorithm into pieces of _iter_ iterations. For example, if the _iterations_ configuration property 
+
+  iter - (number) Default's *20*. Split the algorithm into pieces of _iter_ iterations. For example, if the _iterations_ configuration property
   of your <ForceDirected> class is 100, then you could set _iter_ to 20 to split the main algorithm into 5 smaller pieces.
-  
-  property - (string) Default's *end*. Whether to update starting, current or ending node positions. Possible values are 'end', 'start', 'current'. 
-  You can also set an array of these properties. If you'd like to keep the current node positions but to perform these 
+
+  property - (string) Default's *end*. Whether to update starting, current or ending node positions. Possible values are 'end', 'start', 'current'.
+  You can also set an array of these properties. If you'd like to keep the current node positions but to perform these
   computations for final animation positions then you can just choose 'end'.
-  
-  onStep - (function) A callback function called when each "small part" of the algorithm completed. This function gets as first formal 
+
+  onStep - (function) A callback function called when each "small part" of the algorithm completed. This function gets as first formal
   parameter a percentage value.
-  
+
   onComplete - A callback function called when the algorithm completed.
-  
+
   Example:
-  
+
   In this example I calculate the end positions and then animate the graph to those positions
-  
+
   (start code js)
   var fd = new $jit.ForceDirected(...);
   fd.computeIncremental({
@@ -151,9 +151,9 @@ $jit.ForceDirected = new Class( {
     }
   });
   (end code)
-  
+
   In this example I calculate all positions and (re)plot the graph
-  
+
   (start code js)
   var fd = new ForceDirected(...);
   fd.computeIncremental({
@@ -168,10 +168,10 @@ $jit.ForceDirected = new Class( {
     }
   });
   (end code)
-  
+
   */
   computeIncremental: function(opt) {
-    opt = $.merge( {
+    opt = $.merge({
       iter: 20,
       property: 'end',
       onStep: $.empty,
@@ -184,20 +184,20 @@ $jit.ForceDirected = new Class( {
 
   /*
     Method: computePrefuse
-  
+
     Exactly the same as computeIncremental except it applies the Prefuse
     Force Directed algorithm ((http://prefuse.cvs.sourceforge.net/) as opposed
     to the default JIT algorithm making it better suited for larger graphs (200+ nodes).
     Best results are obtained using Chrome, Safari or Opera. Firefox and IE 9+ only
     provide marginal speed improvement (presumably due to inefficiencies in their
     Javascript engines).
-    
-    Regarding the algorithm, the code is a Javascript port of the key classes of the 
-    Prefuse Java distribution, namely NBodyForce.java, SpringForce.java, DragForce.java, 
+
+    Regarding the algorithm, the code is a Javascript port of the key classes of the
+    Prefuse Java distribution, namely NBodyForce.java, SpringForce.java, DragForce.java,
     RungeKuttaIntegrator.java, ForceSimulator.java, Spring.java, ForceItem.java.
 
 	This method should be treated as experimental.
-  */  
+  */
   computePrefuse: function(opt) {
     opt = $.merge( {
       iter: 20,
@@ -212,7 +212,7 @@ $jit.ForceDirected = new Class( {
 
   /*
     Method: plot
-   
+
     Plots the ForceDirected graph. This is a shortcut to *fx.plot*.
    */
   plot: function() {
@@ -221,7 +221,7 @@ $jit.ForceDirected = new Class( {
 
   /*
      Method: animate
-    
+
      Animates the graph from the current positions to the 'end' node positions.
   */
   animate: function(opt) {
@@ -237,15 +237,15 @@ $jit.ForceDirected.$extend = true;
 
   /*
      Class: ForceDirected.Op
-     
+
      Custom extension of <Graph.Op>.
 
      Extends:
 
      All <Graph.Op> methods
-     
+
      See also:
-     
+
      <Graph.Op>
 
   */
@@ -257,17 +257,17 @@ $jit.ForceDirected.$extend = true;
 
   /*
     Class: ForceDirected.Plot
-    
+
     Custom extension of <Graph.Plot>.
-  
+
     Extends:
-  
+
     All <Graph.Plot> methods
-    
+
     See also:
-    
+
     <Graph.Plot>
-  
+
   */
   ForceDirected.Plot = new Class( {
 
@@ -277,24 +277,24 @@ $jit.ForceDirected.$extend = true;
 
   /*
     Class: ForceDirected.Label
-    
-    Custom extension of <Graph.Label>. 
+
+    Custom extension of <Graph.Label>.
     Contains custom <Graph.Label.SVG>, <Graph.Label.HTML> and <Graph.Label.Native> extensions.
-  
+
     Extends:
-  
+
     All <Graph.Label> methods and subclasses.
-  
+
     See also:
-  
+
     <Graph.Label>, <Graph.Label.Native>, <Graph.Label.HTML>, <Graph.Label.SVG>.
-  
+
   */
   ForceDirected.Label = {};
 
   /*
      ForceDirected.Label.Native
-     
+
      Custom extension of <Graph.Label.Native>.
 
      Extends:
@@ -312,17 +312,17 @@ $jit.ForceDirected.$extend = true;
 
   /*
     ForceDirected.Label.SVG
-    
+
     Custom extension of <Graph.Label.SVG>.
-  
+
     Extends:
-  
+
     All <Graph.Label.SVG> methods
-  
+
     See also:
-  
+
     <Graph.Label.SVG>
-  
+
   */
   ForceDirected.Label.SVG = new Class( {
     Implements: Graph.Label.SVG,
@@ -331,7 +331,7 @@ $jit.ForceDirected.$extend = true;
       this.viz = viz;
     },
 
-    /* 
+    /*
        placeLabel
 
        Overrides abstract method placeLabel in <Graph.Label>.
@@ -341,10 +341,10 @@ $jit.ForceDirected.$extend = true;
        tag - A DOM label element.
        node - A <Graph.Node>.
        controller - A configuration/controller object passed to the visualization.
-      
+
      */
     placeLabel: function(tag, node, controller) {
-      var pos = node.pos.getc(true), 
+      var pos = node.pos.getc(true),
           canvas = this.viz.canvas,
           ox = canvas.translateOffsetX,
           oy = canvas.translateOffsetY,
@@ -364,7 +364,7 @@ $jit.ForceDirected.$extend = true;
 
   /*
      ForceDirected.Label.HTML
-     
+
      Custom extension of <Graph.Label.HTML>.
 
      Extends:
@@ -382,7 +382,7 @@ $jit.ForceDirected.$extend = true;
     initialize: function(viz) {
       this.viz = viz;
     },
-    /* 
+    /*
        placeLabel
 
        Overrides abstract method placeLabel in <Graph.Plot>.
@@ -392,10 +392,10 @@ $jit.ForceDirected.$extend = true;
        tag - A DOM label element.
        node - A <Graph.Node>.
        controller - A configuration/controller object passed to the visualization.
-      
+
      */
     placeLabel: function(tag, node, controller) {
-      var pos = node.pos.getc(true), 
+      var pos = node.pos.getc(true),
           canvas = this.viz.canvas,
           ox = canvas.translateOffsetX,
           oy = canvas.translateOffsetY,
@@ -418,7 +418,7 @@ $jit.ForceDirected.$extend = true;
   /*
     Class: ForceDirected.Plot.NodeTypes
 
-    This class contains a list of <Graph.Node> built-in types. 
+    This class contains a list of <Graph.Node> built-in types.
     Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
 
     You can add your custom node types, customizing your visualization to the extreme.
@@ -447,64 +447,64 @@ $jit.ForceDirected.$extend = true;
     },
     'circle': {
       'render': function(node, canvas){
-        var pos = node.pos.getc(true), 
+        var pos = node.pos.getc(true),
             dim = node.getData('dim');
         this.nodeHelper.circle.render('fill', pos, dim, canvas);
       },
       'contains': function(node, pos){
-        var npos = node.pos.getc(true), 
+        var npos = node.pos.getc(true),
             dim = node.getData('dim');
         return this.nodeHelper.circle.contains(npos, pos, dim);
       }
     },
     'ellipse': {
       'render': function(node, canvas){
-        var pos = node.pos.getc(true), 
-            width = node.getData('width'), 
+        var pos = node.pos.getc(true),
+            width = node.getData('width'),
             height = node.getData('height');
         this.nodeHelper.ellipse.render('fill', pos, width, height, canvas);
         },
       'contains': function(node, pos){
-        var npos = node.pos.getc(true), 
-            width = node.getData('width'), 
+        var npos = node.pos.getc(true),
+            width = node.getData('width'),
             height = node.getData('height');
         return this.nodeHelper.ellipse.contains(npos, pos, width, height);
       }
     },
     'square': {
       'render': function(node, canvas){
-        var pos = node.pos.getc(true), 
+        var pos = node.pos.getc(true),
             dim = node.getData('dim');
         this.nodeHelper.square.render('fill', pos, dim, canvas);
       },
       'contains': function(node, pos){
-        var npos = node.pos.getc(true), 
+        var npos = node.pos.getc(true),
             dim = node.getData('dim');
         return this.nodeHelper.square.contains(npos, pos, dim);
       }
     },
     'rectangle': {
       'render': function(node, canvas){
-        var pos = node.pos.getc(true), 
-            width = node.getData('width'), 
+        var pos = node.pos.getc(true),
+            width = node.getData('width'),
             height = node.getData('height');
         this.nodeHelper.rectangle.render('fill', pos, width, height, canvas);
       },
       'contains': function(node, pos){
-        var npos = node.pos.getc(true), 
-            width = node.getData('width'), 
+        var npos = node.pos.getc(true),
+            width = node.getData('width'),
             height = node.getData('height');
         return this.nodeHelper.rectangle.contains(npos, pos, width, height);
       }
     },
     'triangle': {
       'render': function(node, canvas){
-        var pos = node.pos.getc(true), 
+        var pos = node.pos.getc(true),
             dim = node.getData('dim');
         this.nodeHelper.triangle.render('fill', pos, dim, canvas);
       },
       'contains': function(node, pos) {
-        var npos = node.pos.getc(true), 
+        var npos = node.pos.getc(true),
             dim = node.getData('dim');
         return this.nodeHelper.triangle.contains(npos, pos, dim);
       }
@@ -525,14 +525,14 @@ $jit.ForceDirected.$extend = true;
 
   /*
     Class: ForceDirected.Plot.EdgeTypes
-  
-    This class contains a list of <Graph.Adjacence> built-in types. 
+
+    This class contains a list of <Graph.Adjacence> built-in types.
     Edge types implemented are 'none', 'line' and 'arrow'.
-  
+
     You can add your custom edge types, customizing your visualization to the extreme.
-  
+
     Example:
-  
+
     (start code js)
       ForceDirected.Plot.EdgeTypes.implement({
         'mySpecialType': {
@@ -546,7 +546,7 @@ $jit.ForceDirected.$extend = true;
         }
       });
     (end code)
-  
+
   */
   ForceDirected.Plot.EdgeTypes = new Class({
     'none': $.empty,

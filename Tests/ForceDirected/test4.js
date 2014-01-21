@@ -4,446 +4,446 @@ function init(){
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode1", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode1",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode3", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode3",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode2", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode2",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode4", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode4",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode10", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode10",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode6", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode6",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode11", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode11",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode12", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode12",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode13", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode13",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode14", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode14",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode15", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode15",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode16", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode16",
+          "nodeFrom": "graphnode0",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode17", 
-          "nodeFrom": "graphnode0", 
+          "nodeTo": "graphnode17",
+          "nodeFrom": "graphnode0",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#83548B", 
+        "$color": "#83548B",
         "$type": "circle"
-      }, 
-      "id": "graphnode0", 
+      },
+      "id": "graphnode0",
       "name": "graphnode0"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode2", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode2",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode3", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode3",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode4", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode4",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode5", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode5",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode6", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode6",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode7", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode7",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode8", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode8",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode9", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode9",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode10", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode10",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode11", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode11",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode12", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode12",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode13", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode13",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode14", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode14",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode15", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode15",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode16", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode16",
+          "nodeFrom": "graphnode1",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode17", 
-          "nodeFrom": "graphnode1", 
+          "nodeTo": "graphnode17",
+          "nodeFrom": "graphnode1",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#83548B", 
+        "$color": "#83548B",
         "$type": "star"
-      }, 
-      "id": "graphnode1", 
+      },
+      "id": "graphnode1",
       "name": "graphnode1"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode3", 
-          "nodeFrom": "graphnode2", 
+          "nodeTo": "graphnode3",
+          "nodeFrom": "graphnode2",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode5", 
-          "nodeFrom": "graphnode2", 
+          "nodeTo": "graphnode5",
+          "nodeFrom": "graphnode2",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode9", 
-          "nodeFrom": "graphnode2", 
+          "nodeTo": "graphnode9",
+          "nodeFrom": "graphnode2",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode18", 
-          "nodeFrom": "graphnode2", 
+          "nodeTo": "graphnode18",
+          "nodeFrom": "graphnode2",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#EBB056", 
+        "$color": "#EBB056",
         "$type": "circle"
-      }, 
-      "id": "graphnode2", 
+      },
+      "id": "graphnode2",
       "name": "graphnode2"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode5", 
-          "nodeFrom": "graphnode3", 
+          "nodeTo": "graphnode5",
+          "nodeFrom": "graphnode3",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode9", 
-          "nodeFrom": "graphnode3", 
+          "nodeTo": "graphnode9",
+          "nodeFrom": "graphnode3",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode10", 
-          "nodeFrom": "graphnode3", 
+          "nodeTo": "graphnode10",
+          "nodeFrom": "graphnode3",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode6", 
-          "nodeFrom": "graphnode3", 
+          "nodeTo": "graphnode6",
+          "nodeFrom": "graphnode3",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode11", 
-          "nodeFrom": "graphnode3", 
+          "nodeTo": "graphnode11",
+          "nodeFrom": "graphnode3",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode12", 
-          "nodeFrom": "graphnode3", 
+          "nodeTo": "graphnode12",
+          "nodeFrom": "graphnode3",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#70A35E", 
+        "$color": "#70A35E",
         "$type": "triangle"
-      }, 
-      "id": "graphnode3", 
+      },
+      "id": "graphnode3",
       "name": "graphnode3"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#70A35E", 
+        "$color": "#70A35E",
         "$type": "star"
-      }, 
-      "id": "graphnode4", 
+      },
+      "id": "graphnode4",
       "name": "graphnode4"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode9", 
-          "nodeFrom": "graphnode5", 
+          "nodeTo": "graphnode9",
+          "nodeFrom": "graphnode5",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#416D9C", 
+        "$color": "#416D9C",
         "$type": "star"
-      }, 
-      "id": "graphnode5", 
+      },
+      "id": "graphnode5",
       "name": "graphnode5"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode10", 
-          "nodeFrom": "graphnode6", 
+          "nodeTo": "graphnode10",
+          "nodeFrom": "graphnode6",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode11", 
-          "nodeFrom": "graphnode6", 
+          "nodeTo": "graphnode11",
+          "nodeFrom": "graphnode6",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#416D9C", 
+        "$color": "#416D9C",
         "$type": "star"
-      }, 
-      "id": "graphnode6", 
+      },
+      "id": "graphnode6",
       "name": "graphnode6"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#416D9C", 
+        "$color": "#416D9C",
         "$type": "triangle"
-      }, 
-      "id": "graphnode7", 
+      },
+      "id": "graphnode7",
       "name": "graphnode7"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#EBB056", 
+        "$color": "#EBB056",
         "$type": "star"
-      }, 
-      "id": "graphnode8", 
+      },
+      "id": "graphnode8",
       "name": "graphnode8"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#70A35E", 
+        "$color": "#70A35E",
         "$type": "triangle"
-      }, 
-      "id": "graphnode9", 
+      },
+      "id": "graphnode9",
       "name": "graphnode9"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode11", 
-          "nodeFrom": "graphnode10", 
+          "nodeTo": "graphnode11",
+          "nodeFrom": "graphnode10",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#83548B", 
+        "$color": "#83548B",
         "$type": "triangle"
-      }, 
-      "id": "graphnode10", 
+      },
+      "id": "graphnode10",
       "name": "graphnode10"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#416D9C", 
+        "$color": "#416D9C",
         "$type": "triangle"
-      }, 
-      "id": "graphnode11", 
+      },
+      "id": "graphnode11",
       "name": "graphnode11"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#70A35E", 
+        "$color": "#70A35E",
         "$type": "square"
-      }, 
-      "id": "graphnode12", 
+      },
+      "id": "graphnode12",
       "name": "graphnode12"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode14", 
-          "nodeFrom": "graphnode13", 
+          "nodeTo": "graphnode14",
+          "nodeFrom": "graphnode13",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#416D9C", 
+        "$color": "#416D9C",
         "$type": "square"
-      }, 
-      "id": "graphnode13", 
+      },
+      "id": "graphnode13",
       "name": "graphnode13"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#70A35E", 
+        "$color": "#70A35E",
         "$type": "square"
-      }, 
-      "id": "graphnode14", 
+      },
+      "id": "graphnode14",
       "name": "graphnode14"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode16", 
-          "nodeFrom": "graphnode15", 
+          "nodeTo": "graphnode16",
+          "nodeFrom": "graphnode15",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode17", 
-          "nodeFrom": "graphnode15", 
+          "nodeTo": "graphnode17",
+          "nodeFrom": "graphnode15",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#C74243", 
+        "$color": "#C74243",
         "$type": "circle"
-      }, 
-      "id": "graphnode15", 
+      },
+      "id": "graphnode15",
       "name": "graphnode15"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode17", 
-          "nodeFrom": "graphnode16", 
+          "nodeTo": "graphnode17",
+          "nodeFrom": "graphnode16",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#EBB056", 
+        "$color": "#EBB056",
         "$type": "circle"
-      }, 
-      "id": "graphnode16", 
+      },
+      "id": "graphnode16",
       "name": "graphnode16"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#83548B", 
+        "$color": "#83548B",
         "$type": "triangle"
-      }, 
-      "id": "graphnode17", 
+      },
+      "id": "graphnode17",
       "name": "graphnode17"
-    }, 
+    },
     {
       "adjacencies": [
         {
-          "nodeTo": "graphnode19", 
-          "nodeFrom": "graphnode18", 
+          "nodeTo": "graphnode19",
+          "nodeFrom": "graphnode18",
           "data": {}
-        }, 
+        },
         {
-          "nodeTo": "graphnode20", 
-          "nodeFrom": "graphnode18", 
+          "nodeTo": "graphnode20",
+          "nodeFrom": "graphnode18",
           "data": {}
         }
-      ], 
+      ],
       "data": {
-        "$color": "#C74243", 
+        "$color": "#C74243",
         "$type": "circle"
-      }, 
-      "id": "graphnode18", 
+      },
+      "id": "graphnode18",
       "name": "graphnode18"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#EBB056", 
+        "$color": "#EBB056",
         "$type": "star"
-      }, 
-      "id": "graphnode19", 
+      },
+      "id": "graphnode19",
       "name": "graphnode19"
-    }, 
+    },
     {
-      "adjacencies": [], 
+      "adjacencies": [],
       "data": {
-        "$color": "#416D9C", 
+        "$color": "#416D9C",
         "$type": "circle"
-      }, 
-      "id": "graphnode20", 
+      },
+      "id": "graphnode20",
       "name": "graphnode20"
     }
   ];
