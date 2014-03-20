@@ -318,14 +318,20 @@ $jit.StreamChart = new Class({
       });
     });
 
-    this.delegate.fx.animate({
-      modes: ['node-property:height:dimArray'],
-      duration: 300,
-      onComplete: function() {
-        that.busy = false;
-        callback && callback.onComplete();
-      }
-    });
+    if (config.animate) {
+      this.delegate.fx.animate({
+        modes: ['node-property:height:dimArray'],
+        duration: 300,
+        onComplete: function() {
+          that.busy = false;
+          callback && callback.onComplete();
+        }
+      });
+    } else {
+      this.delegate.refresh();
+      this.busy = false;
+      callback && callback.onComplete();
+    }
   },
 
   getMaxValue: function() {
