@@ -1001,41 +1001,43 @@ $jit.ST.Geom = new Class({
           };
         };
         var dim = this.node;
+        var align = node.getData('align') || dim.align;
         var w = node.getData('width');
         var h = node.getData('height');
 
         if(type == 'begin') {
-            if(dim.align == "center") {
+            if(align == "center") {
                 return this.dispatch(s, $C(0, h/2), $C(-w/2, 0),
                                      $C(0, -h/2),$C(w/2, 0));
-            } else if(dim.align == "left") {
+            } else if(align == "left") {
                 return this.dispatch(s, $C(0, h), $C(0, 0),
                                      $C(0, 0), $C(w, 0));
-            } else if(dim.align == "right") {
+            } else if(align == "right") {
                 return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                      $C(0, -h),$C(0, 0));
             } else throw "align: not implemented";
 
 
         } else if(type == 'end') {
-            if(dim.align == "center") {
+            if(align == "center") {
                 return this.dispatch(s, $C(0, -h/2), $C(w/2, 0),
                                      $C(0, h/2),  $C(-w/2, 0));
-            } else if(dim.align == "left") {
+            } else if(align == "left") {
                 return this.dispatch(s, $C(0, 0), $C(w, 0),
                                      $C(0, h), $C(0, 0));
-            } else if(dim.align == "right") {
+            } else if(align == "right") {
                 return this.dispatch(s, $C(0, -h),$C(0, 0),
                                      $C(0, 0), $C(-w, 0));
             } else throw "align: not implemented";
         }
     },
-
+    
     /*
        Adjusts the tree position due to canvas scaling or translation.
     */
     getScaledTreePosition: function(node, scale) {
         var dim = this.node;
+        var align = node.getData('align') || dim.align;
         var w = node.getData('width');
         var h = node.getData('height');
         var s = (this.config.multitree
@@ -1047,13 +1049,13 @@ $jit.ST.Geom = new Class({
             return node.pos.add(new Complex(a, b)).$scale(1 - scale);
           };
         };
-        if(dim.align == "left") {
+        if(align == "left") {
             return this.dispatch(s, $C(0, h), $C(0, 0),
                                  $C(0, 0), $C(w, 0));
-        } else if(dim.align == "center") {
+        } else if(align == "center") {
             return this.dispatch(s, $C(0, h / 2), $C(-w / 2, 0),
                                  $C(0, -h / 2),$C(w / 2, 0));
-        } else if(dim.align == "right") {
+        } else if(align == "right") {
             return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                  $C(0, -h),$C(0, 0));
         } else throw "align: not implemented";
@@ -1256,6 +1258,7 @@ $jit.ST.Label.DOM = new Class({
         var pos = node.pos.getc(true),
             config = this.viz.config,
             dim = config.Node,
+            align = node.getData('align') || dim.align,
             canvas = this.viz.canvas,
             w = node.getData('width'),
             h = node.getData('height'),
@@ -1269,12 +1272,12 @@ $jit.ST.Label.DOM = new Class({
             posx = pos.x * sx + ox,
             posy = pos.y * sy + oy;
 
-        if(dim.align == "center") {
+        if(align == "center") {
             labelPos= {
                 x: Math.round(posx - w / 2 + radius.width/2),
                 y: Math.round(posy - h / 2 + radius.height/2)
             };
-        } else if (dim.align == "left") {
+        } else if (align == "left") {
             orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
@@ -1287,7 +1290,7 @@ $jit.ST.Label.DOM = new Class({
                     y: Math.round(posy - h / 2 + radius.height/2)
                 };
             }
-        } else if(dim.align == "right") {
+        } else if(align == "right") {
             orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
