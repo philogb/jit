@@ -143,7 +143,7 @@ Layouts.Tree = (function() {
 
     var siblingOffset = config.siblingOffset;
     var subtreeOffset = config.subtreeOffset;
-    var align = config.align;
+    var align = node.getData('align') || config.align;
 
     function $design(node, maxsize, acum) {
       var sval = node.getData(s, prop);
@@ -194,7 +194,6 @@ Layouts.Tree = (function() {
     $design(node, false, 0);
   }
 
-
   return new Class({
     /*
     Method: compute
@@ -221,7 +220,7 @@ Layouts.Tree = (function() {
     computePositions : function(node, prop) {
       var config = this.config;
       var multitree = config.multitree;
-      var align = config.align;
+      var align = node.getData('align') || config.align;
       var indent = align !== 'center' && config.indent;
       var orn = config.orientation;
       var orns = multitree ? [ 'top', 'right', 'bottom', 'left' ] : [ orn ];
