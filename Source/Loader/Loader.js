@@ -188,6 +188,10 @@ var Loader = {
       } else {
         this.root = json[i? i : 0].id;
       }
+      // Clear reference to no-longer-valid node
+      if(this.clickedNode) {
+        this.clickedNode = null;
+      }
     },
     
     /*
