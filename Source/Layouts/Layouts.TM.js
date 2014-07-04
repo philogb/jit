@@ -26,14 +26,14 @@ Layouts.TM.SliceAndDice = new Class({
     this.computePositions(root, root, this.layout.orientation, prop);
     this.controller.onAfterCompute(root);
   },
-  
+
   computePositions: function(par, ch, orn, prop) {
     //compute children areas
     var totalArea = 0;
     par.eachSubnode(function(n) {
       totalArea += n.getData('area', prop);
-    });
-    
+    }, "ignore");
+
     var config = this.config,
         offset = config.offset,
         width  = par.getData('width', prop),
@@ -52,7 +52,7 @@ Layouts.TM.SliceAndDice = new Class({
       posth = config.titleHeight;
       pos2th = 0;
     } else {
-      orn = 'h';    
+      orn = 'h';
       otherSize = height * fact;
       size = width;
       dim = 'width';
@@ -71,10 +71,11 @@ Layouts.TM.SliceAndDice = new Class({
       p[pos2] = cpos[pos2] + pos2th;
       tm.computePositions(ch, n, orn, prop);
       offsetSize += n.getData(dim, prop);
-    });
+    }, "ignore");
   }
 
 });
+
 
 Layouts.TM.Area = {
  /*
