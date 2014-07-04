@@ -120,11 +120,20 @@ $jit.Graph = new Class({
    (end code)
   */  
   getByName: function(name) {
+    var res = [];
     for(var id in this.nodes) {
       var n = this.nodes[id];
-      if(n.name == name) return n;
+      if(n.name == name) {
+        res.push(n);
+      }
     }
-    return false;
+    if (res.length == 1) {
+      return res[0];
+    }
+    if (res.length == 0) {
+      return false;
+    }
+    return res;
   },
 
 /*
