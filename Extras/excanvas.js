@@ -456,7 +456,7 @@ if (!document.createElement('canvas').getContext) {
 
     var str, alpha = 1;
 
-    styleString = String(styleString).toLocaleLowerCase();
+    styleString = String(styleString).toLowerCase();
     if (styleString.charAt(0) == '#') {
       str = styleString;
     } else if (/^rgb/.test(styleString)) {
