@@ -318,9 +318,52 @@ $jit.RGraph.$extend = true;
      <Graph.Label.Native>
 
      */
-    RGraph.Label.Native = new Class( {
-        Implements: Graph.Label.Native
-    });
+  RGraph.Label.Native = new Class( {
+    Implements: Graph.Label.Native,
+
+    initialize: function(viz) {
+      this.viz = viz;
+      this.label = viz.config.Label;
+      this.config = viz.config;
+    },
+
+    renderLabel: function(canvas, node, controller) {
+      var span = node.getData('span');
+      if(span < Math.PI /2 && Math.tan(span) *
+          this.config.levelDistance * node._depth < 10) {
+        return;
+      }
+      var ctx = canvas.getCtx();
+      var measure = ctx.measureText(node.name);
+      if (node.id == this.viz.root) {
+        var x = -measure.width / 2, y = 0, thetap = 0;
+        var ld = 0;
+      } else {
+        var indent = 5;
+        var ld = controller.levelDistance - indent;
+        var clone = node.pos.clone();
+        clone.rho += indent + (node.getData('dim') || 0);
+        var p = clone.getp(true);
+        var ct = clone.getc(true);
+        var x = ct.x, y = ct.y;
+        // get angle in degrees
+        var pi = Math.PI;
+        var cond = (p.theta > pi / 2 && p.theta < 3 * pi / 2);
+        var thetap = cond ? p.theta + pi : p.theta;
+        if (cond) {
+          x -= Math.abs(Math.cos(p.theta) * measure.width);
+          y += Math.sin(p.theta) * measure.width;
+        } else if (node.id == this.viz.root) {
+          x -= measure.width / 2;
+        }
+      }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(thetap);
+      ctx.fillText(node.name, 0, 0);
+      ctx.restore();
+    }
+  });
 
     /*
      RGraph.Label.SVG
