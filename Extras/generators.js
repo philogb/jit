@@ -1,18 +1,18 @@
 //Just a random tree generator.
 var Feeder = {
 	counter:0,
-	
+
 	p: {
 		idPrefix: "node",
 		levelStart: 0,
 		levelEnd: 3,
 		maxChildrenPerNode: 5,
-    minChildrenPerNode: 1,
+        minChildrenPerNode: 1,
 		counter: 0,
 		color: true,
 		dim: true
 	},
-	
+
 	makeTree: function (p) {
 		p = p || this.p;
 		var le = this.p.levelEnd;
@@ -20,13 +20,13 @@ var Feeder = {
 		this.counter = 1;
 		return this.makeTreeWithParameters(p.idPrefix,
 										   p.levelStart,
-										   p.levelEnd, 
+										   p.levelEnd,
 										   p.maxChildrenPerNode,
                        p.minChildrenPerNode,
                        p.color,
                        p.dim);
 	},
-	
+
 	makeTreeWithParameters: function(idPrefix, levelStart, levelEnd, maxChildrenPerNode, minChildrenPerNode, color, dim) {
 		if(levelStart == levelEnd) return null;
 		this.counter++;
@@ -39,10 +39,10 @@ var Feeder = {
 		var ans= {
 			id:   idPrefix + levelStart + this.counter,
 			name: levelStart + "." + this.counter,
-			data: data, 
+			data: data,
 			children: []
 		};
-		var childCount= Math.floor(Math.random() * maxChildrenPerNode) + minChildrenPerNode;
+		var childCount= Math.round(Math.random() * (maxChildrenPerNode - minChildrenPerNode) + minChildrenPerNode);
 		levelStart++;
 		for(var i=0; i<childCount; i++) {
 			var ch= this.makeTreeWithParameters(idPrefix, levelStart, levelEnd, maxChildrenPerNode, minChildrenPerNode, color, dim);
@@ -50,7 +50,7 @@ var Feeder = {
 		}
 		return ans;
    },
- 
+
     setWeights: function(tree, notRec) {
    		if(tree.children.length == 0) {
    			if(!notRec) 	return tree.data.$area;
@@ -73,24 +73,24 @@ var Feeder = {
       tree.data.$dim = accum;
    		return accum;
    },
- 
+
    request: function (nodeId, level, onComplete) {
    		this.p.idPrefix = nodeId;
    		this.p.levelEnd = level + 1;
    		var json = this.makeTree();
    		onComplete.onComplete(nodeId, json);
    }
-}; 
+};
 
 var GraphGenerator = {
 	counter:0,
-	
+
 	p: {
 		idPrefix: "node",
 		nodes: 6,
 		connectionProbability: .5
 	},
-	
+
 	makeGraph: function (weighted) {
 		var ans = new Array();
 		for(var i=0; i<this.p.nodes; i++) {
@@ -100,7 +100,7 @@ var GraphGenerator = {
 		for(var j=0; j<this.p.nodes -1; j++) {
 //			ans[j].adjacencies.push(ans[j +1].id);
 //			ans[j +1].adjacencies.push(ans[j].id);
-			
+
 			for(var k=j +1; k<this.p.nodes; k++) {
 				var w;
 				if(Math.random() <= this.p.connectionProbability)
@@ -130,7 +130,7 @@ var GraphGenerator = {
 		}
 		return ans;
 	},
-	
+
 	newNode: function(i) {
 		var id = this.p.idPrefix + i;
 		return {

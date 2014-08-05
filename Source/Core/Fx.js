@@ -1,182 +1,294 @@
-/*
-     An object containing multiple type of transformations. 
-*/
+var Animation;
+(function() {
 
-$jit.Trans = {
-  $extend: true,
-  
-  linear: function(p){
-    return p;
+  //Utility functions
+  function $(d) {
+    return document.getElementById(d);
   }
-};
 
-var Trans = $jit.Trans;
+  $.empty = function() {};
 
-(function(){
+  $.time = Date.now;
 
-  var makeTrans = function(transition, params){
-    params = $.splat(params);
-    return $.extend(transition, {
-      easeIn: function(pos){
-        return transition(pos, params);
-      },
-      easeOut: function(pos){
-        return 1 - transition(1 - pos, params);
-      },
-      easeInOut: function(pos){
-        return (pos <= 0.5)? transition(2 * pos, params) / 2 : (2 - transition(
-            2 * (1 - pos), params)) / 2;
-      }
-    });
-  };
+  $.uid = (function() {
+    var t = $.time();
 
-  var transitions = {
-
-    Pow: function(p, x){
-      return Math.pow(p, x[0] || 6);
-    },
-
-    Expo: function(p){
-      return Math.pow(2, 8 * (p - 1));
-    },
-
-    Circ: function(p){
-      return 1 - Math.sin(Math.acos(p));
-    },
-
-    Sine: function(p){
-      return 1 - Math.sin((1 - p) * Math.PI / 2);
-    },
-
-    Back: function(p, x){
-      x = x[0] || 1.618;
-      return Math.pow(p, 2) * ((x + 1) * p - x);
-    },
-
-    Bounce: function(p){
-      var value;
-      for ( var a = 0, b = 1; 1; a += b, b /= 2) {
-        if (p >= (7 - 4 * a) / 11) {
-          value = b * b - Math.pow((11 - 6 * a - 11 * p) / 4, 2);
-          break;
-        }
-      }
-      return value;
-    },
-
-    Elastic: function(p, x){
-      return Math.pow(2, 10 * --p)
-          * Math.cos(20 * p * Math.PI * (x[0] || 1) / 3);
-    }
-
-  };
-
-  $.each(transitions, function(val, key){
-    Trans[key] = makeTrans(val);
-  });
-
-  $.each( [
-      'Quad', 'Cubic', 'Quart', 'Quint'
-  ], function(elem, i){
-    Trans[elem] = makeTrans(function(p){
-      return Math.pow(p, [
-        i + 2
-      ]);
-    });
-  });
-
-})();
-
-/*
-   A Class that can perform animations for generic objects.
-
-   If you are looking for animation transitions please take a look at the <Trans> object.
-
-   Used by:
-
-   <Graph.Plot>
-   
-   Based on:
-   
-   The Animation class is based in the MooTools Framework <http://mootools.net>. Copyright (c) 2006-2009 Valerio Proietti, <http://mad4milk.net/>. MIT license <http://mootools.net/license.txt>.
-
-*/
-
-var Animation = new Class( {
-
-  initialize: function(options){
-    this.setOptions(options);
-  },
-
-  setOptions: function(options){
-    var opt = {
-      duration: 2500,
-      fps: 40,
-      transition: Trans.Quart.easeInOut,
-      compute: $.empty,
-      complete: $.empty,
-      link: 'ignore'
+    return function() {
+      return t++;
     };
-    this.opt = $.merge(opt, options || {});
-    return this;
-  },
+  })();
 
-  step: function(){
-    var time = $.time(), opt = this.opt;
-    if (time < this.time + opt.duration) {
-      var delta = opt.transition((time - this.time) / opt.duration);
-      opt.compute(delta);
-    } else {
-      this.timer = clearInterval(this.timer);
-      opt.compute(1);
-      opt.complete();
+  $.extend = function(to, from) {
+    for (var p in from) {
+      to[p] = from[p];
     }
-  },
+    return to;
+  };
 
-  start: function(){
-    if (!this.check())
+  $.type = (function() {
+    var oString = Object.prototype.toString,
+        type = function(e) {
+          var t = oString.call(e);
+          return t.substr(8, t.length - 9).toLowerCase();
+        };
+
+    return function(elem) {
+      var elemType = type(elem);
+      if (elemType != 'object') {
+        return elemType;
+      }
+      if (elem.$$family) return elem.$$family;
+      return (elem && elem.nodeName && elem.nodeType == 1) ? 'element' : elemType;
+    };
+  })();
+
+  (function() {
+    function detach(elem) {
+      var type = $.type(elem), ans;
+      if (type == 'object') {
+        ans = {};
+        for (var p in elem) {
+          ans[p] = detach(elem[p]);
+        }
+        return ans;
+      } else if (type == 'array') {
+        ans = [];
+        for (var i = 0, l = elem.length; i < l; i++) {
+          ans[i] = detach(elem[i]);
+        }
+        return ans;
+      } else {
+        return elem;
+      }
+    }
+
+    $.merge = function() {
+      var mix = {};
+      for (var i = 0, l = arguments.length; i < l; i++){
+          var object = arguments[i];
+          if ($.type(object) != 'object') continue;
+          for (var key in object){
+              var op = object[key], mp = mix[key];
+              if (mp && $.type(op) == 'object' && $.type(mp) == 'object') {
+                mix[key] = $.merge(mp, op);
+              } else{
+                mix[key] = detach(op);
+              }
+          }
+      }
+      return mix;
+    };
+  })();
+
+  $.splat = (function() {
+    var isArray = Array.isArray;
+    return function(a) {
+      return isArray(a) && a || [a];
+    };
+  })();
+
+  //Timer based animation
+  Animation = function(options) {
+      this.opt = $.merge({
+        delay: 0,
+        duration: 1000,
+        transition: function(x) { return x; },
+        compute: $.empty,
+        complete: $.empty
+      }, options || {});
+  };
+
+  var Queue = Animation.Queue = [];
+
+  Animation.prototype = {
+    time:null,
+
+    start: function(options) {
+      this.opt = $.merge(this.opt, options || {});
+      this.time = $.time();
+      this.animating = true;
+      Queue.push(this);
+    },
+
+    setOptions: function(options) {
+      this.opt = $.merge(this.opt, options || {});
       return this;
-    this.time = 0;
-    this.startTimer();
-    return this;
-  },
+    },
 
-  startTimer: function(){
-    var that = this, fps = this.opt.fps;
-    if (this.timer)
-      return false;
-    this.time = $.time() - this.time;
-    this.timer = setInterval((function(){
-      that.step();
-    }), Math.round(1000 / fps));
-    return true;
-  },
+    pause: function() {
+      this.animating = false;
+    },
 
-  pause: function(){
-    this.stopTimer();
-    return this;
-  },
+    stopTimer: function() {
+      this.animating = false;
+    },
 
-  resume: function(){
-    this.startTimer();
-    return this;
-  },
-
-  stopTimer: function(){
-    if (!this.timer)
-      return false;
-    this.time = $.time() - this.time;
-    this.timer = clearInterval(this.timer);
-    return true;
-  },
-
-  check: function(){
-    if (!this.timer)
-      return true;
-    if (this.opt.link == 'cancel') {
-      this.stopTimer();
-      return true;
+    //perform a step in the animation
+    step: function() {
+      //if not animating, then return
+      if (!this.animating) return;
+      var currentTime = $.time(),
+          time = this.time,
+          opt = this.opt,
+          delay = opt.delay,
+          duration = opt.duration,
+          delta = 0;
+      //hold animation for the delay
+      if (currentTime < time + delay) {
+        opt.compute.call(this, delta);
+        return;
+      }
+      //if in our time window, then execute animation
+      if (currentTime < time + delay + duration) {
+        delta = opt.transition((currentTime - time - delay) / duration);
+        opt.compute.call(this, delta);
+      } else {
+        this.animating = false;
+        opt.compute.call(this, 1);
+        opt.complete.call(this);
+      }
     }
-    return false;
+  };
+
+  Animation.compute = function(from, to, delta) {
+    return from + (to - from) * delta;
+  };
+
+  //Easing equations
+  Animation.Transition = {
+    linear: function(p){
+      return p;
+    }
+  };
+
+  var Trans = $jit.Trans = Animation.Transition;
+
+  (function(){
+
+    var makeTrans = function(transition, params){
+      params = $.splat(params);
+      return $.extend(transition, {
+        easeIn: function(pos){
+          return transition(pos, params);
+        },
+        easeOut: function(pos){
+          return 1 - transition(1 - pos, params);
+        },
+        easeInOut: function(pos){
+          return (pos <= 0.5)? transition(2 * pos, params) / 2 : (2 - transition(
+              2 * (1 - pos), params)) / 2;
+        }
+      });
+    };
+
+    var transitions = {
+
+      Pow: function(p, x){
+        return Math.pow(p, x[0] || 6);
+      },
+
+      Expo: function(p){
+        return Math.pow(2, 8 * (p - 1));
+      },
+
+      Circ: function(p){
+        return 1 - Math.sin(Math.acos(p));
+      },
+
+      Sine: function(p){
+        return 1 - Math.sin((1 - p) * Math.PI / 2);
+      },
+
+      Back: function(p, x){
+        x = x[0] || 1.618;
+        return Math.pow(p, 2) * ((x + 1) * p - x);
+      },
+
+      Bounce: function(p){
+        var value;
+        for ( var a = 0, b = 1; 1; a += b, b /= 2) {
+          if (p >= (7 - 4 * a) / 11) {
+            value = b * b - Math.pow((11 - 6 * a - 11 * p) / 4, 2);
+            break;
+          }
+        }
+        return value;
+      },
+
+      Elastic: function(p, x){
+        return Math.pow(2, 10 * --p) * Math.cos(20 * p * Math.PI * (x[0] || 1) / 3);
+      }
+
+    };
+
+    for (var t in transitions) {
+      Trans[t] = makeTrans(transitions[t]);
+    }
+
+    ['Quad', 'Cubic', 'Quart', 'Quint'].forEach(function(elem, i){
+      Trans[elem] = makeTrans(function(p){
+        return Math.pow(p, [
+          i + 2
+        ]);
+      });
+    });
+
+  })();
+
+  //animationTime - function branching
+  var global = self || window,
+      checkFxQueue = function() {
+        var oldQueue = Queue;
+        Queue = [];
+        if (oldQueue.length) {
+          for (var i = 0, l = oldQueue.length, fx; i < l; i++) {
+            fx = oldQueue[i];
+            fx.step();
+            if (fx.animating) {
+              Queue.push(fx);
+            }
+          }
+          Animation.Queue = Queue;
+        }
+      };
+
+  if (global) {
+    var found = false;
+    ['webkitAnimationTime', 'mozAnimationTime', 'animationTime',
+     'webkitAnimationStartTime', 'mozAnimationStartTime', 'animationStartTime'].forEach(function(impl) {
+      if (impl in global) {
+        Animation.animationTime = function() {
+          return global[impl];
+        };
+        found = true;
+      }
+    });
+    if (!found) {
+      Animation.animationTime = $.time;
+    }
+    //requestAnimationFrame - function branching
+    found = false;
+    ['webkitRequestAnimationFrame', 'mozRequestAnimationFrame', 'requestAnimationFrame'].forEach(function(impl) {
+      if (impl in global) {
+        Animation.requestAnimationFrame = function(callback) {
+          global[impl](function() {
+            checkFxQueue();
+            callback();
+          });
+        };
+        found = true;
+      }
+    });
+    if (!found) {
+      Animation.requestAnimationFrame = function(callback) {
+        setTimeout(function() {
+          checkFxQueue();
+          callback();
+        }, 1000 / 60);
+      };
+    }
   }
-});
+
+  (function loop() { Animation.requestAnimationFrame(loop); }());
+
+}());
