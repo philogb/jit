@@ -570,15 +570,15 @@ Graph.Plot = {
        node.eachAdjacency(function(adj) {
          var nodeTo = adj.nodeTo;
          if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
-           !animating && opt.onBeforePlotLine(adj);
+           opt.onBeforePlotLine(adj, animating);
            that.plotLine(adj, canvas, animating);
-           !animating && opt.onAfterPlotLine(adj);
+           opt.onAfterPlotLine(adj, animating);
          }
        });
        if(node.drawn) {
-         !animating && opt.onBeforePlotNode(node);
+         opt.onBeforePlotNode(node, animating);
          that.plotNode(node, canvas, animating);
-         !animating && opt.onAfterPlotNode(node);
+         opt.onAfterPlotNode(node, animating);
        }
        if(!that.labelsHidden && opt.withLabels) {
          if(node.drawn && nodeAlpha >= 0.95) {
@@ -604,16 +604,16 @@ Graph.Plot = {
        node.eachSubnode(function(elem) {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
              var adj = node.getAdjacency(elem.id);
-             !animating && opt.onBeforePlotLine(adj);
+             opt.onBeforePlotLine(adj, animating);
              that.plotLine(adj, canvas, animating);
-             !animating && opt.onAfterPlotLine(adj);
+             opt.onAfterPlotLine(adj, animating);
              that.plotTree(elem, opt, animating);
          }
        });
        if(node.drawn) {
-           !animating && opt.onBeforePlotNode(node);
+           opt.onBeforePlotNode(node, animating);
            this.plotNode(node, canvas, animating);
-           !animating && opt.onAfterPlotNode(node);
+           opt.onAfterPlotNode(node, animating);
            if(!opt.hideLabels && opt.withLabels && nodeAlpha >= 0.95) 
                this.labels.plotLabel(canvas, node, opt);
            else 
