@@ -143,7 +143,7 @@ Layouts.Tree = (function() {
 
     var siblingOffset = config.siblingOffset;
     var subtreeOffset = config.subtreeOffset;
-    var align = node.getData('align') || config.align;
+    var align = config.align; //this should be the tree alignment, not the node alignment.
 
     function $design(node, maxsize, acum) {
       var sval = node.getData(s, prop);
