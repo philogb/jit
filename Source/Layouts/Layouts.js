@@ -41,6 +41,13 @@ var NodeDim = {
         style.width  = autoWidth? 'auto' : width + 'px';
         style.height = autoHeight? 'auto' : height + 'px';
         
+        //font styles
+        if (n.getData('label-size')) {
+          style.fontSize = n.getData('label-size') + 'px';
+        } else {
+          style.fontSize = '';
+        }        
+        
         //TODO(nico) should let the user choose what to insert here.
         label.innerHTML = n.name;
         
