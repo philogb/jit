@@ -730,7 +730,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseWheel: function(e, win, scroll) {
-    if(!this.config.zooming) return;
+    if(!this.config.enable || !this.config.zooming) return;
     $.event.stop($.event.get(e, win));
     var val = this.config.zooming / 1000,
         ans = 1 + scroll * val;
@@ -738,7 +738,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseDown: function(e, win, eventInfo) {
-    if(!this.config.panning) return;
+    if(!this.config.enable || !this.config.panning) return;
     e.preventDefault ? e.preventDefault() : e.returnValue = false;
     $.addClass(this.canvas.getElement(), 'grabbing');
     if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : (eventInfo.getNode() || eventInfo.getEdge()))) return;
@@ -756,7 +756,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseMove: function(e, win, eventInfo) {
-    if(!this.config.panning) return;
+    if(!this.config.enable || !this.config.panning) return;
     if(!this.pressed) return;
     if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : eventInfo.getNode())) return;
     var thispos = this.pos, 
