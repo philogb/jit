@@ -705,7 +705,7 @@ $jit.Hypertree.$extend = true;
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true),
             r = adj.nodeFrom.scale;
-            this.edgeHelper.line.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
+            return this.edgeHelper.line.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
       }
     },
     'arrow': {
@@ -722,7 +722,7 @@ $jit.Hypertree.$extend = true;
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true),
             r = adj.nodeFrom.scale;
-        this.edgeHelper.arrow.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
+        return this.edgeHelper.arrow.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
       }
     },
     'hyperline': {
