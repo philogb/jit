@@ -255,7 +255,7 @@ Extras.Classes.Events = new Class({
 
     this.touchMoved = false;
     this.moved = false;
-    
+    this.lastPosition = false;
   },
   
   setAsProperty: $.lambda(true),
@@ -277,6 +277,7 @@ Extras.Classes.Events = new Class({
       }
       this.pressed = this.moved = false;
     }
+    this.lastPosition = false;
   },
 
   onMouseOut: function(e, win, event) {
@@ -313,9 +314,16 @@ Extras.Classes.Events = new Class({
   },
   
   onMouseMove: function(e, win, event) {
-   var label, evt = $.event.get(e, win);
+   var label, evt = $.event.get(e, win),
+       // Check if mouse actually moved
+       didMove = this.lastPosition && this.mouseDidMove(e);
+   // Update last position to be current position for next time
+   this.lastPosition = {
+      x: e.clientX,
+      y: e.clientY
+   };
    if(this.pressed) {
-     this.moved = true;
+     this.moved = didMove;
      this.config.onDragMove(this.pressed, event, evt);
      return;
    }
@@ -388,6 +396,12 @@ Extras.Classes.Events = new Class({
       }
       this.touched = this.touchMoved = false;
     }
+  },
+  mouseDidMove: function(event) {
+    var deltaX = event.clientX - this.lastPosition.x,
+        deltaY = event.clientY - this.lastPosition.y,
+        movement = deltaX * deltaX + deltaY * deltaY;
+    return movement > 0;
   }
 });
 
