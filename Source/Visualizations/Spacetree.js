@@ -1364,7 +1364,7 @@ $jit.ST.Label.HTML = new Class({
   Class: ST.Plot.NodeTypes
 
   This class contains a list of <Graph.Node> built-in types.
-  Node types implemented are 'none', 'circle', 'rectangle', 'ellipse' and 'square'.
+  Node types implemented are 'none', 'circle', 'rectangle', 'roundedRectangle', 'ellipse' and 'square'.
 
   You can add your custom node types, customizing your visualization to the extreme.
 
@@ -1445,6 +1445,22 @@ $jit.ST.Plot.NodeTypes = new Class({
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
       return this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
     }
+  },
+  'roundedRectangle': {
+    'render': function(node, canvas) {
+        var width = node.getData('width'),
+            height = node.getData('height'),
+            radius = node.getData('radius'),
+            pos = this.getAlignedPos(node.pos.getc(true), width, height);
+        this.nodeHelper.roundedRectangle.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, radius, canvas);
+      },
+      'contains': function(node, pos) {
+        var width = node.getData('width'),
+            height = node.getData('height'),
+            radius = node.getData('radius'),
+            npos = this.getAlignedPos(node.pos.getc(true), width, height);
+        this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height, radius);
+     }
   }
 });
 
@@ -1606,4 +1622,3 @@ $jit.ST.Plot.EdgeTypes = new Class({
        }
     }
 });
-

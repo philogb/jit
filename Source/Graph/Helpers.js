@@ -392,7 +392,73 @@ var NodeHelper = {
         'contains': function(npos, pos, dim) {
             return NodeHelper.circle.contains(npos, pos, dim);
         }
-    }
+    },
+    'roundedRectangle': {
+        /*
+          Method: render
+
+          Renders a rectangle with rounded corners into the canvas.
+
+          Parameters:
+
+          type - (string) Possible options are 'fill' or 'stroke'.
+          pos - (object) An *x*, *y* object with the position of the center of the rectangle.
+          width - (number) The width of the rectangle.
+          height - (number) The height of the rectangle.
+          radius - (number) The radius of the corners.
+          canvas - (object) A <Canvas> instance.
+
+          Example:
+          (start code js)
+          NodeHelper.roundedRectangle.render('fill', { x: 10, y: 30 }, 30, 40, 5, viz.canvas);
+          (end code)
+          */
+          'render': function(type, pos, w, h, r, canvas){
+             var ctx = canvas.getCtx(), x=pos.x, y=pos.y ;
+
+             ctx.save();
+             ctx.translate(-w/2, -h/2);
+             if (w < 2 * r) r = w / 2;
+             if (h < 2 * r) r = h / 2;
+             ctx.beginPath();
+             ctx.moveTo(x+r, y);
+             ctx.arcTo(x+w, y,   x+w, y+h, r);
+             ctx.arcTo(x+w, y+h, x,   y+h, r);
+             ctx.arcTo(x,   y+h, x,   y,   r);
+             ctx.arcTo(x,   y,   x+w, y,   r);
+             ctx.closePath();
+             ctx[type]();
+             /*if(typeof type === 'string') {
+                ctx[type]();
+             }else{ //type is an array
+                for(var t in type){
+                   ctx[type[t]]();
+                }
+             }*/
+             ctx.restore();
+          },
+          /*
+          Method: contains
+
+          Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+
+          Parameters:
+
+          npos - (object) An *x*, *y* object with the <Graph.Node> position.
+          pos - (object) An *x*, *y* object with the position to check.
+          width - (number) The width of the rendered rectangle.
+          height - (number) The height of the rendered rectangle.
+          radius - (number) The radius of the corners.
+
+          Example:
+          (start code js)
+          NodeHelper.roundedRectangle.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30, 40, 5);
+          (end code)
+          */
+          'contains': function(npos, pos, width, height, radius){
+            return NodeHelper.rectangle.contains(npos, pos, width, height);
+        }
+     }
 };
 
 /*

@@ -537,7 +537,7 @@ $jit.Hypertree.$extend = true;
     Class: Hypertree.Plot.NodeTypes
 
     This class contains a list of <Graph.Node> built-in types. 
-    Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
+    Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'roundedRectangle', 'star', 'ellipse' and 'square'.
 
     You can add your custom node types, customizing your visualization to the extreme.
 
@@ -664,6 +664,28 @@ $jit.Hypertree.$extend = true;
             npos = node.pos.getc().$scale(node.scale);
         return this.nodeHelper.star.contains(npos, pos, dim);
       }
+    },
+    'roundedRectangle': {
+        'render': function(node, canvas) {
+          var nconfig = this.node,
+              width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius'),
+              pos = node.pos.getc();
+          width = nconfig.transform? width * (1 - pos.squaredNorm()) : width;
+          height = nconfig.transform? height * (1 - pos.squaredNorm()) : height;
+          pos.$scale(node.scale);
+          if (width > 0.2 && height > 0.2) {
+            this.nodeHelper.roundedRectangle.render('fill', pos, width, height, radius, canvas);
+          }
+        },
+        'contains': function(node, pos) {
+          var width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius'),
+              npos = node.pos.getc().$scale(node.scale);
+          return this.nodeHelper.roundedRectangle.contains(npos, pos, width, height, radius);
+        }
     }
   });
 
