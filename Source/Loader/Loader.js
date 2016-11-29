@@ -16,11 +16,14 @@ var Loader = {
             //make tree
             (function (ans, json) {
                 ans.addNode(json);
-                if(json.children) {
+                if(json.children && json.children.length) {
                   for(var i=0, ch = json.children; i<ch.length; i++) {
                     ans.addAdjacence(json, ch[i]);
                     arguments.callee(ans, ch[i]);
                   }
+                }
+                else {
+                  ans.addNode(json[i]);
                 }
             })(ans, json);
         else
