@@ -4,12 +4,12 @@ JavaScript InfoVis Toolkit
 The JavaScript InfoVis Toolkit provides tools for creating Interactive Data 
 Visualizations for the Web.
 
-This is the Dev project, users should download the project from http://thejit.org.
+This is the Dev project, users should download the project from http://philogb.github.io/jit/.
 
 Useful links
 ------
-  - [jit homepage](http://thejit.org)
-  - [jit's blog](http://blog.thejit.org)
+  - [jit homepage](http://philogb.github.io/jit/)
+  - [jit's blog](http://philogb.github.com/blog)
   - [Getting Started with the Source](https://github.com/philogb/jit/wiki/Getting-Started)
   
   
