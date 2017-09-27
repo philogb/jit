@@ -723,188 +723,300 @@ $jit.json = {
 };
 
 
-/*
-     An object containing multiple type of transformations. 
-*/
+var Animation;
+(function() {
 
-$jit.Trans = {
-  $extend: true,
-  
-  linear: function(p){
-    return p;
+  //Utility functions
+  function $(d) {
+    return document.getElementById(d);
   }
-};
 
-var Trans = $jit.Trans;
+  $.empty = function() {};
 
-(function(){
+  $.time = Date.now;
 
-  var makeTrans = function(transition, params){
-    params = $.splat(params);
-    return $.extend(transition, {
-      easeIn: function(pos){
-        return transition(pos, params);
-      },
-      easeOut: function(pos){
-        return 1 - transition(1 - pos, params);
-      },
-      easeInOut: function(pos){
-        return (pos <= 0.5)? transition(2 * pos, params) / 2 : (2 - transition(
-            2 * (1 - pos), params)) / 2;
-      }
-    });
-  };
+  $.uid = (function() {
+    var t = $.time();
 
-  var transitions = {
-
-    Pow: function(p, x){
-      return Math.pow(p, x[0] || 6);
-    },
-
-    Expo: function(p){
-      return Math.pow(2, 8 * (p - 1));
-    },
-
-    Circ: function(p){
-      return 1 - Math.sin(Math.acos(p));
-    },
-
-    Sine: function(p){
-      return 1 - Math.sin((1 - p) * Math.PI / 2);
-    },
-
-    Back: function(p, x){
-      x = x[0] || 1.618;
-      return Math.pow(p, 2) * ((x + 1) * p - x);
-    },
-
-    Bounce: function(p){
-      var value;
-      for ( var a = 0, b = 1; 1; a += b, b /= 2) {
-        if (p >= (7 - 4 * a) / 11) {
-          value = b * b - Math.pow((11 - 6 * a - 11 * p) / 4, 2);
-          break;
-        }
-      }
-      return value;
-    },
-
-    Elastic: function(p, x){
-      return Math.pow(2, 10 * --p)
-          * Math.cos(20 * p * Math.PI * (x[0] || 1) / 3);
-    }
-
-  };
-
-  $.each(transitions, function(val, key){
-    Trans[key] = makeTrans(val);
-  });
-
-  $.each( [
-      'Quad', 'Cubic', 'Quart', 'Quint'
-  ], function(elem, i){
-    Trans[elem] = makeTrans(function(p){
-      return Math.pow(p, [
-        i + 2
-      ]);
-    });
-  });
-
-})();
-
-/*
-   A Class that can perform animations for generic objects.
-
-   If you are looking for animation transitions please take a look at the <Trans> object.
-
-   Used by:
-
-   <Graph.Plot>
-   
-   Based on:
-   
-   The Animation class is based in the MooTools Framework <http://mootools.net>. Copyright (c) 2006-2009 Valerio Proietti, <http://mad4milk.net/>. MIT license <http://mootools.net/license.txt>.
-
-*/
-
-var Animation = new Class( {
-
-  initialize: function(options){
-    this.setOptions(options);
-  },
-
-  setOptions: function(options){
-    var opt = {
-      duration: 2500,
-      fps: 40,
-      transition: Trans.Quart.easeInOut,
-      compute: $.empty,
-      complete: $.empty,
-      link: 'ignore'
+    return function() {
+      return t++;
     };
-    this.opt = $.merge(opt, options || {});
-    return this;
-  },
+  })();
 
-  step: function(){
-    var time = $.time(), opt = this.opt;
-    if (time < this.time + opt.duration) {
-      var delta = opt.transition((time - this.time) / opt.duration);
-      opt.compute(delta);
-    } else {
-      this.timer = clearInterval(this.timer);
-      opt.compute(1);
-      opt.complete();
+  $.extend = function(to, from) {
+    for (var p in from) {
+      to[p] = from[p];
     }
-  },
+    return to;
+  };
 
-  start: function(){
-    if (!this.check())
+  $.type = (function() {
+    var oString = Object.prototype.toString,
+        type = function(e) {
+          var t = oString.call(e);
+          return t.substr(8, t.length - 9).toLowerCase();
+        };
+
+    return function(elem) {
+      var elemType = type(elem);
+      if (elemType != 'object') {
+        return elemType;
+      }
+      if (elem.$$family) return elem.$$family;
+      return (elem && elem.nodeName && elem.nodeType == 1) ? 'element' : elemType;
+    };
+  })();
+
+  (function() {
+    function detach(elem) {
+      var type = $.type(elem), ans;
+      if (type == 'object') {
+        ans = {};
+        for (var p in elem) {
+          ans[p] = detach(elem[p]);
+        }
+        return ans;
+      } else if (type == 'array') {
+        ans = [];
+        for (var i = 0, l = elem.length; i < l; i++) {
+          ans[i] = detach(elem[i]);
+        }
+        return ans;
+      } else {
+        return elem;
+      }
+    }
+
+    $.merge = function() {
+      var mix = {};
+      for (var i = 0, l = arguments.length; i < l; i++){
+          var object = arguments[i];
+          if ($.type(object) != 'object') continue;
+          for (var key in object){
+              var op = object[key], mp = mix[key];
+              if (mp && $.type(op) == 'object' && $.type(mp) == 'object') {
+                mix[key] = $.merge(mp, op);
+              } else{
+                mix[key] = detach(op);
+              }
+          }
+      }
+      return mix;
+    };
+  })();
+
+  $.splat = (function() {
+    var isArray = Array.isArray;
+    return function(a) {
+      return isArray(a) && a || [a];
+    };
+  })();
+
+  //Timer based animation
+  Animation = function(options) {
+      this.opt = $.merge({
+        delay: 0,
+        duration: 1000,
+        transition: function(x) { return x; },
+        compute: $.empty,
+        complete: $.empty
+      }, options || {});
+  };
+
+  var Queue = Animation.Queue = [];
+
+  Animation.prototype = {
+    time:null,
+
+    start: function(options) {
+      this.opt = $.merge(this.opt, options || {});
+      this.time = $.time();
+      this.animating = true;
+      Queue.push(this);
+    },
+
+    setOptions: function(options) {
+      this.opt = $.merge(this.opt, options || {});
       return this;
-    this.time = 0;
-    this.startTimer();
-    return this;
-  },
+    },
 
-  startTimer: function(){
-    var that = this, fps = this.opt.fps;
-    if (this.timer)
-      return false;
-    this.time = $.time() - this.time;
-    this.timer = setInterval((function(){
-      that.step();
-    }), Math.round(1000 / fps));
-    return true;
-  },
+    pause: function() {
+      this.animating = false;
+    },
 
-  pause: function(){
-    this.stopTimer();
-    return this;
-  },
+    stopTimer: function() {
+      this.animating = false;
+    },
 
-  resume: function(){
-    this.startTimer();
-    return this;
-  },
-
-  stopTimer: function(){
-    if (!this.timer)
-      return false;
-    this.time = $.time() - this.time;
-    this.timer = clearInterval(this.timer);
-    return true;
-  },
-
-  check: function(){
-    if (!this.timer)
-      return true;
-    if (this.opt.link == 'cancel') {
-      this.stopTimer();
-      return true;
+    //perform a step in the animation
+    step: function() {
+      //if not animating, then return
+      if (!this.animating) return;
+      var currentTime = $.time(),
+          time = this.time,
+          opt = this.opt,
+          delay = opt.delay,
+          duration = opt.duration,
+          delta = 0;
+      //hold animation for the delay
+      if (currentTime < time + delay) {
+        opt.compute.call(this, delta);
+        return;
+      }
+      //if in our time window, then execute animation
+      if (currentTime < time + delay + duration) {
+        delta = opt.transition((currentTime - time - delay) / duration);
+        opt.compute.call(this, delta);
+      } else {
+        this.animating = false;
+        opt.compute.call(this, 1);
+        opt.complete.call(this);
+      }
     }
-    return false;
+  };
+
+  Animation.compute = function(from, to, delta) {
+    return from + (to - from) * delta;
+  };
+
+  //Easing equations
+  Animation.Transition = {
+    linear: function(p){
+      return p;
+    }
+  };
+
+  var Trans = $jit.Trans = Animation.Transition;
+
+  (function(){
+
+    var makeTrans = function(transition, params){
+      params = $.splat(params);
+      return $.extend(transition, {
+        easeIn: function(pos){
+          return transition(pos, params);
+        },
+        easeOut: function(pos){
+          return 1 - transition(1 - pos, params);
+        },
+        easeInOut: function(pos){
+          return (pos <= 0.5)? transition(2 * pos, params) / 2 : (2 - transition(
+              2 * (1 - pos), params)) / 2;
+        }
+      });
+    };
+
+    var transitions = {
+
+      Pow: function(p, x){
+        return Math.pow(p, x[0] || 6);
+      },
+
+      Expo: function(p){
+        return Math.pow(2, 8 * (p - 1));
+      },
+
+      Circ: function(p){
+        return 1 - Math.sin(Math.acos(p));
+      },
+
+      Sine: function(p){
+        return 1 - Math.sin((1 - p) * Math.PI / 2);
+      },
+
+      Back: function(p, x){
+        x = x[0] || 1.618;
+        return Math.pow(p, 2) * ((x + 1) * p - x);
+      },
+
+      Bounce: function(p){
+        var value;
+        for ( var a = 0, b = 1; 1; a += b, b /= 2) {
+          if (p >= (7 - 4 * a) / 11) {
+            value = b * b - Math.pow((11 - 6 * a - 11 * p) / 4, 2);
+            break;
+          }
+        }
+        return value;
+      },
+
+      Elastic: function(p, x){
+        return Math.pow(2, 10 * --p) * Math.cos(20 * p * Math.PI * (x[0] || 1) / 3);
+      }
+
+    };
+
+    for (var t in transitions) {
+      Trans[t] = makeTrans(transitions[t]);
+    }
+
+    ['Quad', 'Cubic', 'Quart', 'Quint'].forEach(function(elem, i){
+      Trans[elem] = makeTrans(function(p){
+        return Math.pow(p, [
+          i + 2
+        ]);
+      });
+    });
+
+  })();
+
+  //animationTime - function branching
+  var global = self || window,
+      checkFxQueue = function() {
+        var oldQueue = Queue;
+        Queue = [];
+        if (oldQueue.length) {
+          for (var i = 0, l = oldQueue.length, fx; i < l; i++) {
+            fx = oldQueue[i];
+            fx.step();
+            if (fx.animating) {
+              Queue.push(fx);
+            }
+          }
+          Animation.Queue = Queue;
+        }
+      };
+
+  if (global) {
+    var found = false;
+    ['webkitAnimationTime', 'mozAnimationTime', 'animationTime',
+     'webkitAnimationStartTime', 'mozAnimationStartTime', 'animationStartTime'].forEach(function(impl) {
+      if (impl in global) {
+        Animation.animationTime = function() {
+          return global[impl];
+        };
+        found = true;
+      }
+    });
+    if (!found) {
+      Animation.animationTime = $.time;
+    }
+    //requestAnimationFrame - function branching
+    found = false;
+    ['webkitRequestAnimationFrame', 'mozRequestAnimationFrame', 'requestAnimationFrame'].forEach(function(impl) {
+      if (impl in global) {
+        Animation.requestAnimationFrame = function(callback) {
+          global[impl](function() {
+            checkFxQueue();
+            callback();
+          });
+        };
+        found = true;
+      }
+    });
+    if (!found) {
+      Animation.requestAnimationFrame = function(callback) {
+        setTimeout(function() {
+          checkFxQueue();
+          callback();
+        }, 1000 / 60);
+      };
+    }
   }
-});
+
+  (function loop() { Animation.requestAnimationFrame(loop); }());
+
+}());
 
 
 var Options = function() {
@@ -2656,7 +2768,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseWheel: function(e, win, scroll) {
-    if(!this.config.zooming) return;
+    if(!this.config.enable || !this.config.zooming) return;
     $.event.stop($.event.get(e, win));
     var val = this.config.zooming / 1000,
         ans = 1 + scroll * val;
@@ -2664,7 +2776,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseDown: function(e, win, eventInfo) {
-    if(!this.config.panning) return;
+    if(!this.config.enable || !this.config.panning) return;
     e.preventDefault ? e.preventDefault() : e.returnValue = false;
     $.addClass(this.canvas.getElement(), 'grabbing');
     if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : (eventInfo.getNode() || eventInfo.getEdge()))) return;
@@ -2682,7 +2794,7 @@ Extras.Classes.Navigation = new Class({
   },
   
   onMouseMove: function(e, win, eventInfo) {
-    if(!this.config.panning) return;
+    if(!this.config.enable || !this.config.panning) return;
     if(!this.pressed) return;
     if(this.config.panning == 'avoid nodes' && (this.dom? this.isLabel(e, win) : eventInfo.getNode())) return;
     var thispos = this.pos, 
@@ -4095,11 +4207,20 @@ $jit.Graph = new Class({
    (end code)
   */  
   getByName: function(name) {
+    var res = [];
     for(var id in this.nodes) {
       var n = this.nodes[id];
-      if(n.name == name) return n;
+      if(n.name == name) {
+        res.push(n);
+      }
     }
-    return false;
+    if (res.length == 1) {
+      return res[0];
+    }
+    if (res.length == 0) {
+      return false;
+    }
+    return res;
   },
 
 /*
@@ -5386,6 +5507,7 @@ $.each(['eachAdjacency', 'eachLevel', 'eachSubgraph', 'eachSubnode', 'anySubnode
   };
 });
 
+
 /*
  * File: Graph.Op.js
  *
@@ -6477,7 +6599,73 @@ var NodeHelper = {
         'contains': function(npos, pos, dim) {
             return NodeHelper.circle.contains(npos, pos, dim);
         }
-    }
+    },
+    'roundedRectangle': {
+        /*
+          Method: render
+
+          Renders a rectangle with rounded corners into the canvas.
+
+          Parameters:
+
+          type - (string) Possible options are 'fill' or 'stroke'.
+          pos - (object) An *x*, *y* object with the position of the center of the rectangle.
+          width - (number) The width of the rectangle.
+          height - (number) The height of the rectangle.
+          radius - (number) The radius of the corners.
+          canvas - (object) A <Canvas> instance.
+
+          Example:
+          (start code js)
+          NodeHelper.roundedRectangle.render('fill', { x: 10, y: 30 }, 30, 40, 5, viz.canvas);
+          (end code)
+          */
+          'render': function(type, pos, w, h, r, canvas){
+             var ctx = canvas.getCtx(), x=pos.x, y=pos.y ;
+
+             ctx.save();
+             ctx.translate(-w/2, -h/2);
+             if (w < 2 * r) r = w / 2;
+             if (h < 2 * r) r = h / 2;
+             ctx.beginPath();
+             ctx.moveTo(x+r, y);
+             ctx.arcTo(x+w, y,   x+w, y+h, r);
+             ctx.arcTo(x+w, y+h, x,   y+h, r);
+             ctx.arcTo(x,   y+h, x,   y,   r);
+             ctx.arcTo(x,   y,   x+w, y,   r);
+             ctx.closePath();
+             ctx[type]();
+             /*if(typeof type === 'string') {
+                ctx[type]();
+             }else{ //type is an array
+                for(var t in type){
+                   ctx[type[t]]();
+                }
+             }*/
+             ctx.restore();
+          },
+          /*
+          Method: contains
+
+          Returns *true* if *pos* is contained in the area of the shape. Returns *false* otherwise.
+
+          Parameters:
+
+          npos - (object) An *x*, *y* object with the <Graph.Node> position.
+          pos - (object) An *x*, *y* object with the position to check.
+          width - (number) The width of the rendered rectangle.
+          height - (number) The height of the rendered rectangle.
+          radius - (number) The radius of the corners.
+
+          Example:
+          (start code js)
+          NodeHelper.roundedRectangle.contains({ x: 10, y: 30 }, { x: 15, y: 35 }, 30, 40, 5);
+          (end code)
+          */
+          'contains': function(npos, pos, width, height, radius){
+            return NodeHelper.rectangle.contains(npos, pos, width, height);
+        }
+     }
 };
 
 /*
@@ -7328,15 +7516,15 @@ Graph.Plot = {
        node.eachAdjacency(function(adj) {
          var nodeTo = adj.nodeTo;
          if(!!nodeTo.visited === T && node.drawn && nodeTo.drawn) {
-           !animating && opt.onBeforePlotLine(adj);
+           opt.onBeforePlotLine(adj, animating);
            that.plotLine(adj, canvas, animating);
-           !animating && opt.onAfterPlotLine(adj);
+           opt.onAfterPlotLine(adj, animating);
          }
        });
        if(node.drawn) {
-         !animating && opt.onBeforePlotNode(node);
+         opt.onBeforePlotNode(node, animating);
          that.plotNode(node, canvas, animating);
-         !animating && opt.onAfterPlotNode(node);
+         opt.onAfterPlotNode(node, animating);
        }
        if(!that.labelsHidden && opt.withLabels) {
          if(node.drawn && nodeAlpha >= 0.95) {
@@ -7362,16 +7550,16 @@ Graph.Plot = {
        node.eachSubnode(function(elem) {
          if(opt.plotSubtree(node, elem) && elem.exist && elem.drawn) {
              var adj = node.getAdjacency(elem.id);
-             !animating && opt.onBeforePlotLine(adj);
+             opt.onBeforePlotLine(adj, animating);
              that.plotLine(adj, canvas, animating);
-             !animating && opt.onAfterPlotLine(adj);
+             opt.onAfterPlotLine(adj, animating);
              that.plotTree(elem, opt, animating);
          }
        });
        if(node.drawn) {
-           !animating && opt.onBeforePlotNode(node);
+           opt.onBeforePlotNode(node, animating);
            this.plotNode(node, canvas, animating);
-           !animating && opt.onAfterPlotNode(node);
+           opt.onAfterPlotNode(node, animating);
            if(!opt.hideLabels && opt.withLabels && nodeAlpha >= 0.95) 
                this.labels.plotLabel(canvas, node, opt);
            else 
@@ -8379,6 +8567,13 @@ var NodeDim = {
         style.width  = autoWidth? 'auto' : width + 'px';
         style.height = autoHeight? 'auto' : height + 'px';
         
+        //font styles
+        if (n.getData('label-size')) {
+          style.fontSize = n.getData('label-size') + 'px';
+        } else {
+          style.fontSize = '';
+        }        
+        
         //TODO(nico) should let the user choose what to insert here.
         label.innerHTML = n.name;
         
@@ -8563,7 +8758,7 @@ Layouts.Tree = (function() {
 
     var siblingOffset = config.siblingOffset;
     var subtreeOffset = config.subtreeOffset;
-    var align = config.align;
+    var align = config.align; //this should be the tree alignment, not the node alignment.
 
     function $design(node, maxsize, acum) {
       var sval = node.getData(s, prop);
@@ -8614,7 +8809,6 @@ Layouts.Tree = (function() {
     $design(node, false, 0);
   }
 
-
   return new Class({
     /*
     Method: compute
@@ -8641,7 +8835,7 @@ Layouts.Tree = (function() {
     computePositions : function(node, prop) {
       var config = this.config;
       var multitree = config.multitree;
-      var align = config.align;
+      var align = node.getData('align') || config.align;
       var indent = align !== 'center' && config.indent;
       var orn = config.orientation;
       var orns = multitree ? [ 'top', 'right', 'bottom', 'left' ] : [ orn ];
@@ -9674,41 +9868,43 @@ $jit.ST.Geom = new Class({
           };
         };
         var dim = this.node;
+        var align = node.getData('align') || dim.align;
         var w = node.getData('width');
         var h = node.getData('height');
 
         if(type == 'begin') {
-            if(dim.align == "center") {
+            if(align == "center") {
                 return this.dispatch(s, $C(0, h/2), $C(-w/2, 0),
                                      $C(0, -h/2),$C(w/2, 0));
-            } else if(dim.align == "left") {
+            } else if(align == "left") {
                 return this.dispatch(s, $C(0, h), $C(0, 0),
                                      $C(0, 0), $C(w, 0));
-            } else if(dim.align == "right") {
+            } else if(align == "right") {
                 return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                      $C(0, -h),$C(0, 0));
             } else throw "align: not implemented";
 
 
         } else if(type == 'end') {
-            if(dim.align == "center") {
+            if(align == "center") {
                 return this.dispatch(s, $C(0, -h/2), $C(w/2, 0),
                                      $C(0, h/2),  $C(-w/2, 0));
-            } else if(dim.align == "left") {
+            } else if(align == "left") {
                 return this.dispatch(s, $C(0, 0), $C(w, 0),
                                      $C(0, h), $C(0, 0));
-            } else if(dim.align == "right") {
+            } else if(align == "right") {
                 return this.dispatch(s, $C(0, -h),$C(0, 0),
                                      $C(0, 0), $C(-w, 0));
             } else throw "align: not implemented";
         }
     },
-
+    
     /*
        Adjusts the tree position due to canvas scaling or translation.
     */
     getScaledTreePosition: function(node, scale) {
         var dim = this.node;
+        var align = node.getData('align') || dim.align;
         var w = node.getData('width');
         var h = node.getData('height');
         var s = (this.config.multitree
@@ -9720,13 +9916,13 @@ $jit.ST.Geom = new Class({
             return node.pos.add(new Complex(a, b)).$scale(1 - scale);
           };
         };
-        if(dim.align == "left") {
+        if(align == "left") {
             return this.dispatch(s, $C(0, h), $C(0, 0),
                                  $C(0, 0), $C(w, 0));
-        } else if(dim.align == "center") {
+        } else if(align == "center") {
             return this.dispatch(s, $C(0, h / 2), $C(-w / 2, 0),
                                  $C(0, -h / 2),$C(w / 2, 0));
-        } else if(dim.align == "right") {
+        } else if(align == "right") {
             return this.dispatch(s, $C(0, 0), $C(-w, 0),
                                  $C(0, -h),$C(0, 0));
         } else throw "align: not implemented";
@@ -9929,6 +10125,7 @@ $jit.ST.Label.DOM = new Class({
         var pos = node.pos.getc(true),
             config = this.viz.config,
             dim = config.Node,
+            align = node.getData('align') || dim.align,
             canvas = this.viz.canvas,
             w = node.getData('width'),
             h = node.getData('height'),
@@ -9942,12 +10139,12 @@ $jit.ST.Label.DOM = new Class({
             posx = pos.x * sx + ox,
             posy = pos.y * sy + oy;
 
-        if(dim.align == "center") {
+        if(align == "center") {
             labelPos= {
                 x: Math.round(posx - w / 2 + radius.width/2),
                 y: Math.round(posy - h / 2 + radius.height/2)
             };
-        } else if (dim.align == "left") {
+        } else if (align == "left") {
             orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
@@ -9960,7 +10157,7 @@ $jit.ST.Label.DOM = new Class({
                     y: Math.round(posy - h / 2 + radius.height/2)
                 };
             }
-        } else if(dim.align == "right") {
+        } else if(align == "right") {
             orn = config.orientation;
             if(orn == "bottom" || orn == "top") {
                 labelPos= {
@@ -10034,7 +10231,7 @@ $jit.ST.Label.HTML = new Class({
   Class: ST.Plot.NodeTypes
 
   This class contains a list of <Graph.Node> built-in types.
-  Node types implemented are 'none', 'circle', 'rectangle', 'ellipse' and 'square'.
+  Node types implemented are 'none', 'circle', 'rectangle', 'roundedRectangle', 'ellipse' and 'square'.
 
   You can add your custom node types, customizing your visualization to the extreme.
 
@@ -10115,6 +10312,22 @@ $jit.ST.Plot.NodeTypes = new Class({
           npos = this.getAlignedPos(node.pos.getc(true), width, height);
       return this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height);
     }
+  },
+  'roundedRectangle': {
+    'render': function(node, canvas) {
+        var width = node.getData('width'),
+            height = node.getData('height'),
+            radius = node.getData('radius'),
+            pos = this.getAlignedPos(node.pos.getc(true), width, height);
+        this.nodeHelper.roundedRectangle.render('fill', {x:pos.x+width/2, y:pos.y+height/2}, width, height, radius, canvas);
+      },
+      'contains': function(node, pos) {
+        var width = node.getData('width'),
+            height = node.getData('height'),
+            radius = node.getData('radius'),
+            npos = this.getAlignedPos(node.pos.getc(true), width, height);
+        this.nodeHelper.rectangle.contains({x:npos.x+width/2, y:npos.y+height/2}, pos, width, height, radius);
+     }
   }
 });
 
@@ -10276,7 +10489,6 @@ $jit.ST.Plot.EdgeTypes = new Class({
        }
     }
 });
-
 
 
 /*
@@ -13328,14 +13540,14 @@ Layouts.TM.SliceAndDice = new Class({
     this.computePositions(root, root, this.layout.orientation, prop);
     this.controller.onAfterCompute(root);
   },
-  
+
   computePositions: function(par, ch, orn, prop) {
     //compute children areas
     var totalArea = 0;
     par.eachSubnode(function(n) {
       totalArea += n.getData('area', prop);
-    });
-    
+    }, "ignore");
+
     var config = this.config,
         offset = config.offset,
         width  = par.getData('width', prop),
@@ -13354,7 +13566,7 @@ Layouts.TM.SliceAndDice = new Class({
       posth = config.titleHeight;
       pos2th = 0;
     } else {
-      orn = 'h';    
+      orn = 'h';
       otherSize = height * fact;
       size = width;
       dim = 'width';
@@ -13373,10 +13585,11 @@ Layouts.TM.SliceAndDice = new Class({
       p[pos2] = cpos[pos2] + pos2th;
       tm.computePositions(ch, n, orn, prop);
       offsetSize += n.getData(dim, prop);
-    });
+    }, "ignore");
   }
 
 });
+
 
 Layouts.TM.Area = {
  /*
@@ -16290,6 +16503,22 @@ $jit.ForceDirected.$extend = true;
             dim = node.getData('dim');
         return this.nodeHelper.star.contains(npos, pos, dim);
       }
+    },
+    'roundedRectangle': {
+        'render': function(node, canvas){
+          var pos = node.pos.getc(true),
+              width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius');
+          this.nodeHelper.roundedRectangle.render('fill', pos, width, height, radius, canvas);
+        },
+        'contains': function(node, pos){
+          var npos = node.pos.getc(true),
+              width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius');
+          return this.nodeHelper.roundedRectangle.contains(npos, pos, width, height, radius);
+        }
     }
   });
 
@@ -16350,7 +16579,6 @@ $jit.ForceDirected.$extend = true;
   });
 
 })($jit.ForceDirected);
-
 
 /*
  * File: Treemap.js
@@ -17517,9 +17745,52 @@ $jit.RGraph.$extend = true;
      <Graph.Label.Native>
 
      */
-    RGraph.Label.Native = new Class( {
-        Implements: Graph.Label.Native
-    });
+  RGraph.Label.Native = new Class( {
+    Implements: Graph.Label.Native,
+
+    initialize: function(viz) {
+      this.viz = viz;
+      this.label = viz.config.Label;
+      this.config = viz.config;
+    },
+
+    renderLabel: function(canvas, node, controller) {
+      var span = node.getData('span');
+      if(span < Math.PI /2 && Math.tan(span) *
+          this.config.levelDistance * node._depth < 10) {
+        return;
+      }
+      var ctx = canvas.getCtx();
+      var measure = ctx.measureText(node.name);
+      if (node.id == this.viz.root) {
+        var x = -measure.width / 2, y = 0, thetap = 0;
+        var ld = 0;
+      } else {
+        var indent = 5;
+        var ld = controller.levelDistance - indent;
+        var clone = node.pos.clone();
+        clone.rho += indent + (node.getData('dim') || 0);
+        var p = clone.getp(true);
+        var ct = clone.getc(true);
+        var x = ct.x, y = ct.y;
+        // get angle in degrees
+        var pi = Math.PI;
+        var cond = (p.theta > pi / 2 && p.theta < 3 * pi / 2);
+        var thetap = cond ? p.theta + pi : p.theta;
+        if (cond) {
+          x -= Math.abs(Math.cos(p.theta) * measure.width);
+          y += Math.sin(p.theta) * measure.width;
+        } else if (node.id == this.viz.root) {
+          x -= measure.width / 2;
+        }
+      }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(thetap);
+      ctx.fillText(node.name, 0, 0);
+      ctx.restore();
+    }
+  });
 
     /*
      RGraph.Label.SVG
@@ -17631,7 +17902,7 @@ $jit.RGraph.$extend = true;
      Class: RGraph.Plot.NodeTypes
 
      This class contains a list of <Graph.Node> built-in types.
-     Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
+     Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'roundedRectangle', 'star', 'ellipse' and 'square'.
 
      You can add your custom node types, customizing your visualization to the extreme.
 
@@ -17732,6 +18003,22 @@ $jit.RGraph.$extend = true;
                     dim = node.getData('dim');
                 return this.nodeHelper.star.contains(npos, pos, dim);
             }
+        },
+        'roundedRectangle': {
+            'render': function(node, canvas){
+              var pos = node.pos.getc(true),
+                  width = node.getData('width'),
+                  height = node.getData('height'),
+                  radius = node.getData('radius');
+              this.nodeHelper.roundedRectangle.render('fill', pos, width, height, radius, canvas);
+            },
+            'contains': function(node, pos){
+              var npos = node.pos.getc(true),
+                  width = node.getData('width'),
+                  height = node.getData('height'),
+                  radius = node.getData('radius');
+              return this.nodeHelper.roundedRectangle.contains(npos, pos, width, height, radius);
+            }
         }
     });
 
@@ -17793,7 +18080,6 @@ $jit.RGraph.$extend = true;
     });
 
 })($jit.RGraph);
-
 
 /*
  * File: Hypertree.js
@@ -18334,7 +18620,7 @@ $jit.Hypertree.$extend = true;
     Class: Hypertree.Plot.NodeTypes
 
     This class contains a list of <Graph.Node> built-in types. 
-    Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
+    Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'roundedRectangle', 'star', 'ellipse' and 'square'.
 
     You can add your custom node types, customizing your visualization to the extreme.
 
@@ -18461,6 +18747,28 @@ $jit.Hypertree.$extend = true;
             npos = node.pos.getc().$scale(node.scale);
         return this.nodeHelper.star.contains(npos, pos, dim);
       }
+    },
+    'roundedRectangle': {
+        'render': function(node, canvas) {
+          var nconfig = this.node,
+              width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius'),
+              pos = node.pos.getc();
+          width = nconfig.transform? width * (1 - pos.squaredNorm()) : width;
+          height = nconfig.transform? height * (1 - pos.squaredNorm()) : height;
+          pos.$scale(node.scale);
+          if (width > 0.2 && height > 0.2) {
+            this.nodeHelper.roundedRectangle.render('fill', pos, width, height, radius, canvas);
+          }
+        },
+        'contains': function(node, pos) {
+          var width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius'),
+              npos = node.pos.getc().$scale(node.scale);
+          return this.nodeHelper.roundedRectangle.contains(npos, pos, width, height, radius);
+        }
     }
   });
 
@@ -18502,7 +18810,7 @@ $jit.Hypertree.$extend = true;
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true),
             r = adj.nodeFrom.scale;
-            this.edgeHelper.line.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
+            return this.edgeHelper.line.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
       }
     },
     'arrow': {
@@ -18519,7 +18827,7 @@ $jit.Hypertree.$extend = true;
         var from = adj.nodeFrom.pos.getc(true),
             to = adj.nodeTo.pos.getc(true),
             r = adj.nodeFrom.scale;
-        this.edgeHelper.arrow.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
+        return this.edgeHelper.arrow.contains({x:from.x*r, y:from.y*r}, {x:to.x*r, y:to.y*r}, pos, this.edge.epsilon);
       }
     },
     'hyperline': {
@@ -18534,7 +18842,6 @@ $jit.Hypertree.$extend = true;
   });
 
 })($jit.Hypertree);
-
 
 
 

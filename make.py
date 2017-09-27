@@ -6,7 +6,8 @@ from tests import tests_model
 from serve import render
 from build import Build
 
-YC = 'yuicompressor-2.4.7.jar'
+YC_VER = "2.4.8"
+YC = "yuicompressor-%s.jar" % YC_VER
 EXCLUDES = ['Source/Extras',
             'Source/Layouts',
             'Source/Options/Options.js',
@@ -159,12 +160,20 @@ def make_build(fancy=False):
     f.write(license)
     f.write(lib)
     f.close()
-    print "Done. Compressing Library..."
-    f = open('Jit/jit-yc.js', 'w')
-    f.write(license)
-    f.close()
-    system('java -jar Extras/' + YC + ' Jit/jit.js >> Jit/jit-yc.js')
-    print "Done. Zipping..."
+    print "Done."
+
+    if not path.exists('Extras/' + YC):
+        print "Library compression requires YUI compressor v.%s" % YC_VER
+        print "https://github.com/yui/yuicompressor/releases/download/v%s/yuicompressor-%s.jar" % (YC_VER, YC_VER)
+    else:
+        print "Compressing Library..."
+        f = open('Jit/jit-yc.js', 'w')
+        f.write(license)
+        f.close()
+        system('java -jar Extras/' + YC + ' Jit/jit.js >> Jit/jit-yc.js')
+        print "Done."
+
+    print "Zipping..."
     system('rm Jit.zip')
     system('zip -r Jit.zip Jit/')
     print "Done, I guess."

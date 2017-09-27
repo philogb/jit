@@ -475,7 +475,7 @@ $jit.RGraph.$extend = true;
      Class: RGraph.Plot.NodeTypes
 
      This class contains a list of <Graph.Node> built-in types.
-     Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'star', 'ellipse' and 'square'.
+     Node types implemented are 'none', 'circle', 'triangle', 'rectangle', 'roundedRectangle', 'star', 'ellipse' and 'square'.
 
      You can add your custom node types, customizing your visualization to the extreme.
 
@@ -575,6 +575,22 @@ $jit.RGraph.$extend = true;
                 var npos = node.pos.getc(true),
                     dim = node.getData('dim');
                 return this.nodeHelper.star.contains(npos, pos, dim);
+            }
+        },
+        'roundedRectangle': {
+            'render': function(node, canvas){
+              var pos = node.pos.getc(true),
+                  width = node.getData('width'),
+                  height = node.getData('height'),
+                  radius = node.getData('radius');
+              this.nodeHelper.roundedRectangle.render('fill', pos, width, height, radius, canvas);
+            },
+            'contains': function(node, pos){
+              var npos = node.pos.getc(true),
+                  width = node.getData('width'),
+                  height = node.getData('height'),
+                  radius = node.getData('radius');
+              return this.nodeHelper.roundedRectangle.contains(npos, pos, width, height, radius);
             }
         }
     });

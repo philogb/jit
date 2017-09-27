@@ -520,6 +520,22 @@ $jit.ForceDirected.$extend = true;
             dim = node.getData('dim');
         return this.nodeHelper.star.contains(npos, pos, dim);
       }
+    },
+    'roundedRectangle': {
+        'render': function(node, canvas){
+          var pos = node.pos.getc(true),
+              width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius');
+          this.nodeHelper.roundedRectangle.render('fill', pos, width, height, radius, canvas);
+        },
+        'contains': function(node, pos){
+          var npos = node.pos.getc(true),
+              width = node.getData('width'),
+              height = node.getData('height'),
+              radius = node.getData('radius');
+          return this.nodeHelper.roundedRectangle.contains(npos, pos, width, height, radius);
+        }
     }
   });
 
