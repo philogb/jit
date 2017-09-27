@@ -1,0 +1,14 @@
+==============================================
+Little & straightforward howtos
+Vanesa G. Pazos <nessa.gp@hotmail.es>
+==============================================
+
+
+How to add a new node type
+-----------------------------------
+1. Modify NodeHelper.
+2. Add to different graphs/charts objects:
+   2.1. For instance, if you want to add it to Spacetree then add the new node type to $jit.ST.Plot.NodeTypes (class ST.Plot.NodeTypes)
+
+
+
